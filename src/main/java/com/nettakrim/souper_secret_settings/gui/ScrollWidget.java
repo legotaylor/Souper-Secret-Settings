@@ -31,9 +31,9 @@ public class ScrollWidget extends ClickableWidget {
 
         double barHeight = getBarHeight();
 
-        double fraction = scrollY/scrollHeight * (1-barHeight);
+        double fraction = scrollHeight > 0 ? scrollY/scrollHeight * (1-barHeight) : 0;
 
-        context.drawGuiTexture(RenderLayer::getGuiTextured, SCROLLER_TEXTURE, getX(), (int)(fraction*getHeight()) + getY(), getWidth(), (int)(barHeight*getHeight()), ColorHelper.getWhite(alpha));
+        context.drawGuiTexture(RenderLayer::getGuiTextured, SCROLLER_TEXTURE, getX(), (int)Math.round(fraction*getHeight()) + getY(), getWidth(), (int)(barHeight*getHeight()), ColorHelper.getWhite(alpha));
     }
 
     @Override
