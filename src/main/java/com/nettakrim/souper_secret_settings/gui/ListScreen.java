@@ -1,6 +1,7 @@
 package com.nettakrim.souper_secret_settings.gui;
 
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.Screen;
@@ -40,7 +41,7 @@ public abstract class ListScreen<V> extends Screen {
         listWidgets = new ArrayList<>(listValues.size());
         for (V value : listValues) {
             ListWidget listWidget = createListWidget(value);
-            addDrawableChild(listWidget);
+            addSelectableChild(listWidget);
             listWidgets.add(listWidget);
         }
 
@@ -49,6 +50,17 @@ public abstract class ListScreen<V> extends Screen {
         addDrawableChild(suggestionTextFieldWidget);
 
         updateSpacing();
+    }
+
+    @Override
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.render(context, mouseX, mouseY, delta);
+
+        context.enableScissor(listX, listStart, width, height);
+        for (Drawable drawable : listWidgets) {
+            drawable.render(context, mouseX, mouseY, delta);
+        }
+        context.disableScissor();
     }
 
     //TODO: needs to be a proper header system
@@ -79,6 +91,12 @@ public abstract class ListScreen<V> extends Screen {
         }
 
         suggestionTextFieldWidget.setY(currentListSize - scroll);
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+        scrollWidget.offsetScroll(verticalAmount*-20);
+        return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
     }
 
     @Override
