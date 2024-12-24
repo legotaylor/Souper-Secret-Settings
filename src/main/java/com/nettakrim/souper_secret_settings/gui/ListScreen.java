@@ -13,12 +13,17 @@ import java.util.List;
 public abstract class ListScreen<V> extends Screen {
     protected ArrayList<ListWidget> listWidgets;
 
-    public SuggestionTextFieldWidget suggestionTextFieldWidget;
+    protected SuggestionTextFieldWidget suggestionTextFieldWidget;
 
     protected static final int listWidth = 150;
     protected static final int listGap = 2;
     protected static final int headerHeight = 20;
-    protected static final int listStart = headerHeight+ listGap *2;
+    protected static final int listStart = headerHeight + listGap*2;
+    protected static final int scrollWidth = 6;
+    protected static final int listX = listGap*2+scrollWidth;
+
+    protected ScrollWidget scrollWidget;
+    protected int currentListSize;
 
     protected ListScreen(Text title) {
         super(title);
@@ -28,6 +33,9 @@ public abstract class ListScreen<V> extends Screen {
     protected void init() {
         addDrawableChild(getToggleButton());
 
+        scrollWidget = new ScrollWidget(listGap, listStart, scrollWidth, height-listStart-listGap, Text.literal("scroll"), this::setScroll);
+        addDrawableChild(scrollWidget);
+
         List<V> listValues = getListValues();
         listWidgets = new ArrayList<>(listValues.size());
         for (V value : listValues) {
@@ -36,7 +44,7 @@ public abstract class ListScreen<V> extends Screen {
             listWidgets.add(listWidget);
         }
 
-        suggestionTextFieldWidget = new SuggestionTextFieldWidget(listGap, listWidth, 20, Text.literal("list addition"));
+        suggestionTextFieldWidget = new SuggestionTextFieldWidget(listX, listWidth, 20, Text.literal("list addition"));
         suggestionTextFieldWidget.setListeners(this::getAdditions, this::addAddition);
         addDrawableChild(suggestionTextFieldWidget);
 
@@ -55,14 +63,22 @@ public abstract class ListScreen<V> extends Screen {
     }
 
     public void updateSpacing() {
-        int position = listStart;
+        currentListSize = listStart;
         for (CollapseWidget collapseWidget : listWidgets) {
             collapseWidget.visible = true;
-            collapseWidget.setY(position);
-            position += collapseWidget.getHeight() + listGap;
+            collapseWidget.updateCollapse(currentListSize);
+            currentListSize += collapseWidget.getHeight() + listGap;
         }
 
-        suggestionTextFieldWidget.setY(position);
+        scrollWidget.setContentHeight(currentListSize-listStart + suggestionTextFieldWidget.getHeight());
+    }
+
+    public void setScroll(int scroll) {
+        for (CollapseWidget collapseWidget : listWidgets) {
+            collapseWidget.setY(collapseWidget.offset - scroll);
+        }
+
+        suggestionTextFieldWidget.setY(currentListSize - scroll);
     }
 
     @Override

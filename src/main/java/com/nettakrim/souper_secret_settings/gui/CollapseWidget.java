@@ -18,6 +18,8 @@ public abstract class CollapseWidget extends ClickableWidget {
 
     protected ListScreen<?> listScreen;
 
+    protected int offset;
+
     public CollapseWidget(int x, int width, Text message, ListScreen<?> listScreen) {
         super(x, 0, width, baseHeight, message);
 
@@ -35,14 +37,16 @@ public abstract class CollapseWidget extends ClickableWidget {
         }
     }
 
-    @Override
-    public void setY(int y) {
-        super.setY(y);
+    public void updateCollapse(int y) {
+        offset = y;
+
         int height = baseHeight;
         if (expanded) {
             for (ClickableWidget widget : children) {
                 setVisible(widget, true);
-                widget.setY(height + y);
+                if (widget instanceof CollapseWidget collapseWidget) {
+                    collapseWidget.updateCollapse(height + y);
+                }
                 height += widget.getHeight();
             }
         } else {
@@ -51,6 +55,22 @@ public abstract class CollapseWidget extends ClickableWidget {
             }
         }
         setHeight(height);
+    }
+
+    public int getOffset() {
+        return offset;
+    }
+
+    @Override
+    public void setY(int y) {
+        super.setY(y);
+        int height = baseHeight;
+        if (expanded) {
+            for (ClickableWidget widget : children) {
+                widget.setY(height + y);
+                height += widget.getHeight();
+            }
+        }
     }
 
     protected static void setVisible(ClickableWidget clickableWidget, boolean visible) {

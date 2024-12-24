@@ -36,7 +36,7 @@ public class StackScreen extends ListScreen<ShaderData> {
 
     @Override
     protected ListWidget createListWidget(ShaderData value) {
-        return new ShaderWidget(stack, value, this, listGap, listWidth);
+        return new ShaderWidget(stack, value, this, listX, listWidth);
     }
 
     @Override
@@ -57,7 +57,10 @@ public class StackScreen extends ListScreen<ShaderData> {
 
     @Override
     public void addAddition(String addition) {
-        SouperSecretSettingsClient.soupRenderer.addShader(Identifier.of(addition), 1);
-        SouperSecretSettingsClient.client.setScreen(new StackScreen(SouperSecretSettingsClient.soupRenderer.getActiveStack()));
+        Identifier identifier = Identifier.tryParse(addition);
+        if (identifier != null) {
+            SouperSecretSettingsClient.soupRenderer.addShader(identifier, 1);
+            SouperSecretSettingsClient.client.setScreen(new StackScreen(SouperSecretSettingsClient.soupRenderer.getActiveStack()));
+        }
     }
 }
