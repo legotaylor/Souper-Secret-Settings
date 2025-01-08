@@ -1,7 +1,7 @@
 {
     "targets": {
         "0": {},
-        "previous": {}
+        "previous": {"persistent": true}
     },
     "passes": [
         {
@@ -34,6 +34,10 @@
                 {
                     "sampler_name": "In",
                     "target": "0"
+                },
+                {
+                    "sampler_name": "Aux",
+                    "target": "previous"
                 }
             ],
             "output": "minecraft:main"

@@ -9,11 +9,11 @@ import com.mclegoman.luminance.client.shaders.overrides.UniformOverride;
 import com.mclegoman.luminance.client.shaders.overrides.UniformSource;
 import com.mclegoman.luminance.client.shaders.uniforms.Uniform;
 import com.mclegoman.luminance.mixin.client.shaders.PostEffectProcessorAccessor;
-import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gl.GlUniform;
 import net.minecraft.client.gl.PostEffectPass;
 import net.minecraft.client.gl.ShaderProgram;
-import net.minecraft.client.util.ObjectAllocator;
+import net.minecraft.client.render.DefaultFramebufferSet;
+import net.minecraft.client.render.FrameGraphBuilder;
 
 import java.util.*;
 
@@ -72,9 +72,9 @@ public class ShaderData {
         overrideMap.put(name,uniformOverride);
     }
 
-    public void render(Framebuffer framebuffer, ObjectAllocator objectAllocator) {
+    public void render(FrameGraphBuilder builder, int textureWidth, int textureHeight, DefaultFramebufferSet framebufferSet) {
         OverrideManager.applyOverrides(this);
-        Shaders.renderUsingAllocator(shader.getPostProcessor(), framebuffer, objectAllocator);
+        Shaders.renderUsingFramebufferSet(shader.getPostProcessor(), builder, textureWidth, textureHeight, framebufferSet);
         OverrideManager.resetOverrides();
     }
 

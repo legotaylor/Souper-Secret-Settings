@@ -1,8 +1,8 @@
 package com.nettakrim.souper_secret_settings.shaders;
 
 import com.nettakrim.souper_secret_settings.shaders.calculations.Calculation;
-import net.minecraft.client.gl.Framebuffer;
-import net.minecraft.client.util.ObjectAllocator;
+import net.minecraft.client.render.DefaultFramebufferSet;
+import net.minecraft.client.render.FrameGraphBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +20,7 @@ public class ShaderStack {
         parameterValues = new HashMap<>();
     }
 
-    public void render(Framebuffer framebuffer, ObjectAllocator objectAllocator) {
+    public void render(FrameGraphBuilder builder, int textureWidth, int textureHeight, DefaultFramebufferSet framebufferSet) {
         renderingStack = this;
         parameterValues.clear();
         for (Calculation calculation : calculations) {
@@ -28,7 +28,7 @@ public class ShaderStack {
         }
 
         for (ShaderData shaderData : shaderDatas) {
-            shaderData.render(framebuffer, objectAllocator);
+            shaderData.render(builder, textureWidth, textureHeight, framebufferSet);
         }
         renderingStack = null;
     }
