@@ -8,14 +8,14 @@ import com.mclegoman.luminance.client.shaders.ShaderRegistry;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.mixin.GameRendererAccessor;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.Framebuffer;
-import net.minecraft.client.util.ObjectAllocator;
+import net.minecraft.client.render.DefaultFramebufferSet;
+import net.minecraft.client.render.FrameGraphBuilder;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.Random;
 
 import java.util.ArrayList;
 
-public class SoupRenderer implements Runnables.GameRender {
+public class SoupRenderer implements Runnables.WorldRender {
     public ArrayList<ShaderStack> shaderStacks;
 
     public int activeStack;
@@ -23,7 +23,7 @@ public class SoupRenderer implements Runnables.GameRender {
     public SoupRenderer() {
         clearAll();
 
-        Events.AfterHandRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "rendering"), this);
+        Events.AfterWeatherRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "rendering"), this);
 
         Events.OnShaderDataReset.register(Identifier.of(SouperSecretSettingsClient.MODID, "reload"), this::clearAll);
 
@@ -32,9 +32,9 @@ public class SoupRenderer implements Runnables.GameRender {
     }
 
     @Override
-    public void run(Framebuffer framebuffer, ObjectAllocator objectAllocator) {
+    public void run(FrameGraphBuilder builder, int textureWidth, int textureHeight, DefaultFramebufferSet framebufferSet) {
         for (ShaderStack stack : shaderStacks) {
-            stack.render(framebuffer, objectAllocator);
+            stack.render(builder, textureWidth, textureHeight, framebufferSet);
         }
     }
 

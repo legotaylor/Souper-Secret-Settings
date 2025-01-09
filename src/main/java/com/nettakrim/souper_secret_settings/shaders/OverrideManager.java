@@ -3,39 +3,55 @@ package com.nettakrim.souper_secret_settings.shaders;
 import com.mclegoman.luminance.client.events.Runnables;
 import com.mclegoman.luminance.client.shaders.interfaces.PostEffectPassInterface;
 import com.mclegoman.luminance.client.shaders.overrides.UniformOverride;
+import com.mclegoman.luminance.mixin.client.shaders.PostEffectProcessorAccessor;
 import net.minecraft.client.gl.PostEffectPass;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class OverrideManager {
-    private static ShaderData currentShader;
+    private static Queue<ShaderData> currentShaders;
     private static int currentPassIndex;
 
     private static final Map<String, UniformOverride> replacedOverrides = new HashMap<>();
     private static final List<String> nullOverrides = new ArrayList<>();
 
-    public static void applyOverrides(ShaderData shaderData) {
-        currentShader = shaderData;
-        currentPassIndex = 0;
+    public static void startShaderQueue(Queue<ShaderData> shaderQueue) {
+        if (!shaderQueue.isEmpty()) {
+            currentShaders = shaderQueue;
+            currentPassIndex = -1;
+        }
     }
 
-    public static void resetOverrides() {
-        currentShader = null;
+    private static void searchFor(PostEffectPass postEffectPass) {
+        if (currentShaders == null) return;
+
+        while (!currentShaders.isEmpty()) {
+            currentPassIndex++;
+            List<PostEffectPass> currentPasses = ((PostEffectProcessorAccessor) currentShaders.peek().shader.getPostProcessor()).getPasses();
+
+            while (currentPassIndex < currentPasses.size()) {
+                if (currentPasses.get(currentPassIndex) == postEffectPass) {
+                    return;
+                }
+                currentPassIndex++;
+            }
+
+            currentShaders.remove();
+            currentPassIndex = -1;
+        }
     }
 
     public static class BeforeShaderRender implements Runnables.Shader {
         @Override
         public void run(PostEffectPass postEffectPass) {
-            if (currentShader == null) {
+            searchFor(postEffectPass);
+            if (currentShaders == null || currentShaders.isEmpty()) {
                 return;
             }
 
             PostEffectPassInterface pass = ((PostEffectPassInterface)postEffectPass);
 
-            currentShader.overrides.get(currentPassIndex).forEach((uniform, override) -> {
+            currentShaders.peek().overrides.get(currentPassIndex).forEach((uniform, override) -> {
                 UniformOverride previous = pass.luminance$addUniformOverride(uniform, override);
                 if (previous != null) {
                     replacedOverrides.put(uniform, previous);
@@ -49,7 +65,7 @@ public class OverrideManager {
     public static class AfterShaderRender implements Runnables.Shader {
         @Override
         public void run(PostEffectPass postEffectPass) {
-            if (currentShader == null) {
+            if (currentShaders == null || currentShaders.isEmpty()) {
                 return;
             }
 
@@ -60,8 +76,6 @@ public class OverrideManager {
 
             nullOverrides.forEach(pass::luminance$removeUniformOverride);
             nullOverrides.clear();
-
-            currentPassIndex++;
         }
     }
 }
