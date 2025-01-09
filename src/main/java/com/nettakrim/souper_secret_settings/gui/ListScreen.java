@@ -128,6 +128,13 @@ public abstract class ListScreen<V> extends Screen {
         updateSpacing();
     }
 
+    public void removeEntry(ListWidget listWidget) {
+        remove(listWidget);
+        removeEntry(listWidgets.indexOf(listWidget));
+
+        updateSpacing();
+    }
+
     protected void addEntry(int index, V entry, ListWidget widget) {
         listWidgets.add(index, widget);
         getListValues().add(index, entry);
