@@ -1,10 +1,11 @@
 package com.nettakrim.souper_secret_settings.shaders;
 
 import com.mclegoman.luminance.client.shaders.interfaces.FramePassInterface;
+import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.shaders.calculations.Calculation;
 import net.minecraft.client.render.DefaultFramebufferSet;
 import net.minecraft.client.render.FrameGraphBuilder;
-import net.minecraft.client.render.RenderPass;
+import net.minecraft.util.Identifier;
 
 import java.util.*;
 
@@ -27,14 +28,14 @@ public class ShaderStack {
             calculation.update(this);
         }
 
-        RenderPass renderPass = builder.createPass("soup:stack");
-        ((FramePassInterface)renderPass).luminance$setForceVisit(true);
-        renderPass.setRenderer(() -> OverrideManager.startShaderQueue(new LinkedList<>(shaderDatas)));
+        FramePassInterface.createForcedPass(builder, Identifier.of(SouperSecretSettingsClient.MODID, "stack"), () -> {
+            renderingStack = this;
+            OverrideManager.startShaderQueue(new LinkedList<>(shaderDatas));
+        });
 
         for (ShaderData shaderData : shaderDatas) {
             shaderData.render(builder, textureWidth, textureHeight, framebufferSet);
         }
-        renderingStack = null;
     }
 
     public void addShaderData(ShaderData shaderData) {
