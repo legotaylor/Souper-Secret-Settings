@@ -7,6 +7,7 @@ import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.MathHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -117,4 +118,23 @@ public abstract class ListScreen<V> extends Screen {
     public abstract List<String> getAdditions();
 
     public abstract void addAddition(String addition);
+
+    public void swapEntry(ListWidget listWidget, int direction) {
+        int index = listWidgets.indexOf(listWidget);
+        V entry = removeEntry(index);
+
+        addEntry(MathHelper.clamp(index+direction, 0, listWidgets.size()), entry, listWidget);
+
+        updateSpacing();
+    }
+
+    protected void addEntry(int index, V entry, ListWidget widget) {
+        listWidgets.add(index, widget);
+        getListValues().add(index, entry);
+    }
+
+    protected V removeEntry(int index) {
+        listWidgets.remove(index);
+        return getListValues().remove(index);
+    }
 }

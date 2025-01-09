@@ -22,6 +22,8 @@ public class ShaderData {
 
     public final List<Map<String, UniformOverride>> overrides;
 
+    public boolean active = true;
+
     public ShaderData(Shader shader) {
         this.shader = shader;
         this.shader.setPostProcessor();
@@ -73,6 +75,8 @@ public class ShaderData {
     }
 
     public void render(FrameGraphBuilder builder, int textureWidth, int textureHeight, DefaultFramebufferSet framebufferSet) {
+        if (!active) return;
+
         Shaders.renderUsingFramebufferSet(shader.getPostProcessor(), builder, textureWidth, textureHeight, framebufferSet);
     }
 

@@ -35,4 +35,14 @@ public class ShaderWidget extends ListWidget {
     protected void appendClickableNarrations(NarrationMessageBuilder builder) {
 
     }
+
+    @Override
+    public boolean isActive() {
+        return shaderData.active;
+    }
+
+    @Override
+    public void setActive(boolean to) {
+        shaderData.active = to;
+    }
 }

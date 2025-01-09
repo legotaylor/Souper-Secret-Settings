@@ -9,12 +9,16 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.text.Text;
 
 public class CalculationListWidget extends ListWidget {
+    protected Calculation calculation;
+
     public CalculationListWidget(Calculation calculation, ShaderStack stack, ListScreen<?> listScreen, int x, int width) {
         super(x, width, SouperSecretSettingsClient.translate("calculation."+calculation.getID()), listScreen);
 
         CalculationDisplayWidget calculationDisplayWidget = new CalculationDisplayWidget(calculation, stack, Text.literal(""), x, width, listScreen);
         children.add(calculationDisplayWidget);
         listScreen.addSelectable(calculationDisplayWidget);
+
+        this.calculation = calculation;
     }
 
     @Override
@@ -26,5 +30,15 @@ public class CalculationListWidget extends ListWidget {
     protected void setExpanded(boolean to) {
         ((CalculationDisplayWidget)children.getFirst()).setExpandedWithoutUpdate(to);
         super.setExpanded(to);
+    }
+
+    @Override
+    public boolean isActive() {
+        return calculation.active;
+    }
+
+    @Override
+    public void setActive(boolean to) {
+        calculation.active = to;
     }
 }

@@ -16,6 +16,8 @@ public abstract class Calculation {
 
     private final String id;
 
+    public boolean active = true;
+
     public Calculation(String id) {
         this.id = id;
 
@@ -36,6 +38,8 @@ public abstract class Calculation {
     protected abstract String[] getOutputs();
 
     public void update(ShaderStack stack) {
+        if (!active) return;
+
         for (int i = 0; i < inputs.length; i++) {
             OverrideSource overrideSource = inputs[i];
             if (overrideSource == null) continue;
