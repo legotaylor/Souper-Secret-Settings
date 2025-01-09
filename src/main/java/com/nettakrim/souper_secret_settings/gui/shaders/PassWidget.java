@@ -12,6 +12,7 @@ import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.MathHelper;
 
 public class PassWidget extends CollapseWidget {
@@ -35,11 +36,17 @@ public class PassWidget extends CollapseWidget {
                 children.add(uniformWidget);
             }
         }
+
+        if (children.isEmpty()) active = false;
     }
 
     @Override
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
         drawScrollableText(context, SouperSecretSettingsClient.client.textRenderer, this.getMessage(), this.getX()+2, this.getY(), this.getX()+this.getWidth()-2, this.getY()+20, (this.active ? 16777215 : 10526880) | MathHelper.ceil(this.alpha * 255.0F) << 24);
+
+        if (expanded) {
+            context.fill(getX(), getY() + baseHeight, getX() + getWidth(), getY() + getHeight(), ColorHelper.fromFloats(0.2f, 0, 0, 0));
+        }
 
         super.renderWidget(context, mouseX, mouseY, delta);
     }
