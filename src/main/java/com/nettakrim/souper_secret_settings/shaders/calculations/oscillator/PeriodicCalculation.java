@@ -9,7 +9,7 @@ public abstract class PeriodicCalculation extends Calculation {
 
     @Override
     protected String[] getInputs() {
-        return new String[]{"luminance_gameTime", "1", "0"};
+        return new String[]{"luminance_time", "1", "0"};
     }
 
     @Override
@@ -20,7 +20,7 @@ public abstract class PeriodicCalculation extends Calculation {
     @Override
     protected void calculateOutputValues() {
         float t = inputValues[0];
-        if (inputs[0].getString().contains("gameTime")) {
+        if (inputs[0].getString().equals("gameTime")) {
             t *= 1200;
         }
 

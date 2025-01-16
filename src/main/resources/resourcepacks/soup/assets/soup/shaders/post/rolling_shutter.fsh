@@ -10,14 +10,15 @@ uniform vec2 InSize;
 
 out vec4 fragColor;
 
-uniform float GameTime;
+uniform float luminance_time;
 uniform float Threshold;
+uniform vec2 Direction;
 
 void main() {
     vec3 col = texture(InSampler, texCoord).rgb;
     vec3 prev = texture(PrevSampler, texCoord).rgb;
 
-    float d = texCoord.y;
+    float d = texCoord.y*Direction.y + texCoord.x*Direction.x;
 
-    fragColor = vec4(mix(prev, col, fract((GameTime*1200)+d) < Threshold ? 1.0 : 0.0), 1.0);
+    fragColor = vec4(mix(prev, col, fract(luminance_time+d) < Threshold ? 1.0 : 0.0), 1.0);
 }

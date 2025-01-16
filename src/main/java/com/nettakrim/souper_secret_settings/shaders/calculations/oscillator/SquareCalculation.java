@@ -9,7 +9,7 @@ public class SquareCalculation extends PeriodicCalculation {
 
     @Override
     protected String[] getInputs() {
-        return new String[]{"luminance_gameTime", "1", "0", "0.5"};
+        return new String[]{"luminance_time", "1", "0", "0.5"};
     }
 
     @Override

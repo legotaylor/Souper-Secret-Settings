@@ -7,7 +7,7 @@ in vec2 oneTexel;
 
 out vec4 fragColor;
 
-uniform float GameTime;
+uniform float luminance_time;
 uniform float Rate;
 uniform float Pitch;
 uniform float Strength;
@@ -55,10 +55,9 @@ void main(){
     const float grain_rate = 60.0;
     const float grain_pitch = 1.0;
 
-    float t = fract(GameTime*1200);
-    float rg = grain_source(vec3(pixel, floor(Rate*(t))),     Strength, Pitch);
-    float gg = grain_source(vec3(pixel, floor(Rate*(t+9.0))), Strength, Pitch);
-    float bg = grain_source(vec3(pixel, floor(Rate*(t-9.0))), Strength, Pitch);
+    float rg = grain_source(vec3(pixel, floor(Rate*(luminance_time))),     Strength, Pitch);
+    float gg = grain_source(vec3(pixel, floor(Rate*(luminance_time+9.0))), Strength, Pitch);
+    float bg = grain_source(vec3(pixel, floor(Rate*(luminance_time-9.0))), Strength, Pitch);
 
     vec3 grain = vec3(rg, gg, bg);
     grain = mix(vec3(dot(grain, vec3(0.2126, 0.7152, 0.0722))), grain, ColorStrength);
