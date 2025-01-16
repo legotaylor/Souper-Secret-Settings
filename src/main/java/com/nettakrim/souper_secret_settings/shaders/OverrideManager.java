@@ -27,13 +27,16 @@ public class OverrideManager {
 
         while (!currentShaders.isEmpty()) {
             currentPassIndex++;
-            List<PostEffectPass> currentPasses = ((PostEffectProcessorAccessor) currentShaders.peek().shader.getPostProcessor()).getPasses();
+            ShaderData shaderData = currentShaders.peek();
+            if (shaderData.active) {
+                List<PostEffectPass> currentPasses = ((PostEffectProcessorAccessor) shaderData.shader.getPostProcessor()).getPasses();
 
-            while (currentPassIndex < currentPasses.size()) {
-                if (currentPasses.get(currentPassIndex) == postEffectPass) {
-                    return;
+                while (currentPassIndex < currentPasses.size()) {
+                    if (currentPasses.get(currentPassIndex) == postEffectPass) {
+                        return;
+                    }
+                    currentPassIndex++;
                 }
-                currentPassIndex++;
             }
 
             currentShaders.remove();
