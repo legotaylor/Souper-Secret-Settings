@@ -1,10 +1,13 @@
 package com.nettakrim.souper_secret_settings.gui.shaders;
 
+import com.mclegoman.luminance.client.shaders.Uniforms;
 import com.mclegoman.luminance.client.shaders.interfaces.PostEffectPassInterface;
 import com.mclegoman.luminance.client.shaders.overrides.LuminanceUniformOverride;
 import com.mclegoman.luminance.client.shaders.overrides.UniformOverride;
 import com.mclegoman.luminance.client.shaders.overrides.UniformSource;
 import com.mclegoman.luminance.client.shaders.uniforms.Uniform;
+import com.mclegoman.luminance.client.shaders.uniforms.UniformValue;
+import com.mclegoman.luminance.client.shaders.uniforms.config.EmptyConfig;
 import com.mclegoman.luminance.common.util.Couple;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.DisplayWidget;
@@ -109,11 +112,11 @@ public class UniformWidget extends DisplayWidget<Couple<String,String>> {
             if (LuminanceUniformOverride.sourceFromString(value) instanceof UniformSource uniformSource) {
                 Uniform override = uniformSource.getUniform();
                 if (override != null) {
-                    Optional<Float> min = override.getMin();
-                    Optional<Float> max = override.getMax();
+                    Optional<UniformValue> min = override.getMin();
+                    Optional<UniformValue> max = override.getMax();
                     if (min.isPresent() && max.isPresent()) {
-                        a = min.get();
-                        b = max.get();
+                        a = min.get().values.getFirst();
+                        b = max.get().values.getFirst();
                     }
                 }
             }
@@ -141,7 +144,7 @@ public class UniformWidget extends DisplayWidget<Couple<String,String>> {
 
     @Override
     protected List<Float> getDisplayFloats() {
-        List<Float> display = override.getOverride();
+        List<Float> display = override.getOverride(EmptyConfig.INSTANCE, Uniforms.shaderTime);
         List<Float> base = getBaseValues();
         for (int i = 0; i < display.size(); i++) {
             if (display.get(i) == null) {

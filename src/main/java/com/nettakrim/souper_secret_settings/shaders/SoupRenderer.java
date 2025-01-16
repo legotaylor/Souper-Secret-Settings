@@ -3,8 +3,8 @@ package com.nettakrim.souper_secret_settings.shaders;
 import com.mclegoman.luminance.client.events.Events;
 import com.mclegoman.luminance.client.events.Runnables;
 import com.mclegoman.luminance.client.shaders.Shader;
-import com.mclegoman.luminance.client.shaders.ShaderDataloader;
 import com.mclegoman.luminance.client.shaders.ShaderRegistry;
+import com.mclegoman.luminance.client.shaders.Shaders;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.mixin.GameRendererAccessor;
 import net.minecraft.client.MinecraftClient;
@@ -91,7 +91,7 @@ public class SoupRenderer implements Runnables.WorldRender {
     }
 
     public ShaderRegistry getShaderRegistry(Identifier identifier) {
-        for (ShaderRegistry shaderRegistry : ShaderDataloader.registry) {
+        for (ShaderRegistry shaderRegistry : Shaders.registry) {
             if (shaderRegistry.getID().equals(identifier)) {
                 return shaderRegistry;
             }
@@ -100,7 +100,7 @@ public class SoupRenderer implements Runnables.WorldRender {
     }
 
     private ShaderRegistry getRandomShader() {
-        int size = ShaderDataloader.registry.size();
+        int size = Shaders.registry.size();
         if (size == 0) {
             return null;
         }
@@ -113,7 +113,7 @@ public class SoupRenderer implements Runnables.WorldRender {
 
         int attempts = 0;
         do {
-            newShader = ShaderDataloader.registry.get(random.nextBetween(0, size-1));
+            newShader = Shaders.registry.get(random.nextBetween(0, size-1));
             attempts++;
         } while (attempts < 100 && previous == newShader);
 

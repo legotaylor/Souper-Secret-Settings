@@ -1,6 +1,8 @@
 package com.nettakrim.souper_secret_settings.shaders.calculations;
 
+import com.mclegoman.luminance.client.shaders.Uniforms;
 import com.mclegoman.luminance.client.shaders.overrides.OverrideSource;
+import com.mclegoman.luminance.client.shaders.uniforms.config.EmptyConfig;
 import com.nettakrim.souper_secret_settings.shaders.ParameterOverrideSource;
 import com.nettakrim.souper_secret_settings.shaders.ShaderStack;
 
@@ -44,7 +46,7 @@ public abstract class Calculation {
             OverrideSource overrideSource = inputs[i];
             if (overrideSource == null) continue;
 
-            Float f = overrideSource.get();
+            Float f = overrideSource.get(EmptyConfig.INSTANCE, Uniforms.shaderTime);
             if (f == null) continue;
 
             inputValues[i] = f;

@@ -1,8 +1,11 @@
 package com.nettakrim.souper_secret_settings.shaders;
 
+import com.mclegoman.luminance.client.shaders.ShaderTime;
 import com.mclegoman.luminance.client.shaders.overrides.LuminanceUniformOverride;
 import com.mclegoman.luminance.client.shaders.overrides.OverrideSource;
 import com.mclegoman.luminance.client.shaders.overrides.UniformSource;
+import com.mclegoman.luminance.client.shaders.uniforms.UniformValue;
+import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
 
 import java.util.Optional;
 
@@ -15,20 +18,22 @@ public class ParameterOverrideSource implements OverrideSource {
     }
 
     @Override
-    public Float get() {
+    public Float get(UniformConfig uniformConfig, ShaderTime shaderTime) {
         ShaderStack stack = ShaderStack.getRenderingStack();
         if (stack != null) {
             String parameter = source.getString();
             if (!parameter.isEmpty() && stack.parameterValues.containsKey(parameter)) {
                 lastValue = stack.parameterValues.get(parameter);
             } else {
-                Float f = source.get();
-                if (f == null) return f;
+                Float f = source.get(uniformConfig, shaderTime);
+                if (f == null) return null;
 
-                Optional<Float> min = source.getUniform().getMin();
-                Optional<Float> max = source.getUniform().getMax();
+                Optional<UniformValue> min = source.getUniform().getMin();
+                Optional<UniformValue> max = source.getUniform().getMax();
                 if (min.isPresent() && max.isPresent()) {
-                    f = (f - min.get()) / (max.get() - min.get());
+                    float minValue = min.get().values.getFirst();
+                    float maxValue = max.get().values.getFirst();
+                    f = (f - minValue) / (maxValue - minValue);
                 }
                 lastValue = f;
             }

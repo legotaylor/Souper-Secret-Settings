@@ -8,6 +8,7 @@ import com.mclegoman.luminance.client.shaders.overrides.LuminanceUniformOverride
 import com.mclegoman.luminance.client.shaders.overrides.UniformOverride;
 import com.mclegoman.luminance.client.shaders.overrides.UniformSource;
 import com.mclegoman.luminance.client.shaders.uniforms.Uniform;
+import com.mclegoman.luminance.client.shaders.uniforms.UniformValue;
 import com.mclegoman.luminance.mixin.client.shaders.PostEffectProcessorAccessor;
 import net.minecraft.client.gl.GlUniform;
 import net.minecraft.client.gl.PostEffectPass;
@@ -59,11 +60,11 @@ public class ShaderData {
 
         float a = 0;
         float b = 1;
-        Optional<Float> min = override.getMin();
-        Optional<Float> max = override.getMax();
+        Optional<UniformValue> min = override.getMin();
+        Optional<UniformValue> max = override.getMax();
         if (min.isPresent() && max.isPresent()) {
-            a = min.get();
-            b = max.get();
+            a = min.get().values.getFirst();
+            b = max.get().values.getFirst();
         }
 
         List<String> list = new ArrayList<>();

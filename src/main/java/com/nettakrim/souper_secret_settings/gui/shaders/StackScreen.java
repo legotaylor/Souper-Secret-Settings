@@ -1,7 +1,7 @@
 package com.nettakrim.souper_secret_settings.gui.shaders;
 
-import com.mclegoman.luminance.client.shaders.ShaderDataloader;
 import com.mclegoman.luminance.client.shaders.ShaderRegistry;
+import com.mclegoman.luminance.client.shaders.Shaders;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.ListWidget;
@@ -41,9 +41,9 @@ public class StackScreen extends ListScreen<ShaderData> {
 
     @Override
     public List<String> getAdditions() {
-        List<String> shaders = new ArrayList<>(ShaderDataloader.registry.size()+1);
+        List<String> shaders = new ArrayList<>(Shaders.registry.size()+1);
 
-        for (ShaderRegistry shaderRegistry : ShaderDataloader.registry) {
+        for (ShaderRegistry shaderRegistry : Shaders.registry) {
             shaders.add(shaderRegistry.getID().toString());
         }
         if (shaders.size() > 1) {
