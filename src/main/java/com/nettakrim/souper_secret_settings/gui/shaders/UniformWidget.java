@@ -5,15 +5,11 @@ import com.mclegoman.luminance.client.shaders.interfaces.PostEffectPassInterface
 import com.mclegoman.luminance.client.shaders.overrides.LuminanceUniformOverride;
 import com.mclegoman.luminance.client.shaders.overrides.UniformOverride;
 import com.mclegoman.luminance.client.shaders.overrides.UniformSource;
-import com.mclegoman.luminance.client.shaders.uniforms.Uniform;
-import com.mclegoman.luminance.client.shaders.uniforms.UniformValue;
 import com.mclegoman.luminance.client.shaders.uniforms.config.EmptyConfig;
 import com.mclegoman.luminance.common.util.Couple;
+import com.nettakrim.souper_secret_settings.gui.ConfigWidget;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.DisplayWidget;
-import com.nettakrim.souper_secret_settings.gui.ParameterRemapWidget;
-import com.nettakrim.souper_secret_settings.shaders.MixOverrideSource;
-import com.nettakrim.souper_secret_settings.shaders.ParameterOverrideSource;
 import net.minecraft.client.gl.GlUniform;
 import net.minecraft.client.gl.PostEffectPipeline;
 import net.minecraft.client.gui.widget.ClickableWidget;
@@ -22,7 +18,6 @@ import net.minecraft.text.Text;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 public class UniformWidget extends DisplayWidget<Couple<String,String>> {
     public PassWidget pass;
@@ -96,49 +91,13 @@ public class UniformWidget extends DisplayWidget<Couple<String,String>> {
 
     @Override
     protected ClickableWidget createChildWidget(Couple<String,String> data, int i) {
-        String value = data.getFirst();
-        String defaultValue = data.getSecond();
-
-        float a = 0;
-        float b = 1;
-        if (value.startsWith("mix(")) {
-            try {
-                String[] parts = value.split("/");
-                a = Float.parseFloat(parts[0].substring(4));
-                b = Float.parseFloat(parts[1]);
-                value = parts[2].substring(0, parts[2].length()-1);
-            } catch (Exception ignored) {}
-        } else {
-            if (LuminanceUniformOverride.sourceFromString(value) instanceof UniformSource uniformSource) {
-                Uniform override = uniformSource.getUniform();
-                if (override != null) {
-                    Optional<UniformValue> min = override.getMin();
-                    Optional<UniformValue> max = override.getMax();
-                    if (min.isPresent() && max.isPresent()) {
-                        a = min.get().values.getFirst();
-                        b = max.get().values.getFirst();
-                    }
-                }
-            }
-        }
-
-        ParameterRemapWidget widget = new ParameterRemapWidget(getX(), width, width/2, 20, Text.literal("value"), pass.shader.stack, defaultValue);
-        widget.setText(value);
-        widget.widgetA.setText(Float.toString(a));
-        widget.widgetB.setText(Float.toString(b));
-        widget.onChange((w) -> onValueChanged(i, w));
-
-        widget.setCursorToStart(false);
-        widget.widgetA.setCursorToStart(false);
-        widget.widgetB.setCursorToStart(false);
-
-        listScreen.addSelectable(widget.widgetA);
-        listScreen.addSelectable(widget.widgetB);
-        return widget;
+        ConfigWidget configWidget = new ConfigWidget(getX(), getWidth(), 20, Text.literal(""), pass.shader.stack, data.getSecond(), listScreen);
+        configWidget.onChange((w) -> onValueChanged(i, w));
+        return configWidget;
     }
 
-    protected void onValueChanged(int i, ParameterRemapWidget widget) {
-        override.overrideSources.set(i, new MixOverrideSource(widget.a, widget.b, ParameterOverrideSource.parameterSourceFromString(widget.value)));
+    protected void onValueChanged(int i, ConfigWidget widget) {
+        override.overrideSources.set(i, widget.overrideSource);
         pass.shader.shaderData.overrides.get(pass.passIndex).put(uniform.getName(), override);
     }
 

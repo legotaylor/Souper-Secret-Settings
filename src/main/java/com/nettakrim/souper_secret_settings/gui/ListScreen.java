@@ -75,6 +75,10 @@ public abstract class ListScreen<V> extends Screen {
         addSelectableChild(child);
     }
 
+    public void removeSelectable(Element child) {
+        remove(child);
+    }
+
     public void updateSpacing() {
         currentListSize = listStart;
         for (CollapseWidget collapseWidget : listWidgets) {

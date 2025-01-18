@@ -47,6 +47,11 @@ public class ParameterOverrideSource implements OverrideSource {
         return source.getString();
     }
 
+    @Override
+    public UniformConfig getTemplateConfig() {
+        return source.getTemplateConfig();
+    }
+
     public static OverrideSource parameterSourceFromString(String s) {
         OverrideSource overrideSource = LuminanceUniformOverride.sourceFromString(s);
         if (overrideSource instanceof UniformSource uniformSource) {

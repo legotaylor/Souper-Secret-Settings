@@ -58,6 +58,7 @@ public class ShaderData {
         }
         if (override == null) return;
 
+        //TODO: this needs to be updated
         float a = 0;
         float b = 1;
         Optional<UniformValue> min = override.getMin();
@@ -70,7 +71,7 @@ public class ShaderData {
         List<String> list = new ArrayList<>();
         list.add(null);
         LuminanceUniformOverride uniformOverride = new LuminanceUniformOverride(list);
-        uniformOverride.overrideSources.set(0, new MixOverrideSource(a, b, ParameterOverrideSource.parameterSourceFromString(name)));
+        uniformOverride.overrideSources.set(0, new MixOverrideSource(ParameterOverrideSource.parameterSourceFromString(name)));
 
         overrideMap.put(name,uniformOverride);
     }
