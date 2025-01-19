@@ -23,14 +23,14 @@ public class ConfigValueWidget extends TextWidget {
     public List<Object> objects;
 
     public ConfigValueWidget(int x, int width, int height, ShaderStack shaderStack, String name, @NotNull List<Object> objects) {
-        super(x, 0, width, height, Text.literal(name), SouperSecretSettingsClient.client.textRenderer);
+        super(x, 0, width, height, Text.literal(name.startsWith("soup_") ? name.substring(5) : name), SouperSecretSettingsClient.client.textRenderer);
 
         this.name = name;
         this.objects = new ArrayList<>(objects);
 
         children = new ArrayList<>();
         if (!objects.isEmpty()) {
-            int childStart = width / 2;
+            int childStart = width / 3;
             setWidth(childStart);
             int childWidth = (width - childStart) / objects.size();
             for (int i = 0; i < objects.size(); i++) {

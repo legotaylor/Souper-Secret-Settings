@@ -9,10 +9,7 @@ import com.nettakrim.souper_secret_settings.shaders.ShaderStack;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class ConfigWidget extends ParameterTextWidget {
@@ -62,8 +59,22 @@ public class ConfigWidget extends ParameterTextWidget {
         onChange();
     }
 
+    @SuppressWarnings({"SuspiciousListRemoveInLoop"})
     protected void createChildren(UniformConfig templateConfig) {
-        for (String name : templateConfig.getNames()) {
+        List<String> names = new ArrayList<>(templateConfig.getNames());
+        int soupValues = 0;
+        for (int i = 0; i < names.size(); i++) {
+            if (i == soupValues) continue;
+
+            String name = names.get(i);
+            if (name.startsWith("soup_")) {
+                names.remove(i);
+                names.add(soupValues, name);
+                soupValues++;
+            }
+        }
+
+        for (String name : names) {
             List<Object> objects = previousValues.get(name);
 
             if (objects == null) {
