@@ -45,7 +45,7 @@ public class PassWidget extends CollapseWidget {
         drawScrollableText(context, SouperSecretSettingsClient.client.textRenderer, this.getMessage(), this.getX()+2, this.getY(), this.getX()+this.getWidth()-2, this.getY()+20, (this.active ? 16777215 : 10526880) | MathHelper.ceil(this.alpha * 255.0F) << 24);
 
         if (expanded) {
-            context.fill(getX(), getY() + baseHeight, getX() + getWidth(), getY() + getHeight(), ColorHelper.fromFloats(0.2f, 0, 0, 0));
+            context.fill(getX(), getY() + getCollapseHeight(), getX() + getWidth(), getY() + getHeight(), ColorHelper.fromFloats(0.2f, 0, 0, 0));
         }
 
         super.renderWidget(context, mouseX, mouseY, delta);

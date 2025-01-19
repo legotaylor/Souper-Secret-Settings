@@ -9,19 +9,19 @@ import net.minecraft.text.Text;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class CollapseWidget extends ClickableWidget {
+public abstract class CollapseWidget extends ClickableWidget implements ListChild {
     protected boolean expanded;
 
     protected final List<ClickableWidget> children = new ArrayList<>();
-
-    protected static final int baseHeight = 20;
 
     protected ListScreen<?> listScreen;
 
     protected int offset;
 
+    protected int collapseHeight;
+
     public CollapseWidget(int x, int width, Text message, ListScreen<?> listScreen) {
-        super(x, 0, width, baseHeight, message);
+        super(x, 0, width, 20, message);
 
         this.listScreen = listScreen;
 
@@ -40,21 +40,21 @@ public abstract class CollapseWidget extends ClickableWidget {
     public void updateCollapse(int y) {
         offset = y;
 
-        int height = baseHeight;
+        int height = getHeight();
         if (expanded) {
             for (ClickableWidget widget : children) {
                 setVisible(widget, true);
                 if (widget instanceof CollapseWidget collapseWidget) {
                     collapseWidget.updateCollapse(height + y);
                 }
-                height += widget.getHeight();
+                height += ((ListChild)widget).getCollapseHeight();
             }
         } else {
             for (ClickableWidget widget : children) {
                 setVisible(widget, false);
             }
         }
-        setHeight(height);
+        collapseHeight = height;
     }
 
     public int getOffset() {
@@ -64,11 +64,11 @@ public abstract class CollapseWidget extends ClickableWidget {
     @Override
     public void setY(int y) {
         super.setY(y);
-        int height = baseHeight;
+        int height = getHeight();
         if (expanded) {
             for (ClickableWidget widget : children) {
                 widget.setY(height + y);
-                height += widget.getHeight();
+                height += ((ListChild)widget).getCollapseHeight();
             }
         }
     }
@@ -91,13 +91,28 @@ public abstract class CollapseWidget extends ClickableWidget {
 
     @Override
     public void onClick(double mouseX, double mouseY) {
-        if (mouseY < getY()+baseHeight) {
-            setExpanded(!expanded);
-        }
+        setExpanded(!expanded);
     }
 
     protected void setExpanded(boolean to) {
         expanded = to;
         listScreen.updateSpacing();
+    }
+
+    @Override
+    public int getCollapseHeight() {
+        return collapseHeight;
+    }
+
+    @Override
+    public void onRemove() {
+        listScreen.removeSelectable(this);
+        for (ClickableWidget clickableWidget : children) {
+            if (clickableWidget instanceof ListChild listChild) {
+                listChild.onRemove();
+            } else {
+                listScreen.removeSelectable(clickableWidget);
+            }
+        }
     }
 }

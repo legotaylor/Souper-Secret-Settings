@@ -22,13 +22,12 @@ public abstract class ListWidget extends CollapseWidget {
 
     @Override
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-        int endY = getY()+baseHeight;
         float buttonColor = isActive() ? 1f : 0.5f;
         float dragColor = dragState > 0 ? 1f : 0f;
         float deleteColor = dragState < 0 ? 1f : 0f;
 
-        context.drawGuiTexture(RenderLayer::getGuiTextured, TEXTURES.get(this.active, this.isSelected()), this.getX(), this.getY(), this.getWidth(), this.getHeight(), ColorHelper.fromFloats(this.alpha, buttonColor, buttonColor, buttonColor));
-        drawScrollableText(context, SouperSecretSettingsClient.client.textRenderer, this.getMessage(), this.getX()+2, this.getY(), this.getX()+this.getWidth()-2, endY, (this.active ? 16777215 : 10526880) | MathHelper.ceil(this.alpha * 255.0F) << 24);
+        context.drawGuiTexture(RenderLayer::getGuiTextured, TEXTURES.get(this.active, this.isSelected()), this.getX(), this.getY(), this.getWidth(), getCollapseHeight(), ColorHelper.fromFloats(this.alpha, buttonColor, buttonColor, buttonColor));
+        drawScrollableText(context, SouperSecretSettingsClient.client.textRenderer, this.getMessage(), this.getX()+2, this.getY(), this.getX()+this.getWidth()-2, getY()+getHeight(), (this.active ? 16777215 : 10526880) | MathHelper.ceil(this.alpha * 255.0F) << 24);
         context.drawTexture(RenderLayer::getGuiTextured, ICON_TEXTURE, getX(), getY(), 0, 0, 10, 20, 20, 20, ColorHelper.fromFloats(0.5f, deleteColor, deleteColor, deleteColor));
         context.drawTexture(RenderLayer::getGuiTextured, ICON_TEXTURE, getX()+getWidth()-10, getY(), 10, 0, 10, 20, 20, 20, ColorHelper.fromFloats(0.5f, dragColor, dragColor, dragColor));
 
@@ -38,8 +37,6 @@ public abstract class ListWidget extends CollapseWidget {
     @Override
     public void onClick(double mouseX, double mouseY) {
         dragState = 0;
-        if (mouseY >= getY()+baseHeight) return;
-
         if (mouseX < getX()+getWidth()-10) {
             if (mouseX > getX()+10) {
                 setExpanded(!expanded);
@@ -56,7 +53,7 @@ public abstract class ListWidget extends CollapseWidget {
         if (dragState == 1) {
             setActive(!isActive());
         }
-        if (dragState == -1 && mouseX < getX()+10 && mouseY > getY() && mouseY < getY()+baseHeight) {
+        if (dragState == -1 && mouseX < getX()+10 && mouseY > getY() && mouseY < getY()+getHeight()) {
             listScreen.removeEntry(this);
         }
         dragState = 0;
@@ -67,10 +64,10 @@ public abstract class ListWidget extends CollapseWidget {
         if (dragState <= 0 || deltaY == 0) return;
 
         double offset = mouseY-getY();
-        if (offset < -baseHeight*0.25 && deltaY < 0) {
+        if (offset < -getHeight()*0.25 && deltaY < 0) {
             listScreen.swapEntry(this, -1);
             dragState = 2;
-        } else if (offset > baseHeight*1.25 && deltaY > 0) {
+        } else if (offset > getHeight()*1.25 && deltaY > 0) {
             listScreen.swapEntry(this, 1);
             dragState = 2;
         }

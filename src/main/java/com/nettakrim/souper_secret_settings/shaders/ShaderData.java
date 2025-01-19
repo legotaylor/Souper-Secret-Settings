@@ -58,7 +58,7 @@ public class ShaderData {
         }
         if (override == null) return;
 
-        //TODO: this needs to be updated
+        //TODO: this needs to be updated to use config
         float a = 0;
         float b = 1;
         Optional<UniformValue> min = override.getMin();

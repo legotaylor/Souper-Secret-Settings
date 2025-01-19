@@ -32,10 +32,7 @@ public class ConfigWidget extends ParameterTextWidget {
 
     @Override
     public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-        int heightTemp = getHeight();
-        setHeight(20);
         super.renderWidget(context, mouseX, mouseY, delta);
-        setHeight(heightTemp);
 
         for (ConfigValueWidget child : children) {
             child.renderWidget(context, mouseX, mouseY, delta);
@@ -53,17 +50,17 @@ public class ConfigWidget extends ParameterTextWidget {
             overrideSource = new MixOverrideSource(overrideSource);
             UniformConfig templateConfig = overrideSource.getTemplateConfig();
             for (String name : templateConfig.getNames()) {
+                //TODO: sometimes this is not returning the correct array?
                 List<Object> objects = templateConfig.getObjects(name);
                 if (objects != null) {
                     ConfigValueWidget child = new ConfigValueWidget(getX(), getWidth(), 20, stack, name, objects);
-                    child.addToScreen(listScreen);
                     children.add(child);
+                    child.addToScreen(listScreen);
                 }
             }
         }
 
         onChange();
-        setHeight(20*(1+children.size()));
         listScreen.updateSpacing();
     }
 
@@ -95,5 +92,18 @@ public class ConfigWidget extends ParameterTextWidget {
         for (int i = 0; i < children.size(); i++) {
             children.get(i).setY(y+(i+1)*20);
         }
+    }
+
+    @Override
+    public int getCollapseHeight() {
+        return getHeight()*(1+children.size());
+    }
+
+    @Override
+    public void onRemove() {
+        for (ConfigValueWidget child : children) {
+            child.removeFromScreen(listScreen);
+        }
+        listScreen.removeSelectable(this);
     }
 }

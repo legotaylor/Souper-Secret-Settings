@@ -4,7 +4,7 @@ import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 
-public class DraggableTextFieldWidget extends TextFieldWidget {
+public class DraggableTextFieldWidget extends TextFieldWidget implements ListChild {
     public DraggableTextFieldWidget(int x, int width, int height, Text message) {
         super(SouperSecretSettingsClient.client.textRenderer, x, 0, width, height, message);
     }
@@ -16,5 +16,15 @@ public class DraggableTextFieldWidget extends TextFieldWidget {
             setText(Float.toString(f + (float)(deltaX/50.0 * Math.max(Math.abs(f), 0.5f))));
             this.setCursorToStart(false);
         } catch (Exception ignored) {}
+    }
+
+    @Override
+    public int getCollapseHeight() {
+        return getHeight();
+    }
+
+    @Override
+    public void onRemove() {
+
     }
 }

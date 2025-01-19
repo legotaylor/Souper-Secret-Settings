@@ -84,7 +84,7 @@ public abstract class ListScreen<V> extends Screen {
         for (CollapseWidget collapseWidget : listWidgets) {
             collapseWidget.visible = true;
             collapseWidget.updateCollapse(currentListSize);
-            currentListSize += collapseWidget.getHeight() + listGap;
+            currentListSize += collapseWidget.getCollapseHeight() + listGap;
         }
 
         scrollWidget.setContentHeight(currentListSize-listStart + suggestionTextFieldWidget.getHeight());
@@ -125,7 +125,7 @@ public abstract class ListScreen<V> extends Screen {
 
     public void swapEntry(ListWidget listWidget, int direction) {
         int index = listWidgets.indexOf(listWidget);
-        V entry = removeEntry(index);
+        V entry = removeEntry(index, false);
 
         addEntry(MathHelper.clamp(index+direction, 0, listWidgets.size()), entry, listWidget);
 
@@ -134,7 +134,7 @@ public abstract class ListScreen<V> extends Screen {
 
     public void removeEntry(ListWidget listWidget) {
         remove(listWidget);
-        removeEntry(listWidgets.indexOf(listWidget));
+        removeEntry(listWidgets.indexOf(listWidget), true);
 
         updateSpacing();
     }
@@ -144,8 +144,11 @@ public abstract class ListScreen<V> extends Screen {
         getListValues().add(index, entry);
     }
 
-    protected V removeEntry(int index) {
-        listWidgets.remove(index);
+    protected V removeEntry(int index, boolean delete) {
+        ListWidget listWidget = listWidgets.remove(index);
+        if (delete) {
+            listWidget.onRemove();
+        }
         return getListValues().remove(index);
     }
 }

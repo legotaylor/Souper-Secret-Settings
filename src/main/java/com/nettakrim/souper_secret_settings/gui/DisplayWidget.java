@@ -16,7 +16,6 @@ public abstract class DisplayWidget<T> extends CollapseWidget {
     public DisplayWidget(int count, Text name, int x, int width, ListScreen<?> listScreen) {
         super(x, width, name, listScreen);
         this.count = count;
-        height = 20+(count*20);
     }
 
     protected void initValues() {
@@ -42,7 +41,7 @@ public abstract class DisplayWidget<T> extends CollapseWidget {
         List<Float> currentDisplay = getDisplayFloats();
         drawIndicator(context, currentDisplay);
 
-        if (hovered && mouseY > getY()+baseHeight && mouseX > this.getX()+this.getWidth()-displayWidth-2) {
+        if (hovered && mouseX > this.getX()+this.getWidth()-displayWidth-2) {
             Text text = getHoverText(currentDisplay);
             context.fill(mouseX-2, mouseY-22, mouseX + SouperSecretSettingsClient.client.textRenderer.getWidth(text)+2, mouseY-10, ColorHelper.getArgb(128,0,0,0));
             context.drawText(SouperSecretSettingsClient.client.textRenderer, text, mouseX, mouseY-20, color, true);
