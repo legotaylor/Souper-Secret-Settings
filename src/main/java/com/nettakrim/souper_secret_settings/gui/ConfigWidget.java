@@ -50,7 +50,6 @@ public class ConfigWidget extends ParameterTextWidget {
             overrideSource = new MixOverrideSource(overrideSource);
             UniformConfig templateConfig = overrideSource.getTemplateConfig();
             for (String name : templateConfig.getNames()) {
-                //TODO: sometimes this is not returning the correct array?
                 List<Object> objects = templateConfig.getObjects(name);
                 if (objects != null) {
                     ConfigValueWidget child = new ConfigValueWidget(getX(), getWidth(), 20, stack, name, objects);
@@ -61,7 +60,6 @@ public class ConfigWidget extends ParameterTextWidget {
         }
 
         onChange();
-        listScreen.updateSpacing();
     }
 
     public void onChange(Consumer<ConfigWidget> onChange) {
