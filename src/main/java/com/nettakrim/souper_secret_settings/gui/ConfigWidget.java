@@ -10,22 +10,27 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class ConfigWidget extends ParameterTextWidget {
     protected final List<ConfigValueWidget> children;
     protected final ListScreen<?> listScreen;
+    protected final Map<String, List<Object>> previousValues;
 
     protected Consumer<ConfigWidget> onChange;
 
     public OverrideSource overrideSource;
+
 
     public ConfigWidget(int x, int width, int height, Text message, ShaderStack stack, String defaultValue, ListScreen<?> listScreen, String initialValue, UniformConfig initialConfig) {
         super(x, width, height, message, stack, defaultValue);
 
         children = new ArrayList<>();
         this.listScreen = listScreen;
+        previousValues = new HashMap<>();
 
         setText(initialValue);
         createChildren(initialConfig);
@@ -57,19 +62,32 @@ public class ConfigWidget extends ParameterTextWidget {
         onChange();
     }
 
-    protected void createChildren(UniformConfig uniformConfig) {
-        for (String name : uniformConfig.getNames()) {
-            List<Object> objects = uniformConfig.getObjects(name);
+    protected void createChildren(UniformConfig templateConfig) {
+        for (String name : templateConfig.getNames()) {
+            List<Object> objects = previousValues.get(name);
+
+            if (objects == null) {
+                objects = templateConfig.getObjects(name);
+                if (objects != null) {
+                    previousValues.put(name, objects);
+                }
+            }
+
             if (objects != null) {
                 ConfigValueWidget child = new ConfigValueWidget(getX(), getWidth(), 20, stack, name, objects);
-                child.setChangedListener((v) -> this.onChange());
+                child.setChangedListener(this::onChangeChild);
                 children.add(child);
                 child.addToScreen(listScreen);
             }
         }
     }
 
-    public void onChange(Consumer<ConfigWidget> onChange) {
+    protected void onChangeChild(ConfigValueWidget configValueWidget) {
+        previousValues.put(configValueWidget.name, configValueWidget.objects);
+        onChange();
+    }
+
+    public void onChangeListener(Consumer<ConfigWidget> onChange) {
         this.onChange = onChange;
     }
 
@@ -115,7 +133,7 @@ public class ConfigWidget extends ParameterTextWidget {
     public UniformConfig getConfig(String prefix) {
         MapConfig mapConfig = new MapConfig(List.of());
         for (ConfigValueWidget child : children) {
-            mapConfig.config.put(prefix+child.name, child.getObjects());
+            mapConfig.config.put(prefix+child.name, child.objects);
         }
         return mapConfig;
     }

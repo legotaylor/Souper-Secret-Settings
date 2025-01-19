@@ -92,9 +92,10 @@ public class UniformWidget extends DisplayWidget<Couple<String,String>> {
 
     @Override
     protected ClickableWidget createChildWidget(Couple<String,String> data, int i) {
+        //TODO: make default values correct for config values
         UniformConfig uniformConfig = pass.shader.shaderData.configs.get(pass.passIndex).getOrDefault(data.getFirst(), EmptyConfig.INSTANCE);
         ConfigWidget configWidget = new ConfigWidget(getX(), getWidth(), 20, Text.literal(""), pass.shader.stack, data.getSecond(), listScreen, data.getFirst(), uniformConfig);
-        configWidget.onChange((w) -> onValueChanged(i, w));
+        configWidget.onChangeListener((w) -> onValueChanged(i, w));
         return configWidget;
     }
 

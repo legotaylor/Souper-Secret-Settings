@@ -18,9 +18,9 @@ public class ConfigValueWidget extends TextWidget {
 
     protected final List<ParameterTextWidget> children;
 
-    protected Consumer<Object> onChangeCallback;
+    protected Consumer<ConfigValueWidget> onChangeCallback;
 
-    protected List<Object> objects;
+    public List<Object> objects;
 
     public ConfigValueWidget(int x, int width, int height, ShaderStack shaderStack, String name, @NotNull List<Object> objects) {
         super(x, 0, width, height, Text.literal(name), SouperSecretSettingsClient.client.textRenderer);
@@ -94,15 +94,11 @@ public class ConfigValueWidget extends TextWidget {
         }
         objects.set(i, object);
         if (onChangeCallback != null) {
-            onChangeCallback.accept(object);
+            onChangeCallback.accept(this);
         }
     }
 
-    public void setChangedListener(Consumer<Object> callback) {
+    public void setChangedListener(Consumer<ConfigValueWidget> callback) {
         onChangeCallback = callback;
-    }
-
-    public List<Object> getObjects() {
-        return objects;
     }
 }
