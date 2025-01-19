@@ -1,6 +1,7 @@
 package com.nettakrim.souper_secret_settings.gui;
 
 import com.mclegoman.luminance.client.shaders.overrides.OverrideSource;
+import com.mclegoman.luminance.client.shaders.uniforms.config.MapConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
 import com.nettakrim.souper_secret_settings.shaders.MixOverrideSource;
 import com.nettakrim.souper_secret_settings.shaders.ParameterOverrideSource;
@@ -20,13 +21,15 @@ public class ConfigWidget extends ParameterTextWidget {
 
     public OverrideSource overrideSource;
 
-    public ConfigWidget(int x, int width, int height, Text message, ShaderStack stack, String defaultValue, ListScreen<?> listScreen) {
+    public ConfigWidget(int x, int width, int height, Text message, ShaderStack stack, String defaultValue, ListScreen<?> listScreen, String initialValue, UniformConfig initialConfig) {
         super(x, width, height, message, stack, defaultValue);
 
         children = new ArrayList<>();
         this.listScreen = listScreen;
 
-        setText(defaultValue);
+        setText(initialValue);
+        createChildren(initialConfig);
+
         setChangedListener(this::setValue);
     }
 
@@ -48,18 +51,22 @@ public class ConfigWidget extends ParameterTextWidget {
         overrideSource = ParameterOverrideSource.parameterSourceFromString(value);
         if (!value.isEmpty() && overrideSource instanceof ParameterOverrideSource) {
             overrideSource = new MixOverrideSource(overrideSource);
-            UniformConfig templateConfig = overrideSource.getTemplateConfig();
-            for (String name : templateConfig.getNames()) {
-                List<Object> objects = templateConfig.getObjects(name);
-                if (objects != null) {
-                    ConfigValueWidget child = new ConfigValueWidget(getX(), getWidth(), 20, stack, name, objects);
-                    children.add(child);
-                    child.addToScreen(listScreen);
-                }
-            }
+            createChildren(overrideSource.getTemplateConfig());
         }
 
         onChange();
+    }
+
+    protected void createChildren(UniformConfig uniformConfig) {
+        for (String name : uniformConfig.getNames()) {
+            List<Object> objects = uniformConfig.getObjects(name);
+            if (objects != null) {
+                ConfigValueWidget child = new ConfigValueWidget(getX(), getWidth(), 20, stack, name, objects);
+                child.setChangedListener((v) -> this.onChange());
+                children.add(child);
+                child.addToScreen(listScreen);
+            }
+        }
     }
 
     public void onChange(Consumer<ConfigWidget> onChange) {
@@ -103,5 +110,13 @@ public class ConfigWidget extends ParameterTextWidget {
             child.removeFromScreen(listScreen);
         }
         listScreen.removeSelectable(this);
+    }
+
+    public UniformConfig getConfig(String prefix) {
+        MapConfig mapConfig = new MapConfig(List.of());
+        for (ConfigValueWidget child : children) {
+            mapConfig.config.put(prefix+child.name, child.getObjects());
+        }
+        return mapConfig;
     }
 }

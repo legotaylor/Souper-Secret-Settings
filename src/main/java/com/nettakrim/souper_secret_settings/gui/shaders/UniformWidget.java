@@ -6,6 +6,7 @@ import com.mclegoman.luminance.client.shaders.overrides.LuminanceUniformOverride
 import com.mclegoman.luminance.client.shaders.overrides.UniformOverride;
 import com.mclegoman.luminance.client.shaders.overrides.UniformSource;
 import com.mclegoman.luminance.client.shaders.uniforms.config.EmptyConfig;
+import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
 import com.mclegoman.luminance.common.util.Couple;
 import com.nettakrim.souper_secret_settings.gui.ConfigWidget;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
@@ -91,8 +92,8 @@ public class UniformWidget extends DisplayWidget<Couple<String,String>> {
 
     @Override
     protected ClickableWidget createChildWidget(Couple<String,String> data, int i) {
-        ConfigWidget configWidget = new ConfigWidget(getX(), getWidth(), 20, Text.literal(""), pass.shader.stack, data.getSecond(), listScreen);
-        configWidget.setText(data.getFirst());
+        UniformConfig uniformConfig = pass.shader.shaderData.configs.get(pass.passIndex).getOrDefault(data.getFirst(), EmptyConfig.INSTANCE);
+        ConfigWidget configWidget = new ConfigWidget(getX(), getWidth(), 20, Text.literal(""), pass.shader.stack, data.getSecond(), listScreen, data.getFirst(), uniformConfig);
         configWidget.onChange((w) -> onValueChanged(i, w));
         return configWidget;
     }
@@ -100,6 +101,7 @@ public class UniformWidget extends DisplayWidget<Couple<String,String>> {
     protected void onValueChanged(int i, ConfigWidget widget) {
         override.overrideSources.set(i, widget.overrideSource);
         pass.shader.shaderData.overrides.get(pass.passIndex).put(uniform.getName(), override);
+        pass.shader.shaderData.configs.get(pass.passIndex).put(uniform.getName(), widget.getConfig(i+"_"));
         listScreen.updateSpacing();
     }
 

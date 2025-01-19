@@ -5,10 +5,14 @@ import com.mclegoman.luminance.client.shaders.Shaders;
 import com.mclegoman.luminance.client.shaders.interfaces.PostEffectPassInterface;
 import com.mclegoman.luminance.client.shaders.interfaces.ShaderProgramInterface;
 import com.mclegoman.luminance.client.shaders.overrides.LuminanceUniformOverride;
+import com.mclegoman.luminance.client.shaders.overrides.OverrideSource;
 import com.mclegoman.luminance.client.shaders.overrides.UniformOverride;
 import com.mclegoman.luminance.client.shaders.overrides.UniformSource;
 import com.mclegoman.luminance.client.shaders.uniforms.Uniform;
 import com.mclegoman.luminance.client.shaders.uniforms.UniformValue;
+import com.mclegoman.luminance.client.shaders.uniforms.config.ConfigData;
+import com.mclegoman.luminance.client.shaders.uniforms.config.MapConfig;
+import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
 import com.mclegoman.luminance.mixin.client.shaders.PostEffectProcessorAccessor;
 import net.minecraft.client.gl.GlUniform;
 import net.minecraft.client.gl.PostEffectPass;
@@ -22,6 +26,7 @@ public class ShaderData {
     public Shader shader;
 
     public final List<Map<String, UniformOverride>> overrides;
+    public final List<Map<String, UniformConfig>> configs;
 
     public boolean active = true;
 
@@ -31,20 +36,23 @@ public class ShaderData {
 
         List<PostEffectPass> passes = ((PostEffectProcessorAccessor)this.shader.getPostProcessor()).getPasses();
         this.overrides = new ArrayList<>(passes.size());
+        this.configs = new ArrayList<>(passes.size());
 
         for (PostEffectPass pass : passes) {
             Map<String, UniformOverride> override = new HashMap<>(0);
+            Map<String, UniformConfig> config = new HashMap<>(0);
 
             ShaderProgram program = ((PostEffectPassInterface)pass).luminance$getProgram();
             for (String name : ((ShaderProgramInterface)program).luminance$getUniformNames()) {
-                defaultOverride(pass, program.getUniform(name), name, override);
+                defaultOverride(pass, program.getUniform(name), name, override, config);
             }
 
             this.overrides.add(override);
+            this.configs.add(config);
         }
     }
 
-    private void defaultOverride(PostEffectPass pass, GlUniform uniform, String name, Map<String, UniformOverride> overrideMap) {
+    private void defaultOverride(PostEffectPass pass, GlUniform uniform, String name, Map<String, UniformOverride> overrideMap, Map<String, UniformConfig> configMap) {
         if (uniform == null || uniform.getCount() != 1 || !allowUniform(name)) {
             return;
         }
@@ -58,7 +66,14 @@ public class ShaderData {
         }
         if (override == null) return;
 
-        //TODO: this needs to be updated to use config
+        List<String> list = new ArrayList<>();
+        list.add(null);
+        LuminanceUniformOverride uniformOverride = new LuminanceUniformOverride(list);
+        OverrideSource overrideSource = new MixOverrideSource(ParameterOverrideSource.parameterSourceFromString(name));
+        uniformOverride.overrideSources.set(0, overrideSource);
+
+        overrideMap.put(name, uniformOverride);
+
         float a = 0;
         float b = 1;
         Optional<UniformValue> min = override.getMin();
@@ -68,12 +83,21 @@ public class ShaderData {
             b = max.get().values.getFirst();
         }
 
-        List<String> list = new ArrayList<>();
-        list.add(null);
-        LuminanceUniformOverride uniformOverride = new LuminanceUniformOverride(list);
-        uniformOverride.overrideSources.set(0, new MixOverrideSource(ParameterOverrideSource.parameterSourceFromString(name)));
+        MapConfig configOverride = new MapConfig(List.of(new ConfigData("soup_range", List.of(a,b))));
+        mergeConfig(configOverride, ((PostEffectPassInterface)pass).luminance$getUniformConfigs().get(name));
+        mergeConfig(configOverride, overrideSource.getTemplateConfig());
+        configMap.put(name, configOverride);
+    }
 
-        overrideMap.put(name,uniformOverride);
+    private void mergeConfig(MapConfig mapConfig, UniformConfig newConfig) {
+        if (newConfig == null) return;
+
+        for (String s : newConfig.getNames()) {
+            List<Object> objects = newConfig.getObjects(s);
+            if (objects != null) {
+                mapConfig.config.putIfAbsent(s, objects);
+            }
+        }
     }
 
     public void render(FrameGraphBuilder builder, int textureWidth, int textureHeight, DefaultFramebufferSet framebufferSet) {

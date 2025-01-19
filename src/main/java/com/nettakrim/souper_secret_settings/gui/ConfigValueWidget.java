@@ -9,14 +9,24 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class ConfigValueWidget extends TextWidget {
+    public final String name;
+
     protected boolean visible;
 
     protected final List<ParameterTextWidget> children;
 
+    protected Consumer<Object> onChangeCallback;
+
+    protected List<Object> objects;
+
     public ConfigValueWidget(int x, int width, int height, ShaderStack shaderStack, String name, @NotNull List<Object> objects) {
         super(x, 0, width, height, Text.literal(name), SouperSecretSettingsClient.client.textRenderer);
+
+        this.name = name;
+        this.objects = new ArrayList<>(objects);
 
         children = new ArrayList<>();
         if (!objects.isEmpty()) {
@@ -27,9 +37,9 @@ public class ConfigValueWidget extends TextWidget {
                 Object object = objects.get(i);
                 String text = String.valueOf(object);
                 ParameterTextWidget parameterTextWidget = new ParameterTextWidget(x + childStart + (childWidth * i), childWidth, height, Text.literal(String.valueOf(i)), shaderStack, text);
-                //TODO: needs to effect the ShaderData
-                //parameterTextWidget.onChange(...);
+                int finalI = i;
                 parameterTextWidget.setText(text);
+                parameterTextWidget.setChangedListener((s) -> valueChanged(s, finalI));
                 children.add(parameterTextWidget);
             }
         }
@@ -72,5 +82,27 @@ public class ConfigValueWidget extends TextWidget {
         for (ParameterTextWidget parameterTextWidget : children) {
             parameterTextWidget.setY(y);
         }
+    }
+
+    public void valueChanged(String s, int i) {
+        Object objectAtIndex = objects.get(i);
+        Object object = s;
+        if (objectAtIndex instanceof Number) {
+            try {
+                object = Float.parseFloat(s);
+            } catch (Exception ignored) {}
+        }
+        objects.set(i, object);
+        if (onChangeCallback != null) {
+            onChangeCallback.accept(object);
+        }
+    }
+
+    public void setChangedListener(Consumer<Object> callback) {
+        onChangeCallback = callback;
+    }
+
+    public List<Object> getObjects() {
+        return objects;
     }
 }
