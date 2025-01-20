@@ -4,7 +4,6 @@ import com.mclegoman.luminance.client.shaders.Uniforms;
 import com.mclegoman.luminance.client.shaders.interfaces.PostEffectPassInterface;
 import com.mclegoman.luminance.client.shaders.overrides.LuminanceUniformOverride;
 import com.mclegoman.luminance.client.shaders.overrides.UniformOverride;
-import com.mclegoman.luminance.client.shaders.overrides.UniformSource;
 import com.mclegoman.luminance.client.shaders.uniforms.config.EmptyConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.MapConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
@@ -18,10 +17,7 @@ import net.minecraft.client.gl.PostEffectPipeline;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class UniformWidget extends DisplayWidget<Couple<String,String>> {
     public PassWidget pass;
@@ -48,17 +44,22 @@ public class UniformWidget extends DisplayWidget<Couple<String,String>> {
 
         String[] defaults = values.clone();
 
-        if (defaults.length == 1) {
-            if (((PostEffectPassInterface)pass.postEffectPass).luminance$getUniformOverride(uniform.getName()) instanceof LuminanceUniformOverride o && o.overrideSources.getFirst() instanceof UniformSource uniformSource && uniformSource.getUniform() != null) {
-                defaults[0] = uniformSource.getString();
-            } else if (LuminanceUniformOverride.sourceFromString(uniform.getName()) instanceof UniformSource uniformSource && uniformSource.getUniform() != null) {
-                defaults[0] = uniformSource.getString();
+        LuminanceUniformOverride defaultOverride = null;
+        if (((PostEffectPassInterface)pass.postEffectPass).luminance$getUniformOverride(uniform.getName()) instanceof LuminanceUniformOverride luminanceUniformOverride) {
+            defaultOverride = luminanceUniformOverride;
+        }
+        if (defaultOverride == null) {
+            defaultOverride = LuminanceUniformOverride.overrideFromUniform(uniform.getName());
+        }
+        if (defaultOverride != null) {
+            for (int i = 0; i < defaultOverride.overrideSources.size(); i++) {
+                defaults[i] = defaultOverride.overrideSources.get(i).getString();
             }
         }
 
         UniformOverride uniformOverride = pass.shader.shaderData.overrides.get(pass.passIndex).get(uniform.getName());
         if (uniformOverride == null) {
-            uniformOverride = ((PostEffectPassInterface)pass.postEffectPass).luminance$getUniformOverride(uniform.getName());
+            uniformOverride = defaultOverride;
         }
 
         if (uniformOverride instanceof LuminanceUniformOverride luminanceUniformOverride) {
@@ -85,12 +86,28 @@ public class UniformWidget extends DisplayWidget<Couple<String,String>> {
     }
 
     protected List<Float> getBaseValues() {
+        List<Float> values = null;
         for (PostEffectPipeline.Uniform u : ((PostEffectPassInterface)pass.postEffectPass).luminance$getUniforms()) {
             if (u.name().equals(uniform.getName())) {
-                return u.values();
+                values = u.values();
+                break;
             }
         }
-        return Objects.requireNonNull(pass.postEffectPass.getProgram().getUniformDefinition(uniform.getName())).values();
+
+        List<Float> definitionValues = Objects.requireNonNull(pass.postEffectPass.getProgram().getUniformDefinition(uniform.getName())).values();
+        if (values == null) {
+            return definitionValues;
+        }
+
+        if (values.size() < definitionValues.size()) {
+            List<Float> combined = new ArrayList<>(values);
+            for (int i = values.size(); i < definitionValues.size(); i++) {
+                combined.add(definitionValues.get(i));
+            }
+            return combined;
+        }
+
+        return values;
     }
 
     @Override
@@ -117,7 +134,7 @@ public class UniformWidget extends DisplayWidget<Couple<String,String>> {
             configs.put(uniform.getName(), widget.getConfig(prefix));
         } else {
             mapConfig.config.keySet().removeIf((s) -> s.startsWith(prefix));
-            ShaderData.mergeConfig(mapConfig, widget.getConfig(prefix));
+            ShaderData.mergeConfig(mapConfig, widget.getConfig(prefix), 0);
         }
 
         listScreen.updateSpacing();
