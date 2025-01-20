@@ -86,12 +86,17 @@ public class ConfigValueWidget extends TextWidget {
 
     public void valueChanged(String s, int i) {
         Object objectAtIndex = objects.get(i);
-        Object object = s;
+        Object object;
         if (objectAtIndex instanceof Number) {
             try {
                 object = Float.parseFloat(s);
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+                return;
+            }
+        } else {
+            object = s;
         }
+
         objects.set(i, object);
         if (onChangeCallback != null) {
             onChangeCallback.accept(this);

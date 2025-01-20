@@ -4,10 +4,7 @@ import com.mclegoman.luminance.client.shaders.Shader;
 import com.mclegoman.luminance.client.shaders.Shaders;
 import com.mclegoman.luminance.client.shaders.interfaces.PostEffectPassInterface;
 import com.mclegoman.luminance.client.shaders.interfaces.ShaderProgramInterface;
-import com.mclegoman.luminance.client.shaders.overrides.LuminanceUniformOverride;
-import com.mclegoman.luminance.client.shaders.overrides.OverrideSource;
-import com.mclegoman.luminance.client.shaders.overrides.UniformOverride;
-import com.mclegoman.luminance.client.shaders.overrides.UniformSource;
+import com.mclegoman.luminance.client.shaders.overrides.*;
 import com.mclegoman.luminance.client.shaders.uniforms.Uniform;
 import com.mclegoman.luminance.client.shaders.uniforms.UniformValue;
 import com.mclegoman.luminance.client.shaders.uniforms.config.ConfigData;
@@ -53,12 +50,13 @@ public class ShaderData {
     }
 
     private void defaultOverride(PostEffectPass pass, GlUniform uniform, String name, Map<String, UniformOverride> overrideMap, Map<String, UniformConfig> configMap) {
+        // TODO: needs to work for non-1 counts
         if (uniform == null || uniform.getCount() != 1 || !allowUniform(name)) {
             return;
         }
 
         Uniform override = null;
-        if (((PostEffectPassInterface)pass).luminance$getUniformOverride(name) instanceof LuminanceUniformOverride o && o.overrideSources.getFirst() instanceof UniformSource uniformSource) {
+        if (((PostEffectPassInterface)pass).luminance$getUniformOverride(name) instanceof LuminanceUniformOverride o && o.overrideSources.get(0) instanceof UniformSource uniformSource) {
             override = uniformSource.getUniform();
         }
         if (override == null && LuminanceUniformOverride.sourceFromString(name) instanceof UniformSource uniformSource) {
@@ -83,13 +81,13 @@ public class ShaderData {
             b = max.get().values.getFirst();
         }
 
-        MapConfig configOverride = new MapConfig(List.of(new ConfigData("soup_range", List.of(a,b))));
+        MapConfig configOverride = new MapConfig(List.of(new ConfigData(0+"_soup_range", List.of(a,b))));
         mergeConfig(configOverride, ((PostEffectPassInterface)pass).luminance$getUniformConfigs().get(name));
-        mergeConfig(configOverride, overrideSource.getTemplateConfig());
+        mergeConfig(configOverride, new OverrideConfig(overrideSource.getTemplateConfig(), 0));
         configMap.put(name, configOverride);
     }
 
-    private void mergeConfig(MapConfig mapConfig, UniformConfig newConfig) {
+    public static void mergeConfig(MapConfig mapConfig, UniformConfig newConfig) {
         if (newConfig == null) return;
 
         for (String s : newConfig.getNames()) {

@@ -1,5 +1,6 @@
 package com.nettakrim.souper_secret_settings.gui;
 
+import com.mclegoman.luminance.client.shaders.overrides.OverrideConfig;
 import com.mclegoman.luminance.client.shaders.overrides.OverrideSource;
 import com.mclegoman.luminance.client.shaders.uniforms.config.MapConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
@@ -8,6 +9,7 @@ import com.nettakrim.souper_secret_settings.shaders.ParameterOverrideSource;
 import com.nettakrim.souper_secret_settings.shaders.ShaderStack;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -16,21 +18,23 @@ public class ConfigWidget extends ParameterTextWidget {
     protected final List<ConfigValueWidget> children;
     protected final ListScreen<?> listScreen;
     protected final Map<String, List<Object>> previousValues;
+    protected final int index;
 
     protected Consumer<ConfigWidget> onChange;
 
     public OverrideSource overrideSource;
 
 
-    public ConfigWidget(int x, int width, int height, Text message, ShaderStack stack, String defaultValue, ListScreen<?> listScreen, String initialValue, UniformConfig initialConfig) {
+    public ConfigWidget(int x, int width, int height, Text message, ShaderStack stack, String defaultValue, ListScreen<?> listScreen, String initialValue, UniformConfig initialConfig, int index) {
         super(x, width, height, message, stack, defaultValue);
 
         children = new ArrayList<>();
         this.listScreen = listScreen;
         previousValues = new HashMap<>();
+        this.index = index;
 
         setText(initialValue);
-        createChildren(initialConfig);
+        createChildren(new OverrideConfig(initialConfig));
 
         setChangedListener(this::setValue);
     }
@@ -50,31 +54,25 @@ public class ConfigWidget extends ParameterTextWidget {
         }
         children.clear();
 
-        overrideSource = ParameterOverrideSource.parameterSourceFromString(value);
-        if (!value.isEmpty() && overrideSource instanceof ParameterOverrideSource) {
-            overrideSource = new MixOverrideSource(overrideSource);
-            createChildren(overrideSource.getTemplateConfig());
+        if (updateOverrideSource()) {
+            createChildren(new OverrideConfig(overrideSource.getTemplateConfig(), index));
         }
-
         onChange();
     }
 
-    @SuppressWarnings({"SuspiciousListRemoveInLoop"})
-    protected void createChildren(UniformConfig templateConfig) {
-        List<String> names = new ArrayList<>(templateConfig.getNames());
-        int soupValues = 0;
-        for (int i = 0; i < names.size(); i++) {
-            if (i == soupValues) continue;
-
-            String name = names.get(i);
-            if (name.startsWith("soup_")) {
-                names.remove(i);
-                names.add(soupValues, name);
-                soupValues++;
-            }
+    protected boolean updateOverrideSource() {
+        String value = getText();
+        overrideSource = ParameterOverrideSource.parameterSourceFromString(value);
+        if (!value.isEmpty() && overrideSource instanceof ParameterOverrideSource) {
+            overrideSource = new MixOverrideSource(overrideSource);
+            return true;
         }
+        return false;
+    }
 
-        for (String name : names) {
+    protected void createChildren(OverrideConfig templateConfig) {
+        templateConfig.setIndex(index);
+        for (String name : getFilteredNames(templateConfig)) {
             List<Object> objects = previousValues.get(name);
 
             if (objects == null) {
@@ -93,8 +91,35 @@ public class ConfigWidget extends ParameterTextWidget {
         }
     }
 
+    private @NotNull List<String> getFilteredNames(UniformConfig templateConfig) {
+        List<String> names = new ArrayList<>(templateConfig.getNames());
+        int soupValues = 0;
+        String prefix = index+"_";
+        for (int i = 0; i < names.size(); i++) {
+            String name = names.get(i);
+            if (name.startsWith(prefix)) {
+                name = name.substring(prefix.length());
+                names.set(i, name);
+            } else {
+                names.remove(i);
+                i--;
+                continue;
+            }
+
+            if (i == soupValues) continue;
+
+            if (name.startsWith("soup_")) {
+                names.remove(i);
+                names.add(soupValues, name);
+                soupValues++;
+            }
+        }
+        return names;
+    }
+
     protected void onChangeChild(ConfigValueWidget configValueWidget) {
         previousValues.put(configValueWidget.name, configValueWidget.objects);
+        updateOverrideSource();
         onChange();
     }
 

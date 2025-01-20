@@ -6,11 +6,13 @@ import com.mclegoman.luminance.client.shaders.overrides.LuminanceUniformOverride
 import com.mclegoman.luminance.client.shaders.overrides.UniformOverride;
 import com.mclegoman.luminance.client.shaders.overrides.UniformSource;
 import com.mclegoman.luminance.client.shaders.uniforms.config.EmptyConfig;
+import com.mclegoman.luminance.client.shaders.uniforms.config.MapConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
 import com.mclegoman.luminance.common.util.Couple;
 import com.nettakrim.souper_secret_settings.gui.ConfigWidget;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.DisplayWidget;
+import com.nettakrim.souper_secret_settings.shaders.ShaderData;
 import net.minecraft.client.gl.GlUniform;
 import net.minecraft.client.gl.PostEffectPipeline;
 import net.minecraft.client.gui.widget.ClickableWidget;
@@ -18,6 +20,7 @@ import net.minecraft.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class UniformWidget extends DisplayWidget<Couple<String,String>> {
@@ -92,9 +95,13 @@ public class UniformWidget extends DisplayWidget<Couple<String,String>> {
 
     @Override
     protected ClickableWidget createChildWidget(Couple<String,String> data, int i) {
-        //TODO: make default values correct for config values
-        UniformConfig uniformConfig = pass.shader.shaderData.configs.get(pass.passIndex).getOrDefault(data.getFirst(), EmptyConfig.INSTANCE);
-        ConfigWidget configWidget = new ConfigWidget(getX(), getWidth(), 20, Text.literal(""), pass.shader.stack, data.getSecond(), listScreen, data.getFirst(), uniformConfig);
+        //TODO: make default values correct for config values, instead of whatever they were at the time the gui is opened
+        UniformConfig uniformConfig = pass.shader.shaderData.configs.get(pass.passIndex).get(uniform.getName());
+        if (uniformConfig == null) {
+            uniformConfig = EmptyConfig.INSTANCE;
+        }
+
+        ConfigWidget configWidget = new ConfigWidget(getX(), getWidth(), 20, Text.literal(""), pass.shader.stack, data.getSecond(), listScreen, data.getFirst(), uniformConfig, i);
         configWidget.onChangeListener((w) -> onValueChanged(i, w));
         return configWidget;
     }
@@ -102,7 +109,17 @@ public class UniformWidget extends DisplayWidget<Couple<String,String>> {
     protected void onValueChanged(int i, ConfigWidget widget) {
         override.overrideSources.set(i, widget.overrideSource);
         pass.shader.shaderData.overrides.get(pass.passIndex).put(uniform.getName(), override);
-        pass.shader.shaderData.configs.get(pass.passIndex).put(uniform.getName(), widget.getConfig(i+"_"));
+
+        String prefix = i+"_";
+        Map<String, UniformConfig> configs = pass.shader.shaderData.configs.get(pass.passIndex);
+        MapConfig mapConfig = (MapConfig)configs.get(uniform.getName());
+        if (mapConfig == null) {
+            configs.put(uniform.getName(), widget.getConfig(prefix));
+        } else {
+            mapConfig.config.keySet().removeIf((s) -> s.startsWith(prefix));
+            ShaderData.mergeConfig(mapConfig, widget.getConfig(prefix));
+        }
+
         listScreen.updateSpacing();
     }
 
