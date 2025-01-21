@@ -85,9 +85,9 @@ public class OverrideManager {
         Map<String, T> replacedValues = new HashMap<>();
         List<String> nullValues = new ArrayList<>();
 
-        public void replace(Map<String, T> replacement, BiFunction<String, T, T> replaceFunction) {
+        public void replace(Map<String, UniformData<T>> replacement, BiFunction<String, T, T> replaceFunction) {
             replacement.forEach((key, value) -> {
-                T previous = replaceFunction.apply(key, value);
+                T previous = replaceFunction.apply(key, value.value);
                 if (previous == null) {
                     nullValues.add(key);
                 } else {

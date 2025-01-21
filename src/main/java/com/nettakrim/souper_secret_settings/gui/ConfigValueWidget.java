@@ -22,7 +22,7 @@ public class ConfigValueWidget extends TextWidget {
 
     public List<Object> objects;
 
-    public ConfigValueWidget(int x, int width, int height, ShaderStack shaderStack, String name, @NotNull List<Object> objects) {
+    public ConfigValueWidget(int x, int width, int height, ShaderStack shaderStack, String name, @NotNull List<Object> objects, @NotNull List<Object> defaultObjects) {
         super(x, 0, width, height, Text.literal(name.startsWith("soup_") ? name.substring(5) : name), SouperSecretSettingsClient.client.textRenderer);
 
         this.name = name;
@@ -34,11 +34,9 @@ public class ConfigValueWidget extends TextWidget {
             setWidth(childStart);
             int childWidth = (width - childStart) / objects.size();
             for (int i = 0; i < objects.size(); i++) {
-                Object object = objects.get(i);
-                String text = String.valueOf(object);
-                ParameterTextWidget parameterTextWidget = new ParameterTextWidget(x + childStart + (childWidth * i), childWidth, height, Text.literal(String.valueOf(i)), shaderStack, text);
+                ParameterTextWidget parameterTextWidget = new ParameterTextWidget(x + childStart + (childWidth * i), childWidth, height, Text.literal(String.valueOf(i)), shaderStack, String.valueOf(defaultObjects.get(i)));
                 int finalI = i;
-                parameterTextWidget.setText(text);
+                parameterTextWidget.setText(String.valueOf(objects.get(i)));
                 parameterTextWidget.setChangedListener((s) -> valueChanged(s, finalI));
                 children.add(parameterTextWidget);
             }

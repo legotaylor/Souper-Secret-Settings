@@ -12,14 +12,14 @@ import com.nettakrim.souper_secret_settings.gui.ConfigWidget;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.DisplayWidget;
 import com.nettakrim.souper_secret_settings.shaders.ShaderData;
+import com.nettakrim.souper_secret_settings.shaders.UniformData;
 import net.minecraft.client.gl.GlUniform;
-import net.minecraft.client.gl.PostEffectPipeline;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
 
 import java.util.*;
 
-public class UniformWidget extends DisplayWidget<Couple<String,String>> {
+public class UniformWidget extends DisplayWidget<Couple<UniformData<String>,UniformData<UniformConfig>>> {
     public PassWidget pass;
 
     public GlUniform uniform;
@@ -34,107 +34,46 @@ public class UniformWidget extends DisplayWidget<Couple<String,String>> {
     }
 
     @Override
-    protected List<Couple<String,String>> getChildData() {
-        String[] values = new String[uniform.getCount()];
+    protected List<Couple<UniformData<String>,UniformData<UniformConfig>>> getChildData() {
+        List<Couple<UniformData<String>,UniformData<UniformConfig>>> list = new ArrayList<>();
 
-        List<Float> baseValues = getBaseValues();
-        for (int i = 0; i < values.length; i++) {
-            values[i] = Float.toString(baseValues.get(i));
+        UniformData<UniformOverride> uniformOverride = pass.shader.shaderData.overrides.get(pass.passIndex).get(uniform.getName());
+        UniformData<UniformConfig> uniformConfig = pass.shader.shaderData.configs.get(pass.passIndex).get(uniform.getName());
+
+        List<String> valueStrings = ((LuminanceUniformOverride)uniformOverride.value).getStrings();
+        List<String> defaultStrings = ((LuminanceUniformOverride)uniformOverride.defaultValue).getStrings();
+
+        for (int i = 0; i < uniform.getCount(); i++) {
+            list.add(new Couple<>(new UniformData<>(valueStrings.get(i), defaultStrings.get(i)), uniformConfig));
         }
 
-        String[] defaults = values.clone();
-
-        LuminanceUniformOverride defaultOverride = null;
-        if (((PostEffectPassInterface)pass.postEffectPass).luminance$getUniformOverride(uniform.getName()) instanceof LuminanceUniformOverride luminanceUniformOverride) {
-            defaultOverride = luminanceUniformOverride;
-        }
-        if (defaultOverride == null) {
-            defaultOverride = LuminanceUniformOverride.overrideFromUniform(uniform.getName());
-        }
-        if (defaultOverride != null) {
-            for (int i = 0; i < defaultOverride.overrideSources.size(); i++) {
-                defaults[i] = defaultOverride.overrideSources.get(i).getString();
-            }
-        }
-
-        UniformOverride uniformOverride = pass.shader.shaderData.overrides.get(pass.passIndex).get(uniform.getName());
-        if (uniformOverride == null) {
-            uniformOverride = defaultOverride;
-        }
-
-        if (uniformOverride instanceof LuminanceUniformOverride luminanceUniformOverride) {
-            for (int i = 0; i < values.length; i++) {
-                String s = luminanceUniformOverride.getStrings().get(i);
-                if (s != null) {
-                    values[i] = s;
-                }
-            }
-            override = luminanceUniformOverride;
-        } else {
-            List<String> overrideStrings = new ArrayList<>(values.length);
-            for (int i = 0; i < values.length; i++) {
-                overrideStrings.add(null);
-            }
-            override = new LuminanceUniformOverride(overrideStrings);
-        }
-
-        List<Couple<String, String>> data = new ArrayList<>(values.length);
-        for (int i = 0; i < values.length; i++) {
-            data.add(new Couple<>(values[i], defaults[i]));
-        }
-        return data;
-    }
-
-    protected List<Float> getBaseValues() {
-        List<Float> values = null;
-        for (PostEffectPipeline.Uniform u : ((PostEffectPassInterface)pass.postEffectPass).luminance$getUniforms()) {
-            if (u.name().equals(uniform.getName())) {
-                values = u.values();
-                break;
-            }
-        }
-
-        List<Float> definitionValues = Objects.requireNonNull(pass.postEffectPass.getProgram().getUniformDefinition(uniform.getName())).values();
-        if (values == null) {
-            return definitionValues;
-        }
-
-        if (values.size() < definitionValues.size()) {
-            List<Float> combined = new ArrayList<>(values);
-            for (int i = values.size(); i < definitionValues.size(); i++) {
-                combined.add(definitionValues.get(i));
-            }
-            return combined;
-        }
-
-        return values;
+        override = (LuminanceUniformOverride)uniformOverride.value;
+        return list;
     }
 
     @Override
-    protected ClickableWidget createChildWidget(Couple<String,String> data, int i) {
-        //TODO: make default values correct for config values, instead of whatever they were at the time the gui is opened
-        UniformConfig uniformConfig = pass.shader.shaderData.configs.get(pass.passIndex).get(uniform.getName());
-        if (uniformConfig == null) {
-            uniformConfig = EmptyConfig.INSTANCE;
-        }
+    protected ClickableWidget createChildWidget(Couple<UniformData<String>,UniformData<UniformConfig>> data, int i) {
+        UniformData<String> uniformOverride = data.getFirst();
+        UniformData<UniformConfig> uniformConfig = data.getSecond();
 
-        ConfigWidget configWidget = new ConfigWidget(getX(), getWidth(), 20, Text.literal(""), pass.shader.stack, data.getSecond(), listScreen, data.getFirst(), uniformConfig, i);
+        ConfigWidget configWidget = new ConfigWidget(getX(), getWidth(), 20, Text.literal(""), pass.shader.stack, listScreen, uniformOverride.value, uniformOverride.defaultValue, uniformConfig.value, uniformConfig.defaultValue, i);
         configWidget.onChangeListener((w) -> onValueChanged(i, w));
         return configWidget;
     }
 
     protected void onValueChanged(int i, ConfigWidget widget) {
         override.overrideSources.set(i, widget.overrideSource);
-        pass.shader.shaderData.overrides.get(pass.passIndex).put(uniform.getName(), override);
 
+        UniformData<UniformOverride> uniforms = pass.shader.shaderData.overrides.get(pass.passIndex).get(uniform.getName());
+        uniforms.value = override;
+
+        UniformData<UniformConfig> configs = pass.shader.shaderData.configs.get(pass.passIndex).get(uniform.getName());
         String prefix = i+"_";
-        Map<String, UniformConfig> configs = pass.shader.shaderData.configs.get(pass.passIndex);
-        MapConfig mapConfig = (MapConfig)configs.get(uniform.getName());
-        if (mapConfig == null) {
-            configs.put(uniform.getName(), widget.getConfig(prefix));
-        } else {
+        if (configs.value instanceof MapConfig mapConfig) {
             mapConfig.config.keySet().removeIf((s) -> s.startsWith(prefix));
-            ShaderData.mergeConfig(mapConfig, widget.getConfig(prefix), 0);
+            mapConfig.mergeWithConfig(widget.getConfig(prefix));
+        } else {
+            configs.value = widget.getConfig(prefix);
         }
 
         listScreen.updateSpacing();
@@ -143,7 +82,7 @@ public class UniformWidget extends DisplayWidget<Couple<String,String>> {
     @Override
     protected List<Float> getDisplayFloats() {
         List<Float> display = override.getOverride(EmptyConfig.INSTANCE, Uniforms.shaderTime);
-        List<Float> base = getBaseValues();
+        List<Float> base = ShaderData.getBaseValues((PostEffectPassInterface)pass.postEffectPass, uniform.getName());
         for (int i = 0; i < display.size(); i++) {
             if (display.get(i) == null) {
                 display.set(i, base.get(i));

@@ -27,7 +27,7 @@ public class PassWidget extends CollapseWidget {
         this.postEffectPass = postEffectPass;
         this.passIndex = passIndex;
 
-        ShaderProgram program = ((PostEffectPassInterface)postEffectPass).luminance$getProgram();
+        ShaderProgram program = postEffectPass.getProgram();
         for (String name : ((ShaderProgramInterface)program).luminance$getUniformNames()) {
             GlUniform uniform = program.getUniform(name);
             if (uniform != null && ShaderData.allowUniform(name)) {

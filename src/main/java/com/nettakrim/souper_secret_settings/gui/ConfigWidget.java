@@ -24,8 +24,9 @@ public class ConfigWidget extends ParameterTextWidget {
 
     public OverrideSource overrideSource;
 
+    protected OverrideConfig defaultConfig;
 
-    public ConfigWidget(int x, int width, int height, Text message, ShaderStack stack, String defaultValue, ListScreen<?> listScreen, String initialValue, UniformConfig initialConfig, int index) {
+    public ConfigWidget(int x, int width, int height, Text message, ShaderStack stack, ListScreen<?> listScreen, String initialValue, String defaultValue, UniformConfig initialConfig, UniformConfig defaultConfig, int index) {
         super(x, width, height, message, stack, defaultValue);
 
         children = new ArrayList<>();
@@ -33,7 +34,10 @@ public class ConfigWidget extends ParameterTextWidget {
         previousValues = new HashMap<>();
         this.index = index;
 
+        this.defaultConfig = new OverrideConfig(defaultConfig);
+
         setText(initialValue);
+        updateOverrideSource();
         createChildren(new OverrideConfig(initialConfig));
 
         setChangedListener(this::setValue);
@@ -72,18 +76,31 @@ public class ConfigWidget extends ParameterTextWidget {
 
     protected void createChildren(OverrideConfig templateConfig) {
         templateConfig.setIndex(index);
+        defaultConfig.setIndex(index);
         for (String name : getFilteredNames(templateConfig)) {
             List<Object> objects = previousValues.get(name);
+            List<Object> defaultObjects = defaultConfig.getObjects(name);
 
             if (objects == null) {
-                objects = templateConfig.getObjects(name);
-                if (objects != null) {
-                    previousValues.put(name, objects);
+                if (defaultObjects != null) {
+                    objects = defaultObjects;
+                    previousValues.put(name, defaultObjects);
+                } else {
+                    objects = templateConfig.getObjects(name);
+                    if (objects != null) {
+                        previousValues.put(name, objects);
+                    }
                 }
             }
 
             if (objects != null) {
-                ConfigValueWidget child = new ConfigValueWidget(getX(), getWidth(), 20, stack, name, objects);
+                if (defaultObjects == null) {
+                    defaultObjects = overrideSource.getTemplateConfig().getObjects(name);
+                    if (defaultObjects == null) {
+                        defaultObjects = objects;
+                    }
+                }
+                ConfigValueWidget child = new ConfigValueWidget(getX(), getWidth(), 20, stack, name, objects, defaultObjects);
                 child.setChangedListener(this::onChangeChild);
                 children.add(child);
                 child.addToScreen(listScreen);
