@@ -10,12 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Calculation {
-    public OverrideSource[] inputs;
-    public String[] inputNames;
-    public String[] outputs;
+    public final OverrideSource[] inputs;
+    public final String[] inputNames;
+    public final String[] outputs;
 
-    protected float[] inputValues;
-    protected float[] outputValues;
+    protected final float[] inputValues;
+    protected final float[] outputValues;
 
     private final String id;
 
@@ -47,16 +47,7 @@ public abstract class Calculation {
     public void update(ShaderStack stack) {
         if (!active) return;
 
-        for (int i = 0; i < inputs.length; i++) {
-            OverrideSource overrideSource = inputs[i];
-            if (overrideSource == null) continue;
-
-            Float f = overrideSource.get(EmptyConfig.INSTANCE, Uniforms.shaderTime);
-            if (f == null) continue;
-
-            inputValues[i] = f;
-        }
-
+        updateInputValues();
         calculateOutputValues();
 
         for (int i = 0; i < outputs.length; i++) {
@@ -65,6 +56,22 @@ public abstract class Calculation {
                 stack.parameterValues.put(output, outputValues[i]);
             }
         }
+    }
+
+    protected void updateInputValues() {
+        for (int i = 0; i < inputs.length; i++) {
+            updateInputValue(i);
+        }
+    }
+
+    protected void updateInputValue(int i) {
+        OverrideSource overrideSource = inputs[i];
+        assert overrideSource != null;
+
+        Float f = overrideSource.get(EmptyConfig.INSTANCE, Uniforms.shaderTime);
+        if (f == null) return;
+
+        inputValues[i] = f;
     }
 
     protected abstract void calculateOutputValues();
