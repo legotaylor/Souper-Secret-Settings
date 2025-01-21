@@ -9,6 +9,7 @@ import com.nettakrim.souper_secret_settings.shaders.ParameterOverrideSource;
 import com.nettakrim.souper_secret_settings.shaders.ShaderStack;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.ColorHelper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -47,8 +48,12 @@ public class ConfigWidget extends ParameterTextWidget {
     public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
         super.renderWidget(context, mouseX, mouseY, delta);
 
-        for (ConfigValueWidget child : children) {
-            child.renderWidget(context, mouseX, mouseY, delta);
+        if (!children.isEmpty()) {
+            context.fill(getX(), getY() + getHeight(), getX() + getWidth() / 3, getY() + getHeight() + 20 * children.size(), ColorHelper.fromFloats(0.2f, 0, 0, 0));
+
+            for (ConfigValueWidget child : children) {
+                child.renderWidget(context, mouseX, mouseY, delta);
+            }
         }
     }
 
