@@ -13,6 +13,11 @@ public abstract class PeriodicCalculation extends Calculation {
     }
 
     @Override
+    protected String[] getInputNames() {
+        return new String[]{"time", "period", "phase"};
+    }
+
+    @Override
     protected String[] getOutputs() {
         return new String[]{""};
     }

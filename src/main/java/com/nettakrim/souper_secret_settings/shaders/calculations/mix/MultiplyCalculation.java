@@ -13,6 +13,11 @@ public class MultiplyCalculation extends Calculation {
     }
 
     @Override
+    protected String[] getInputNames() {
+        return new String[]{"a","b","center"};
+    }
+
+    @Override
     protected String[] getOutputs() {
         return new String[]{""};
     }

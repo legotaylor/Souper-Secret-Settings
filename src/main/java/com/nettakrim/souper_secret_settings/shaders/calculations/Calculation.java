@@ -11,6 +11,7 @@ import java.util.List;
 
 public abstract class Calculation {
     public OverrideSource[] inputs;
+    public String[] inputNames;
     public String[] outputs;
 
     protected float[] inputValues;
@@ -24,10 +25,13 @@ public abstract class Calculation {
         this.id = id;
 
         String[] inputStrings = getInputs();
+        String[] names = getInputNames();
 
         this.inputs = new OverrideSource[inputStrings.length];
+        this.inputNames = new String[inputStrings.length];
         for (int i = 0; i < inputs.length; i++) {
             this.inputs[i] = ParameterOverrideSource.parameterSourceFromString(inputStrings[i]);
+            this.inputNames[i] = i < names.length ? names[i] : String.valueOf((char)('a'+i));
         }
 
         this.outputs = getOutputs();
@@ -37,6 +41,7 @@ public abstract class Calculation {
     }
 
     protected abstract String[] getInputs();
+    protected abstract String[] getInputNames();
     protected abstract String[] getOutputs();
 
     public void update(ShaderStack stack) {

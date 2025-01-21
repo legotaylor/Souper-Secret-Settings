@@ -13,6 +13,11 @@ public class CompareCalculation extends Calculation {
     }
 
     @Override
+    protected String[] getInputNames() {
+        return new String[]{"a", "b", "a < b", "a ≥ b"};
+    }
+
+    @Override
     protected String[] getOutputs() {
         return new String[]{""};
     }

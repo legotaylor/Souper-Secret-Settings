@@ -13,6 +13,11 @@ public class SquareCalculation extends PeriodicCalculation {
     }
 
     @Override
+    protected String[] getInputNames() {
+        return new String[]{"time", "period", "phase", "width"};
+    }
+
+    @Override
     protected float periodicCalculation(float t) {
         return MathHelper.floorMod(t,1) > inputValues[3] ? 0 : 1;
     }

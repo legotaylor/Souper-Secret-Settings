@@ -13,6 +13,11 @@ public class NearCalculation extends Calculation {
     }
 
     @Override
+    protected String[] getInputNames() {
+        return new String[]{"a","b","range"};
+    }
+
+    @Override
     protected String[] getOutputs() {
         return new String[]{""};
     }

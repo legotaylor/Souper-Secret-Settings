@@ -13,6 +13,11 @@ public class ClampCalculation extends Calculation {
     }
 
     @Override
+    protected String[] getInputNames() {
+        return new String[]{"x","min","max"};
+    }
+
+    @Override
     protected String[] getOutputs() {
         return new String[]{""};
     }

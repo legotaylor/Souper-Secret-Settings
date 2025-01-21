@@ -13,6 +13,11 @@ public class LimitCalculation extends Calculation {
     }
 
     @Override
+    protected String[] getInputNames() {
+        return new String[]{"x","scale"};
+    }
+
+    @Override
     protected String[] getOutputs() {
         return new String[]{""};
     }

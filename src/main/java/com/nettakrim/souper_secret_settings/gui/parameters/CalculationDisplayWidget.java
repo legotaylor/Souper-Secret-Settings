@@ -58,7 +58,7 @@ public class CalculationDisplayWidget extends DisplayWidget<OverrideSource> {
     @Override
     protected ClickableWidget createChildWidget(OverrideSource data, int i) {
         String value = data.getString();
-        ParameterTextWidget parameterTextWidget = new CalculationInputWidget(getX(), getWidth(), 20, Text.literal("input"+i), stack, value, SouperSecretSettingsClient.translate("calculation."+calculation.getID()+".input_"+i));
+        ParameterTextWidget parameterTextWidget = new CalculationInputWidget(getX(), getWidth(), 20, Text.literal(calculation.inputNames[i]), stack, value);
         parameterTextWidget.setText(value);
         parameterTextWidget.setChangedListener((s) -> onInputChanged(i, s));
         return parameterTextWidget;

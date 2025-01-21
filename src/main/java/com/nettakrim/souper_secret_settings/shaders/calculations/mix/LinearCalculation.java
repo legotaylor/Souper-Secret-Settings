@@ -13,6 +13,11 @@ public class LinearCalculation extends Calculation {
     }
 
     @Override
+    protected String[] getInputNames() {
+        return new String[]{"a","b","mix"};
+    }
+
+    @Override
     protected String[] getOutputs() {
         return new String[]{""};
     }
