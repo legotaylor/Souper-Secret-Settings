@@ -8,7 +8,8 @@ in vec2 oneTexel;
 out vec4 fragColor;
 
 uniform float luminance_time;
-uniform float MaxDistance;
+uniform vec2 Distance;
+uniform vec2 NoiseScale;
 
 //https://www.shadertoy.com/view/XdXGW8
 vec2 grad( ivec2 z )
@@ -41,11 +42,11 @@ float noise( in vec2 p )
 
 void main(){
     vec2 aspect = vec2(1, oneTexel.x/oneTexel.y);
-    vec2 randomPos = ((texCoord*vec2(100,0.1))+vec2(43.123))*aspect;
+    vec2 randomPos = ((texCoord*NoiseScale)+vec2(43.123))*aspect;
     float t = fract(noise(randomPos*300.123)+luminance_time);
 
     vec3 center = texture(InSampler, texCoord).rgb;
-    vec3 down = texture(InSampler, texCoord - vec2(0, oneTexel.y*t*MaxDistance)).rgb;
+    vec3 down = texture(InSampler, texCoord - oneTexel*t*Distance).rgb;
 
     vec3 col = mix(down, center, t);
 
