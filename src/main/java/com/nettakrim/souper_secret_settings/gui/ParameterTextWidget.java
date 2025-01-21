@@ -1,6 +1,6 @@
 package com.nettakrim.souper_secret_settings.gui;
 
-import com.mclegoman.luminance.client.events.Events;
+import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.shaders.ShaderStack;
 import net.minecraft.text.Text;
 
@@ -22,10 +22,12 @@ public class ParameterTextWidget extends SuggestionTextFieldWidget {
     }
 
     protected List<String> getParameters() {
-        List<String> parameters = new ArrayList<>(stack.parameterValues.size()+Events.ShaderUniform.registry.size()+1);
+        List<String> validUniforms = SouperSecretSettingsClient.soupRenderer.getValidUniforms();
+
+        List<String> parameters = new ArrayList<>(stack.parameterValues.size()+validUniforms.size()+1);
 
         parameters.addAll(stack.parameterValues.keySet());
-        parameters.addAll(Events.ShaderUniform.registry.keySet());
+        parameters.addAll(validUniforms);
 
         Collections.sort(parameters);
         if (!defaultValue.isEmpty()) {

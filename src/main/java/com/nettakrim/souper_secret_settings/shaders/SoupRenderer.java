@@ -5,6 +5,7 @@ import com.mclegoman.luminance.client.events.Runnables;
 import com.mclegoman.luminance.client.shaders.Shader;
 import com.mclegoman.luminance.client.shaders.ShaderRegistry;
 import com.mclegoman.luminance.client.shaders.Shaders;
+import com.mclegoman.luminance.client.shaders.uniforms.Uniform;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.mixin.GameRendererAccessor;
 import net.minecraft.client.MinecraftClient;
@@ -14,11 +15,15 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.Random;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class SoupRenderer implements Runnables.WorldRender {
     public ArrayList<ShaderStack> shaderStacks;
 
     public int activeStack;
+
+    private List<String> validUniforms;
 
     public SoupRenderer() {
         clearAll();
@@ -128,5 +133,18 @@ public class SoupRenderer implements Runnables.WorldRender {
         shaderStacks = new ArrayList<>();
         shaderStacks.add(new ShaderStack());
         activeStack = 0;
+    }
+
+    public List<String> getValidUniforms() {
+        if (validUniforms == null) {
+            validUniforms = new ArrayList<>();
+            for (Map.Entry<String, Uniform> entry : Events.ShaderUniform.registry.entrySet()) {
+                if (entry.getValue().getLength() == 1) {
+                    validUniforms.add(entry.getKey());
+                }
+            }
+        }
+
+        return validUniforms;
     }
 }
