@@ -55,7 +55,7 @@ public class ConfigWidget extends ParameterTextWidget {
         super.renderWidget(context, mouseX, mouseY, delta);
 
         if (!children.isEmpty()) {
-            context.fill(getX(), getY() + getHeight(), getX() + getWidth() / 3, getY() + getHeight() + 20 * children.size(), ColorHelper.fromFloats(0.2f, 0, 0, 0));
+            context.fill(getX(), getY() + getHeight(), getX() + getWidth() / 3, getY() + getHeight() + 20 * children.size(), ColorHelper.fromFloats(0.4f, 0, 0, 0));
 
             for (ConfigValueWidget child : children) {
                 child.renderWidget(context, mouseX, mouseY, delta);
