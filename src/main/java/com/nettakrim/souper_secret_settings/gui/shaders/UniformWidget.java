@@ -4,7 +4,6 @@ import com.mclegoman.luminance.client.shaders.Uniforms;
 import com.mclegoman.luminance.client.shaders.interfaces.PostEffectPassInterface;
 import com.mclegoman.luminance.client.shaders.overrides.LuminanceUniformOverride;
 import com.mclegoman.luminance.client.shaders.overrides.UniformOverride;
-import com.mclegoman.luminance.client.shaders.uniforms.config.EmptyConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.MapConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
 import com.mclegoman.luminance.common.util.Couple;
@@ -81,7 +80,7 @@ public class UniformWidget extends DisplayWidget<Couple<UniformData<String>,Unif
 
     @Override
     protected List<Float> getDisplayFloats() {
-        List<Float> display = override.getOverride(EmptyConfig.INSTANCE, Uniforms.shaderTime);
+        List<Float> display = override.getOverride(pass.shader.shaderData.configs.get(pass.passIndex).get(uniform.getName()).value, Uniforms.shaderTime);
         List<Float> base = ShaderData.getBaseValues((PostEffectPassInterface)pass.postEffectPass, uniform.getName());
         for (int i = 0; i < display.size(); i++) {
             if (display.get(i) == null) {

@@ -18,28 +18,34 @@ import java.util.function.Consumer;
 public class ConfigWidget extends ParameterTextWidget {
     protected final List<ConfigValueWidget> children;
     protected final ListScreen<?> listScreen;
-    protected final Map<String, List<Object>> previousValues;
     protected final int index;
+    protected final OverrideConfig defaultConfig;
+    protected final Map<String, List<Object>> previousValues;
 
     protected Consumer<ConfigWidget> onChange;
 
     public OverrideSource overrideSource;
 
-    protected OverrideConfig defaultConfig;
 
     public ConfigWidget(int x, int width, int height, Text message, ShaderStack stack, ListScreen<?> listScreen, String initialValue, String defaultValue, UniformConfig initialConfig, UniformConfig defaultConfig, int index) {
         super(x, width, height, message, stack, defaultValue);
 
         children = new ArrayList<>();
         this.listScreen = listScreen;
-        previousValues = new HashMap<>();
         this.index = index;
-
         this.defaultConfig = new OverrideConfig(defaultConfig);
+
+        OverrideConfig initial = new OverrideConfig(initialConfig);
+        initial.setIndex(index);
+
+        previousValues = new HashMap<>();
+        for (String name : getFilteredNames(initial)) {
+            previousValues.put(name, initial.getObjects(name));
+        }
 
         setText(initialValue);
         updateOverrideSource();
-        createChildren(new OverrideConfig(initialConfig));
+        createChildren(initial);
 
         setChangedListener(this::setValue);
     }
@@ -105,7 +111,7 @@ public class ConfigWidget extends ParameterTextWidget {
                         defaultObjects = objects;
                     }
                 }
-                ConfigValueWidget child = new ConfigValueWidget(getX(), getWidth(), 20, stack, name, objects, defaultObjects);
+                ConfigValueWidget child = new ConfigValueWidget(getX(), getWidth(), 20, name, objects, defaultObjects);
                 child.setChangedListener(this::onChangeChild);
                 children.add(child);
                 child.addToScreen(listScreen);
