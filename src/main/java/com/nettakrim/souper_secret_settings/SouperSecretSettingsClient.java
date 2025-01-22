@@ -41,7 +41,7 @@ public class SouperSecretSettingsClient implements ClientModInitializer {
 	}
 
 	public static void say(String key, Object... args) {
-		sayText(translate("say").setStyle(Style.EMPTY.withColor(nameTextColor)).append(translate(key, args).setStyle(Style.EMPTY.withColor(textColor))));
+		sayText(translate(key, args).setStyle(Style.EMPTY.withColor(textColor)));
 	}
 
 	public static void sayText(MutableText text) {

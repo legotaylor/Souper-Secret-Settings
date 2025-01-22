@@ -8,8 +8,14 @@ in vec2 oneTexel;
 
 out vec4 fragColor;
 
-uniform float YFov;
 uniform vec3 Offset;
+
+uniform float YFov;
+uniform float ZStep;
+uniform float ZGrowth;
+uniform float Steps;
+uniform float SubThreshold;
+uniform float SubSteps;
 
 float near = 0.1;
 float far = 1000.0;
@@ -25,10 +31,10 @@ vec2 GetRayPos(mat4 projection, float xSlope, float ySlope, vec3 offset, float d
     return ((projected.xy/projected.z) + vec2(1.0))/2;
 }
 
-vec2 SubStepRaycast(mat4 projection, float xSlope, float ySlope, vec3 offset, float start, float end, float steps) {
+vec2 SubStepRaycast(mat4 projection, float xSlope, float ySlope, vec3 offset, float start, float end) {
     vec2 screen;
-    for (float i = 0; i < steps; i++) {
-        float t = i/steps;
+    for (float i = 0; i < SubSteps; i++) {
+        float t = i/SubSteps;
 
         float d = mix(start, end, t);
         screen = GetRayPos(projection, xSlope, ySlope, offset, d);
@@ -41,22 +47,23 @@ vec2 SubStepRaycast(mat4 projection, float xSlope, float ySlope, vec3 offset, fl
     return screen;
 }
 
-vec2 ExponentialRaycast(mat4 projection, float xSlope, float ySlope, vec3 offset, float zStep, float zGrowth, float steps, float subThreshold) {
+vec2 ExponentialRaycast(mat4 projection, float xSlope, float ySlope, vec3 offset) {
     vec2 screen;
-    for (float i = 1; i < steps; i++) {
-        //d = zStep * (zGrowth^i) * i
+    float zStep = ZStep;
+    for (float i = 1; i < Steps; i++) {
+        //d = ZStep * (ZGrowth^i) * i
         float d = i*zStep;
 
         screen = GetRayPos(projection, xSlope, ySlope, offset, d);
         float depth = LinearizeDepth(texture(InDepthSampler, screen).r);
 
         if (depth < d) {
-            if (depth < subThreshold) {
-                return SubStepRaycast(projection, xSlope, ySlope, offset, i * zStep/zGrowth, d, 10);
+            if (depth < SubThreshold) {
+                return SubStepRaycast(projection, xSlope, ySlope, offset, i * zStep/ZGrowth, d);
             }
             return screen;
         }
-        zStep *= zGrowth;
+        zStep *= ZGrowth;
     }
     return screen;
 }
@@ -78,7 +85,7 @@ void main(){
     //https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/gluPerspective.xml
     mat4 projection = mat4(yCotan/aspect, 0, 0, 0, 0, yCotan, 0, 0, 0, 0, (far+near)/(near-far), (2*far*near)/(near-far), 0, 0, -1, 0);
 
-    vec2 hitPos = ExponentialRaycast(projection, xSlope, ySlope, Offset, 0.001, 1.07, 128, 10);
+    vec2 hitPos = ExponentialRaycast(projection, xSlope, ySlope, Offset);
     vec4 color = texture(InSampler, hitPos);
 
     fragColor = vec4(color.rgb, 1.0);
