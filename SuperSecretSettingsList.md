@@ -39,6 +39,7 @@ All builtin resourcepacks should be enabled by default, but they may need to ena
 | wobble                             |                  | half_invert     |
 |                                    |                  | halftone        |
 |                                    |                  | harsh_dither    |
+|                                    |                  | hsv_map         |
 |                                    |                  | highpass        |
 |                                    |                  | horror          |
 |                                    |                  | hue_rotate      |
@@ -66,3 +67,4 @@ All builtin resourcepacks should be enabled by default, but they may need to ena
 |                                    |                  | toxic_waste     |
 |                                    |                  | voronoi         |
 |                                    |                  | walls           |
+|                                    |                  | xor             |
