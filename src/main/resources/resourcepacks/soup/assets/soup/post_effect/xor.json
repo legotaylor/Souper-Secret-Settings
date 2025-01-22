@@ -14,7 +14,13 @@
             "uniforms": [
                 {
                     "name": "Value",
-                    "values": [100.0, 100.0, 100.0]
+                    "values": [],
+                    "override": [ "soup_byte", "soup_byte", "soup_byte" ],
+                    "config": [
+                        { "name": "0_value", "values": [ "01100100" ] },
+                        { "name": "1_value", "values": [ "01100100" ] },
+                        { "name": "2_value", "values": [ "01100100" ] }
+                    ]
                 }
             ],
             "output": "0"

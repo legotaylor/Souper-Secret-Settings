@@ -1,6 +1,7 @@
 package com.nettakrim.souper_secret_settings;
 
 import com.nettakrim.souper_secret_settings.shaders.SoupRenderer;
+import com.nettakrim.souper_secret_settings.shaders.SoupUniforms;
 import com.nettakrim.souper_secret_settings.shaders.calculations.Calculations;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -33,6 +34,7 @@ public class SouperSecretSettingsClient implements ClientModInitializer {
 
 		ResourceManagerHelper.registerBuiltinResourcePack(Identifier.of("soup"), FabricLoader.getInstance().getModContainer(MODID).orElseThrow(), Text.literal("Extra Soup"), ResourcePackActivationType.DEFAULT_ENABLED);
 
+		SoupUniforms.register();
 		Calculations.register();
 		SouperSecretSettingsCommands.initialize();
 		Keybinds.init();
