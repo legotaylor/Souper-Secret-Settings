@@ -101,6 +101,14 @@ public class SoupRenderer implements Runnables.WorldRender {
                 return shaderRegistry;
             }
         }
+
+        if (identifier.getNamespace().equals("minecraft")) {
+            Identifier guessed = Shaders.guessPostShader(identifier.getPath());
+            if (!guessed.getNamespace().equals("minecraft")) {
+                return getShaderRegistry(guessed);
+            }
+        }
+
         return null;
     }
 
