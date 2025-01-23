@@ -55,6 +55,7 @@ All builtin resourcepacks should be enabled by default, but they may need to ena
 |                                    |                  | out_of_bounds   |
 |                                    |                  | pixels          |
 |                                    |                  | plants          |
+|                                    |                  | plasma          |
 |                                    |                  | retro           |
 |                                    |                  | rings           |
 |                                    |                  | rolling_shutter |

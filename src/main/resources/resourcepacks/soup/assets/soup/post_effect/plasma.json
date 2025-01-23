@@ -1,0 +1,39 @@
+{
+    "targets": {
+        "0": {}
+    },
+    "passes": [
+        {
+            "program": "soup:post/gradient_map",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "minecraft:main"
+                }
+            ],
+            "uniforms": [
+                { "name": "Color1", "values": [ 0.050383, 0.029803, 0.527975 ] },
+                { "name": "Color2", "values": [ 0.325150, 0.006915, 0.639512 ] },
+                { "name": "Color3", "values": [ 0.546157, 0.038954, 0.647010 ] },
+                { "name": "Color4", "values": [ 0.723444, 0.196158, 0.538981 ] },
+                { "name": "Color5", "values": [ 0.859750, 0.360588, 0.406917 ] },
+                { "name": "Color6", "values": [ 0.955470, 0.533093, 0.285490 ] },
+                { "name": "Color7", "values": [ 0.994495, 0.740880, 0.166335 ] },
+                { "name": "Color8", "values": [ 0.940015, 0.975158, 0.131326 ] }
+
+            ],
+            "comment": "colors from https://github.com/matplotlib/matplotlib/blob/306c8dedaf0dae9d4636438bf7395457ff7bb2c0/lib/matplotlib/_cm_listed.py#L517",
+            "output": "0"
+        },
+        {
+            "program": "minecraft:post/blit",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "0"
+                }
+            ],
+            "output": "minecraft:main"
+        }
+    ]
+}

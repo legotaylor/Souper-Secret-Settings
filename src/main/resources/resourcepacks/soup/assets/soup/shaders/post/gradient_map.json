@@ -1,0 +1,22 @@
+{
+    "vertex": "minecraft:post/sobel",
+    "fragment": "soup:post/gradient_map",
+    "samplers": [
+        { "name": "InSampler" }
+    ],
+    "uniforms": [
+        { "name": "ProjMat", "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+        { "name": "InSize",  "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
+        { "name": "OutSize", "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
+        { "name": "Gray",    "type": "float",     "count": 3,  "values": [ 0.3, 0.59, 0.11 ] },
+        { "name": "Colors",  "type": "float",     "count": 1,  "values": [ 7.0 ] },
+        { "name": "Color1",  "type": "float",     "count": 3,  "values": [ 0.0,   0.0,   0.0   ] },
+        { "name": "Color2",  "type": "float",     "count": 3,  "values": [ 0.142, 0.142, 0.142 ] },
+        { "name": "Color3",  "type": "float",     "count": 3,  "values": [ 0.286, 0.286, 0.286 ] },
+        { "name": "Color4",  "type": "float",     "count": 3,  "values": [ 0.429, 0.429, 0.429 ] },
+        { "name": "Color5",  "type": "float",     "count": 3,  "values": [ 0.571, 0.571, 0.571 ] },
+        { "name": "Color6",  "type": "float",     "count": 3,  "values": [ 0.714, 0.714, 0.714 ] },
+        { "name": "Color7",  "type": "float",     "count": 3,  "values": [ 0.857, 0.857, 0.857 ] },
+        { "name": "Color8",  "type": "float",     "count": 3,  "values": [ 1.0,   1.0,   1.0   ] }
+    ]
+}

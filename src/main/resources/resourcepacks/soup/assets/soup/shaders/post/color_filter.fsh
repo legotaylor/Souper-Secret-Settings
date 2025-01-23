@@ -20,6 +20,6 @@ void main(){
     if (maxRGB(col*Mask) > maxRGB(col*Threshold)) {
         fragColor = vec4(col.rgb, 1.0);
     } else {
-        fragColor = vec4(vec3(col.r*Gray.r + col.g*Gray.g + col.b*Gray.b), 1.0);
+        fragColor = vec4(vec3(dot(col, Gray)), 1.0);
     }
 }
