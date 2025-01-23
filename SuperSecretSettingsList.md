@@ -53,6 +53,7 @@ All builtin resourcepacks should be enabled by default, but they may need to ena
 |                                    |                  | mouse           |
 |                                    |                  | normalise       |
 |                                    |                  | out_of_bounds   |
+|                                    |                  | pendulum        |
 |                                    |                  | pixels          |
 |                                    |                  | plants          |
 |                                    |                  | plasma          |
