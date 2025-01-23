@@ -34,7 +34,7 @@ public class ConfigValueWidget extends TextWidget {
             setWidth(childStart);
             int childWidth = (width - childStart) / objects.size();
             for (int i = 0; i < objects.size(); i++) {
-                SuggestionTextFieldWidget textFieldWidget = new SuggestionTextFieldWidget(x + childStart + (childWidth * i), childWidth, height, Text.literal(String.valueOf(i)));
+                SuggestionTextFieldWidget textFieldWidget = new SuggestionTextFieldWidget(x + childStart + (childWidth * i), childWidth, height, Text.literal(String.valueOf(i)), true);
                 int finalI = i;
                 textFieldWidget.setText(String.valueOf(objects.get(i)));
                 textFieldWidget.setChangedListener((s) -> valueChanged(s, finalI));

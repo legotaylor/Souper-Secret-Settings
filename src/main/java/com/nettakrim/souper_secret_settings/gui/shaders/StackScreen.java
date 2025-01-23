@@ -56,11 +56,13 @@ public class StackScreen extends ListScreen<ShaderData> {
     }
 
     @Override
-    public void addAddition(String addition) {
+    public ShaderData tryGetAddition(String addition) {
         Identifier identifier = Shaders.guessPostShader(addition);
         if (identifier != null) {
-            SouperSecretSettingsClient.soupRenderer.addShader(identifier, 1);
-            SouperSecretSettingsClient.client.setScreen(new StackScreen(SouperSecretSettingsClient.soupRenderer.getActiveStack()));
+            if (SouperSecretSettingsClient.soupRenderer.addShader(identifier, 1)) {
+                return SouperSecretSettingsClient.soupRenderer.getActiveStack().shaderDatas.removeLast();
+            }
         }
+        return null;
     }
 }

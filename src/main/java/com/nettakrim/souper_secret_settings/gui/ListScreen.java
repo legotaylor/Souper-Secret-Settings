@@ -8,6 +8,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,7 @@ public abstract class ListScreen<V> extends Screen {
             listWidgets.add(listWidget);
         }
 
-        suggestionTextFieldWidget = new SuggestionTextFieldWidget(listX, listWidth, 20, Text.literal("list addition"));
+        suggestionTextFieldWidget = new SuggestionTextFieldWidget(listX, listWidth, 20, Text.literal("list addition"), false);
         suggestionTextFieldWidget.setListeners(this::getAdditions, this::addAddition);
         addDrawableChild(suggestionTextFieldWidget);
 
@@ -119,9 +120,21 @@ public abstract class ListScreen<V> extends Screen {
         return false;
     }
 
+    protected void addAddition(String addition) {
+        V entry = tryGetAddition(addition);
+        if (entry != null) {
+            ListWidget listWidget = createListWidget(entry);
+            addEntry(listWidgets.size(), entry, listWidget);
+            addSelectable(listWidget);
+            updateSpacing();
+        }
+        suggestionTextFieldWidget.setText("");
+    }
+
     public abstract List<String> getAdditions();
 
-    public abstract void addAddition(String addition);
+    @Nullable
+    public abstract V tryGetAddition(String addition);
 
     public void swapEntry(ListWidget listWidget, int direction) {
         int index = listWidgets.indexOf(listWidget);

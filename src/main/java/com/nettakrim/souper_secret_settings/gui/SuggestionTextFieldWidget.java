@@ -16,9 +16,12 @@ public class SuggestionTextFieldWidget extends DraggableTextFieldWidget {
     private final List<String> currentSuggestions = new ArrayList<>();
     private int currentSuggestionIndex = 0;
 
-    public SuggestionTextFieldWidget(int x, int width, int height, Text message) {
+    private final boolean resetOnEmpty;
+
+    public SuggestionTextFieldWidget(int x, int width, int height, Text message, boolean resetOnEmpty) {
         super(x, width, height, message);
         super.setChangedListener(this::onChange);
+        this.resetOnEmpty = resetOnEmpty;
     }
 
     @Override
@@ -48,7 +51,7 @@ public class SuggestionTextFieldWidget extends DraggableTextFieldWidget {
         List<String> suggestions = validAdditions.get();
 
         int length = s.length();
-        if (length == 0) {
+        if (length == 0 && resetOnEmpty) {
             previousSuggestion = null;
         }
         for (String suggestion : suggestions) {

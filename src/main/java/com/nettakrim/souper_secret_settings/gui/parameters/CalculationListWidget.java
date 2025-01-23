@@ -1,6 +1,5 @@
 package com.nettakrim.souper_secret_settings.gui.parameters;
 
-import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.ListWidget;
 import com.nettakrim.souper_secret_settings.shaders.ShaderStack;

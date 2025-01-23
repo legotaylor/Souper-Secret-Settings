@@ -13,7 +13,7 @@ public class ParameterTextWidget extends SuggestionTextFieldWidget {
     protected final ShaderStack stack;
 
     public ParameterTextWidget(int x, int width, int height, Text message, ShaderStack stack, String defaultValue) {
-        super(x, width, height, message);
+        super(x, width, height, message, true);
         this.stack = stack;
         this.defaultValue = defaultValue;
         if (defaultValue != null) {

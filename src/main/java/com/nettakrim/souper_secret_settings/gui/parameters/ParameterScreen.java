@@ -45,11 +45,7 @@ public class ParameterScreen extends ListScreen<Calculation> {
     }
 
     @Override
-    public void addAddition(String addition) {
-        Calculation calculation = Calculations.createCalcultion(addition);
-        if (calculation != null) {
-            stack.calculations.add(calculation);
-            SouperSecretSettingsClient.client.setScreen(new ParameterScreen(SouperSecretSettingsClient.soupRenderer.getActiveStack()));
-        }
+    public Calculation tryGetAddition(String addition) {
+        return Calculations.createCalcultion(addition);
     }
 }
