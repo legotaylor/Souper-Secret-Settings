@@ -13,10 +13,8 @@
         { "name": "InputX",       "type": "float",     "count": 4,  "values": [ 1.0, 0.0, 1.0, 0.0 ] },
         { "name": "InputY",       "type": "float",     "count": 4,  "values": [ 0.0, 1.0, 0.0, 1.0 ] },
         { "name": "InputOffset",  "type": "float",     "count": 4,  "values": [ 0.0, 0.0, 0.0, 0.0 ] },
-        { "name": "OutputX",      "type": "float",     "count": 2,  "values": [ 0.0, 0.0 ] },
-        { "name": "OutputY",      "type": "float",     "count": 2,  "values": [ 0.0, 0.0 ] },
-        { "name": "OutputZ",      "type": "float",     "count": 2,  "values": [ 1.0, 0.0 ] },
-        { "name": "OutputW",      "type": "float",     "count": 2,  "values": [ 0.0, 1.0 ] },
+        { "name": "OutputX",      "type": "float",     "count": 4,  "values": [ 0.0, 0.0, 1.0, 0.0 ] },
+        { "name": "OutputY",      "type": "float",     "count": 4,  "values": [ 0.0, 0.0, 0.0, 1.0 ] },
         { "name": "OutputOffset", "type": "float",     "count": 2,  "values": [ 0.0, 0.0 ] }
     ]
 }

@@ -40,10 +40,8 @@ uniform vec4 InputX;
 uniform vec4 InputY;
 uniform vec4 InputOffset;
 
-uniform vec2 OutputX;
-uniform vec2 OutputY;
-uniform vec2 OutputZ;
-uniform vec2 OutputW;
+uniform vec4 OutputX;
+uniform vec4 OutputY;
 uniform vec2 OutputOffset;
 
 vec4 derivative(vec4 state) {
@@ -92,7 +90,7 @@ void main(){
         pendulum = updatePendulum(pendulum, TimeStep);
     }
 
-    vec4 col = texture(InSampler, fract(OutputX*pendulum.x + OutputY*pendulum.y + OutputZ*pendulum.z + OutputW*pendulum.w + OutputOffset));
+    vec4 col = texture(InSampler, fract(vec2(dot(OutputX, pendulum), dot(OutputY, pendulum)) + OutputOffset));
 
     fragColor = vec4(col.rgb, 1.0);
 }
