@@ -70,6 +70,12 @@ public class ShaderData {
         UniformConfig defaultConfig = ((Map<String,UniformConfig>)((PostEffectPassInterface)pass).luminance$getCustomData(configPath).get()).get(uniform.getName());
 
         LuminanceUniformOverride uniformOverride = new LuminanceUniformOverride(defaultOverride.getStrings());
+        for (int i = 0; i < uniformOverride.overrideSources.size(); i++) {
+            OverrideSource overrideSource = uniformOverride.overrideSources.get(i);
+            if (overrideSource instanceof UniformSource uniformSource) {
+                uniformOverride.overrideSources.set(i, new ParameterOverrideSource(uniformSource));
+            }
+        }
 
         MapConfig configOverride = new MapConfig(List.of());
         configOverride.mergeWithConfig(defaultConfig);
