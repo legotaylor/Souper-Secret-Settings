@@ -49,7 +49,7 @@ public class ShaderData {
 
             ShaderProgram program = pass.getProgram();
             List<String> names = ((ShaderProgramInterface)program).luminance$getUniformNames();
-            initialise((PostEffectPassInterface)pass, names, program);
+            initialiseUniforms((PostEffectPassInterface)pass, names, program);
             for (String name : names) {
                 defaultOverride(pass, program.getUniform(name), override, config);
             }
@@ -73,7 +73,7 @@ public class ShaderData {
         for (int i = 0; i < uniformOverride.overrideSources.size(); i++) {
             OverrideSource overrideSource = uniformOverride.overrideSources.get(i);
             if (overrideSource instanceof UniformSource uniformSource) {
-                uniformOverride.overrideSources.set(i, new ParameterOverrideSource(uniformSource));
+                uniformOverride.overrideSources.set(i, new MixOverrideSource(new ParameterOverrideSource(uniformSource)));
             }
         }
 
@@ -84,7 +84,7 @@ public class ShaderData {
         configMap.put(uniform.getName(), new UniformData<>(configOverride, defaultConfig));
     }
 
-    private void initialise(PostEffectPassInterface pass, List<String> names, ShaderProgram program) {
+    private void initialiseUniforms(PostEffectPassInterface pass, List<String> names, ShaderProgram program) {
         if ((pass).luminance$getCustomData(overridePath).isPresent()) {
             return;
         }
@@ -93,14 +93,14 @@ public class ShaderData {
         Map<String,UniformConfig> configMap = new HashMap<>(names.size());
 
         for (String name : names) {
-            setDefaults(pass, program.getUniform(name), overrideMap, configMap);
+            setUniformInitial(pass, program.getUniform(name), overrideMap, configMap);
         }
 
         pass.luminance$putCustomData(overridePath, overrideMap);
         pass.luminance$putCustomData(configPath, configMap);
     }
 
-    private void setDefaults(PostEffectPassInterface pass, @Nullable GlUniform uniform, Map<String,LuminanceUniformOverride> overrideMap, Map<String,UniformConfig> configMap) {
+    private void setUniformInitial(PostEffectPassInterface pass, @Nullable GlUniform uniform, Map<String,LuminanceUniformOverride> overrideMap, Map<String,UniformConfig> configMap) {
         assert uniform != null;
         if (!allowUniform(uniform.getName())) {
             return;
