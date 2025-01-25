@@ -3,6 +3,7 @@ package com.nettakrim.souper_secret_settings.shaders;
 import com.mclegoman.luminance.client.shaders.Shader;
 import com.mclegoman.luminance.client.shaders.Shaders;
 import com.mclegoman.luminance.client.shaders.interfaces.PostEffectPassInterface;
+import com.mclegoman.luminance.client.shaders.interfaces.PostEffectProcessorInterface;
 import com.mclegoman.luminance.client.shaders.interfaces.ShaderProgramInterface;
 import com.mclegoman.luminance.client.shaders.overrides.*;
 import com.mclegoman.luminance.client.shaders.uniforms.UniformValue;
@@ -10,7 +11,6 @@ import com.mclegoman.luminance.client.shaders.uniforms.config.ConfigData;
 import com.mclegoman.luminance.client.shaders.uniforms.config.EmptyConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.MapConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
-import com.mclegoman.luminance.mixin.client.shaders.PostEffectProcessorAccessor;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import net.minecraft.client.gl.GlUniform;
 import net.minecraft.client.gl.PostEffectPass;
@@ -39,7 +39,7 @@ public class ShaderData {
         this.shader = shader;
         this.shader.setPostProcessor();
 
-        List<PostEffectPass> passes = ((PostEffectProcessorAccessor)this.shader.getPostProcessor()).getPasses();
+        List<PostEffectPass> passes = ((PostEffectProcessorInterface)this.shader.getPostProcessor()).luminance$getPasses(null);
         this.overrides = new ArrayList<>(passes.size());
         this.configs = new ArrayList<>(passes.size());
 
@@ -191,7 +191,7 @@ public class ShaderData {
     public void render(FrameGraphBuilder builder, int textureWidth, int textureHeight, DefaultFramebufferSet framebufferSet) {
         if (!active) return;
 
-        Shaders.renderUsingFramebufferSet(shader.getPostProcessor(), builder, textureWidth, textureHeight, framebufferSet);
+        Shaders.renderProcessorUsingFramebufferSet(shader.getPostProcessor(), builder, textureWidth, textureHeight, framebufferSet, null);
     }
 
     public static final List<String> uniformsToIgnore = List.of("ProjMat", "InSize", "OutSize");

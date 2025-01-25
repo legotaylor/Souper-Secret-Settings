@@ -2,9 +2,9 @@ package com.nettakrim.souper_secret_settings.shaders;
 
 import com.mclegoman.luminance.client.events.Runnables;
 import com.mclegoman.luminance.client.shaders.interfaces.PostEffectPassInterface;
+import com.mclegoman.luminance.client.shaders.interfaces.PostEffectProcessorInterface;
 import com.mclegoman.luminance.client.shaders.overrides.UniformOverride;
 import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
-import com.mclegoman.luminance.mixin.client.shaders.PostEffectProcessorAccessor;
 import net.minecraft.client.gl.PostEffectPass;
 
 import java.util.*;
@@ -33,7 +33,7 @@ public class OverrideManager {
             currentPassIndex++;
             ShaderData shaderData = currentShaders.peek();
             if (shaderData.active) {
-                List<PostEffectPass> currentPasses = ((PostEffectProcessorAccessor) shaderData.shader.getPostProcessor()).getPasses();
+                List<PostEffectPass> currentPasses = ((PostEffectProcessorInterface) shaderData.shader.getPostProcessor()).luminance$getPasses(null);
 
                 while (currentPassIndex < currentPasses.size()) {
                     if (currentPasses.get(currentPassIndex) == postEffectPass) {

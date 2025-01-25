@@ -95,7 +95,7 @@ public class SoupRenderer implements Runnables.WorldRender {
         return Shader.RenderType.WORLD;
     }
 
-    public ShaderRegistry getShaderRegistry(Identifier identifier) {
+    public static ShaderRegistry getShaderRegistry(Identifier identifier) {
         for (ShaderRegistry shaderRegistry : Shaders.registry) {
             if (shaderRegistry.getID().equals(identifier)) {
                 return shaderRegistry;
