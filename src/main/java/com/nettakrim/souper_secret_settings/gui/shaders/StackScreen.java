@@ -1,6 +1,6 @@
 package com.nettakrim.souper_secret_settings.gui.shaders;
 
-import com.mclegoman.luminance.client.shaders.ShaderRegistry;
+import com.mclegoman.luminance.client.shaders.ShaderRegistryEntry;
 import com.mclegoman.luminance.client.shaders.Shaders;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
@@ -41,9 +41,9 @@ public class StackScreen extends ListScreen<ShaderData> {
 
     @Override
     public List<String> getAdditions() {
-        List<String> shaders = new ArrayList<>(Shaders.registry.size()+1);
+        List<String> shaders = new ArrayList<>(Shaders.getRegistry().size()+1);
 
-        for (ShaderRegistry shaderRegistry : Shaders.registry) {
+        for (ShaderRegistryEntry shaderRegistry : Shaders.getRegistry()) {
             shaders.add(shaderRegistry.getID().toString());
         }
         if (shaders.size() > 1) {
@@ -59,8 +59,8 @@ public class StackScreen extends ListScreen<ShaderData> {
     public ShaderData tryGetAddition(String addition) {
         Identifier identifier = Shaders.guessPostShader(addition);
         if (identifier != null) {
-            if (SouperSecretSettingsClient.soupRenderer.addShader(identifier, 1)) {
-                return SouperSecretSettingsClient.soupRenderer.getActiveStack().shaderDatas.removeLast();
+            if (SouperSecretSettingsClient.soupRenderer.addShaders(Shaders.getMainRegistryId(), identifier, 1, stack, stack::addShaderData)) {
+                return stack.shaderDatas.removeLast();
             }
         }
         return null;

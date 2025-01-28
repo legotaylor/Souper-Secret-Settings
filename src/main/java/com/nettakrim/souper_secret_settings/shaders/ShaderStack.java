@@ -65,12 +65,11 @@ public class ShaderStack {
     }
 
     public void addShaderData(ShaderData shaderData) {
-        //TODO: this, properly
-        if (Objects.equals(shaderData.shader.getShaderId().getNamespace(), SouperSecretSettingsClient.MODID)) {
-            layerEffects.add(shaderData);
-        } else {
-            shaderDatas.add(shaderData);
-        }
+        shaderDatas.add(shaderData);
+    }
+
+    public void addLayerEffect(ShaderData shaderData) {
+        layerEffects.add(shaderData);
     }
 
     public void clear() {

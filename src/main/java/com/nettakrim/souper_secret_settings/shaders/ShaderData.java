@@ -20,7 +20,9 @@ public class ShaderData {
 
     public ShaderData(Shader shader) {
         this.shader = shader;
-        this.shader.setPostProcessor();
+        if (this.shader.getPostProcessor() == null) {
+            this.shader.setPostProcessor();
+        }
 
         PostEffectProcessorInterface processor = (PostEffectProcessorInterface)this.shader.getPostProcessor();
         Set<Identifier> customPasses = processor.luminance$getCustomPassNames();
@@ -47,7 +49,7 @@ public class ShaderData {
             return false;
         }
 
-        Shaders.renderProcessorUsingFramebufferSet(shader.getPostProcessor(), builder, textureWidth, textureHeight, framebufferSet, customPasses);
+        Shaders.renderProcessorUsingFramebufferSet(shader, builder, textureWidth, textureHeight, framebufferSet, customPasses);
         return true;
     }
 

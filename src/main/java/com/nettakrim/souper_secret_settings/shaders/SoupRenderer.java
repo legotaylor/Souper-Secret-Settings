@@ -3,7 +3,7 @@ package com.nettakrim.souper_secret_settings.shaders;
 import com.mclegoman.luminance.client.events.Events;
 import com.mclegoman.luminance.client.events.Runnables;
 import com.mclegoman.luminance.client.shaders.Shader;
-import com.mclegoman.luminance.client.shaders.ShaderRegistry;
+import com.mclegoman.luminance.client.shaders.ShaderRegistryEntry;
 import com.mclegoman.luminance.client.shaders.Shaders;
 import com.mclegoman.luminance.client.shaders.uniforms.Uniform;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
@@ -13,10 +13,12 @@ import net.minecraft.client.render.DefaultFramebufferSet;
 import net.minecraft.client.render.FrameGraphBuilder;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.Random;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class SoupRenderer implements Runnables.WorldRender {
     public ArrayList<ShaderStack> shaderStacks;
@@ -24,6 +26,8 @@ public class SoupRenderer implements Runnables.WorldRender {
     public int activeStack;
 
     private List<String> validUniforms;
+
+    public static final Identifier layerEffectRegistry = Identifier.of(SouperSecretSettingsClient.MODID, "layer_effects");
 
     public SoupRenderer() {
         clearAll();
@@ -56,81 +60,98 @@ public class SoupRenderer implements Runnables.WorldRender {
         return true;
     }
 
-    public boolean addShader(Identifier id, int amount) {
-        if (id.equals(Identifier.ofVanilla("random"))) {
-            return addRandomShaders(amount);
-        }
-
-        ShaderRegistry shaderRegistry = getShaderRegistry(id);
-        if (shaderRegistry == null) {
-            SouperSecretSettingsClient.say("shader.missing", id);
+    public boolean addShaders(Identifier registry, Identifier id, int amount, ShaderStack stack, Consumer<ShaderData> addFunction) {
+        List<ShaderData> shaders = getShaderAdditions(registry, id, amount, stack);
+        if (shaders == null || shaders.isEmpty()) {
             return false;
         }
+
+        for (ShaderData shaderData : shaders) {
+            addFunction.accept(shaderData);
+        }
+        return true;
+    }
+
+    @Nullable
+    private List<ShaderData> getShaderAdditions(Identifier registry, Identifier id, int amount, ShaderStack stack) {
+        if (id.equals(Identifier.ofVanilla("random"))) {
+            return getRandomShaders(stack, registry, amount);
+        }
+
+        ShaderRegistryEntry shaderRegistry = getRegistryEntry(registry, id);
+        if (shaderRegistry == null) {
+            SouperSecretSettingsClient.say("shader.missing", id);
+            return null;
+        }
+
+        List<ShaderData> shaders = new ArrayList<>();
 
         Shader shader = new Shader(shaderRegistry, this::getRenderType);
         int i = 0;
         while (i < amount) {
-            getActiveStack().addShaderData(new ShaderData(shader));
+            shaders.add(new ShaderData(shader));
             i++;
         }
 
-        return true;
+        return shaders;
     }
 
-    private boolean addRandomShaders(int amount) {
+    @Nullable
+    private List<ShaderData> getRandomShaders(ShaderStack stack, Identifier registry, int amount) {
+        List<ShaderData> shaders = new ArrayList<>();
+        ShaderRegistryEntry shaderRegistry = (stack == null || stack.shaderDatas.isEmpty()) ? null : stack.shaderDatas.getLast().shader.getShaderData();
+
         int i = 0;
         while (i < amount) {
-            ShaderRegistry shaderRegistry = getRandomShader();
+            shaderRegistry = getRandomShader(registry, shaderRegistry);
             if (shaderRegistry == null) {
                 SouperSecretSettingsClient.say("shader.registry_empty");
-                return false;
+                return null;
             }
-            getActiveStack().addShaderData(new ShaderData(new Shader(shaderRegistry, this::getRenderType)));
+            shaders.add(new ShaderData(new Shader(shaderRegistry, this::getRenderType)));
             i++;
         }
-        return true;
+
+        return shaders;
+    }
+
+    private ShaderRegistryEntry getRandomShader(Identifier registry, ShaderRegistryEntry previous) {
+        int size = Shaders.getRegistry(registry).size();
+        if (size == 0) {
+            return null;
+        }
+
+        Random random = ((GameRendererAccessor)MinecraftClient.getInstance().gameRenderer).getRandom();
+        ShaderRegistryEntry newShader;
+
+        int attempts = 0;
+        do {
+            newShader = Shaders.getRegistry(registry).get(random.nextBetween(0, size-1));
+            attempts++;
+        } while (attempts < 100 && previous == newShader);
+
+        return newShader;
     }
 
     private Shader.RenderType getRenderType() {
         return Shader.RenderType.WORLD;
     }
 
-    public static ShaderRegistry getShaderRegistry(Identifier identifier) {
-        for (ShaderRegistry shaderRegistry : Shaders.registry) {
+    public static ShaderRegistryEntry getRegistryEntry(Identifier registry, Identifier identifier) {
+        for (ShaderRegistryEntry shaderRegistry : Shaders.getRegistry(registry)) {
             if (shaderRegistry.getID().equals(identifier)) {
                 return shaderRegistry;
             }
         }
 
         if (identifier.getNamespace().equals("minecraft")) {
-            Identifier guessed = Shaders.guessPostShader(identifier.getPath());
+            Identifier guessed = Shaders.guessPostShader(registry, identifier.getPath());
             if (!guessed.getNamespace().equals("minecraft")) {
-                return getShaderRegistry(guessed);
+                return getRegistryEntry(registry, guessed);
             }
         }
 
         return null;
-    }
-
-    private ShaderRegistry getRandomShader() {
-        int size = Shaders.registry.size();
-        if (size == 0) {
-            return null;
-        }
-
-        Random random = ((GameRendererAccessor)MinecraftClient.getInstance().gameRenderer).getRandom();
-
-        ShaderStack stack = getActiveStack();
-        ShaderRegistry previous = stack == null || stack.shaderDatas.isEmpty() ? null : stack.shaderDatas.getLast().shader.getShaderData();
-        ShaderRegistry newShader;
-
-        int attempts = 0;
-        do {
-            newShader = Shaders.registry.get(random.nextBetween(0, size-1));
-            attempts++;
-        } while (attempts < 100 && previous == newShader);
-
-        return newShader;
     }
 
     public ShaderStack getActiveStack() {
