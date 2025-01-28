@@ -5,7 +5,9 @@ import com.mclegoman.luminance.client.shaders.interfaces.PostEffectPassInterface
 import com.mclegoman.luminance.client.shaders.interfaces.PostEffectProcessorInterface;
 import com.mclegoman.luminance.client.shaders.overrides.UniformOverride;
 import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
+import com.mclegoman.luminance.common.util.Couple;
 import net.minecraft.client.gl.PostEffectPass;
+import net.minecraft.util.Identifier;
 
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -13,16 +15,19 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 public class OverrideManager {
-    private static Queue<ShaderData> currentShaders;
+    private static Queue<Couple<ShaderData, Identifier>> currentShaders;
     private static int currentPassIndex;
+
+    private static int currentShaderIndex;
 
     private static final Replacement<UniformOverride> overrideReplacement = new Replacement<>();
     private static final Replacement<UniformConfig> configReplacement = new Replacement<>();
 
-    public static void startShaderQueue(Queue<ShaderData> shaderQueue) {
+    public static void startShaderQueue(Queue<Couple<ShaderData, Identifier>> shaderQueue) {
         if (!shaderQueue.isEmpty()) {
             currentShaders = shaderQueue;
             currentPassIndex = -1;
+            currentShaderIndex = 0;
         }
     }
 
@@ -31,9 +36,11 @@ public class OverrideManager {
 
         while (!currentShaders.isEmpty()) {
             currentPassIndex++;
-            ShaderData shaderData = currentShaders.peek();
-            if (shaderData.active) {
-                List<PostEffectPass> currentPasses = ((PostEffectProcessorInterface) shaderData.shader.getPostProcessor()).luminance$getPasses(null);
+            Couple<ShaderData, Identifier> shaderData = currentShaders.peek();
+            if (shaderData.getFirst().active) {
+                List<PostEffectPass> currentPasses = ((PostEffectProcessorInterface) shaderData.getFirst().shader.getPostProcessor()).luminance$getPasses(shaderData.getSecond());
+                // render queue is only added to when the passes *do* exist
+                assert currentPasses != null;
 
                 while (currentPassIndex < currentPasses.size()) {
                     if (currentPasses.get(currentPassIndex) == postEffectPass) {
@@ -45,6 +52,13 @@ public class OverrideManager {
 
             currentShaders.remove();
             currentPassIndex = -1;
+
+            if (!currentShaders.isEmpty()) {
+                shaderData = currentShaders.peek();
+                if (shaderData.getFirst().active && shaderData.getSecond() == null) {
+                    currentShaderIndex++;
+                }
+            }
         }
     }
 
@@ -56,13 +70,14 @@ public class OverrideManager {
                 return;
             }
 
-            ShaderData shaderData = currentShaders.peek();
+            assert currentShaders.peek() != null;
+            Couple<ShaderData, Identifier> shaderData = currentShaders.peek();
 
             PostEffectPassInterface pass = ((PostEffectPassInterface)postEffectPass);
             Map<String, UniformConfig> configs = pass.luminance$getUniformConfigs();
 
-            overrideReplacement.replace(shaderData.overrides.get(currentPassIndex), pass::luminance$addUniformOverride);
-            configReplacement.replace(shaderData.configs.get(currentPassIndex), configs::put);
+            overrideReplacement.replace(shaderData.getFirst().getPassData(shaderData.getSecond()).overrides.get(currentPassIndex), pass::luminance$addUniformOverride);
+            configReplacement.replace(shaderData.getFirst().getPassData(shaderData.getSecond()).configs.get(currentPassIndex), configs::put);
         }
     }
 
@@ -103,5 +118,9 @@ public class OverrideManager {
             nullValues.forEach(removeFunction);
             nullValues.clear();
         }
+    }
+
+    public static int getCurrentShaderIndex() {
+        return currentShaderIndex;
     }
 }

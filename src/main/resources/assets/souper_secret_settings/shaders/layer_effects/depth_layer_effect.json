@@ -1,15 +1,9 @@
 {
-    "blend": {
-        "func": "add",
-        "srcrgb": "one",
-        "dstrgb": "zero"
-    },
-    "vertex": "sobel",
-    "fragment": "souper_secret_settings:depth_layer_effect",
-    "attributes": [ "Position" ],
+    "vertex": "minecraft:post/sobel",
+    "fragment": "souper_secret_settings:layer_effects/depth_layer_effect",
     "samplers": [
-        { "name": "DiffuseSampler" },
-        { "name": "DiffuseDepthSampler" },
+        { "name": "InSampler" },
+        { "name": "InDepthSampler" },
         { "name": "BaseSampler" }
     ],
     "uniforms": [

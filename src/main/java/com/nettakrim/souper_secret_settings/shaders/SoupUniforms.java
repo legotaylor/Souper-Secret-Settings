@@ -4,6 +4,7 @@ import com.mclegoman.luminance.client.shaders.ShaderTime;
 import com.mclegoman.luminance.client.shaders.Uniforms;
 import com.mclegoman.luminance.client.shaders.uniforms.UniformValue;
 import com.mclegoman.luminance.client.shaders.uniforms.config.ConfigData;
+import com.mclegoman.luminance.client.shaders.uniforms.config.EmptyConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.MapConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
 
@@ -13,6 +14,8 @@ import java.util.Objects;
 public class SoupUniforms {
     public static void register() {
         Uniforms.registerStandardTree("soup", "byte", SoupUniforms::getBinary, 0f, 255f, 1, new MapConfig(List.of(new ConfigData("value", List.of("0")))));
+        Uniforms.registerStandardTree("soup", "shader_index", SoupUniforms::getShaderIndex, 0f, null, 1, EmptyConfig.INSTANCE);
+        Uniforms.registerStandardTree("soup", "stack_size", SoupUniforms::getStackSize, 0f, null, 1, EmptyConfig.INSTANCE);
     }
 
     public static void getBinary(UniformConfig config, ShaderTime shaderTime, UniformValue uniformValue) {
@@ -27,5 +30,22 @@ public class SoupUniforms {
             }
         }
         uniformValue.values.set(0, (float)v);
+    }
+
+    public static void getStackSize(UniformConfig config, ShaderTime shaderTime, UniformValue uniformValue) {
+        ShaderStack stack = ShaderStack.getRenderingStack();
+        float count = 0;
+        if (stack != null) {
+            for (ShaderData shaderData : stack.shaderDatas) {
+                if (shaderData.active) {
+                    count++;
+                }
+            }
+        }
+        uniformValue.values.set(0, count);
+    }
+
+    public static void getShaderIndex(UniformConfig config, ShaderTime shaderTime, UniformValue uniformValue) {
+        uniformValue.values.set(0, (float)OverrideManager.getCurrentShaderIndex());
     }
 }

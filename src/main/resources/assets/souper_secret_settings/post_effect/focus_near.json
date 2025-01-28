@@ -18,18 +18,33 @@
         ],
         "souper_secret_settings:after_stack_render": [
             {
-                "program": "souper_secret_settings:layer_effects/compare_layer_effect",
+                "program": "souper_secret_settings:layer_effects/depth_layer_effect",
                 "inputs": [
                     {
                         "sampler_name": "In",
-                        "target": "base"
+                        "target": "minecraft:main"
+                    },
+                    {
+                        "sampler_name": "InDepth",
+                        "target": "minecraft:main",
+                        "use_depth_buffer": true
                     },
                     {
                         "sampler_name": "Base",
-                        "target": "minecraft:main"
+                        "target": "base"
                     }
                 ],
-                "output": "0"
+                "output": "0",
+                "uniforms": [
+                    {
+                        "name": "Scale",
+                        "values": [ 3 ]
+                    },
+                    {
+                        "name": "Offset",
+                        "values": [ 0 ]
+                    }
+                ]
             },
             {
                 "program": "minecraft:post/blit",

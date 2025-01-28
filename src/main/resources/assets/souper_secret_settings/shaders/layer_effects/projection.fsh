@@ -1,6 +1,6 @@
 #version 150
 
-uniform sampler2D DiffuseSampler;
+uniform sampler2D InSampler;
 
 in vec2 texCoord;
 
@@ -38,5 +38,5 @@ void main(){
 
     vec2 pos = applyTransform(M_final, texCoord);
 
-    fragColor = vec4(texture(DiffuseSampler, pos).rgb, 1.0);
+    fragColor = vec4(texture(InSampler, pos).rgb, 1.0);
 }

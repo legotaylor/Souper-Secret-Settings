@@ -8,11 +8,11 @@ in vec2 oneTexel;
 
 out vec4 fragColor;
 
-uniform int LayerEffectValue;
+uniform int soup_shader_index;
 
 void main(){
     vec4 color = texture(PrevSampler, texCoord);
-    int channel = LayerEffectValue%3;
+    int channel = soup_shader_index%3;
     if (channel == 0) {
         color.r = 0;
     } else if (channel == 1) {

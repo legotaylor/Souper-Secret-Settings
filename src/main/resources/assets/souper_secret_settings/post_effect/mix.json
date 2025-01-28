@@ -18,7 +18,7 @@
         ],
         "souper_secret_settings:after_stack_render": [
             {
-                "program": "souper_secret_settings:layer_effects/compare_layer_effect",
+                "program": "souper_secret_settings:layer_effects/mix_layer_effect",
                 "inputs": [
                     {
                         "sampler_name": "In",
@@ -29,7 +29,13 @@
                         "target": "minecraft:main"
                     }
                 ],
-                "output": "0"
+                "output": "0",
+                "uniforms": [
+                    {
+                        "name": "Amount",
+                        "values": [ 0.9 ]
+                    }
+                ]
             },
             {
                 "program": "minecraft:post/blit",

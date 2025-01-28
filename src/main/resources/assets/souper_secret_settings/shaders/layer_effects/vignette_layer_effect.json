@@ -1,14 +1,8 @@
 {
-    "blend": {
-        "func": "add",
-        "srcrgb": "one",
-        "dstrgb": "zero"
-    },
-    "vertex": "sobel",
-    "fragment": "souper_secret_settings:vignette_layer_effect",
-    "attributes": [ "Position" ],
+    "vertex": "minecraft:post/sobel",
+    "fragment": "souper_secret_settings:layer_effects/vignette_layer_effect",
     "samplers": [
-        { "name": "DiffuseSampler" },
+        { "name": "InSampler" },
         { "name": "BaseSampler" }
     ],
     "uniforms": [

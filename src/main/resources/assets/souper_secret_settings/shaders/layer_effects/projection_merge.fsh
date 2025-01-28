@@ -1,6 +1,6 @@
 #version 150
 
-uniform sampler2D DiffuseSampler;
+uniform sampler2D InSampler;
 uniform sampler2D BaseSampler;
 
 in vec2 texCoord;
@@ -44,7 +44,7 @@ void main(){
     if (pos.x < 0 || pos.x > 1 || pos.y < 0 || pos.y > 1) {
         col = texture(BaseSampler, texCoord).rgb;
     } else {
-        col = texture(DiffuseSampler, pos).rgb;
+        col = texture(InSampler, pos).rgb;
     }
 
     fragColor = vec4(col, 1.0);

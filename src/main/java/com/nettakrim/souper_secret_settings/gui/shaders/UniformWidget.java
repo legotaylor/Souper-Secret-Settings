@@ -10,7 +10,7 @@ import com.mclegoman.luminance.common.util.Couple;
 import com.nettakrim.souper_secret_settings.gui.ConfigWidget;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.DisplayWidget;
-import com.nettakrim.souper_secret_settings.shaders.ShaderData;
+import com.nettakrim.souper_secret_settings.shaders.PassData;
 import com.nettakrim.souper_secret_settings.shaders.UniformData;
 import net.minecraft.client.gl.GlUniform;
 import net.minecraft.client.gui.widget.ClickableWidget;
@@ -36,8 +36,8 @@ public class UniformWidget extends DisplayWidget<Couple<UniformData<String>,Unif
     protected List<Couple<UniformData<String>,UniformData<UniformConfig>>> getChildData() {
         List<Couple<UniformData<String>,UniformData<UniformConfig>>> list = new ArrayList<>();
 
-        UniformData<UniformOverride> uniformOverride = pass.shader.shaderData.overrides.get(pass.passIndex).get(uniform.getName());
-        UniformData<UniformConfig> uniformConfig = pass.shader.shaderData.configs.get(pass.passIndex).get(uniform.getName());
+        UniformData<UniformOverride> uniformOverride = pass.shader.shaderData.getPassData(null).overrides.get(pass.passIndex).get(uniform.getName());
+        UniformData<UniformConfig> uniformConfig = pass.shader.shaderData.getPassData(null).configs.get(pass.passIndex).get(uniform.getName());
 
         List<String> valueStrings = ((LuminanceUniformOverride)uniformOverride.value).getStrings();
         List<String> defaultStrings = ((LuminanceUniformOverride)uniformOverride.defaultValue).getStrings();
@@ -63,10 +63,10 @@ public class UniformWidget extends DisplayWidget<Couple<UniformData<String>,Unif
     protected void onValueChanged(int i, ConfigWidget widget) {
         override.overrideSources.set(i, widget.overrideSource);
 
-        UniformData<UniformOverride> uniforms = pass.shader.shaderData.overrides.get(pass.passIndex).get(uniform.getName());
+        UniformData<UniformOverride> uniforms = pass.shader.shaderData.getPassData(null).overrides.get(pass.passIndex).get(uniform.getName());
         uniforms.value = override;
 
-        UniformData<UniformConfig> configs = pass.shader.shaderData.configs.get(pass.passIndex).get(uniform.getName());
+        UniformData<UniformConfig> configs = pass.shader.shaderData.getPassData(null).configs.get(pass.passIndex).get(uniform.getName());
         String prefix = i+"_";
         if (configs.value instanceof MapConfig mapConfig) {
             mapConfig.config.keySet().removeIf((s) -> s.startsWith(prefix));
@@ -80,8 +80,9 @@ public class UniformWidget extends DisplayWidget<Couple<UniformData<String>,Unif
 
     @Override
     protected List<Float> getDisplayFloats() {
-        List<Float> display = override.getOverride(pass.shader.shaderData.configs.get(pass.passIndex).get(uniform.getName()).value, Uniforms.shaderTime);
-        List<Float> base = ShaderData.getBaseValues((PostEffectPassInterface)pass.postEffectPass, uniform.getName());
+        //TODO: this needs to update the value of soup_shader_index etc to be correct
+        List<Float> display = override.getOverride(pass.shader.shaderData.getPassData(null).configs.get(pass.passIndex).get(uniform.getName()).value, Uniforms.shaderTime);
+        List<Float> base = PassData.getBaseValues((PostEffectPassInterface)pass.postEffectPass, uniform.getName());
         for (int i = 0; i < display.size(); i++) {
             if (display.get(i) == null) {
                 display.set(i, base.get(i));

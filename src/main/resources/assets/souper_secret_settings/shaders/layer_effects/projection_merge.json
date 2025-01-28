@@ -1,14 +1,8 @@
 {
-  "blend": {
-    "func": "add",
-    "srcrgb": "one",
-    "dstrgb": "zero"
-  },
-  "vertex": "sobel",
-  "fragment": "souper_secret_settings:projection_merge",
-  "attributes": [ "Position" ],
+  "vertex": "minecraft:post/sobel",
+  "fragment": "souper_secret_settings:layer_effects/projection_merge",
   "samplers": [
-    { "name": "DiffuseSampler" },
+    { "name": "InSampler" },
     { "name": "BaseSampler" }
   ],
   "uniforms": [

@@ -5,7 +5,7 @@ import com.mclegoman.luminance.client.shaders.interfaces.ShaderProgramInterface;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.CollapseWidget;
-import com.nettakrim.souper_secret_settings.shaders.ShaderData;
+import com.nettakrim.souper_secret_settings.shaders.PassData;
 import net.minecraft.client.gl.GlUniform;
 import net.minecraft.client.gl.PostEffectPass;
 import net.minecraft.client.gl.ShaderProgram;
@@ -30,7 +30,7 @@ public class PassWidget extends CollapseWidget {
         ShaderProgram program = postEffectPass.getProgram();
         for (String name : ((ShaderProgramInterface)program).luminance$getUniformNames()) {
             GlUniform uniform = program.getUniform(name);
-            if (uniform != null && ShaderData.allowUniform(name)) {
+            if (uniform != null && PassData.allowUniform(name)) {
                 UniformWidget uniformWidget = new UniformWidget(this, uniform, Text.literal(uniform.getName()), x, width, listScreen);
                 listScreen.addSelectable(uniformWidget);
                 children.add(uniformWidget);
