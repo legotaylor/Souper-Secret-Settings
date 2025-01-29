@@ -18,7 +18,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 public class SoupRenderer implements Runnables.WorldRender {
     public ArrayList<ShaderStack> shaderStacks;
@@ -47,33 +46,8 @@ public class SoupRenderer implements Runnables.WorldRender {
         }
     }
 
-    public boolean clearShader() {
-        getActiveStack().clear();
-        return true;
-    }
-
-    public boolean removeTop() {
-        if (getActiveStack().shaderDatas.isEmpty()) {
-            return false;
-        }
-        getActiveStack().shaderDatas.removeLast();
-        return true;
-    }
-
-    public boolean addShaders(Identifier registry, Identifier id, int amount, ShaderStack stack, Consumer<ShaderData> addFunction) {
-        List<ShaderData> shaders = getShaderAdditions(registry, id, amount, stack);
-        if (shaders == null || shaders.isEmpty()) {
-            return false;
-        }
-
-        for (ShaderData shaderData : shaders) {
-            addFunction.accept(shaderData);
-        }
-        return true;
-    }
-
     @Nullable
-    private List<ShaderData> getShaderAdditions(Identifier registry, Identifier id, int amount, ShaderStack stack) {
+    public List<ShaderData> getShaderAdditions(Identifier registry, Identifier id, int amount, ShaderStack stack) {
         if (id.equals(Identifier.ofVanilla("random"))) {
             return getRandomShaders(stack, registry, amount);
         }

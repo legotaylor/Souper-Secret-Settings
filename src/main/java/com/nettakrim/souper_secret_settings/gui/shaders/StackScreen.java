@@ -59,8 +59,9 @@ public class StackScreen extends ListScreen<ShaderData> {
     public ShaderData tryGetAddition(String addition) {
         Identifier identifier = Shaders.guessPostShader(addition);
         if (identifier != null) {
-            if (SouperSecretSettingsClient.soupRenderer.addShaders(Shaders.getMainRegistryId(), identifier, 1, stack, stack::addShaderData)) {
-                return stack.shaderDatas.removeLast();
+            List<ShaderData> shader = SouperSecretSettingsClient.soupRenderer.getShaderAdditions(Shaders.getMainRegistryId(), identifier, 1, stack);
+            if (shader != null) {
+                return shader.getFirst();
             }
         }
         return null;

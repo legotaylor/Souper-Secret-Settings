@@ -65,18 +65,6 @@ public class ShaderStack {
         }
     }
 
-    public void addShaderData(ShaderData shaderData) {
-        shaderDatas.add(shaderData);
-    }
-
-    public void addLayerEffect(ShaderData shaderData) {
-        layerEffects.add(shaderData);
-    }
-
-    public void clear() {
-        shaderDatas.clear();
-    }
-
     private static ShaderStack renderingStack;
     public static ShaderStack getRenderingStack() {
         return renderingStack;
