@@ -46,6 +46,7 @@ public class ShaderStack {
                 renderList(layerEffects, shaderQueue, builder, textureWidth, textureHeight, framebufferSet, Identifier.of(SouperSecretSettingsClient.MODID, "before_shader_render"));
                 renderShader(shaderData, shaderQueue, builder, textureWidth, textureHeight, framebufferSet, null);
                 renderList(layerEffects, shaderQueue, builder, textureWidth, textureHeight, framebufferSet, Identifier.of(SouperSecretSettingsClient.MODID, "after_shader_render"));
+                shaderQueue.add(null);
             }
         }
 

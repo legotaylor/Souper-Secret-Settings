@@ -37,6 +37,11 @@ public class OverrideManager {
         while (!currentShaders.isEmpty()) {
             currentPassIndex++;
             Couple<ShaderData, Identifier> shaderData = currentShaders.peek();
+            if (shaderData == null) {
+                currentShaders.remove();
+                continue;
+            }
+
             if (shaderData.getFirst().active) {
                 List<PostEffectPass> currentPasses = ((PostEffectProcessorInterface) shaderData.getFirst().shader.getPostProcessor()).luminance$getPasses(shaderData.getSecond());
                 // render queue is only added to when the passes *do* exist
@@ -55,8 +60,9 @@ public class OverrideManager {
 
             if (!currentShaders.isEmpty()) {
                 shaderData = currentShaders.peek();
-                if (shaderData.getFirst().active && shaderData.getSecond() == null) {
+                if (shaderData == null) {
                     currentShaderIndex++;
+                    currentShaders.remove();
                 }
             }
         }
