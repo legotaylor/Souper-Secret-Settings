@@ -54,11 +54,18 @@ public class SuggestionTextFieldWidget extends DraggableTextFieldWidget {
         if (length == 0 && resetOnEmpty) {
             previousSuggestion = null;
         }
+
+        int maxSuggestionLength = length;
         for (String suggestion : suggestions) {
-            if (suggestion.length() >= length && s.equals(suggestion.substring(0, length))) {
+            int suggestionLength = suggestion.length();
+            if (suggestionLength >= length && s.equals(suggestion.substring(0, length))) {
                 currentSuggestions.add(suggestion);
+                if (suggestionLength > maxSuggestionLength) {
+                    maxSuggestionLength = suggestionLength;
+                }
             }
         }
+        setMaxLength(maxSuggestionLength);
 
         if (currentSuggestions.isEmpty()) {
             setSuggestion(null);
