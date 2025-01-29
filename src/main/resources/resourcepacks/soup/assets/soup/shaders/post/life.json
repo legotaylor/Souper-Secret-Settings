@@ -6,12 +6,22 @@
         { "name": "PrevSampler" }
     ],
     "uniforms": [
-        { "name": "ProjMat",        "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
-        { "name": "InSize",         "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
-        { "name": "OutSize",        "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
-        { "name": "MinPopulation",  "type": "float",     "count": 1,  "values": [ 1 ] },
-        { "name": "MaxPopulation",  "type": "float",     "count": 1,  "values": [ 1 ] },
-        { "name": "Creation",       "type": "float",     "count": 1,  "values": [ 1 ] },
-        { "name": "AliveThreshold", "type": "float",     "count": 3,  "values": [ 0.5, 0.5, 0.5 ] }
+        { "name": "ProjMat",         "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+        { "name": "InSize",          "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
+        { "name": "OutSize",         "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
+        { "name": "OnKernelOrtho",   "type": "float",     "count": 4,  "values": [ 1.0, 1.0, 1.0, 1.0 ] },
+        { "name": "OnKernelDiag",    "type": "float",     "count": 4,  "values": [ 1.0, 1.0, 1.0, 1.0 ] },
+        { "name": "OffKernelOrtho",  "type": "float",     "count": 4,  "values": [ 1.0, 1.0, 1.0, 1.0 ] },
+        { "name": "OffKernelDiag",   "type": "float",     "count": 4,  "values": [ 1.0, 1.0, 1.0, 1.0 ] },
+        { "name": "RedKernelMask",   "type": "float",     "count": 3,  "values": [ 1.0, 0.0, 0.0 ] },
+        { "name": "RedTurnOn",       "type": "float",     "count": 3,  "values": [ 3.0, 3.0, 1.0 ] },
+        { "name": "RedTurnOff",      "type": "float",     "count": 3,  "values": [ 2.0, 3.0, 0.0 ] },
+        { "name": "GreenKernelMask", "type": "float",     "count": 3,  "values": [ 0.0, 1.0, 0.0 ] },
+        { "name": "GreenTurnOn",     "type": "float",     "count": 3,  "values": [ 3.0, 3.0, 1.0 ] },
+        { "name": "GreenTurnOff",    "type": "float",     "count": 3,  "values": [ 2.0, 3.0, 0.0 ] },
+        { "name": "BlueKernelMask",  "type": "float",     "count": 3,  "values": [ 0.0, 0.0, 1.0 ] },
+        { "name": "BlueTurnOn",      "type": "float",     "count": 3,  "values": [ 3.0, 3.0, 1.0 ] },
+        { "name": "BlueTurnOff",     "type": "float",     "count": 3,  "values": [ 2.0, 3.0, 0.0 ] },
+        { "name": "IsOnThreshold",   "type": "float",     "count": 1,  "values": [ 0.5 ] }
     ]
 }

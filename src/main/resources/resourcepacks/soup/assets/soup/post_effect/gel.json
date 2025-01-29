@@ -16,6 +16,17 @@
                     "target": "previous"
                 }
             ],
+            "uniforms": [
+                { "name" : "RedKernelMask",   "values": [  1.0, -0.25, -0.25 ]},
+                { "name" : "RedTurnOn",       "values": [  5.0,  32.0,  1.0 ]},
+                { "name" : "RedTurnOff",      "values": [ -32.0, 4.0,   1.0 ]},
+                { "name" : "GreenKernelMask", "values": [ -0.25, 1.0, -0.25 ]},
+                { "name" : "GreenTurnOn",     "values": [  5.0,  32.0,  1.0 ]},
+                { "name" : "GreenTurnOff",    "values": [ -32.0, 4.0,   1.0 ]},
+                { "name" : "BlueKernelMask",  "values": [ -0.25, -0.25, 1.0 ]},
+                { "name" : "BlueTurnOn",      "values": [  5.0,  32.0,  1.0 ]},
+                { "name" : "BlueTurnOff",     "values": [ -32.0, 4.0,   1.0 ]}
+            ],
             "output": "swap"
         },
         {

@@ -34,9 +34,10 @@ All builtin resourcepacks should be enabled by default, but they may need to ena
 | phosphor                           |                  | frigid          |
 | scan_pincushion                    |                  | gaussian        |
 | shareware*                         |                  | ghost           |
-| sobel                              |                  | glass           |
-| spider**                           |                  | glitchy         |
-| wobble                             |                  | half_invert     |
+| sobel                              |                  | gel             |
+| spider**                           |                  | glass           |
+| wobble                             |                  | glitchy         |
+|                                    |                  | half_invert     |
 |                                    |                  | halftone        |
 |                                    |                  | harsh_dither    |
 |                                    |                  | hsv_map         |
