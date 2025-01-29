@@ -12,8 +12,8 @@ public class SouperSecretSettingsCommands {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
             RootCommandNode<FabricClientCommandSource> root = dispatcher.getRoot();
 
-            new ShaderListCommand("shader", Shaders.getMainRegistryId(), (stack) -> stack.shaderDatas).register(root);
-            new ShaderListCommand("effect", SoupRenderer.layerEffectRegistry, (stack) -> stack.layerEffects).register(root);
+            new ShaderListCommand("shader", Shaders.getMainRegistryId()).register(root);
+            new ShaderListCommand("effect", SoupRenderer.layerEffectRegistry).register(root);
         });
     }
 }

@@ -8,6 +8,7 @@ import com.nettakrim.souper_secret_settings.shaders.ShaderStack;
 import net.minecraft.client.gl.PostEffectPass;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 import java.util.List;
 
@@ -21,10 +22,20 @@ public class ShaderWidget extends ListWidget {
         this.stack = stack;
         this.shaderData = shaderData;
 
-        List<PostEffectPass> passes = ((PostEffectProcessorInterface)shaderData.shader.getPostProcessor()).luminance$getPasses(null);
+        for (Identifier customPasses : ((StackScreen)listScreen).customPasses) {
+            addPasses(customPasses);
+        }
+    }
+
+    protected void addPasses(Identifier customPasses) {
+        List<PostEffectPass> passes = ((PostEffectProcessorInterface)shaderData.shader.getPostProcessor()).luminance$getPasses(customPasses);
+        if (passes == null) {
+            return;
+        }
+
         int i = 0;
         for (PostEffectPass postEffectPass : passes) {
-            PassWidget passWidget = new PassWidget(this, postEffectPass, i, x, width, listScreen);
+            PassWidget passWidget = new PassWidget(this, postEffectPass, customPasses, i, getX(), width, listScreen);
             children.add(passWidget);
             listScreen.addSelectable(passWidget);
             i++;

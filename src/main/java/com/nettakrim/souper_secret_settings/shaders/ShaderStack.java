@@ -1,5 +1,6 @@
 package com.nettakrim.souper_secret_settings.shaders;
 
+import com.mclegoman.luminance.client.shaders.Shaders;
 import com.mclegoman.luminance.client.shaders.interfaces.FramePassInterface;
 import com.mclegoman.luminance.common.util.Couple;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
@@ -63,6 +64,18 @@ public class ShaderStack {
         if (shaderData.render(builder, textureWidth, textureHeight, framebufferSet, customPasses)) {
             shaderQueue.add(new Couple<>(shaderData, customPasses));
         }
+    }
+
+    public List<ShaderData> getList(Identifier registry) {
+        if (Shaders.getMainRegistryId().equals(registry)) {
+            return shaderDatas;
+        }
+
+        if (SoupRenderer.layerEffectRegistry.equals(registry)) {
+            return layerEffects;
+        }
+
+        return List.of();
     }
 
     private static ShaderStack renderingStack;

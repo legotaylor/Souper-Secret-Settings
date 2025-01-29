@@ -16,18 +16,15 @@ import net.minecraft.util.Identifier;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 
 public class ShaderListCommand {
     protected final String name;
     protected final Identifier registry;
-    protected final Function<ShaderStack, List<ShaderData>> list;
     protected final SuggestionProvider<FabricClientCommandSource> suggestionProvider;
 
-    public ShaderListCommand(String name, Identifier registry, Function<ShaderStack, List<ShaderData>> list) {
+    public ShaderListCommand(String name, Identifier registry) {
         this.name = name;
         this.registry = registry;
-        this.list = list;
 
         this.suggestionProvider = getRegistrySuggestions(registry);
     }
@@ -80,19 +77,19 @@ public class ShaderListCommand {
             return -1;
         }
 
-        list.apply(stack).addAll(shaders);
+        stack.getList(registry).addAll(shaders);
         return 1;
     }
 
     public int removeAll() {
         ShaderStack stack = SouperSecretSettingsClient.soupRenderer.getActiveStack();
-        list.apply(stack).clear();
+        stack.getList(registry).clear();
         return 1;
     }
 
     public int removeTop() {
         ShaderStack stack = SouperSecretSettingsClient.soupRenderer.getActiveStack();
-        List<ShaderData> shaders = list.apply(stack);
+        List<ShaderData> shaders = stack.getList(registry);
         if (shaders.isEmpty()) {
             return -1;
         }

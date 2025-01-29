@@ -18,10 +18,14 @@ import java.util.List;
 
 public class StackScreen extends ListScreen<ShaderData> {
     public final ShaderStack stack;
+    public final Identifier registry;
+    public final Identifier[] customPasses;
 
-    public StackScreen(ShaderStack stack) {
+    public StackScreen(ShaderStack stack, Identifier registry, Identifier[] customPasses) {
         super(Text.literal(""));
         this.stack = stack;
+        this.registry = registry;
+        this.customPasses = customPasses;
     }
 
     @Override
@@ -31,7 +35,7 @@ public class StackScreen extends ListScreen<ShaderData> {
 
     @Override
     protected List<ShaderData> getListValues() {
-        return stack.shaderDatas;
+        return stack.getList(registry);
     }
 
     @Override
@@ -41,9 +45,9 @@ public class StackScreen extends ListScreen<ShaderData> {
 
     @Override
     public List<String> getAdditions() {
-        List<String> shaders = new ArrayList<>(Shaders.getRegistry().size()+1);
+        List<String> shaders = new ArrayList<>(Shaders.getRegistry(registry).size()+1);
 
-        for (ShaderRegistryEntry shaderRegistry : Shaders.getRegistry()) {
+        for (ShaderRegistryEntry shaderRegistry : Shaders.getRegistry(registry)) {
             shaders.add(shaderRegistry.getID().toString());
         }
         if (shaders.size() > 1) {
@@ -59,7 +63,7 @@ public class StackScreen extends ListScreen<ShaderData> {
     public ShaderData tryGetAddition(String addition) {
         Identifier identifier = Shaders.guessPostShader(addition);
         if (identifier != null) {
-            List<ShaderData> shader = SouperSecretSettingsClient.soupRenderer.getShaderAdditions(Shaders.getMainRegistryId(), identifier, 1, stack);
+            List<ShaderData> shader = SouperSecretSettingsClient.soupRenderer.getShaderAdditions(registry, identifier, 1, stack);
             if (shader != null) {
                 return shader.getFirst();
             }
