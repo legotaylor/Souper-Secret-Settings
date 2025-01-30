@@ -21,6 +21,22 @@
                 {
                     "name": "Offset",
                     "values": [ 0, -1, 0 ]
+                },
+                {
+                    "name": "Rotation",
+                    "values": [],
+                    "override": [ "luminance_pitch", "0.0", "0.0" ],
+                    "config": [
+                        {"name": "0_soup_range", "values": [ -0.25, 0.25 ]}
+                    ]
+                },
+                {
+                    "name": "Camera",
+                    "values": [],
+                    "override": [ "luminance_pitch", "0.0", "0.0" ],
+                    "config": [
+                        {"name": "0_soup_range", "values": [ 0.25, -0.25 ]}
+                    ]
                 }
             ]
         },
