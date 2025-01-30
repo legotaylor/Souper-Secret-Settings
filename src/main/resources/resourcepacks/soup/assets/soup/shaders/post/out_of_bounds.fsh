@@ -5,10 +5,12 @@ uniform sampler2D InDepthSampler;
 uniform sampler2D PrevOutSampler;
 
 in vec2 texCoord;
+in vec2 oneTexel;
 
 out vec4 fragColor;
 
 uniform float Threshold;
+uniform vec2 Offset;
 
 float near = 0.1;
 float far = 1000.0;
@@ -21,7 +23,7 @@ void main(){
     vec4 col = texture(InSampler, texCoord);
     float depth = LinearizeDepth(texture(InDepthSampler, texCoord).r);
     if (depth > Threshold) {
-        col = texture(PrevOutSampler, texCoord);
+        col = texture(PrevOutSampler, texCoord + Offset*oneTexel);
     }
     fragColor = vec4(col.rgb, 1.0);
 }
