@@ -14,6 +14,8 @@ uniform vec4 OnKernelDiag;
 uniform vec4 OffKernelOrtho;
 uniform vec4 OffKernelDiag;
 
+uniform vec4 KernelDistance;
+
 uniform vec3 RedKernelMask;
 uniform vec3 RedTurnOn;
 uniform vec3 RedTurnOff;
@@ -26,7 +28,7 @@ uniform vec3 BlueKernelMask;
 uniform vec3 BlueTurnOn;
 uniform vec3 BlueTurnOff;
 
-uniform float IsOnThreshold;
+uniform vec3 IsOnThreshold;
 
 out vec4 fragColor;
 
@@ -34,7 +36,7 @@ float total(vec3 v) {
     return v.r + v.g + v.b;
 }
 
-float neighbourCount(vec4 kernelOrtho, vec4 kernelDiag, vec3 mask, vec3 posPP, vec3 posPZ, vec3 posPN, vec3 posNP, vec3 posNZ, vec3 posNN, vec3 posZP, vec3 posZN) {
+float neighbourCount(vec4 kernelOrtho, vec4 kernelDiag, vec3 mask, vec3 posZP, vec3 posPZ, vec3 posZN, vec3 posNZ, vec3 posPP, vec3 posPN, vec3 posNN, vec3 posNP) {
     return kernelOrtho.x*total(posZP*mask) + kernelOrtho.y*total(posPZ*mask) + kernelOrtho.z*total(posZN*mask) + kernelOrtho.w*total(posNZ*mask) +
            kernelDiag.x *total(posPP*mask) + kernelDiag.y *total(posPN*mask) + kernelDiag.z *total(posNN*mask) + kernelDiag.w *total(posNP*mask);
 }
@@ -46,7 +48,7 @@ bool passesRange(float value, vec3 range) {
     return range.x > value+0.1 || value-0.1 > range.y;
 }
 
-float life(float current, vec3 mask, vec3 turnOnRange, vec3 turnOffRange, vec3 posPP, vec3 posPZ, vec3 posPN, vec3 posNP, vec3 posNZ, vec3 posNN, vec3 posZP, vec3 posZN) {
+float life(float current, vec3 mask, vec3 turnOnRange, vec3 turnOffRange, vec3 posZP, vec3 posPZ, vec3 posZN, vec3 posNZ, vec3 posPP, vec3 posPN, vec3 posNN, vec3 posNP) {
     vec4 kernelOrtho;
     vec4 kernelDiag;
     vec3 changeStateRange;
@@ -61,7 +63,7 @@ float life(float current, vec3 mask, vec3 turnOnRange, vec3 turnOffRange, vec3 p
         changeStateRange = turnOnRange;
     }
 
-    float neighbours = neighbourCount(kernelOrtho, kernelDiag, mask, posPP, posPZ, posPN, posNP, posNZ, posNN, posZP, posZN);
+    float neighbours = neighbourCount(kernelOrtho, kernelDiag, mask, posZP, posPZ, posZN, posNZ, posPP, posPN, posNN, posNP);
     if (passesRange(neighbours, changeStateRange)) {
         return 1.0-current;
     }
@@ -69,22 +71,28 @@ float life(float current, vec3 mask, vec3 turnOnRange, vec3 turnOffRange, vec3 p
     return current;
 }
 
+vec2 offset(float dist, float angle) {
+    float rad = angle*6.28318530718;
+    return vec2(sin(rad), cos(rad)) * dist;
+}
+
 void main() {
-    vec3 posPP = texture(PrevSampler, texCoord+vec2( oneTexel.x,  oneTexel.y)).rgb;
-    vec3 posPZ = texture(PrevSampler, texCoord+vec2( oneTexel.x,  0         )).rgb;
-    vec3 posPN = texture(PrevSampler, texCoord+vec2( oneTexel.x, -oneTexel.y)).rgb;
-    vec3 posNP = texture(PrevSampler, texCoord+vec2(-oneTexel.x,  oneTexel.y)).rgb;
-    vec3 posNZ = texture(PrevSampler, texCoord+vec2(-oneTexel.x,  0         )).rgb;
-    vec3 posNN = texture(PrevSampler, texCoord+vec2(-oneTexel.x, -oneTexel.y)).rgb;
-    vec3 posZP = texture(PrevSampler, texCoord+vec2( 0         ,  oneTexel.y)).rgb;
-    vec3 posZN = texture(PrevSampler, texCoord+vec2( 0         , -oneTexel.y)).rgb;
+    vec3 posZP = texture(PrevSampler, texCoord+offset(KernelDistance.x, KernelDistance.y     )*oneTexel).rgb;
+    vec3 posPZ = texture(PrevSampler, texCoord+offset(KernelDistance.x, KernelDistance.y+0.25)*oneTexel).rgb;
+    vec3 posZN = texture(PrevSampler, texCoord+offset(KernelDistance.x, KernelDistance.y+0.5 )*oneTexel).rgb;
+    vec3 posNZ = texture(PrevSampler, texCoord+offset(KernelDistance.x, KernelDistance.y-0.25)*oneTexel).rgb;
+
+    vec3 posPP = texture(PrevSampler, texCoord+offset(KernelDistance.z, KernelDistance.w     )*oneTexel).rgb;
+    vec3 posPN = texture(PrevSampler, texCoord+offset(KernelDistance.z, KernelDistance.w+0.25)*oneTexel).rgb;
+    vec3 posNN = texture(PrevSampler, texCoord+offset(KernelDistance.z, KernelDistance.w+0.5 )*oneTexel).rgb;
+    vec3 posNP = texture(PrevSampler, texCoord+offset(KernelDistance.z, KernelDistance.w-0.25)*oneTexel).rgb;
 
     vec3 current = texture(PrevSampler, texCoord).rgb;
 
     vec3 iteration = vec3(
-        life(current.r, RedKernelMask,   RedTurnOn,   RedTurnOff,   posPP, posPZ, posPN, posNP, posNZ, posNN, posZP, posZN),
-        life(current.g, GreenKernelMask, GreenTurnOn, GreenTurnOff, posPP, posPZ, posPN, posNP, posNZ, posNN, posZP, posZN),
-        life(current.b, BlueKernelMask,  BlueTurnOn,  BlueTurnOff,  posPP, posPZ, posPN, posNP, posNZ, posNN, posZP, posZN)
+        life(current.r, RedKernelMask,   RedTurnOn,   RedTurnOff,   posZP, posPZ, posZN, posNZ, posPP, posPN, posNN, posNP),
+        life(current.g, GreenKernelMask, GreenTurnOn, GreenTurnOff, posZP, posPZ, posZN, posNZ, posPP, posPN, posNN, posNP),
+        life(current.b, BlueKernelMask,  BlueTurnOn,  BlueTurnOff,  posZP, posPZ, posZN, posNZ, posPP, posPN, posNN, posNP)
     );
 
     vec3 new = step(IsOnThreshold, texture(InSampler, texCoord).rgb);
