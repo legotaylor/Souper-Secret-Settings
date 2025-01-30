@@ -29,13 +29,7 @@
                         "target": "minecraft:main"
                     }
                 ],
-                "output": "0",
-                "uniforms": [
-                    {
-                        "name": "Amount",
-                        "values": [ 0.9 ]
-                    }
-                ]
+                "output": "0"
             },
             {
                 "program": "minecraft:post/blit",

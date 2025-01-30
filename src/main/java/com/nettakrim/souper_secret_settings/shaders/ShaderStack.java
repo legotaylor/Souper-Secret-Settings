@@ -46,12 +46,12 @@ public class ShaderStack {
             if (shaderData.active) {
                 renderList(layerEffects, shaderQueue, builder, textureWidth, textureHeight, framebufferSet, Identifier.of(SouperSecretSettingsClient.MODID, "before_shader_render"));
                 renderShader(shaderData, shaderQueue, builder, textureWidth, textureHeight, framebufferSet, null);
-                renderList(layerEffects, shaderQueue, builder, textureWidth, textureHeight, framebufferSet, Identifier.of(SouperSecretSettingsClient.MODID, "after_shader_render"));
+                renderList(layerEffects.reversed(), shaderQueue, builder, textureWidth, textureHeight, framebufferSet, Identifier.of(SouperSecretSettingsClient.MODID, "after_shader_render"));
                 shaderQueue.add(null);
             }
         }
 
-        renderList(layerEffects, shaderQueue, builder, textureWidth, textureHeight, framebufferSet, Identifier.of(SouperSecretSettingsClient.MODID, "after_stack_render"));
+        renderList(layerEffects.reversed(), shaderQueue, builder, textureWidth, textureHeight, framebufferSet, Identifier.of(SouperSecretSettingsClient.MODID, "after_stack_render"));
     }
 
     public void renderList(List<ShaderData> shaders, Queue<Couple<ShaderData, Identifier>> shaderQueue, FrameGraphBuilder builder, int textureWidth, int textureHeight, DefaultFramebufferSet framebufferSet, @Nullable Identifier customPasses) {
