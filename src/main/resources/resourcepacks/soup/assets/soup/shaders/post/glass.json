@@ -11,6 +11,7 @@
         { "name": "OffsetScale",   "type": "float",     "count": 1,  "values": [ 100.0 ] },
         { "name": "CloudScale",    "type": "float",     "count": 1,  "values": [ 0.5 ] },
         { "name": "CloudDistance", "type": "float",     "count": 1,  "values": [ 0.3 ] },
-        { "name": "CloudAmount",   "type": "float",     "count": 1,  "values": [ 0.5 ] }
+        { "name": "CloudAmount",   "type": "float",     "count": 1,  "values": [ 0.5 ] },
+        { "name": "Wrapping",      "type": "float",     "count": 1,  "values": [ 0.0 ] }
     ]
 }

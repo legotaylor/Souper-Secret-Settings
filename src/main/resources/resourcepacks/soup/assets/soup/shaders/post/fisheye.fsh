@@ -10,6 +10,12 @@ out vec4 fragColor;
 uniform float Curvature;
 uniform float Scale;
 
+uniform float Wrapping;
+
+vec4 wrapTexture(sampler2D tex, vec2 coord) {
+    return texture2D(tex, mix(coord, fract(coord), Wrapping));
+}
+
 //https://www.shadertoy.com/view/wtt3z2
 
 void main(){
@@ -22,7 +28,7 @@ void main(){
 
     coord = vec2(r*cos(phi),r*sin(phi)) + vec2(0.5);
 
-    vec4 color = texture(InSampler, coord);
+    vec4 color = wrapTexture(InSampler, coord);
 
     fragColor = vec4(color.rgb, 1.0);
 }

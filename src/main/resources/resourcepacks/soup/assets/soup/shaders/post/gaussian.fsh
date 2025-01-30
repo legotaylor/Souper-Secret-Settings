@@ -10,6 +10,12 @@ out vec4 fragColor;
 uniform float Sigma;
 uniform vec2 Direction;
 
+uniform float Wrapping;
+
+vec4 wrapTexture(sampler2D tex, vec2 coord) {
+    return texture2D(tex, mix(coord, fract(coord), Wrapping));
+}
+
 float gaussian(float sigma, float pos) {
     return (1.0f / sqrt(2.0f * 6.28318530718 * sigma * sigma)) * exp(-(pos * pos) / (2.0f * sigma * sigma));
 }
@@ -23,7 +29,7 @@ void main(){
     if (texCoord.x == 1000) col.r += Direction.x*Sigma;
 
     for (int x = -kernelRadius; x <= kernelRadius; ++x) {
-        vec3 c = texture(InSampler, texCoord + Direction*x*oneTexel).rgb;
+        vec3 c = wrapTexture(InSampler, texCoord + Direction*x*oneTexel).rgb;
         float gauss = gaussian(Sigma, x);
 
         col += c * gauss;

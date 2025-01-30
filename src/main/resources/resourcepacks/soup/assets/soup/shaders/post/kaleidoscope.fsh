@@ -9,6 +9,12 @@ out vec4 fragColor;
 uniform vec2 Mirrors;
 uniform vec2 Position;
 
+uniform float Wrapping;
+
+vec4 wrapTexture(sampler2D tex, vec2 coord) {
+    return texture2D(tex, mix(coord, fract(coord), Wrapping));
+}
+
 vec2 mirrorAlongLines(vec2 point, vec3 lineA, vec3 lineB, float iterations) {
     for (int i = 0; i < iterations; i++) {
         vec3 a;
@@ -39,6 +45,6 @@ vec3 getLine(float angle, float offset) {
 
 void main(){
     vec2 coord = mirrorAlongLines(vec2(texCoord.x-0.5, texCoord.y-0.5), getLine(Mirrors.y*6.28318530718, Position.x), getLine((Mirrors.y+(1.0/Mirrors.x)+0.5)*6.28318530718, Position.y), abs(Mirrors.x-1));
-    vec4 col = texture(InSampler, vec2(coord.x+0.5, coord.y+0.5));
+    vec4 col = wrapTexture(InSampler, vec2(coord.x+0.5, coord.y+0.5));
     fragColor = col;
 }

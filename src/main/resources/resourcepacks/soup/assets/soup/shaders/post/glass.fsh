@@ -12,6 +12,12 @@ uniform float CloudScale;
 uniform float CloudDistance;
 uniform float CloudAmount;
 
+uniform float Wrapping;
+
+vec4 wrapTexture(sampler2D tex, vec2 coord) {
+    return texture2D(tex, mix(coord, fract(coord), Wrapping));
+}
+
 //https://www.shadertoy.com/view/XdXGW8
 vec2 grad( ivec2 z )
 {
@@ -46,7 +52,7 @@ void main(){
     vec2 randomPos = (texCoord+vec2(100.123))*aspect;
     vec2 offset = vec2(noise(randomPos*400.123), noise(randomPos*399.987));
 
-    vec4 color = texture(InSampler, texCoord + offset/OffsetScale);
+    vec4 color = wrapTexture(InSampler, texCoord + offset/OffsetScale);
 
     float distance = length(offset);
 

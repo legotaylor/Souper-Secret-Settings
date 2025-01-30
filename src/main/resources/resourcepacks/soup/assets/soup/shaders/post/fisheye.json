@@ -9,6 +9,7 @@
         { "name": "InSize",        "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
         { "name": "OutSize",       "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
         { "name": "Curvature",     "type": "float",     "count": 1,  "values": [ -1.2 ] },
-        { "name": "Scale",         "type": "float",     "count": 1,  "values": [ 2.625 ] }
+        { "name": "Scale",         "type": "float",     "count": 1,  "values": [ 2.625 ] },
+        { "name": "Wrapping",      "type": "float",     "count": 1,  "values": [ 0.0 ] }
     ]
 }
