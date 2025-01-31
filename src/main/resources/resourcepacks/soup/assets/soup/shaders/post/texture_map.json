@@ -1,0 +1,21 @@
+{
+    "vertex": "minecraft:post/sobel",
+    "fragment": "soup:post/texture_map",
+    "samplers": [
+        { "name": "InSampler" },
+        { "name": "InDepthSampler" }
+    ],
+    "uniforms": [
+        { "name": "ProjMat",             "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+        { "name": "InSize",              "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
+        { "name": "OutSize",             "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
+        { "name": "luminance_fov",       "type": "float",     "count": 1,  "values": [ 90.0 ] },
+        { "name": "luminance_pitch",     "type": "float",     "count": 1,  "values": [ 0.0 ]},
+        { "name": "luminance_yaw",       "type": "float",     "count": 1,  "values": [ 0.0 ]},
+        { "name": "luminance_eye_fract", "type": "float",     "count": 3,  "values": [ 0.0, 0.0, 0.0 ]},
+        { "name": "Offset",              "type": "float",     "count": 3,  "values": [ 0.0, 0.0, 0.0 ]},
+        { "name": "Aspect",              "type": "float",     "count": 1,  "values": [ 1.0 ]},
+        { "name": "Coloring",            "type": "float",     "count": 3,  "values": [ 0.0, 0.0, 0.0 ]},
+        { "name": "UVMix",               "type": "float",     "count": 2,  "values": [ 1.0, 512.0 ]}
+    ]
+}

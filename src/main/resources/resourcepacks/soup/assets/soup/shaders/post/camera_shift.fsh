@@ -12,7 +12,7 @@ uniform vec3 Offset;
 uniform vec3 Rotation;
 uniform vec3 Camera;
 
-uniform float YFov;
+uniform float luminance_fov;
 uniform float ZStep;
 uniform float ZGrowth;
 uniform float Steps;
@@ -79,7 +79,7 @@ vec2 ExponentialRaycast(mat4 projection, mat4 coord, float xSlope, float ySlope)
     return screen;
 }
 
-mat4 getRotationMatrix(vec3 rotation) {
+mat4 GetRotationMatrix(vec3 rotation) {
     rotation *= 6.28318530718;
     float sx = sin(rotation.x);
     float cx = cos(rotation.x);
@@ -97,21 +97,16 @@ mat4 getRotationMatrix(vec3 rotation) {
 void main(){
     float aspect = oneTexel.x/oneTexel.y;
 
-    // convert = 57.2958 // convert*2 = 114.591559
-    // XFov = atan(aspect*(YFov/90))*convert*2
-    // xSlope = tan(XFov/2.0 / convert) * ...
-    // this simplifies, so the calculation for xSlope looks different to ySlope
-
-    float yTan = tan(YFov/114.591559);
+    float yTan = tan(luminance_fov/114.591559);
     float yCotan = 1.0/yTan;
 
+    float xSlope = aspect*yTan * (texCoord.x*2.0 - 1.0);
     float ySlope = yTan * (texCoord.y*2.0 - 1.0);
-    float xSlope = aspect*(YFov/90) * (texCoord.x*2.0 - 1.0);
 
     //https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/gluPerspective.xml
     mat4 projection = mat4(yCotan/aspect, 0, 0, 0, 0, yCotan, 0, 0, 0, 0, (far+near)/(near-far), (2*far*near)/(near-far), 0, 0, -1, 0);
 
-    mat4 coord = getRotationMatrix(Rotation) * mat4(1, 0, 0, 0,  0, 1, 0, 0,  0, 0, 1, 0,  Offset.x, Offset.y, Offset.z, 1) * getRotationMatrix(Camera);
+    mat4 coord = GetRotationMatrix(Rotation) * mat4(1, 0, 0, 0,  0, 1, 0, 0,  0, 0, 1, 0,  Offset.x, Offset.y, Offset.z, 1) * GetRotationMatrix(Camera);
 
     vec2 hitPos = ExponentialRaycast(projection, coord, xSlope, ySlope);
     vec4 color = texture(InSampler, wrapCoord(hitPos));
