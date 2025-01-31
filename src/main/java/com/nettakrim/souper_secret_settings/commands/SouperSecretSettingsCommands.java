@@ -5,6 +5,7 @@ import java.util.concurrent.CompletableFuture;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.RootCommandNode;
+import com.nettakrim.souper_secret_settings.mixin.MessageFormatAccessor;
 import com.nettakrim.souper_secret_settings.shaders.AbstractLayerEffect;
 import com.nettakrim.souper_secret_settings.shaders.ShaderData;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
@@ -62,6 +63,6 @@ public class SouperSecretSettingsCommands {
     public static String getMessageText(CommandContext<FabricClientCommandSource> context, String name) {
         //a lot of digging through #SayCommand to make a MessageArgumentType that works clientside
         MessageFormat messageFormat = context.getArgument(name, MessageFormat.class);
-        return messageFormat.contents();
+        return ((MessageFormatAccessor)messageFormat).getContents();
     }
 }
