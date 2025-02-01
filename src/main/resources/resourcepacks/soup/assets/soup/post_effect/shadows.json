@@ -16,13 +16,7 @@
                     "use_depth_buffer": true
                 }
             ],
-            "output": "0",
-            "uniforms": [
-                {
-                    "name": "Offset",
-                    "values": [ 0, 0, 0 ]
-                }
-            ]
+            "output": "0"
         },
         {
             "program": "minecraft:post/blit",

@@ -64,7 +64,9 @@ All builtin resourcepacks should be enabled by default, but they may need to ena
 |                                    |                  | rotate          |
 |                                    |                  | sepia           |
 |                                    |                  | sequins         |
+|                                    |                  | shadows         |
 |                                    |                  | suspicious      |
+|                                    |                  | texture_map     |
 |                                    |                  | thermal         |
 |                                    |                  | toon            |
 |                                    |                  | toxic_waste     |

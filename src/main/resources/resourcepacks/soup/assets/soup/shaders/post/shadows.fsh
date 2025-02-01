@@ -8,8 +8,17 @@ in vec2 oneTexel;
 
 out vec4 fragColor;
 
-uniform float YFov;
+uniform float luminance_fov;
+uniform float luminance_pitch;
+uniform float luminance_yaw;
 uniform vec3 Offset;
+uniform vec3 UpVector;
+uniform float DepthScale;
+uniform float Padding;
+uniform float luminance_viewDistance;
+uniform vec2 ShadowFade;
+uniform float luminance_sunAngle;
+uniform float SunFade;
 
 float near = 0.1;
 float far = 1000.0;
@@ -18,7 +27,31 @@ float LinearizeDepth(float depth) {
     return (near * far) / (far + near - z * (far - near));
 }
 
-vec3 OffsetRaycast(mat4 projection, vec3 direction, vec3 startPos, float startingDepth, float zStep, float zGrowth, float steps, float subThreshold) {
+float aspect = oneTexel.y/oneTexel.x;
+float yTan = tan(luminance_fov/114.591559);
+
+mat3 GetRotationMatrix(vec2 rotation) {
+    rotation /= 57.2957795131;
+    float sx = sin(rotation.x);
+    float cx = cos(rotation.x);
+    float sy = sin(rotation.y);
+    float cy = cos(rotation.y);
+    return transpose(mat3(cy, 0, sy, 0, 1, 0, -sy, 0, cy) * mat3(1, 0, 0, 0, cx, -sx, 0, sx, cx));
+}
+
+mat3 rotation = GetRotationMatrix(vec2(luminance_pitch, luminance_yaw));
+
+vec3 GetWorldOffset(vec2 coord) {
+    float xSlope = yTan * (coord.x*2.0 - 1.0) * aspect;
+    float ySlope = yTan * (coord.y*2.0 - 1.0);
+
+    float d = LinearizeDepth(texture(InDepthSampler, coord).r);
+    vec3 pos = vec3(xSlope * d, (ySlope * d), -d) + Offset;
+    return pos * rotation;
+}
+
+
+vec3 OffsetRaycast(mat4 projection, vec3 direction, vec3 startPos, float zStep, float zGrowth, float steps, float subThreshold) {
     vec3 pos = startPos;
     for (float i = 1; i < steps; i++) {
         //d = zStep * (zGrowth^i) * i
@@ -26,11 +59,11 @@ vec3 OffsetRaycast(mat4 projection, vec3 direction, vec3 startPos, float startin
 
         pos = startPos + (direction*d);
 
-        vec4 projected = projection*vec4(pos, 0.0);
+        vec4 projected = projection*vec4(rotation*pos, 0.0);
         vec2 screen = ((projected.xy/projected.z) + vec2(1.0))/2;
-        float depth = LinearizeDepth(texture(InDepthSampler, screen).r);
+        float depth = length(GetWorldOffset(screen));
 
-        if (depth < startingDepth) {
+        if (depth+Padding < length(pos)) {
             return pos-startPos;
         }
         zStep *= zGrowth;
@@ -38,31 +71,28 @@ vec3 OffsetRaycast(mat4 projection, vec3 direction, vec3 startPos, float startin
     return pos-startPos;
 }
 
-vec3 GetScreenPos(mat4 projection, float xSlope, float ySlope, vec3 offset, float d) {
-    return vec3(xSlope * d, (ySlope * d), -d) + offset;
-}
-
 void main(){
-    float aspect = oneTexel.x/oneTexel.y;
-
-    // convert = 57.2958 // convert*2 = 114.591559
-    // XFov = atan(aspect*(YFov/90))*convert*2
-    // xSlope = tan(XFov/2.0 / convert) * ...
-    // this simplifies, so the calculation for xSlope looks different to ySlope
-
-    float yTan = tan(YFov/114.591559);
-    float yCotan = 1.0/yTan;
-
-    float ySlope = yTan * (texCoord.y*2.0 - 1.0);
-    float xSlope = aspect*(YFov/90) * (texCoord.x*2.0 - 1.0);
-
     //https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/gluPerspective.xml
+    float yCotan = 1.0/yTan;
     mat4 projection = mat4(yCotan/aspect, 0, 0, 0, 0, yCotan, 0, 0, 0, 0, (far+near)/(near-far), (2*far*near)/(near-far), 0, 0, -1, 0);
+    vec3 pos = GetWorldOffset(texCoord);
 
-    float d = LinearizeDepth(texture(InDepthSampler, texCoord).r);
-    vec3 pos = GetScreenPos(projection, xSlope, ySlope, Offset, d);
-    vec3 hitOffset = OffsetRaycast(projection, vec3(0,1,0), pos, d, 0.001, 1.07, 128, 10);
-    vec4 color = texture(InSampler, texCoord) * (hitOffset.y / (hitOffset.y + 1));
+    vec3 upVector = UpVector;
+    float angle = luminance_sunAngle;
+    if (angle > 0.5) {
+        angle -= 0.5;
+    }
+    float sinAngle = sin(angle*6.28318530718);
+    float cosAngle = cos(angle*6.28318530718);
+    upVector.xy = vec2(-(upVector.y*cosAngle+upVector.x*sinAngle), upVector.y*sinAngle-upVector.x*cosAngle);
+
+    vec3 hitOffset = OffsetRaycast(projection, upVector, pos, 0.001, 1.07, 128, 10);
+
+    float shadowScale = 1-clamp(((length(hitOffset+pos)-luminance_viewDistance*16)+ShadowFade.x+ShadowFade.y) / ShadowFade.y, 0, 1);
+    shadowScale *= min(SunFade/4 - abs(SunFade*(angle-0.25)), 1);
+
+    float offset = length(hitOffset*upVector);
+    vec4 color = texture(InSampler, texCoord) * mix(1, (offset / (offset + DepthScale)), shadowScale);
 
     fragColor = vec4(color.rgb, 1.0);
 }
