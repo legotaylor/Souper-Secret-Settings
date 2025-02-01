@@ -12,10 +12,13 @@ uniform float luminance_fov;
 uniform float luminance_pitch;
 uniform float luminance_yaw;
 uniform vec3 luminance_eye_fract;
+uniform vec3 luminance_eye;
+uniform float TextureScale;
 uniform vec3 Offset;
 uniform float Aspect;
 uniform vec3 Coloring;
 uniform vec2 UVMix;
+uniform vec4 UVDistances;
 
 float near = 0.1;
 float far = 1000.0;
@@ -57,17 +60,18 @@ vec3 GetWorldOffset(vec2 coord) {
 void main(){
     float dist = GetDepth(texCoord);
     vec3 pos = GetWorldOffset(texCoord, dist);
-    vec3 offsetLeft =  pos - GetWorldOffset(texCoord + vec2(-oneTexel.x, 0));
-    vec3 offsetRight = pos - GetWorldOffset(texCoord + vec2( oneTexel.x, 0));
-    vec3 offsetUp =    pos - GetWorldOffset(texCoord + vec2(0,  oneTexel.y));
-    vec3 offsetDown =  pos - GetWorldOffset(texCoord + vec2(0, -oneTexel.y));
+    vec3 offsetLeft =  pos - GetWorldOffset(texCoord + vec2(-oneTexel.x * UVDistances.z, 0));
+    vec3 offsetRight = pos - GetWorldOffset(texCoord + vec2( oneTexel.x * UVDistances.x, 0));
+    vec3 offsetUp =    pos - GetWorldOffset(texCoord + vec2(0,  oneTexel.y * UVDistances.y));
+    vec3 offsetDown =  pos - GetWorldOffset(texCoord + vec2(0, -oneTexel.y * UVDistances.w));
 
     vec3 totalOffset = abs(offsetLeft) + abs(offsetRight) + abs(offsetUp) + abs(offsetDown);
 
     vec3 flip = offsetLeft - offsetRight + offsetUp - offsetDown;
     flip.y = pos.y;
 
-    pos = fract(pos + vec3(-luminance_eye_fract.x, luminance_eye_fract.y, -luminance_eye_fract.z));
+    vec3 offset = vec3(-luminance_eye_fract.x, luminance_eye_fract.y, -luminance_eye_fract.z)/TextureScale - fract(floor(luminance_eye)/TextureScale);
+    pos = fract(pos/TextureScale + offset);
 
     vec2 uv;
     if (totalOffset.x < totalOffset.y && totalOffset.x < totalOffset.z) {
