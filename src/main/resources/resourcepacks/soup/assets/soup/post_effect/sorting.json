@@ -1,0 +1,42 @@
+{
+    "targets": {
+        "0": {},
+        "1": {}
+    },
+    "passes": [
+        {
+            "program": "soup:post/sort_rank",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "minecraft:main"
+                }
+            ],
+            "output": "0"
+        },
+        {
+            "program": "soup:post/sort_order",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "minecraft:main"
+                },
+                {
+                    "sampler_name": "Rank",
+                    "target": "0"
+                }
+            ],
+            "output": "1"
+        },
+        {
+            "program": "minecraft:post/blit",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "1"
+                }
+            ],
+            "output": "minecraft:main"
+        }
+    ]
+}

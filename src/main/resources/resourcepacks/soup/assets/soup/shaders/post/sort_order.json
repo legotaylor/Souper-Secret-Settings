@@ -1,0 +1,15 @@
+{
+    "vertex": "minecraft:post/sobel",
+    "fragment": "soup:post/sort_order",
+    "samplers": [
+        { "name": "InSampler" },
+        { "name": "RankSampler" }
+    ],
+    "uniforms": [
+        { "name": "ProjMat",     "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+        { "name": "InSize",      "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
+        { "name": "OutSize",     "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
+        { "name": "ListSize",    "type": "int",       "count": 1,  "values": [ 32 ] },
+        { "name": "Direction",   "type": "float",     "count": 2,  "values": [ 0.0, 1.0 ] }
+    ]
+}

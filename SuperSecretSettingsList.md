@@ -65,6 +65,8 @@ All builtin resourcepacks should be enabled by default, but they may need to ena
 |                                    |                  | sepia           |
 |                                    |                  | sequins         |
 |                                    |                  | shadows         |
+|                                    |                  | sorting         |
+|                                    |                  | stereogram      |
 |                                    |                  | suspicious      |
 |                                    |                  | texture_map     |
 |                                    |                  | thermal         |
