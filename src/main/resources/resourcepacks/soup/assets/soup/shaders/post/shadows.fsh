@@ -13,8 +13,10 @@ uniform float luminance_pitch;
 uniform float luminance_yaw;
 uniform vec3 Offset;
 uniform vec3 UpVector;
-uniform float DepthScale;
+uniform vec3 Steps;
 uniform float Padding;
+uniform float DepthScale;
+uniform vec3 ShadowColor;
 uniform float luminance_viewDistance;
 uniform vec2 ShadowFade;
 uniform float luminance_sunAngle;
@@ -51,7 +53,7 @@ vec3 GetWorldOffset(vec2 coord) {
 }
 
 
-vec3 OffsetRaycast(mat4 projection, vec3 direction, vec3 startPos, float zStep, float zGrowth, float steps, float subThreshold) {
+vec3 OffsetRaycast(mat4 projection, vec3 direction, vec3 startPos, float steps, float zStep, float zGrowth) {
     vec3 pos = startPos;
     for (float i = 1; i < steps; i++) {
         //d = zStep * (zGrowth^i) * i
@@ -86,13 +88,13 @@ void main(){
     float cosAngle = cos(angle*6.28318530718);
     upVector.xy = vec2(-(upVector.y*cosAngle+upVector.x*sinAngle), upVector.y*sinAngle-upVector.x*cosAngle);
 
-    vec3 hitOffset = OffsetRaycast(projection, upVector, pos, 0.001, 1.07, 128, 10);
+    vec3 hitOffset = OffsetRaycast(projection, upVector, pos, Steps.x, Steps.y, Steps.z);
 
     float shadowScale = 1-clamp(((length(hitOffset+pos)-luminance_viewDistance*16)+ShadowFade.x+ShadowFade.y) / ShadowFade.y, 0, 1);
     shadowScale *= min(SunFade/4 - abs(SunFade*(angle-0.25)), 1);
 
     float offset = length(hitOffset*upVector);
-    vec4 color = texture(InSampler, texCoord) * mix(1, (offset / (offset + DepthScale)), shadowScale);
+    vec3 color = mix(ShadowColor, texture(InSampler, texCoord).rgb, mix(1, (offset / (offset + DepthScale)), shadowScale));
 
-    fragColor = vec4(color.rgb, 1.0);
+    fragColor = vec4(color, 1.0);
 }
