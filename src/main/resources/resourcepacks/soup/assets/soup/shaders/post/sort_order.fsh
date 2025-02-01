@@ -8,8 +8,10 @@ in vec2 oneTexel;
 
 out vec4 fragColor;
 
-uniform int ListSize;
+uniform int SegmentSize;
+uniform int MaxLength;
 uniform vec2 Direction;
+uniform float LossRate;
 
 const int MAX_SIZE = 256;
 
@@ -20,16 +22,17 @@ vec2 GetListCoord(float offset) {
     return abs(vec2(offset)*oneTexel*Direction + texOffset);
 }
 
-int GetNthMinIndex(float[MAX_SIZE] ranks, int entries, int n) {
+int GetNthMinIndex(float[MAX_SIZE] ranks, int n, int start, int end) {
     float minRank;
     int minIndex;
     float rank;
 
+    float firstRank = ranks[start];
     for (int i = 0; i <= n; i++) {
-        minRank = 2.0;
-        minIndex = 0;
+        minRank = ranks[start];
+        minIndex = start;
 
-        for (int j = 0; j < entries; j++) {
+        for (int j = start+1; j <= end; j++) {
             rank = ranks[j];
             if (rank < minRank) {
                 minRank = rank;
@@ -37,25 +40,70 @@ int GetNthMinIndex(float[MAX_SIZE] ranks, int entries, int n) {
             }
         }
 
-        ranks[minIndex] = 2.0;
+        ranks[minIndex] = 255;
+        if (minIndex == start) {
+            start++;
+        }
+        if (minIndex == end) {
+            end--;
+        }
     }
 
     return minIndex;
 }
 
+bool passesHash(vec3 p3) {
+    p3 = fract(p3 * 0.1031);
+    p3 += dot(p3,p3.yzx + 19.19);
+    return fract((p3.x + p3.y) * p3.z) >= LossRate;
+}
+
 void main(){
-    int listSize = min(ListSize, MAX_SIZE);
+    int listSize = min(SegmentSize, MAX_SIZE);
 
     int pixelCoord = int((texCoord.x/oneTexel.x + 0.5)*Direction.x) + int((texCoord.y/oneTexel.y + 0.5)*Direction.y);
     int listIndex = pixelCoord%listSize;
     int listStart = (pixelCoord/listSize)*listSize;
 
     float ranks[MAX_SIZE];
+    int startIndex = -1;
+    int endIndex = listSize-1;
     for (int i = 0; i < listSize; i++) {
-        ranks[i] = texture(RankSampler, GetListCoord(listStart+i)).r;
+        vec2 coord = GetListCoord(listStart+i);
+        vec4 rankCol = texture(RankSampler, coord);
+        if (startIndex == -1) {
+            if (rankCol.b > 0.5) {
+                startIndex = i;
+            }
+        } else {
+            if (rankCol.b < 0.5) {
+                endIndex = i-1;
+                break;
+            }
+        }
+
+        float value = rankCol.r + (rankCol.g*255.0)-127.0;
+        if (passesHash(vec3(coord.xy, value))) {
+            ranks[i] = value;
+        } else {
+            //the default value in the list is random gpu data
+            value = fract(ranks[i]);
+            ranks[i] = LossRate > 1 ? (value*2 - 1) * LossRate : value;
+        }
     }
 
-    int index = GetNthMinIndex(ranks, listSize, listIndex);
+    int runLength = endIndex-startIndex;
+    if (runLength > MaxLength) {
+        endIndex = startIndex+MaxLength;
+    }
+
+    int index;
+    if (startIndex == -1 || listIndex < startIndex || listIndex > endIndex) {
+        index = listIndex;
+    } else {
+        index = GetNthMinIndex(ranks, listIndex-startIndex, startIndex, endIndex);
+    }
+
     vec2 coord = GetListCoord(listStart+index);
     vec3 color = texture(InSampler, coord).rgb;
 
