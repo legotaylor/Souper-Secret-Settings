@@ -70,6 +70,7 @@ All builtin resourcepacks should be enabled by default, but they may need to ena
 |                                    |                  | thermal         |
 |                                    |                  | toon            |
 |                                    |                  | toxic_waste     |
+|                                    |                  | uv_map          |
 |                                    |                  | voronoi         |
 |                                    |                  | walls           |
 |                                    |                  | xor             |
