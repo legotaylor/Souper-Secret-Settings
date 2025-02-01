@@ -12,6 +12,7 @@ uniform int SegmentSize;
 uniform int MaxLength;
 uniform vec2 Direction;
 uniform float LossRate;
+uniform int ShowRank;
 
 const int MAX_SIZE = 256;
 
@@ -105,7 +106,7 @@ void main(){
     }
 
     vec2 coord = GetListCoord(listStart+index);
-    vec3 color = texture(InSampler, coord).rgb;
+    vec3 color = texture(ShowRank > 0 ? RankSampler : InSampler, coord).rgb;
 
     fragColor = vec4(color, 1.0);
 }

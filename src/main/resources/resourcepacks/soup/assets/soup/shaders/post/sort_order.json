@@ -12,6 +12,7 @@
         { "name": "SegmentSize", "type": "int",       "count": 1,  "values": [ 32 ] },
         { "name": "MaxLength",   "type": "int",       "count": 1,  "values": [ 256 ] },
         { "name": "Direction",   "type": "float",     "count": 2,  "values": [ 0.0, 1.0 ] },
-        { "name": "LossRate",    "type": "float",     "count": 1,  "values": [ 0.0 ] }
+        { "name": "LossRate",    "type": "float",     "count": 1,  "values": [ 0.0 ] },
+        { "name": "ShowRank",    "type": "int",       "count": 1,  "values": [ 0.0 ] }
     ]
 }
