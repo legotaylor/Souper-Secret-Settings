@@ -10,6 +10,7 @@ out vec4 fragColor;
 
 uniform int SegmentSize;
 uniform int MaxLength;
+uniform vec4 Scroll;
 uniform vec2 Direction;
 uniform float LossRate;
 uniform int ShowRank;
@@ -53,18 +54,31 @@ int GetNthMinIndex(float[MAX_SIZE] ranks, int n, int start, int end) {
     return minIndex;
 }
 
-bool passesHash(vec3 p3) {
+float hash(vec3 p3) {
     p3 = fract(p3 * 0.1031);
     p3 += dot(p3,p3.yzx + 19.19);
-    return fract((p3.x + p3.y) * p3.z) >= LossRate;
+    return fract((p3.x + p3.y) * p3.z);
+}
+
+float hash1D(float v) {
+    float p;
+    p = hash(vec3(1/v, fract(v*13.2169), pow(2, fract(v)+1.23)));
+    p = hash(vec3(p*v, p*123.456, p+1.23));
+    p = hash(vec3(mod(p,0.123), p-15.32 + v, p*8));
+    return p;
 }
 
 void main(){
     int listSize = min(SegmentSize, MAX_SIZE);
 
-    int pixelCoord = int((texCoord.x/oneTexel.x + 0.5)*Direction.x) + int((texCoord.y/oneTexel.y + 0.5)*Direction.y);
+    float h = hash1D(length(texOffset)+Scroll.z);
+    int scroll = int(h*Scroll.x*listSize + Scroll.w);
+    listSize += int(mod(h*Scroll.y,Scroll.y)*min(abs(Scroll.x),1));
+
+    int pixelCoord = int((texCoord.x/oneTexel.x + 0.5)*Direction.x) + int((texCoord.y/oneTexel.y + 0.5)*Direction.y) + scroll;
     int listIndex = pixelCoord%listSize;
     int listStart = (pixelCoord/listSize)*listSize;
+    listStart -= scroll;
 
     float ranks[MAX_SIZE];
     int startIndex = -1;
@@ -84,7 +98,7 @@ void main(){
         }
 
         float value = rankCol.r + (rankCol.g*255.0)-127.0;
-        if (passesHash(vec3(coord.xy, value))) {
+        if (hash(vec3(coord.xy, value)) >= LossRate) {
             ranks[i] = value;
         } else {
             //the default value in the list is random gpu data
