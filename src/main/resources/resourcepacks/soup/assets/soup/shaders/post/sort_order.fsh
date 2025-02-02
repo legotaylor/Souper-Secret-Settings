@@ -12,7 +12,7 @@ uniform int SegmentSize;
 uniform int MaxLength;
 uniform vec4 Scroll;
 uniform vec2 Direction;
-uniform float LossRate;
+uniform vec2 LossRate;
 uniform int ShowRank;
 
 const int MAX_SIZE = 256;
@@ -60,20 +60,21 @@ float hash(vec3 p3) {
     return fract((p3.x + p3.y) * p3.z);
 }
 
-float hash1D(float v) {
+vec2 hash1D(float v) {
     float p;
+    float p2;
     p = hash(vec3(1/v, fract(v*13.2169), pow(2, fract(v)+1.23)));
-    p = hash(vec3(p*v, p*123.456, p+1.23));
-    p = hash(vec3(mod(p,0.123), p-15.32 + v, p*8));
-    return p;
+    p2 = hash(vec3(p*v, p*123.456, p+1.23));
+    p = hash(vec3(mod(p2,0.123), p2-15.32 + v, p2*p*8));
+    return vec2(p,p2);
 }
 
 void main(){
     int listSize = min(SegmentSize, MAX_SIZE);
 
-    float h = hash1D(length(texOffset)+Scroll.z);
-    int scroll = int(h*Scroll.x*listSize + Scroll.w);
-    listSize += int(mod(h*Scroll.y,Scroll.y)*min(abs(Scroll.x),1));
+    vec2 rand = hash1D(length(texOffset)+Scroll.z);
+    listSize += int(mod(rand.x*Scroll.y,Scroll.y));
+    int scroll = int(rand.y*Scroll.x*listSize + Scroll.w);
 
     int pixelCoord = int((texCoord.x/oneTexel.x + 0.5)*Direction.x) + int((texCoord.y/oneTexel.y + 0.5)*Direction.y) + scroll;
     int listIndex = pixelCoord%listSize;
@@ -98,12 +99,12 @@ void main(){
         }
 
         float value = rankCol.r + (rankCol.g*255.0)-127.0;
-        if (hash(vec3(coord.xy, value)) >= LossRate) {
+        if (hash(vec3(coord.xy, value)) >= LossRate.x) {
             ranks[i] = value;
         } else {
             //the default value in the list is random gpu data
             value = fract(ranks[i]);
-            ranks[i] = LossRate > 1 ? (value*2 - 1) * LossRate : value;
+            ranks[i] = ((value-0.5) * LossRate.y) + 0.5;
         }
     }
 
