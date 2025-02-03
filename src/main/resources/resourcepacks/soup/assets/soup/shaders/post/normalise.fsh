@@ -7,10 +7,15 @@ in vec2 oneTexel;
 
 out vec4 fragColor;
 
+uniform vec3 Levels;
+
 void main(){
-    vec4 col = texture(InSampler, texCoord);
+    vec3 col = texture(InSampler, texCoord).rgb;
 
-    col/=max(max(col.r,col.g),col.b);
+    float m = max(max(col.r,col.g),col.b);
+    vec3 normalised = m == 0 ? col : col/m;
 
-    fragColor = vec4(col.rgb, 1.0);
+    col = normalised*ceil(m*Levels)/Levels;
+
+    fragColor = vec4(col, 1.0);
 }
