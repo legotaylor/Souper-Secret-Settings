@@ -58,6 +58,7 @@ All builtin resourcepacks should be enabled by default, but they may need to ena
 |                                    |                  | pixels          |
 |                                    |                  | plants          |
 |                                    |                  | plasma          |
+|                                    |                  | reflect         |
 |                                    |                  | retro           |
 |                                    |                  | rings           |
 |                                    |                  | rolling_shutter |
