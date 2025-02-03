@@ -13,23 +13,23 @@ All builtin resourcepacks should be enabled by default, but they may need to ena
 | antialias                          | bloom_dither     | anaglyph        |
 | art                                | crt              | autumnal        |
 | bits                               | depth_dither     | bevel           |
-| blobs                              | eightbit         | blobs_outline   |
-| blobs2                             | gentoo           | blobs_square    |
-| bloom*                             | golden           | bloom_color     |
-| box_blur**                         | grayscale        | bloom_spike     |
-| bumpy                              | health_overlay   | brightness      |
-| color_convolve                     | mirror           | checkerboard    |
-| creeper**                          | outlined         | cinematic       |
-| deconverge                         | outlined2        | collapse        |
-| desaturate                         | pixelated        | color_bleed     |
-| flip                               | rainbow          | color_blind     |
-| fxaa                               | saturate         | color_shuffle   |
-| green                              | silhouette       | contrast        |
-| invert**                           | silhouette2      | crystallize     |
-| love*                              | sixteen_colors   | depth_outline   |
-| notch                              | tiltshift        | dramatic        |
-| ntsc                               |                  | film_grain      |
-| outline                            |                  | fisheye         |
+| blobs                              | dos              | blobs_outline   |
+| blobs2                             | eightbit         | blobs_square    |
+| bloom*                             | gaussian         | bloom_color     |
+| box_blur**                         | gentoo           | bloom_spike     |
+| bumpy                              | golden           | brightness      |
+| color_convolve                     | grayscale        | checkerboard    |
+| creeper**                          | health_overlay   | cinematic       |
+| deconverge                         | mirror           | collapse        |
+| desaturate                         | outlined         | color_bleed     |
+| flip                               | outlined2        | color_blind     |
+| fxaa                               | pixelated        | color_shuffle   |
+| green                              | rainbow          | contrast        |
+| invert**                           | saturate         | crystallize     |
+| love*                              | silhouette       | depth_outline   |
+| notch                              | silhouette2      | dramatic        |
+| ntsc                               | sixteen_colors   | film_grain      |
+| outline                            | tiltshift        | fisheye         |
 | pencil                             |                  | fractal         |
 | phosphor                           |                  | frigid          |
 | scan_pincushion                    |                  | gaussian        |
