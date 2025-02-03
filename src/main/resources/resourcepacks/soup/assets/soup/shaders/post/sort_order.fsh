@@ -76,16 +76,26 @@ void main(){
     listSize += int(mod(rand.x*Scroll.y,Scroll.y));
     int scroll = int(rand.y*Scroll.x*listSize + Scroll.w);
 
-    int pixelCoord = int((texCoord.x/oneTexel.x + 0.5)*Direction.x) + int((texCoord.y/oneTexel.y + 0.5)*Direction.y) + scroll;
+    int pixelCoord = int((texCoord.x/oneTexel.x)*Direction.x) + int((texCoord.y/oneTexel.y)*Direction.y) + scroll;
     int listIndex = pixelCoord%listSize;
     int listStart = (pixelCoord/listSize)*listSize;
     listStart -= scroll;
+
+    if (listStart < 0) {
+        listSize += listStart;
+        listIndex += listStart;
+        listStart = 0;
+    }
 
     float ranks[MAX_SIZE];
     int startIndex = -1;
     int endIndex = listSize-1;
     for (int i = 0; i < listSize; i++) {
         vec2 coord = GetListCoord(listStart+i);
+        if (coord.x > 1 || coord.y > 1) {
+            endIndex = i-1;
+            break;
+        }
         vec4 rankCol = texture(RankSampler, coord);
         if (startIndex == -1) {
             if (rankCol.b > 0.5) {
