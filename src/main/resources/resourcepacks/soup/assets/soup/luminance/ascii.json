@@ -1,0 +1,11 @@
+{
+    "post_effect": "soup:ascii",
+    "enabled": true,
+    "translatable": true,
+    "disable_game_rendertype": true,
+    "custom": {
+        "souper_secret_settings": {
+            "disable_soup": false
+        }
+    }
+}
