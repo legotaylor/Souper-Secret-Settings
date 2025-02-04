@@ -4,7 +4,7 @@
     },
     "passes": [
         {
-            "program": "soup:post/aspect_ratio",
+            "program": "luminance:post/aspect_ratio",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -14,7 +14,7 @@
             "output": "0",
             "uniforms": [
                 {
-                    "name": "Ratio",
+                    "name": "AspectRatio",
                     "values": [ 21.0, 9.0 ]
                 }
             ]
