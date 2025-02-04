@@ -9,11 +9,10 @@ uniform vec2 InSize;
 
 out vec4 fragColor;
 
-uniform float Scale;
+uniform vec3 Scale;
 uniform ivec2 Grid;
-uniform vec3 Gray;
 uniform vec4 Thresholds;
-uniform float Rounding;
+uniform vec2 Levels;
 uniform ivec4 Char1A;
 uniform ivec4 Char1B;
 uniform ivec4 Char2A;
@@ -31,11 +30,14 @@ bool getChar(ivec4 charA, ivec4 charB, ivec2 index) {
 }
 
 void main() {
-    ivec2 pixelCoord = ivec2(texCoord/oneTexel/Scale);
+    ivec2 pixelCoord = ivec2(texCoord/oneTexel/Scale.xy);
 
-    vec3 col = texture(InSampler, mix(pixelCoord, (pixelCoord/Grid)*Grid, Rounding)*oneTexel*Scale).rgb;
+    vec3 col = texture(InSampler, mix(pixelCoord, (pixelCoord/Grid)*Grid, Scale.z)*oneTexel*Scale.xy).rgb;
 
-    float l = dot(col, Gray);
+    float m = max(max(col.r, col.g), col.b);
+    col /= m;
+    m *= Levels.y;
+    float l = fract(m*0.9999);
 
     ivec4 charA;
     ivec4 charB;
@@ -64,7 +66,7 @@ void main() {
     if (Grid.y < 8) {
         coord.y += offset.y;
     }
-    col *= getChar(charA, charB, coord) ? 1 : 0;
 
+    col = round(col*Levels.x)/Levels.x * (getChar(charA, charB, coord) ? ceil(m) : min(floor(m),Levels.y-1))/Levels.y;
     fragColor = vec4(col, 1.0);
 }
