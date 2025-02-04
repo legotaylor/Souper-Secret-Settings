@@ -11,32 +11,34 @@ All builtin resourcepacks should be enabled by default, but they may need to ena
 |------------------------------------|------------------|-----------------|
 | **[minecraft:]**                   | **[luminance:]** | **[soup:]**     |
 | antialias                          | bloom_dither     | anaglyph        |
-| art                                | crt              | autumnal        |
-| bits                               | depth_dither     | bevel           |
-| blobs                              | dos              | blobs_outline   |
-| blobs2                             | eightbit         | blobs_square    |
-| bloom*                             | gaussian         | bloom_color     |
-| box_blur**                         | gentoo           | bloom_spike     |
-| bumpy                              | golden           | brightness      |
-| color_convolve                     | grayscale        | checkerboard    |
-| creeper**                          | health_overlay   | cinematic       |
-| deconverge                         | mirror           | collapse        |
-| desaturate                         | outlined         | color_bleed     |
-| flip                               | outlined2        | color_blind     |
-| fxaa                               | pixelated        | color_shuffle   |
-| green                              | rainbow          | contrast        |
-| invert**                           | saturate         | crystallize     |
-| love*                              | silhouette       | depth_outline   |
-| notch                              | silhouette2      | dramatic        |
-| ntsc                               | sixteen_colors   | film_grain      |
-| outline                            | tiltshift        | fisheye         |
-| pencil                             |                  | fractal         |
-| phosphor                           |                  | frigid          |
-| scan_pincushion                    |                  | gaussian        |
-| shareware*                         |                  | ghost           |
-| sobel                              |                  | gel             |
-| spider**                           |                  | glass           |
-| wobble                             |                  | glitchy         |
+| art                                | crt              | ascii           |
+| bits                               | depth_dither     | autumnal        |
+| blobs                              | dos              | bevel           |
+| blobs2                             | eightbit         | blobs_outline   |
+| bloom*                             | gaussian         | blobs_square    |
+| box_blur**                         | gentoo           | bloom_color     |
+| bumpy                              | golden           | bloom_spike     |
+| color_convolve                     | grayscale        | brightness      |
+| creeper**                          | health_overlay   | checkerboard    |
+| deconverge                         | mirror           | cinematic       |
+| desaturate                         | outlined         | collapse        |
+| flip                               | outlined2        | color_bleed     |
+| fxaa                               | pixelated        | color_blind     |
+| green                              | rainbow          | color_shuffle   |
+| invert**                           | saturate         | contrast        |
+| love*                              | silhouette       | crystallize     |
+| notch                              | silhouette2      | depth_outline   |
+| ntsc                               | sixteen_colors   | dither          |
+| outline                            | tiltshift        | dramatic        |
+| pencil                             |                  | film_grain      |
+| phosphor                           |                  | fisheye         |
+| scan_pincushion                    |                  | fractal         |
+| shareware*                         |                  | frigid          |
+| sobel                              |                  | gaussian        |
+| spider**                           |                  | ghost           |
+| wobble                             |                  | gel             |
+|                                    |                  | glass           |
+|                                    |                  | glitchy         |
 |                                    |                  | half_invert     |
 |                                    |                  | halftone        |
 |                                    |                  | harsh_dither    |

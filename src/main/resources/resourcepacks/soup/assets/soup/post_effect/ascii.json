@@ -11,6 +11,75 @@
                     "target": "minecraft:main"
                 }
             ],
+            "uniforms": [
+                {
+                    "name": "Scale",
+                    "values": [ 2.0, 2.0, 1.0 ]
+                },
+                {
+                    "name": "Levels",
+                    "values": [ 4.0, 2.0 ]
+                },
+                {
+                    "name": "Grid",
+                    "values": [ 6, 8 ]
+                },
+                {"name": "Char1A", "values": [], "override": [ "soup_byte", "soup_byte", "soup_byte", "soup_byte" ], "config": [
+                    { "name": "0_value", "values": [ "00000000" ] },
+                    { "name": "1_value", "values": [ "00000000" ] },
+                    { "name": "2_value", "values": [ "00001000" ] },
+                    { "name": "3_value", "values": [ "00000000" ] }]},
+                {"name": "Char1B", "values": [], "override": [ "soup_byte", "soup_byte", "soup_byte", "soup_byte" ], "config": [
+                    { "name": "0_value", "values": [ "00000000" ] },
+                    { "name": "1_value", "values": [ "00000000" ] },
+                    { "name": "2_value", "values": [ "00001000" ] },
+                    { "name": "3_value", "values": [ "00000000" ] }]
+                },
+                {"name": "Char2A", "values": [], "override": [ "soup_byte", "soup_byte", "soup_byte", "soup_byte" ], "config": [
+                    { "name": "0_value", "values": [ "00000000" ] },
+                    { "name": "1_value", "values": [ "00000000" ] },
+                    { "name": "2_value", "values": [ "00000000" ] },
+                    { "name": "3_value", "values": [ "00000000" ] }]},
+                {"name": "Char2B", "values": [], "override": [ "soup_byte", "soup_byte", "soup_byte", "soup_byte" ], "config": [
+                    { "name": "0_value", "values": [ "00111110" ] },
+                    { "name": "1_value", "values": [ "00000000" ] },
+                    { "name": "2_value", "values": [ "00000000" ] },
+                    { "name": "3_value", "values": [ "00000000" ] }]
+                },
+                {"name": "Char3A", "values": [], "override": [ "soup_byte", "soup_byte", "soup_byte", "soup_byte" ], "config": [
+                    { "name": "0_value", "values": [ "00000000" ] },
+                    { "name": "1_value", "values": [ "00000000" ] },
+                    { "name": "2_value", "values": [ "00001000" ] },
+                    { "name": "3_value", "values": [ "00001000" ] }]},
+                {"name": "Char3B", "values": [], "override": [ "soup_byte", "soup_byte", "soup_byte", "soup_byte" ], "config": [
+                    { "name": "0_value", "values": [ "00111110" ] },
+                    { "name": "1_value", "values": [ "00001000" ] },
+                    { "name": "2_value", "values": [ "00001000" ] },
+                    { "name": "3_value", "values": [ "00000000" ] }]
+                },
+                {"name": "Char4A", "values": [], "override": [ "soup_byte", "soup_byte", "soup_byte", "soup_byte" ], "config": [
+                    { "name": "0_value", "values": [ "00000000" ] },
+                    { "name": "1_value", "values": [ "00100010" ] },
+                    { "name": "2_value", "values": [ "00100100" ] },
+                    { "name": "3_value", "values": [ "00000100" ] }]},
+                {"name": "Char4B", "values": [], "override": [ "soup_byte", "soup_byte", "soup_byte", "soup_byte" ], "config": [
+                    { "name": "0_value", "values": [ "00001000" ] },
+                    { "name": "1_value", "values": [ "00010000" ] },
+                    { "name": "2_value", "values": [ "00010010" ] },
+                    { "name": "3_value", "values": [ "00100010" ] }]
+                },
+                {"name": "Char5A", "values": [], "override": [ "soup_byte", "soup_byte", "soup_byte", "soup_byte" ], "config": [
+                    { "name": "0_value", "values": [ "00000000" ] },
+                    { "name": "1_value", "values": [ "00010100" ] },
+                    { "name": "2_value", "values": [ "00010100" ] },
+                    { "name": "3_value", "values": [ "00111110" ] }]},
+                {"name": "Char5B", "values": [], "override": [ "soup_byte", "soup_byte", "soup_byte", "soup_byte" ], "config": [
+                    { "name": "0_value", "values": [ "00010100" ] },
+                    { "name": "1_value", "values": [ "00111110" ] },
+                    { "name": "2_value", "values": [ "00010100" ] },
+                    { "name": "3_value", "values": [ "00010100" ] }]
+                }
+            ],
             "output": "0"
         },
         {

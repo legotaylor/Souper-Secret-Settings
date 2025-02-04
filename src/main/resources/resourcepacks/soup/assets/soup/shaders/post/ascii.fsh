@@ -11,8 +11,9 @@ out vec4 fragColor;
 
 uniform vec3 Scale;
 uniform ivec2 Grid;
-uniform vec4 Thresholds;
 uniform vec2 Levels;
+uniform vec4 Thresholds;
+uniform ivec3 BitShift;
 uniform ivec4 Char1A;
 uniform ivec4 Char1B;
 uniform ivec4 Char2A;
@@ -23,7 +24,6 @@ uniform ivec4 Char4A;
 uniform ivec4 Char4B;
 uniform ivec4 Char5A;
 uniform ivec4 Char5B;
-uniform ivec3 BitShift;
 
 bool getChar(ivec4 charA, ivec4 charB, ivec2 index) {
     return (((((index.y/4)%2 > 0 ? charB : charA)[index.y%4] * BitShift.y) ^ BitShift.z) & (BitShift.x << index.x)) > 0;
