@@ -36,10 +36,15 @@ public class ConfigValueWidget extends TextWidget {
             for (int i = 0; i < objects.size(); i++) {
                 SuggestionTextFieldWidget textFieldWidget = new SuggestionTextFieldWidget(x + childStart + (childWidth * i), childWidth, height, Text.literal(String.valueOf(i)), true);
                 int finalI = i;
-                textFieldWidget.setText(String.valueOf(objects.get(i)));
+                Object object = objects.get(i);
+                textFieldWidget.setText(String.valueOf(object));
                 textFieldWidget.setChangedListener((s) -> valueChanged(s, finalI));
                 textFieldWidget.setListeners(() -> Collections.singletonList(String.valueOf(defaultObjects.get(finalI))), null);
                 children.add(textFieldWidget);
+
+                if (object instanceof String) {
+                    textFieldWidget.disableDrag = true;
+                }
             }
         }
     }
