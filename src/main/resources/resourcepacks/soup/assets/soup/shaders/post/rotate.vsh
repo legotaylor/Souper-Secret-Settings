@@ -10,6 +10,9 @@ uniform vec2 ScreenSize;
 out vec2 texCoord;
 
 uniform float Angle;
+uniform vec2 X;
+uniform vec2 Y;
+uniform vec2 Offset;
 
 vec2 rotate(vec2 v, float angle) {
     float radians = angle / 57.2957795131;
@@ -25,5 +28,5 @@ void main(){
     texCoord = Position.xy / OutSize;
 
     vec2 centered = texCoord-vec2(0.5);
-    texCoord = rotate(centered, Angle)+vec2(0.5);
+    texCoord = (mat3x2(X, Y, Offset)*vec3(rotate(centered, Angle), 1.0))+vec2(0.5);
 }
