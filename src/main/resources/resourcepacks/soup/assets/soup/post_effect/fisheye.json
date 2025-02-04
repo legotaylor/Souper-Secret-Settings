@@ -4,7 +4,7 @@
     },
     "passes": [
         {
-            "program": "soup:post/fisheye",
+            "program": "luminance:post/fisheye",
             "inputs": [
                 {
                     "sampler_name": "In",
