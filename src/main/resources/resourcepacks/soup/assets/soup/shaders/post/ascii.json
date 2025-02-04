@@ -5,19 +5,24 @@
         { "name": "InSampler" }
     ],
     "uniforms": [
-        { "name": "ProjMat",  "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
-        { "name": "InSize",   "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
-        { "name": "OutSize",  "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
-        { "name": "Scale",    "type": "float",     "count": 1,  "values": [ 1.0 ] },
-        { "name": "Char1A",   "type": "int",       "count": 4,  "values": [ 136, 0  , 34 , 0   ] },
-        { "name": "Char1B",   "type": "int",       "count": 4,  "values": [ 136, 0  , 34 , 0   ] },
-        { "name": "Char2A",   "type": "int",       "count": 4,  "values": [ 146, 73 , 36 , 146 ] },
-        { "name": "Char2B",   "type": "int",       "count": 4,  "values": [ 73 , 36 , 146, 73  ] },
-        { "name": "Char3A",   "type": "int",       "count": 4,  "values": [ 170, 85 , 170, 85  ] },
-        { "name": "Char3B",   "type": "int",       "count": 4,  "values": [ 170, 85 , 170, 85  ] },
-        { "name": "Char4A",   "type": "int",       "count": 4,  "values": [ 109, 182, 219, 109 ] },
-        { "name": "Char4B",   "type": "int",       "count": 4,  "values": [ 182, 219, 109, 182 ] },
-        { "name": "Char5A",   "type": "int",       "count": 4,  "values": [ 119, 255, 221, 255 ] },
-        { "name": "Char5B",   "type": "int",       "count": 4,  "values": [ 119, 255, 221, 255 ] }
+        { "name": "ProjMat",    "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+        { "name": "InSize",     "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
+        { "name": "OutSize",    "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
+        { "name": "Scale",      "type": "float",     "count": 1,  "values": [ 1.0 ] },
+        { "name": "Grid",       "type": "int",       "count": 2,  "values": [ 8, 8 ] },
+        { "name": "Gray",       "type": "float",     "count": 3,  "values": [ 0.3, 0.59, 0.11 ] },
+        { "name": "Thresholds", "type": "float",     "count": 4,  "values": [ 0.2, 0.4, 0.6, 0.8 ] },
+        { "name": "Rounding",   "type": "float",     "count": 1,  "values": [ 1.0 ] },
+        { "name": "Char1A",     "type": "int",       "count": 4,  "values": [ 136, 0  , 34 , 0   ] },
+        { "name": "Char1B",     "type": "int",       "count": 4,  "values": [ 136, 0  , 34 , 0   ] },
+        { "name": "Char2A",     "type": "int",       "count": 4,  "values": [ 170, 0  , 170, 0   ] },
+        { "name": "Char2B",     "type": "int",       "count": 4,  "values": [ 170, 0  , 170, 0   ] },
+        { "name": "Char3A",     "type": "int",       "count": 4,  "values": [ 170, 85 , 170, 85  ] },
+        { "name": "Char3B",     "type": "int",       "count": 4,  "values": [ 170, 85 , 170, 85  ] },
+        { "name": "Char4A",     "type": "int",       "count": 4,  "values": [ 255, 85 , 255, 85  ] },
+        { "name": "Char4B",     "type": "int",       "count": 4,  "values": [ 255, 85 , 255, 85  ] },
+        { "name": "Char5A",     "type": "int",       "count": 4,  "values": [ 255, 221, 255, 119 ] },
+        { "name": "Char5B",     "type": "int",       "count": 4,  "values": [ 255, 221, 255, 119 ] },
+        { "name": "BitShift",   "type": "int",       "count": 3,  "values": [ 1, 1, 0 ] }
     ]
 }
