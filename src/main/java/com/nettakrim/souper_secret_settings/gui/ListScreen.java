@@ -1,11 +1,12 @@
 package com.nettakrim.souper_secret_settings.gui;
 
+import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
@@ -19,11 +20,9 @@ public abstract class ListScreen<V> extends Screen {
     protected SuggestionTextFieldWidget suggestionTextFieldWidget;
 
     protected static final int listWidth = 150;
-    protected static final int listGap = 2;
-    protected static final int headerHeight = 20;
-    protected static final int listStart = headerHeight + listGap*2;
+    protected static final int listStart = SoupGui.headerHeight + SoupGui.listGap*2;
     protected static final int scrollWidth = 6;
-    protected static final int listX = listGap*2+scrollWidth;
+    protected static final int listX = SoupGui.listGap*2+scrollWidth;
 
     protected ScrollWidget scrollWidget;
     protected int currentListSize;
@@ -34,9 +33,11 @@ public abstract class ListScreen<V> extends Screen {
 
     @Override
     protected void init() {
-        addDrawableChild(getToggleButton());
+        for (ClickableWidget clickableWidget : SouperSecretSettingsClient.soupGui.getHeader()) {
+            addDrawableChild(clickableWidget);
+        }
 
-        scrollWidget = new ScrollWidget(listGap, listStart, scrollWidth, height-listStart-listGap, Text.literal("scroll"), this::setScroll);
+        scrollWidget = new ScrollWidget(SoupGui.listGap, listStart, scrollWidth, height-listStart-SoupGui.listGap, Text.literal("scroll"), this::setScroll);
         addDrawableChild(scrollWidget);
 
         List<V> listValues = getListValues();
@@ -65,9 +66,6 @@ public abstract class ListScreen<V> extends Screen {
         context.disableScissor();
     }
 
-    //TODO: needs to be a proper header system
-    protected abstract ButtonWidget getToggleButton();
-
     protected abstract List<V> getListValues();
 
     protected abstract ListWidget createListWidget(V value);
@@ -85,7 +83,7 @@ public abstract class ListScreen<V> extends Screen {
         for (CollapseWidget collapseWidget : listWidgets) {
             collapseWidget.visible = true;
             collapseWidget.updateCollapse(currentListSize);
-            currentListSize += collapseWidget.getCollapseHeight() + listGap;
+            currentListSize += collapseWidget.getCollapseHeight() + SoupGui.listGap;
         }
 
         scrollWidget.setContentHeight(currentListSize-listStart + suggestionTextFieldWidget.getHeight());

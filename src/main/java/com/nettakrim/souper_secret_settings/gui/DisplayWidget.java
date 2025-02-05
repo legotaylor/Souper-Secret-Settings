@@ -1,6 +1,6 @@
 package com.nettakrim.souper_secret_settings.gui;
 
-import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
+import com.mclegoman.luminance.client.data.ClientData;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ClickableWidget;
@@ -34,7 +34,7 @@ public abstract class DisplayWidget<T> extends CollapseWidget {
     @Override
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
         int color = ColorHelper.getArgb(255,255,255,255);
-        drawScrollableText(context, SouperSecretSettingsClient.client.textRenderer, this.getMessage(), this.getX()+2, this.getY(), this.getX()+this.getWidth()-displayWidth-2, this.getY()+20, color);
+        drawScrollableText(context, ClientData.minecraft.textRenderer, this.getMessage(), this.getX()+2, this.getY(), this.getX()+this.getWidth()-displayWidth-2, this.getY()+20, color);
 
         super.renderWidget(context, mouseX, mouseY, delta);
 
@@ -43,8 +43,8 @@ public abstract class DisplayWidget<T> extends CollapseWidget {
 
         if (hovered && mouseX > this.getX()+this.getWidth()-displayWidth-2) {
             Text text = getHoverText(currentDisplay);
-            context.fill(mouseX-2, mouseY-22, mouseX + SouperSecretSettingsClient.client.textRenderer.getWidth(text)+2, mouseY-10, ColorHelper.getArgb(128,0,0,0));
-            context.drawText(SouperSecretSettingsClient.client.textRenderer, text, mouseX, mouseY-20, color, true);
+            context.fill(mouseX-2, mouseY-22, mouseX + ClientData.minecraft.textRenderer.getWidth(text)+2, mouseY-10, ColorHelper.getArgb(128,0,0,0));
+            context.drawText(ClientData.minecraft.textRenderer, text, mouseX, mouseY-20, color, true);
         }
     }
 

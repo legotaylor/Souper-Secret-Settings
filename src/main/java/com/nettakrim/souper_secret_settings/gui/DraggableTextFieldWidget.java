@@ -1,6 +1,6 @@
 package com.nettakrim.souper_secret_settings.gui;
 
-import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
+import com.mclegoman.luminance.client.data.ClientData;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 
@@ -8,7 +8,7 @@ public class DraggableTextFieldWidget extends TextFieldWidget implements ListChi
     public boolean disableDrag = false;
 
     public DraggableTextFieldWidget(int x, int width, int height, Text message) {
-        super(SouperSecretSettingsClient.client.textRenderer, x, 0, width, height, message);
+        super(ClientData.minecraft.textRenderer, x, 0, width, height, message);
     }
 
     @Override

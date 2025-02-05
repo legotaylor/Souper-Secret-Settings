@@ -1,5 +1,6 @@
 package com.nettakrim.souper_secret_settings.gui;
 
+import com.mclegoman.luminance.client.data.ClientData;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ButtonTextures;
@@ -27,7 +28,7 @@ public abstract class ListWidget extends CollapseWidget {
         float deleteColor = dragState < 0 ? 1f : 0f;
 
         context.drawGuiTexture(RenderLayer::getGuiTextured, TEXTURES.get(this.active, this.isSelected()), this.getX(), this.getY(), this.getWidth(), getCollapseHeight(), ColorHelper.fromFloats(this.alpha, buttonColor, buttonColor, buttonColor));
-        drawScrollableText(context, SouperSecretSettingsClient.client.textRenderer, this.getMessage(), this.getX()+2, this.getY(), this.getX()+this.getWidth()-2, getY()+getHeight(), (this.active ? 16777215 : 10526880) | MathHelper.ceil(this.alpha * 255.0F) << 24);
+        drawScrollableText(context, ClientData.minecraft.textRenderer, this.getMessage(), this.getX()+2, this.getY(), this.getX()+this.getWidth()-2, getY()+getHeight(), (this.active ? 16777215 : 10526880) | MathHelper.ceil(this.alpha * 255.0F) << 24);
         context.drawTexture(RenderLayer::getGuiTextured, ICON_TEXTURE, getX(), getY(), 0, 0, 10, 20, 20, 20, ColorHelper.fromFloats(0.5f, deleteColor, deleteColor, deleteColor));
         context.drawTexture(RenderLayer::getGuiTextured, ICON_TEXTURE, getX()+getWidth()-10, getY(), 10, 0, 10, 20, 20, 20, ColorHelper.fromFloats(0.5f, dragColor, dragColor, dragColor));
 

@@ -1,8 +1,8 @@
 package com.nettakrim.souper_secret_settings.gui.shaders;
 
+import com.mclegoman.luminance.client.data.ClientData;
 import com.mclegoman.luminance.client.shaders.interfaces.PostEffectPassInterface;
 import com.mclegoman.luminance.client.shaders.interfaces.ShaderProgramInterface;
-import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.CollapseWidget;
 import com.nettakrim.souper_secret_settings.shaders.PassData;
@@ -57,11 +57,11 @@ public class PassWidget extends CollapseWidget {
         int y = getY();
         if (isFirstCustom) {
             context.fill(getX(), y, getX() + getWidth(), y+firstCustomHeight, ColorHelper.fromFloats(0.4f, 0, 0, 0));
-            drawScrollableText(context, SouperSecretSettingsClient.client.textRenderer, Text.literal(customPass.getPath()), this.getX()+2, y, this.getX()+this.getWidth()-2, y+firstCustomHeight, (this.active ? 16777215 : 10526880) | MathHelper.ceil(this.alpha * 255.0F) << 24);
+            drawScrollableText(context, ClientData.minecraft.textRenderer, Text.literal(customPass.getPath()), this.getX()+2, y, this.getX()+this.getWidth()-2, y+firstCustomHeight, (this.active ? 16777215 : 10526880) | MathHelper.ceil(this.alpha * 255.0F) << 24);
             y += firstCustomHeight;
         }
 
-        drawScrollableText(context, SouperSecretSettingsClient.client.textRenderer, this.getMessage(), this.getX()+2, y, this.getX()+this.getWidth()-2, y+20, (this.active ? 16777215 : 10526880) | MathHelper.ceil(this.alpha * 255.0F) << 24);
+        drawScrollableText(context, ClientData.minecraft.textRenderer, this.getMessage(), this.getX()+2, y, this.getX()+this.getWidth()-2, y+20, (this.active ? 16777215 : 10526880) | MathHelper.ceil(this.alpha * 255.0F) << 24);
 
         if (expanded) {
             context.fill(getX(), getY() + getCollapseHeight(), getX() + getWidth(), y+20, ColorHelper.fromFloats(0.2f, 0, 0, 0));

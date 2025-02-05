@@ -1,6 +1,6 @@
 package com.nettakrim.souper_secret_settings.gui;
 
-import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
+import com.mclegoman.luminance.client.data.ClientData;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.text.Text;
@@ -23,7 +23,7 @@ public class ConfigValueWidget extends TextWidget {
     public List<Object> objects;
 
     public ConfigValueWidget(int x, int width, int height, String name, @NotNull List<Object> objects, @NotNull List<Object> defaultObjects) {
-        super(x, 0, width, height, Text.literal(name.startsWith("soup_") ? name.substring(5) : name), SouperSecretSettingsClient.client.textRenderer);
+        super(x, 0, width, height, Text.literal(name.startsWith("soup_") ? name.substring(5) : name), ClientData.minecraft.textRenderer);
 
         this.name = name;
         this.objects = new ArrayList<>(objects);
