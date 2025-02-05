@@ -29,7 +29,7 @@ vec2 offset(vec2 cell) {
 vec2 voronoiNoise(vec2 value){
     vec2 center = floor(value);
 
-    float smallestDistance = 10;
+    float smallestDistance = 10.0;
     vec2 closestCell;
 
     for(int x = -1; x <= 1; x++) {
@@ -47,7 +47,7 @@ vec2 voronoiNoise(vec2 value){
 }
 
 void main(){
-    vec2 scale = (1/oneTexel)/Scale;
+    vec2 scale = (vec2(1.0)/oneTexel)/Scale;
 
     vec2 pos = texCoord*scale;
     vec2 cell = voronoiNoise(pos);
@@ -55,7 +55,7 @@ void main(){
 
     vec2 slope = (vec2(hash(vec3(cell.x, cell.y, Seed))-0.5, hash(vec3(Seed, cell.x, cell.y))-0.5)*Angle.xy)*pos;
     float angle = fract(slope.x + slope.y);
-    color = mix(color, vec3(color.r*color.r > angle ? 1 : 0, color.g*color.g > angle ? 1 : 0, color.b*color.b > angle ? 1 : 0), Angle.z);
+    color = mix(color, step(angle, color*color), Angle.z);
 
     fragColor = vec4(color, 1);
 }
