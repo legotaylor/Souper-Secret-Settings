@@ -4,7 +4,7 @@
     },
     "passes": [
         {
-            "program": "soup:post/gaussian",
+            "program": "luminance:post/gaussian",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -14,17 +14,17 @@
             "output": "0",
             "uniforms": [
                 {
-                    "name": "Direction",
+                    "name": "BlurDir",
                     "values": [ 1.0, 0.0 ]
                 },
                 {
-                    "name": "Sigma",
-                    "values": [ 5.0 ]
+                    "name": "Radius",
+                    "values": [ 15.0 ]
                 }
             ]
         },
         {
-            "program": "soup:post/gaussian",
+            "program": "luminance:post/gaussian",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -34,12 +34,12 @@
             "output": "minecraft:main",
             "uniforms": [
                 {
-                    "name": "Direction",
+                    "name": "BlurDir",
                     "values": [ 0.0, 1.0 ]
                 },
                 {
-                    "name": "Sigma",
-                    "values": [ 5.0 ]
+                    "name": "Radius",
+                    "values": [ 15.0 ]
                 }
             ]
         },
