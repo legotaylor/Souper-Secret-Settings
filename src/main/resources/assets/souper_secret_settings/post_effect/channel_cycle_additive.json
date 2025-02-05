@@ -18,7 +18,7 @@
         ],
         "souper_secret_settings:before_shader_render": [
             {
-                "program": "souper_secret_settings:layer_effects/cycle_additive",
+                "program": "souper_secret_settings:effects/cycle_additive",
                 "inputs": [
                     {
                         "sampler_name": "In",
@@ -40,7 +40,7 @@
         ],
         "souper_secret_settings:after_shader_render": [
             {
-                "program": "souper_secret_settings:layer_effects/cycle_additive_combine",
+                "program": "souper_secret_settings:effects/cycle_additive_combine",
                 "inputs": [
                     {
                         "sampler_name": "In",

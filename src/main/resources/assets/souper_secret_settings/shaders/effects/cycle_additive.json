@@ -1,9 +1,8 @@
 {
     "vertex": "minecraft:post/sobel",
-    "fragment": "souper_secret_settings:layer_effects/cycle_additive_combine",
+    "fragment": "souper_secret_settings:effects/cycle_additive",
     "samplers": [
-        { "name": "InSampler" },
-        { "name": "PrevSampler" }
+        { "name": "InSampler" }
     ],
     "uniforms": [
         { "name": "ProjMat",           "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },

@@ -4,7 +4,7 @@
     "translatable": true,
     "disable_game_rendertype": true,
     "registries": [
-        "souper_secret_settings:layer_effects"
+        "souper_secret_settings:effects"
     ],
     "custom": {}
 }

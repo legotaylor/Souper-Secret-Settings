@@ -1,6 +1,6 @@
 {
     "vertex": "minecraft:post/sobel",
-    "fragment": "souper_secret_settings:layer_effects/depth_layer_effect",
+    "fragment": "souper_secret_settings:effects/depth",
     "samplers": [
         { "name": "InSampler" },
         { "name": "InDepthSampler" },

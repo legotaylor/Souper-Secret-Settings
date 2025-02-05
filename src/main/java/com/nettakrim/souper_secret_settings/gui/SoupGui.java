@@ -23,7 +23,7 @@ public class SoupGui {
 
     public SoupGui() {
         header = new ArrayList<>();
-        int radioWidth = 75;
+        int radioWidth = 70;
         int x = listGap;
         for (ScreenType screenType : ScreenType.values()) {
             header.add(ButtonWidget.builder(Text.literal(screenType.name().toLowerCase()), (widget) -> open(screenType)).dimensions(x, listGap, radioWidth, headerHeight).build());

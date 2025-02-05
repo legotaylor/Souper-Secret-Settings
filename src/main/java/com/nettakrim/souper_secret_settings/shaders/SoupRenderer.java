@@ -26,7 +26,7 @@ public class SoupRenderer implements Runnables.WorldRender {
 
     private List<String> validUniforms;
 
-    public static final Identifier layerEffectRegistry = Identifier.of(SouperSecretSettingsClient.MODID, "layer_effects");
+    public static final Identifier layerEffectRegistry = Identifier.of(SouperSecretSettingsClient.MODID, "effects");
 
     public SoupRenderer() {
         clearAll();

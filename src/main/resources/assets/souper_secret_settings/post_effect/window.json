@@ -16,7 +16,7 @@
                 "output": "base"
             },
             {
-                "program": "souper_secret_settings:layer_effects/projection",
+                "program": "souper_secret_settings:effects/projection",
                 "inputs": [
                     {
                         "sampler_name": "In",
@@ -56,7 +56,7 @@
         ],
         "souper_secret_settings:after_stack_render": [
             {
-                "program": "souper_secret_settings:layer_effects/projection_merge",
+                "program": "souper_secret_settings:effects/projection_merge",
                 "inputs": [
                     {
                         "sampler_name": "In",

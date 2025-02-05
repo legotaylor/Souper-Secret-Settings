@@ -18,20 +18,20 @@
         ],
         "souper_secret_settings:after_stack_render": [
             {
-                "program": "souper_secret_settings:layer_effects/depth_layer_effect",
+                "program": "souper_secret_settings:effects/depth",
                 "inputs": [
                     {
                         "sampler_name": "In",
                         "target": "base"
                     },
                     {
-                      "name": "InDepth",
-                      "id": "minecraft:main",
-                      "use_depth_buffer": true
+                        "sampler_name": "InDepth",
+                        "target": "minecraft:main",
+                        "use_depth_buffer": true
                     },
                     {
-                        "name": "Base",
-                        "id": "minecraft:main"
+                        "sampler_name": "Base",
+                        "target": "minecraft:main"
                     }
                 ],
                 "output": "0",

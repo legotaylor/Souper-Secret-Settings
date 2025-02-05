@@ -19,7 +19,7 @@
         ],
         "souper_secret_settings:after_stack_render": [
             {
-                "program": "souper_secret_settings:layer_effects/depth_layer_effect",
+                "program": "souper_secret_settings:effects/depth",
                 "inputs": [
                     {
                         "sampler_name": "In",
@@ -39,7 +39,7 @@
                 "uniforms": [
                     {
                         "name": "Scale",
-                        "values": [ 1 ]
+                        "values": [ 4.0 ]
                     },
                     {
                         "name": "Offset",
@@ -48,7 +48,7 @@
                 ]
             },
             {
-                "program": "souper_secret_settings:layer_effects/vignette_layer_effect",
+                "program": "souper_secret_settings:effects/vignette",
                 "inputs": [
                     {
                         "sampler_name": "In",
@@ -63,7 +63,7 @@
                 "uniforms": [
                     {
                         "name": "Scale",
-                        "values": [ 3 ]
+                        "values": [ 4.0 ]
                     }
                 ]
             },

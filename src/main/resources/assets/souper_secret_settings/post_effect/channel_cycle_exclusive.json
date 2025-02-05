@@ -29,7 +29,7 @@
         ],
         "souper_secret_settings:before_shader_render": [
             {
-                "program": "souper_secret_settings:layer_effects/cycle_exclusive",
+                "program": "souper_secret_settings:effects/cycle_exclusive",
                 "inputs": [
                     {
                         "sampler_name": "In",
@@ -65,7 +65,7 @@
         ],
         "souper_secret_settings:after_shader_render": [
             {
-                "program": "souper_secret_settings:layer_effects/cycle_exclusive_combine",
+                "program": "souper_secret_settings:effects/cycle_exclusive_combine",
                 "inputs": [
                     {
                         "sampler_name": "In",

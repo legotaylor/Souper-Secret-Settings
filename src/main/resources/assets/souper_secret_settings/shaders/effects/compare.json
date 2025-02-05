@@ -1,6 +1,6 @@
 {
     "vertex": "minecraft:post/sobel",
-    "fragment": "souper_secret_settings:layer_effects/compare_layer_effect",
+    "fragment": "souper_secret_settings:effects/compare",
     "samplers": [
         { "name": "InSampler" },
         { "name": "BaseSampler" }

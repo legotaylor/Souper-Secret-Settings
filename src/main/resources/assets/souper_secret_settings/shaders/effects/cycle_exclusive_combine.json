@@ -1,6 +1,6 @@
 {
     "vertex": "minecraft:post/sobel",
-    "fragment": "souper_secret_settings:layer_effects/cycle_exclusive_combine",
+    "fragment": "souper_secret_settings:effects/cycle_exclusive_combine",
     "samplers": [
         { "name": "InSampler" },
         { "name": "PrevSampler" }

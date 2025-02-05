@@ -18,7 +18,7 @@
         ],
         "souper_secret_settings:after_stack_render": [
             {
-                "program": "souper_secret_settings:layer_effects/compare_layer_effect",
+                "program": "souper_secret_settings:effects/compare",
                 "inputs": [
                     {
                         "sampler_name": "In",

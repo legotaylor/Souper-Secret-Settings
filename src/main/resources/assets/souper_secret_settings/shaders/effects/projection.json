@@ -1,6 +1,6 @@
 {
   "vertex": "minecraft:post/sobel",
-  "fragment": "souper_secret_settings:layer_effects/projection",
+  "fragment": "souper_secret_settings:effects/projection",
   "samplers": [
     { "name": "InSampler" }
   ],
