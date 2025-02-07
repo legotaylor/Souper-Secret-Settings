@@ -45,11 +45,14 @@ public class ShaderData {
 
     public boolean render(FrameGraphBuilder builder, int textureWidth, int textureHeight, DefaultFramebufferSet framebufferSet, @Nullable Identifier customPasses) {
         if (!active) return false;
-        if (customPasses != null && !((PostEffectProcessorInterface)shader.getPostProcessor()).luminance$getCustomPassNames().contains(customPasses)) {
+        PostEffectProcessorInterface processor = (PostEffectProcessorInterface)shader.getPostProcessor();
+        if (customPasses != null && !processor.luminance$getCustomPassNames().contains(customPasses)) {
             return false;
         }
 
+        processor.luminance$setPersistentBufferSource(this);
         Shaders.renderProcessorUsingFramebufferSet(shader, builder, textureWidth, textureHeight, framebufferSet, customPasses);
+        processor.luminance$setPersistentBufferSource(null);
         return true;
     }
 
