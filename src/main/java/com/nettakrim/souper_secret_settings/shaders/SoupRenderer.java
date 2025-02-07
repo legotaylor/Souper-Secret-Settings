@@ -20,9 +20,8 @@ import java.util.List;
 import java.util.Map;
 
 public class SoupRenderer implements Runnables.WorldRender {
-    public ArrayList<ShaderLayer> shaderLayers;
-
-    public int activeLayer;
+    public List<ShaderLayer> shaderLayers;
+    public ShaderLayer activeLayer;
 
     private List<String> validUniforms;
 
@@ -128,14 +127,11 @@ public class SoupRenderer implements Runnables.WorldRender {
         return null;
     }
 
-    public ShaderLayer getActiveLayer() {
-        return shaderLayers.get(activeLayer);
-    }
-
     public void clearAll() {
         shaderLayers = new ArrayList<>();
-        shaderLayers.add(new ShaderLayer());
-        activeLayer = 0;
+
+        activeLayer = new ShaderLayer("initial");
+        shaderLayers.add(activeLayer);
     }
 
     public List<String> getValidUniforms() {

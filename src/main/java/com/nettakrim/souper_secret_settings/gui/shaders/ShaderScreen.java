@@ -7,20 +7,18 @@ import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.ListWidget;
 import com.nettakrim.souper_secret_settings.shaders.ShaderData;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class LayerScreen extends ListScreen<ShaderData> {
+public class ShaderScreen extends ListScreen<ShaderData> {
     public final ShaderLayer layer;
     public final Identifier registry;
     public final Identifier[] customPasses;
 
-    public LayerScreen(ShaderLayer layer, Identifier registry, Identifier[] customPasses) {
-        super(Text.literal(""));
+    public ShaderScreen(ShaderLayer layer, Identifier registry, Identifier[] customPasses) {
         this.layer = layer;
         this.registry = registry;
         this.customPasses = customPasses;

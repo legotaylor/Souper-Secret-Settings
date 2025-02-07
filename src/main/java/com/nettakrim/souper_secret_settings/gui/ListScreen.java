@@ -27,8 +27,8 @@ public abstract class ListScreen<V> extends Screen {
     protected ScrollWidget scrollWidget;
     protected int currentListSize;
 
-    protected ListScreen(Text title) {
-        super(title);
+    protected ListScreen() {
+        super(Text.literal(""));
     }
 
     @Override

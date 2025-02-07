@@ -3,8 +3,9 @@ package com.nettakrim.souper_secret_settings.gui;
 import com.mclegoman.luminance.client.data.ClientData;
 import com.mclegoman.luminance.client.shaders.Shaders;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
+import com.nettakrim.souper_secret_settings.gui.layers.LayerScreen;
 import com.nettakrim.souper_secret_settings.gui.parameters.ParameterScreen;
-import com.nettakrim.souper_secret_settings.gui.shaders.LayerScreen;
+import com.nettakrim.souper_secret_settings.gui.shaders.ShaderScreen;
 import com.nettakrim.souper_secret_settings.shaders.SoupRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -33,14 +34,15 @@ public class SoupGui {
 
     public void open(ScreenType screenType) {
         Screen screen = switch(screenType) {
-            case SHADERS -> new LayerScreen(SouperSecretSettingsClient.soupRenderer.getActiveLayer(), Shaders.getMainRegistryId(),new Identifier[] {null});
-            case EFFECTS -> new LayerScreen(SouperSecretSettingsClient.soupRenderer.getActiveLayer(), SoupRenderer.layerEffectRegistry, new Identifier[] {
+            case SHADERS -> new ShaderScreen(SouperSecretSettingsClient.soupRenderer.activeLayer, Shaders.getMainRegistryId(),new Identifier[] {null});
+            case EFFECTS -> new ShaderScreen(SouperSecretSettingsClient.soupRenderer.activeLayer, SoupRenderer.layerEffectRegistry, new Identifier[] {
                     Identifier.of(SouperSecretSettingsClient.MODID, "before_layer_render"),
                     Identifier.of(SouperSecretSettingsClient.MODID, "before_shader_render"),
                     Identifier.of(SouperSecretSettingsClient.MODID, "after_shader_render"),
                     Identifier.of(SouperSecretSettingsClient.MODID, "after_layer_render")
             });
-            case PARAMETERS -> new ParameterScreen(SouperSecretSettingsClient.soupRenderer.getActiveLayer());
+            case PARAMETERS -> new ParameterScreen(SouperSecretSettingsClient.soupRenderer.activeLayer);
+            case LAYERS -> new LayerScreen();
         };
         ClientData.minecraft.setScreen(screen);
 
@@ -60,6 +62,7 @@ public class SoupGui {
     public enum ScreenType {
         SHADERS,
         EFFECTS,
-        PARAMETERS
+        PARAMETERS,
+        LAYERS
     }
 }

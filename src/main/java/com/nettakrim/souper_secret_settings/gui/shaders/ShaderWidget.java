@@ -6,7 +6,6 @@ import com.nettakrim.souper_secret_settings.gui.ListWidget;
 import com.nettakrim.souper_secret_settings.shaders.ShaderData;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import net.minecraft.client.gl.PostEffectPass;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -22,7 +21,7 @@ public class ShaderWidget extends ListWidget {
         this.layer = layer;
         this.shaderData = shaderData;
 
-        for (Identifier customPasses : ((LayerScreen)listScreen).customPasses) {
+        for (Identifier customPasses : ((ShaderScreen)listScreen).customPasses) {
             addPasses(customPasses);
         }
     }
@@ -40,11 +39,6 @@ public class ShaderWidget extends ListWidget {
             listScreen.addSelectable(passWidget);
             i++;
         }
-    }
-
-    @Override
-    protected void appendClickableNarrations(NarrationMessageBuilder builder) {
-
     }
 
     @Override

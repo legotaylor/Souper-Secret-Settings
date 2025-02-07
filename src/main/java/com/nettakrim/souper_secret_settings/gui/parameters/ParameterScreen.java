@@ -5,7 +5,6 @@ import com.nettakrim.souper_secret_settings.gui.ListWidget;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import com.nettakrim.souper_secret_settings.shaders.calculations.Calculations;
 import com.nettakrim.souper_secret_settings.shaders.calculations.Calculation;
-import net.minecraft.text.Text;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,7 +14,6 @@ public class ParameterScreen extends ListScreen<Calculation> {
     public final ShaderLayer layer;
 
     public ParameterScreen(ShaderLayer layer) {
-        super(Text.literal(""));
         this.layer = layer;
     }
 

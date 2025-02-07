@@ -70,7 +70,7 @@ public class ShaderListCommand {
     }
 
     public int add(Identifier id, int amount) {
-        ShaderLayer layer = SouperSecretSettingsClient.soupRenderer.getActiveLayer();
+        ShaderLayer layer = SouperSecretSettingsClient.soupRenderer.activeLayer;
 
         List<ShaderData> shaders = SouperSecretSettingsClient.soupRenderer.getShaderAdditions(registry, id, amount, layer);
         if (shaders == null) {
@@ -82,14 +82,12 @@ public class ShaderListCommand {
     }
 
     public int removeAll() {
-        ShaderLayer layer = SouperSecretSettingsClient.soupRenderer.getActiveLayer();
-        layer.getList(registry).clear();
+        SouperSecretSettingsClient.soupRenderer.activeLayer.getList(registry).clear();
         return 1;
     }
 
     public int removeTop() {
-        ShaderLayer layer = SouperSecretSettingsClient.soupRenderer.getActiveLayer();
-        List<ShaderData> shaders = layer.getList(registry);
+        List<ShaderData> shaders = SouperSecretSettingsClient.soupRenderer.activeLayer.getList(registry);
         if (shaders.isEmpty()) {
             return -1;
         }

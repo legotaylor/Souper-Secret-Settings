@@ -4,6 +4,7 @@ import com.mclegoman.luminance.client.data.ClientData;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ButtonTextures;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -72,6 +73,11 @@ public abstract class ListWidget extends CollapseWidget {
             listScreen.swapEntry(this, 1);
             dragState = 2;
         }
+    }
+
+    @Override
+    protected void appendClickableNarrations(NarrationMessageBuilder builder) {
+
     }
 
     public abstract boolean isActive();

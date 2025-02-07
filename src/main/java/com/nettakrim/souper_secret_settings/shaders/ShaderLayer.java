@@ -13,13 +13,19 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public class ShaderLayer {
+    public String name;
+
     public List<ShaderData> shaderDatas;
     public List<ShaderData> layerEffects;
 
     public List<Calculation> calculations;
     public Map<String, Float> parameterValues;
 
-    public ShaderLayer() {
+    public boolean active = true;
+
+    public ShaderLayer(String name) {
+        this.name = name;
+
         shaderDatas = new ArrayList<>();
         layerEffects = new ArrayList<>();
 
@@ -28,6 +34,10 @@ public class ShaderLayer {
     }
 
     public void render(FrameGraphBuilder builder, int textureWidth, int textureHeight, DefaultFramebufferSet framebufferSet) {
+        if (!active) {
+            return;
+        }
+
         renderingLayer = this;
         parameterValues.clear();
         for (Calculation calculation : calculations) {

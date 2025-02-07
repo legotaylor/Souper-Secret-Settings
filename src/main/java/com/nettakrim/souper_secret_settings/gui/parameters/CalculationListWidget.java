@@ -4,7 +4,6 @@ import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.ListWidget;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import com.nettakrim.souper_secret_settings.shaders.calculations.Calculation;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.text.Text;
 
 public class CalculationListWidget extends ListWidget {
@@ -18,11 +17,6 @@ public class CalculationListWidget extends ListWidget {
         listScreen.addSelectable(calculationDisplayWidget);
 
         this.calculation = calculation;
-    }
-
-    @Override
-    protected void appendClickableNarrations(NarrationMessageBuilder builder) {
-
     }
 
     @Override
