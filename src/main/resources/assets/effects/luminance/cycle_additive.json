@@ -1,0 +1,10 @@
+{
+    "post_effect": "effects:cycle_additive",
+    "enabled": true,
+    "translatable": true,
+    "disable_game_rendertype": true,
+    "registries": [
+        "souper_secret_settings:effects"
+    ],
+    "custom": {}
+}
