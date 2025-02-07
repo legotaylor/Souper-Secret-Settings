@@ -1,7 +1,7 @@
 package com.nettakrim.souper_secret_settings.gui;
 
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
-import com.nettakrim.souper_secret_settings.shaders.ShaderStack;
+import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import net.minecraft.text.Text;
 
 import java.util.ArrayList;
@@ -10,11 +10,11 @@ import java.util.List;
 
 public class ParameterTextWidget extends SuggestionTextFieldWidget {
     protected final String defaultValue;
-    protected final ShaderStack stack;
+    protected final ShaderLayer layer;
 
-    public ParameterTextWidget(int x, int width, int height, Text message, ShaderStack stack, String defaultValue) {
+    public ParameterTextWidget(int x, int width, int height, Text message, ShaderLayer layer, String defaultValue) {
         super(x, width, height, message, true);
-        this.stack = stack;
+        this.layer = layer;
         this.defaultValue = defaultValue;
         if (defaultValue != null) {
             setListeners(this::getParameters, this::setText);
@@ -24,9 +24,9 @@ public class ParameterTextWidget extends SuggestionTextFieldWidget {
     protected List<String> getParameters() {
         List<String> validUniforms = SouperSecretSettingsClient.soupRenderer.getValidUniforms();
 
-        List<String> parameters = new ArrayList<>(stack.parameterValues.size()+validUniforms.size()+1);
+        List<String> parameters = new ArrayList<>(layer.parameterValues.size()+validUniforms.size()+1);
 
-        parameters.addAll(stack.parameterValues.keySet());
+        parameters.addAll(layer.parameterValues.keySet());
         parameters.addAll(validUniforms);
 
         Collections.sort(parameters);

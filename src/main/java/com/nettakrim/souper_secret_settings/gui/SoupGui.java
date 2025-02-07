@@ -4,7 +4,7 @@ import com.mclegoman.luminance.client.data.ClientData;
 import com.mclegoman.luminance.client.shaders.Shaders;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.gui.parameters.ParameterScreen;
-import com.nettakrim.souper_secret_settings.gui.shaders.StackScreen;
+import com.nettakrim.souper_secret_settings.gui.shaders.LayerScreen;
 import com.nettakrim.souper_secret_settings.shaders.SoupRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -33,14 +33,14 @@ public class SoupGui {
 
     public void open(ScreenType screenType) {
         Screen screen = switch(screenType) {
-            case SHADERS -> new StackScreen(SouperSecretSettingsClient.soupRenderer.getActiveStack(), Shaders.getMainRegistryId(),new Identifier[] {null});
-            case EFFECTS -> new StackScreen(SouperSecretSettingsClient.soupRenderer.getActiveStack(), SoupRenderer.layerEffectRegistry, new Identifier[] {
-                    Identifier.of(SouperSecretSettingsClient.MODID, "before_stack_render"),
+            case SHADERS -> new LayerScreen(SouperSecretSettingsClient.soupRenderer.getActiveLayer(), Shaders.getMainRegistryId(),new Identifier[] {null});
+            case EFFECTS -> new LayerScreen(SouperSecretSettingsClient.soupRenderer.getActiveLayer(), SoupRenderer.layerEffectRegistry, new Identifier[] {
+                    Identifier.of(SouperSecretSettingsClient.MODID, "before_layer_render"),
                     Identifier.of(SouperSecretSettingsClient.MODID, "before_shader_render"),
                     Identifier.of(SouperSecretSettingsClient.MODID, "after_shader_render"),
-                    Identifier.of(SouperSecretSettingsClient.MODID, "after_stack_render")
+                    Identifier.of(SouperSecretSettingsClient.MODID, "after_layer_render")
             });
-            case PARAMETERS -> new ParameterScreen(SouperSecretSettingsClient.soupRenderer.getActiveStack());
+            case PARAMETERS -> new ParameterScreen(SouperSecretSettingsClient.soupRenderer.getActiveLayer());
         };
         ClientData.minecraft.setScreen(screen);
 

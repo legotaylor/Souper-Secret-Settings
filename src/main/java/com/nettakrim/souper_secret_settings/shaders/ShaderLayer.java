@@ -12,14 +12,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class ShaderStack {
+public class ShaderLayer {
     public List<ShaderData> shaderDatas;
     public List<ShaderData> layerEffects;
 
     public List<Calculation> calculations;
     public Map<String, Float> parameterValues;
 
-    public ShaderStack() {
+    public ShaderLayer() {
         shaderDatas = new ArrayList<>();
         layerEffects = new ArrayList<>();
 
@@ -28,19 +28,19 @@ public class ShaderStack {
     }
 
     public void render(FrameGraphBuilder builder, int textureWidth, int textureHeight, DefaultFramebufferSet framebufferSet) {
-        renderingStack = this;
+        renderingLayer = this;
         parameterValues.clear();
         for (Calculation calculation : calculations) {
             calculation.update(this);
         }
 
         Queue<Couple<ShaderData, Identifier>> shaderQueue = new LinkedList<>();
-        FramePassInterface.createForcedPass(builder, Identifier.of(SouperSecretSettingsClient.MODID, "stack"), () -> {
-            renderingStack = this;
+        FramePassInterface.createForcedPass(builder, Identifier.of(SouperSecretSettingsClient.MODID, "layer"), () -> {
+            renderingLayer = this;
             OverrideManager.startShaderQueue(shaderQueue);
         });
 
-        renderList(layerEffects, shaderQueue, builder, textureWidth, textureHeight, framebufferSet, Identifier.of(SouperSecretSettingsClient.MODID, "before_stack_render"));
+        renderList(layerEffects, shaderQueue, builder, textureWidth, textureHeight, framebufferSet, Identifier.of(SouperSecretSettingsClient.MODID, "before_layer_render"));
 
         for (ShaderData shaderData : shaderDatas) {
             if (shaderData.active) {
@@ -51,7 +51,7 @@ public class ShaderStack {
             }
         }
 
-        renderList(layerEffects.reversed(), shaderQueue, builder, textureWidth, textureHeight, framebufferSet, Identifier.of(SouperSecretSettingsClient.MODID, "after_stack_render"));
+        renderList(layerEffects.reversed(), shaderQueue, builder, textureWidth, textureHeight, framebufferSet, Identifier.of(SouperSecretSettingsClient.MODID, "after_layer_render"));
     }
 
     public void renderList(List<ShaderData> shaders, Queue<Couple<ShaderData, Identifier>> shaderQueue, FrameGraphBuilder builder, int textureWidth, int textureHeight, DefaultFramebufferSet framebufferSet, @Nullable Identifier customPasses) {
@@ -78,8 +78,8 @@ public class ShaderStack {
         return List.of();
     }
 
-    private static ShaderStack renderingStack;
-    public static ShaderStack getRenderingStack() {
-        return renderingStack;
+    private static ShaderLayer renderingLayer;
+    public static ShaderLayer getRenderingLayer() {
+        return renderingLayer;
     }
 }

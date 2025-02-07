@@ -6,7 +6,7 @@ import com.mclegoman.luminance.client.shaders.uniforms.config.MapConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
 import com.nettakrim.souper_secret_settings.shaders.MixOverrideSource;
 import com.nettakrim.souper_secret_settings.shaders.ParameterOverrideSource;
-import com.nettakrim.souper_secret_settings.shaders.ShaderStack;
+import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.ColorHelper;
@@ -27,8 +27,8 @@ public class ConfigWidget extends ParameterTextWidget {
     public OverrideSource overrideSource;
 
 
-    public ConfigWidget(int x, int width, int height, Text message, ShaderStack stack, ListScreen<?> listScreen, String initialValue, String defaultValue, UniformConfig initialConfig, UniformConfig defaultConfig, int index) {
-        super(x, width, height, message, stack, defaultValue);
+    public ConfigWidget(int x, int width, int height, Text message, ShaderLayer layer, ListScreen<?> listScreen, String initialValue, String defaultValue, UniformConfig initialConfig, UniformConfig defaultConfig, int index) {
+        super(x, width, height, message, layer, defaultValue);
 
         children = new ArrayList<>();
         this.listScreen = listScreen;

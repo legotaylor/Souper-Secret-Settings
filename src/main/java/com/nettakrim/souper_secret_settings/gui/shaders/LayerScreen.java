@@ -6,7 +6,7 @@ import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.ListWidget;
 import com.nettakrim.souper_secret_settings.shaders.ShaderData;
-import com.nettakrim.souper_secret_settings.shaders.ShaderStack;
+import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -14,26 +14,26 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class StackScreen extends ListScreen<ShaderData> {
-    public final ShaderStack stack;
+public class LayerScreen extends ListScreen<ShaderData> {
+    public final ShaderLayer layer;
     public final Identifier registry;
     public final Identifier[] customPasses;
 
-    public StackScreen(ShaderStack stack, Identifier registry, Identifier[] customPasses) {
+    public LayerScreen(ShaderLayer layer, Identifier registry, Identifier[] customPasses) {
         super(Text.literal(""));
-        this.stack = stack;
+        this.layer = layer;
         this.registry = registry;
         this.customPasses = customPasses;
     }
 
     @Override
     protected List<ShaderData> getListValues() {
-        return stack.getList(registry);
+        return layer.getList(registry);
     }
 
     @Override
     protected ListWidget createListWidget(ShaderData value) {
-        return new ShaderWidget(stack, value, this, listX, listWidth);
+        return new ShaderWidget(layer, value, this, listX, listWidth);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class StackScreen extends ListScreen<ShaderData> {
     public ShaderData tryGetAddition(String addition) {
         Identifier identifier = Shaders.guessPostShader(addition);
         if (identifier != null) {
-            List<ShaderData> shader = SouperSecretSettingsClient.soupRenderer.getShaderAdditions(registry, identifier, 1, stack);
+            List<ShaderData> shader = SouperSecretSettingsClient.soupRenderer.getShaderAdditions(registry, identifier, 1, layer);
             if (shader != null) {
                 return shader.getFirst();
             }

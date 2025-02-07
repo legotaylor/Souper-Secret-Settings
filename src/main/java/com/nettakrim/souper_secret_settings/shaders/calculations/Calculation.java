@@ -4,7 +4,7 @@ import com.mclegoman.luminance.client.shaders.Uniforms;
 import com.mclegoman.luminance.client.shaders.overrides.OverrideSource;
 import com.mclegoman.luminance.client.shaders.uniforms.config.EmptyConfig;
 import com.nettakrim.souper_secret_settings.shaders.ParameterOverrideSource;
-import com.nettakrim.souper_secret_settings.shaders.ShaderStack;
+import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +44,7 @@ public abstract class Calculation {
     protected abstract String[] getInputNames();
     protected abstract String[] getOutputs();
 
-    public void update(ShaderStack stack) {
+    public void update(ShaderLayer layer) {
         if (!active) return;
 
         updateInputValues();
@@ -53,7 +53,7 @@ public abstract class Calculation {
         for (int i = 0; i < outputs.length; i++) {
             String output = outputs[i];
             if (!output.isBlank()) {
-                stack.parameterValues.put(output, outputValues[i]);
+                layer.parameterValues.put(output, outputValues[i]);
             }
         }
     }

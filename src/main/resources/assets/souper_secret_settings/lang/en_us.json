@@ -15,7 +15,7 @@
 
     "souper_secret_settings.share.click" : "[Click Here] ",
     "souper_secret_settings.share.send" : "To share recipe \"%s\"",
-    "souper_secret_settings.share.send.current" : "To share the currently active stack",
+    "souper_secret_settings.share.send.current" : "To share the currently active layer",
     "souper_secret_settings.share.receive" : "To apply recipe with %s different shaders",
     "souper_secret_settings.share.long" : "Recipe is too long to send in chat - copied to clipboard instead",
 

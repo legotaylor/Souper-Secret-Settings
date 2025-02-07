@@ -4,7 +4,7 @@
         "base": {"persistent": true}
     },
     "custom_passes": {
-        "souper_secret_settings:before_stack_render": [
+        "souper_secret_settings:before_layer_render": [
             {
                 "program": "minecraft:post/blit",
                 "inputs": [
@@ -16,7 +16,7 @@
                 "output": "base"
             }
         ],
-        "souper_secret_settings:after_stack_render": [
+        "souper_secret_settings:after_layer_render": [
             {
                 "program": "souper_secret_settings:effects/compare",
                 "inputs": [

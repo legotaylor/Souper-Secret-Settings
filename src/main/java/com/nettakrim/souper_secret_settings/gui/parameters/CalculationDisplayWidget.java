@@ -1,12 +1,11 @@
 package com.nettakrim.souper_secret_settings.gui.parameters;
 
 import com.mclegoman.luminance.client.shaders.overrides.OverrideSource;
-import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.gui.DisplayWidget;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.ParameterTextWidget;
 import com.nettakrim.souper_secret_settings.shaders.ParameterOverrideSource;
-import com.nettakrim.souper_secret_settings.shaders.ShaderStack;
+import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import com.nettakrim.souper_secret_settings.shaders.calculations.Calculation;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ClickableWidget;
@@ -17,14 +16,14 @@ import java.util.List;
 
 public class CalculationDisplayWidget extends DisplayWidget<OverrideSource> {
     public Calculation calculation;
-    protected ShaderStack stack;
+    protected ShaderLayer layer;
 
     protected ParameterTextWidget[] outputs;
 
-    public CalculationDisplayWidget(Calculation calculation, ShaderStack stack, Text name, int x, int width, ListScreen<?> listScreen) {
+    public CalculationDisplayWidget(Calculation calculation, ShaderLayer layer, Text name, int x, int width, ListScreen<?> listScreen) {
         super(calculation.inputs.length, name, x, width, listScreen);
         this.calculation = calculation;
-        this.stack = stack;
+        this.layer = layer;
         initValues();
     }
 
@@ -35,7 +34,7 @@ public class CalculationDisplayWidget extends DisplayWidget<OverrideSource> {
 
         int width = (getWidth()-displayWidth)/outputCount;
         for (int i = 0; i < outputCount; i++) {
-            ParameterTextWidget parameterTextWidget = new ParameterTextWidget(getX() + width*i, width, 20, Text.literal("output"+i), stack, "");
+            ParameterTextWidget parameterTextWidget = new ParameterTextWidget(getX() + width*i, width, 20, Text.literal("output"+i), layer, "");
             listScreen.addSelectable(parameterTextWidget);
             int finalI = i;
             parameterTextWidget.setText(calculation.outputs[i]);
@@ -58,7 +57,7 @@ public class CalculationDisplayWidget extends DisplayWidget<OverrideSource> {
     @Override
     protected ClickableWidget createChildWidget(OverrideSource data, int i) {
         String value = data.getString();
-        ParameterTextWidget parameterTextWidget = new CalculationInputWidget(getX(), getWidth(), 20, Text.literal(calculation.inputNames[i]), stack, value);
+        ParameterTextWidget parameterTextWidget = new CalculationInputWidget(getX(), getWidth(), 20, Text.literal(calculation.inputNames[i]), layer, value);
         parameterTextWidget.setText(value);
         parameterTextWidget.setChangedListener((s) -> onInputChanged(i, s));
         return parameterTextWidget;

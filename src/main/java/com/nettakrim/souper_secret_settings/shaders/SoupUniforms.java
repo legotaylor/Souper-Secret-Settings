@@ -15,7 +15,7 @@ public class SoupUniforms {
     public static void register() {
         Uniforms.registerStandardTree("soup", "byte", SoupUniforms::getBinary, 0f, 255f, 1, new MapConfig(List.of(new ConfigData("value", List.of("0")))));
         Uniforms.registerStandardTree("soup", "shader_index", SoupUniforms::getShaderIndex, 0f, null, 1, EmptyConfig.INSTANCE);
-        Uniforms.registerStandardTree("soup", "stack_size", SoupUniforms::getStackSize, 0f, null, 1, EmptyConfig.INSTANCE);
+        Uniforms.registerStandardTree("soup", "layer_size", SoupUniforms::getLayerSize, 0f, null, 1, EmptyConfig.INSTANCE);
     }
 
     public static void getBinary(UniformConfig config, ShaderTime shaderTime, UniformValue uniformValue) {
@@ -32,11 +32,11 @@ public class SoupUniforms {
         uniformValue.values.set(0, (float)v);
     }
 
-    public static void getStackSize(UniformConfig config, ShaderTime shaderTime, UniformValue uniformValue) {
-        ShaderStack stack = ShaderStack.getRenderingStack();
+    public static void getLayerSize(UniformConfig config, ShaderTime shaderTime, UniformValue uniformValue) {
+        ShaderLayer layer = ShaderLayer.getRenderingLayer();
         float count = 0;
-        if (stack != null) {
-            for (ShaderData shaderData : stack.shaderDatas) {
+        if (layer != null) {
+            for (ShaderData shaderData : layer.shaderDatas) {
                 if (shaderData.active) {
                     count++;
                 }

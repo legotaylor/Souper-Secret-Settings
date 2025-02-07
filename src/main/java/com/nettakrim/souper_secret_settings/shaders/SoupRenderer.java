@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.Map;
 
 public class SoupRenderer implements Runnables.WorldRender {
-    public ArrayList<ShaderStack> shaderStacks;
+    public ArrayList<ShaderLayer> shaderLayers;
 
-    public int activeStack;
+    public int activeLayer;
 
     private List<String> validUniforms;
 
@@ -41,15 +41,15 @@ public class SoupRenderer implements Runnables.WorldRender {
 
     @Override
     public void run(FrameGraphBuilder builder, int textureWidth, int textureHeight, DefaultFramebufferSet framebufferSet) {
-        for (ShaderStack stack : shaderStacks) {
-            stack.render(builder, textureWidth, textureHeight, framebufferSet);
+        for (ShaderLayer layer : shaderLayers) {
+            layer.render(builder, textureWidth, textureHeight, framebufferSet);
         }
     }
 
     @Nullable
-    public List<ShaderData> getShaderAdditions(Identifier registry, Identifier id, int amount, ShaderStack stack) {
+    public List<ShaderData> getShaderAdditions(Identifier registry, Identifier id, int amount, ShaderLayer layer) {
         if (id.equals(Identifier.ofVanilla("random"))) {
-            return getRandomShaders(stack, registry, amount);
+            return getRandomShaders(layer, registry, amount);
         }
 
         ShaderRegistryEntry shaderRegistry = getRegistryEntry(registry, id);
@@ -71,9 +71,9 @@ public class SoupRenderer implements Runnables.WorldRender {
     }
 
     @Nullable
-    private List<ShaderData> getRandomShaders(ShaderStack stack, Identifier registry, int amount) {
+    private List<ShaderData> getRandomShaders(ShaderLayer layer, Identifier registry, int amount) {
         List<ShaderData> shaders = new ArrayList<>();
-        ShaderRegistryEntry shaderRegistry = (stack == null || stack.shaderDatas.isEmpty()) ? null : stack.shaderDatas.getLast().shader.getShaderData();
+        ShaderRegistryEntry shaderRegistry = (layer == null || layer.shaderDatas.isEmpty()) ? null : layer.shaderDatas.getLast().shader.getShaderData();
 
         int i = 0;
         while (i < amount) {
@@ -128,14 +128,14 @@ public class SoupRenderer implements Runnables.WorldRender {
         return null;
     }
 
-    public ShaderStack getActiveStack() {
-        return shaderStacks.get(activeStack);
+    public ShaderLayer getActiveLayer() {
+        return shaderLayers.get(activeLayer);
     }
 
     public void clearAll() {
-        shaderStacks = new ArrayList<>();
-        shaderStacks.add(new ShaderStack());
-        activeStack = 0;
+        shaderLayers = new ArrayList<>();
+        shaderLayers.add(new ShaderLayer());
+        activeLayer = 0;
     }
 
     public List<String> getValidUniforms() {

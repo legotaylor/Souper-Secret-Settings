@@ -55,7 +55,7 @@ public class UniformWidget extends DisplayWidget<Couple<UniformData<String>,Unif
         UniformData<String> uniformOverride = data.getFirst();
         UniformData<UniformConfig> uniformConfig = data.getSecond();
 
-        ConfigWidget configWidget = new ConfigWidget(getX(), getWidth(), 20, Text.literal(""), pass.shader.stack, listScreen, uniformOverride.value, uniformOverride.defaultValue, uniformConfig.value, uniformConfig.defaultValue, i);
+        ConfigWidget configWidget = new ConfigWidget(getX(), getWidth(), 20, Text.literal(""), pass.shader.layer, listScreen, uniformOverride.value, uniformOverride.defaultValue, uniformConfig.value, uniformConfig.defaultValue, i);
         configWidget.onChangeListener((w) -> onValueChanged(i, w));
         return configWidget;
     }

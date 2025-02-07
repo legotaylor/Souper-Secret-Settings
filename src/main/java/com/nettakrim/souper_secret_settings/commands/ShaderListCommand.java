@@ -8,7 +8,7 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.shaders.ShaderData;
-import com.nettakrim.souper_secret_settings.shaders.ShaderStack;
+import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.command.argument.IdentifierArgumentType;
@@ -70,26 +70,26 @@ public class ShaderListCommand {
     }
 
     public int add(Identifier id, int amount) {
-        ShaderStack stack = SouperSecretSettingsClient.soupRenderer.getActiveStack();
+        ShaderLayer layer = SouperSecretSettingsClient.soupRenderer.getActiveLayer();
 
-        List<ShaderData> shaders = SouperSecretSettingsClient.soupRenderer.getShaderAdditions(registry, id, amount, stack);
+        List<ShaderData> shaders = SouperSecretSettingsClient.soupRenderer.getShaderAdditions(registry, id, amount, layer);
         if (shaders == null) {
             return -1;
         }
 
-        stack.getList(registry).addAll(shaders);
+        layer.getList(registry).addAll(shaders);
         return 1;
     }
 
     public int removeAll() {
-        ShaderStack stack = SouperSecretSettingsClient.soupRenderer.getActiveStack();
-        stack.getList(registry).clear();
+        ShaderLayer layer = SouperSecretSettingsClient.soupRenderer.getActiveLayer();
+        layer.getList(registry).clear();
         return 1;
     }
 
     public int removeTop() {
-        ShaderStack stack = SouperSecretSettingsClient.soupRenderer.getActiveStack();
-        List<ShaderData> shaders = stack.getList(registry);
+        ShaderLayer layer = SouperSecretSettingsClient.soupRenderer.getActiveLayer();
+        List<ShaderData> shaders = layer.getList(registry);
         if (shaders.isEmpty()) {
             return -1;
         }

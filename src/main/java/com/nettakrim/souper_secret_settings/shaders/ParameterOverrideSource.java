@@ -19,11 +19,11 @@ public class ParameterOverrideSource implements OverrideSource {
 
     @Override
     public Float get(UniformConfig uniformConfig, ShaderTime shaderTime) {
-        ShaderStack stack = ShaderStack.getRenderingStack();
-        if (stack != null) {
+        ShaderLayer layer = ShaderLayer.getRenderingLayer();
+        if (layer != null) {
             String parameter = source.getString();
-            if (!parameter.isEmpty() && stack.parameterValues.containsKey(parameter)) {
-                lastValue = stack.parameterValues.get(parameter);
+            if (!parameter.isEmpty() && layer.parameterValues.containsKey(parameter)) {
+                lastValue = layer.parameterValues.get(parameter);
             } else {
                 Float f = source.get(uniformConfig, shaderTime);
                 if (f == null) return null;
