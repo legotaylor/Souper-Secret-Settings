@@ -47,7 +47,7 @@ public abstract class CollapseWidget extends ClickableWidget implements ListChil
                 if (widget instanceof CollapseWidget collapseWidget) {
                     collapseWidget.updateCollapse(height + y);
                 }
-                height += ((ListChild)widget).getCollapseHeight();
+                height += getCollapseHeight(widget);
             }
         } else {
             for (ClickableWidget widget : children) {
@@ -68,7 +68,7 @@ public abstract class CollapseWidget extends ClickableWidget implements ListChil
         if (expanded) {
             for (ClickableWidget widget : children) {
                 widget.setY(height + y);
-                height += ((ListChild)widget).getCollapseHeight();
+                height += getCollapseHeight(widget);
             }
         }
     }
@@ -86,6 +86,14 @@ public abstract class CollapseWidget extends ClickableWidget implements ListChil
                     setVisible(child, false);
                 }
             }
+        }
+    }
+
+    protected static int getCollapseHeight(ClickableWidget widget) {
+        if (widget instanceof ListChild listChild) {
+            return listChild.getCollapseHeight();
+        } else {
+            return widget.getHeight();
         }
     }
 
