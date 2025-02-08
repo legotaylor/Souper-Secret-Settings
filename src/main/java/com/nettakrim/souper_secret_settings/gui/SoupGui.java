@@ -34,6 +34,7 @@ public class SoupGui {
 
     public void open(ScreenType screenType) {
         Screen screen = switch(screenType) {
+            case LAYERS -> new LayerScreen();
             case SHADERS -> new ShaderScreen(SouperSecretSettingsClient.soupRenderer.activeLayer, Shaders.getMainRegistryId(),new Identifier[] {null});
             case EFFECTS -> new ShaderScreen(SouperSecretSettingsClient.soupRenderer.activeLayer, SoupRenderer.layerEffectRegistry, new Identifier[] {
                     Identifier.of(SouperSecretSettingsClient.MODID, "before_layer_render"),
@@ -42,7 +43,6 @@ public class SoupGui {
                     Identifier.of(SouperSecretSettingsClient.MODID, "after_layer_render")
             });
             case PARAMETERS -> new ParameterScreen(SouperSecretSettingsClient.soupRenderer.activeLayer);
-            case LAYERS -> new LayerScreen();
         };
         ClientData.minecraft.setScreen(screen);
 
@@ -60,9 +60,9 @@ public class SoupGui {
     }
 
     public enum ScreenType {
+        LAYERS,
         SHADERS,
         EFFECTS,
-        PARAMETERS,
-        LAYERS
+        PARAMETERS
     }
 }
