@@ -72,11 +72,25 @@
             ]
         },
         {
-            "program": "minecraft:post/blit",
+            "program": "luminance:post/merge",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "combined"
+                },
+                {
+                    "sampler_name": "Merge",
+                    "target": "minecraft:main"
+                }
+            ],
+            "output": "left"
+        },
+        {
+            "program": "minecraft:post/blit",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "left"
                 }
             ],
             "output": "minecraft:main"

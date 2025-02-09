@@ -84,7 +84,14 @@
             "uniforms": [
                 {
                     "name": "Mix",
-                    "values": [ 0.5 ]
+                    "values": [ 0.5 ],
+                    "override": [ "luminance_alpha_smooth" ],
+                    "config": [
+                        {
+                            "name": "0_soup_range",
+                            "values": [ 0.0, 0.5 ]
+                        }
+                    ]
                 }
             ]
         },

@@ -10,6 +10,7 @@
         { "name": "OutSize",        "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
         { "name": "luminance_time", "type": "float",     "count": 1,  "values": [ 1.0 ] },
         { "name": "Distance",       "type": "float",     "count": 2,  "values": [ 0.0, 20.0 ] },
-        { "name": "NoiseScale",     "type": "float",     "count": 2,  "values": [ 100, 0.1 ] }
+        { "name": "NoiseScale",     "type": "float",     "count": 2,  "values": [ 100, 0.1 ] },
+        { "name": "luminance_alpha_smooth",     "type": "float",     "count": 1,  "values": [ 1.0 ] }
     ]
 }

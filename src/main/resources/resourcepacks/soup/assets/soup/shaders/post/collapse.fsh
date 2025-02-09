@@ -10,6 +10,7 @@ out vec4 fragColor;
 uniform float luminance_time;
 uniform vec2 Distance;
 uniform vec2 NoiseScale;
+uniform float luminance_alpha_smooth;
 
 //https://www.shadertoy.com/view/XdXGW8
 vec2 grad( ivec2 z )
@@ -48,7 +49,7 @@ void main(){
     vec3 center = texture(InSampler, texCoord).rgb;
     vec3 down = texture(InSampler, texCoord - oneTexel*t*Distance).rgb;
 
-    vec3 col = mix(down, center, t);
+    vec3 col = mix(center, mix(down, center, t), luminance_alpha_smooth);
 
     fragColor = vec4(col, 1.0);
 }

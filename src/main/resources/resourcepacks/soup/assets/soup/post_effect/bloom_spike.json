@@ -128,11 +128,25 @@
             "output": "bloom_clip"
         },
         {
-            "program": "minecraft:post/blit",
+            "program": "luminance:post/merge",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "bloom_clip"
+                },
+                {
+                    "sampler_name": "Merge",
+                    "target": "minecraft:main"
+                }
+            ],
+            "output": "blur0"
+        },
+        {
+            "program": "minecraft:post/blit",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "blur0"
                 }
             ],
             "output": "minecraft:main"

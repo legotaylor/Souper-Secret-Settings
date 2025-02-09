@@ -22,6 +22,7 @@
         { "name": "Char4A",     "type": "int",       "count": 4,  "values": [ 255, 85 , 255, 85  ] },
         { "name": "Char4B",     "type": "int",       "count": 4,  "values": [ 255, 85 , 255, 85  ] },
         { "name": "Char5A",     "type": "int",       "count": 4,  "values": [ 255, 221, 255, 119 ] },
-        { "name": "Char5B",     "type": "int",       "count": 4,  "values": [ 255, 221, 255, 119 ] }
+        { "name": "Char5B",     "type": "int",       "count": 4,  "values": [ 255, 221, 255, 119 ] },
+        { "name": "luminance_alpha_smooth", "type": "float", "count": 1, "values": [ 1.0 ] }
     ]
 }

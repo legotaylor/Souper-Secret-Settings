@@ -11,6 +11,7 @@ uniform float Scale;
 uniform vec2 Offset;
 uniform vec3 Angle;
 uniform float Seed;
+uniform float luminance_alpha_smooth;
 
 //https://www.shadertoy.com/view/3sGSWV
 
@@ -57,5 +58,5 @@ void main(){
     float angle = fract(slope.x + slope.y);
     color = mix(color, step(angle, color*color), Angle.z);
 
-    fragColor = vec4(color, 1);
+    fragColor = vec4(mix(texture(InSampler, texCoord).rgb, color, luminance_alpha_smooth), 1);
 }

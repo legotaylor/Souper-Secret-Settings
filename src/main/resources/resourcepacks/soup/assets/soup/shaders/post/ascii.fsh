@@ -24,6 +24,7 @@ uniform ivec4 Char4A;
 uniform ivec4 Char4B;
 uniform ivec4 Char5A;
 uniform ivec4 Char5B;
+uniform float luminance_alpha_smooth;
 
 bool getChar(ivec4 charA, ivec4 charB, ivec2 index) {
     return (((((index.y/4)%2 > 0 ? charB : charA)[index.y%4] * BitShift.y) ^ BitShift.z) & (BitShift.x << index.x)) > 0;
@@ -68,5 +69,5 @@ void main() {
     }
 
     col = round(col*Levels.x)/Levels.x * (getChar(charA, charB, coord) ? ceil(m) : min(floor(m),Levels.y-1))/Levels.y;
-    fragColor = vec4(col, 1.0);
+    fragColor = vec4(mix(texture(InSampler, texCoord).rgb, col, luminance_alpha_smooth), 1.0);
 }
