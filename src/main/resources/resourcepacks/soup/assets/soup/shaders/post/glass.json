@@ -12,6 +12,7 @@
         { "name": "CloudScale",    "type": "float",     "count": 1,  "values": [ 0.5 ] },
         { "name": "CloudDistance", "type": "float",     "count": 1,  "values": [ 0.3 ] },
         { "name": "CloudAmount",   "type": "float",     "count": 1,  "values": [ 0.5 ] },
-        { "name": "Wrapping",      "type": "float",     "count": 1,  "values": [ 0.0 ] }
+        { "name": "Wrapping",      "type": "float",     "count": 1,  "values": [ 0.0 ] },
+        { "name": "luminance_alpha_smooth",     "type": "float",     "count": 1,  "values": [ 1.0 ] }
     ]
 }

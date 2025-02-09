@@ -13,6 +13,7 @@
         { "name": "Pitch",          "type": "float",     "count": 1,  "values": [ 1.0 ] },
         { "name": "Strength",       "type": "float",     "count": 1,  "values": [ 1.0 ] },
         { "name": "ColorStrength",  "type": "float",     "count": 1,  "values": [ 1.0 ] },
-        { "name": "MixMode",        "type": "float",     "count": 1,  "values": [ 0.1 ] }
+        { "name": "MixMode",        "type": "float",     "count": 1,  "values": [ 0.1 ] },
+        { "name": "luminance_alpha_smooth",     "type": "float",     "count": 1,  "values": [ 1.0 ] }
     ]
 }

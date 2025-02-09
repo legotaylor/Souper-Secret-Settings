@@ -13,6 +13,7 @@ uniform float Pitch;
 uniform float Strength;
 uniform float ColorStrength;
 uniform float MixMode;
+uniform float luminance_alpha_smooth;
 
 //https://www.shadertoy.com/view/3sGSWV
 
@@ -63,7 +64,7 @@ void main(){
     grain = mix(vec3(dot(grain, vec3(0.2126, 0.7152, 0.0722))), grain, ColorStrength);
 
     vec3 color = texture(InSampler, texCoord).rgb;
-    color = max(mix(color*grain, color+(grain-1.0), MixMode), 0.0);
+    color = mix(color, max(mix(color*grain, color+(grain-1.0), MixMode), 0.0), luminance_alpha_smooth);
 
     fragColor = vec4(color.rgb, 1);
 }

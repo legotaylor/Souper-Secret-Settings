@@ -13,6 +13,7 @@ uniform float CloudDistance;
 uniform float CloudAmount;
 
 uniform float Wrapping;
+uniform float luminance_alpha_smooth;
 
 vec4 wrapTexture(sampler2D tex, vec2 coord) {
     return texture2D(tex, mix(coord, fract(coord), Wrapping));
@@ -58,5 +59,5 @@ void main(){
 
     float vignetteAmount = max(length(texCoord - vec2(0.5))-CloudDistance, 0.0)*CloudScale;
 
-    fragColor = vec4(mix(color.rgb, color.rgb + distance*CloudAmount, vignetteAmount), 1.0);
+    fragColor = vec4(mix(texture(InSampler, texCoord).rgb, mix(color.rgb, color.rgb + distance*CloudAmount, vignetteAmount), luminance_alpha_smooth), 1.0);
 }
