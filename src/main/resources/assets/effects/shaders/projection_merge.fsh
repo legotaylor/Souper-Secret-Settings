@@ -11,6 +11,7 @@ uniform vec2 Corner00;
 uniform vec2 Corner01;
 uniform vec2 Corner10;
 uniform vec2 Corner11;
+uniform float Crop;
 
 mat3 getMatrix(vec2 a, vec2 b, vec2 c, vec2 d) {
     vec3 A = vec3(a, 1);
@@ -44,7 +45,7 @@ void main(){
     if (pos.x < 0 || pos.x > 1 || pos.y < 0 || pos.y > 1) {
         col = texture(BaseSampler, texCoord).rgb;
     } else {
-        col = texture(InSampler, pos).rgb;
+        col = texture(InSampler, mix(pos, texCoord, Crop)).rgb;
     }
 
     fragColor = vec4(col, 1.0);

@@ -1,0 +1,80 @@
+{
+    "targets": {
+        "0": {},
+        "base": {"persistent": true}
+    },
+    "custom_passes": {
+        "souper_secret_settings:before_layer_render": [
+            {
+                "program": "minecraft:post/blit",
+                "inputs": [
+                    {
+                        "sampler_name": "In",
+                        "target": "minecraft:main"
+                    }
+                ],
+                "output": "base"
+            },
+            {
+                "program": "effects:projection",
+                "inputs": [
+                    {
+                        "sampler_name": "In",
+                        "target": "minecraft:main"
+                    }
+                ],
+                "output": "0"
+            },
+            {
+                "program": "minecraft:post/blit",
+                "inputs": [
+                    {
+                        "sampler_name": "In",
+                        "target": "0"
+                    }
+                ],
+                "output": "minecraft:main"
+            }
+        ],
+        "souper_secret_settings:after_layer_render": [
+            {
+                "program": "effects:projection_merge",
+                "inputs": [
+                    {
+                        "sampler_name": "In",
+                        "target": "minecraft:main"
+                    },
+                    {
+                        "sampler_name": "Base",
+                        "target": "base"
+                    }
+                ],
+                "output": "0",
+                "uniforms": [
+                    {
+                        "name": "Corner00",
+                        "values": [ 0.5, 0.0 ]
+                    },
+                    {
+                        "name": "Corner01",
+                        "values": [ 0.5, 1.0 ]
+                    },
+                    {
+                        "name": "Crop",
+                        "values": [ 1.0 ]
+                    }
+                ]
+            },
+            {
+                "program": "minecraft:post/blit",
+                "inputs": [
+                    {
+                        "sampler_name": "In",
+                        "target": "0"
+                    }
+                ],
+                "output": "minecraft:main"
+            }
+        ]
+    }
+}
