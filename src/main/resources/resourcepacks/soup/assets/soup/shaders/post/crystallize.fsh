@@ -24,7 +24,7 @@ float hash(vec3 p3){
 //https://www.ronja-tutorials.com/post/028-voronoi-noise/
 
 vec2 offset(vec2 cell) {
-    return cell + vec2(hash(vec3(cell.x, Seed, -cell.y)),hash(vec3(cell.y, -cell.x, Seed)))*Offset;
+    return cell + vec2(hash(vec3(cell.x, Seed, -cell.y))-0.5, hash(vec3(cell.y, -cell.x, Seed))-0.5)*Offset;
 }
 
 vec2 voronoiNoise(vec2 value){
