@@ -10,6 +10,7 @@
         { "name": "OutSize",     "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
         { "name": "Hue",         "type": "float",     "count": 2,  "values": [ 0.0, 1.0 ] },
         { "name": "Saturation",  "type": "float",     "count": 2,  "values": [ 0.0, 1.0 ] },
-        { "name": "Value",       "type": "float",     "count": 2,  "values": [ 0.0, 1.0 ] }
+        { "name": "Value",       "type": "float",     "count": 2,  "values": [ 0.0, 1.0 ] },
+        { "name": "luminance_alpha_smooth",     "type": "float",     "count": 1,  "values": [ 1.0 ] }
     ]
 }

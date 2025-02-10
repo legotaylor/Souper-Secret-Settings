@@ -11,6 +11,7 @@
         { "name": "HueMatrix", "type": "float",     "count": 3,  "values": [ 1.0, 0.0, 0.0 ] },
         { "name": "SatMatrix", "type": "float",     "count": 3,  "values": [ 0.0, 1.0, 0.0 ] },
         { "name": "ValMatrix", "type": "float",     "count": 3,  "values": [ 0.0, 0.0, 1.0 ] },
-        { "name": "Direction", "type": "float",     "count": 1,  "values": [ 1.0 ] }
+        { "name": "Direction", "type": "float",     "count": 1,  "values": [ 1.0 ] },
+        { "name": "luminance_alpha_smooth",     "type": "float",     "count": 1,  "values": [ 1.0 ] }
     ]
 }

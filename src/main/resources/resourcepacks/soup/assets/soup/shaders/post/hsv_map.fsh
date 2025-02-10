@@ -9,6 +9,7 @@ uniform vec3 HueMatrix;
 uniform vec3 SatMatrix;
 uniform vec3 ValMatrix;
 uniform float Direction;
+uniform float luminance_alpha_smooth;
 
 out vec4 fragColor;
 
@@ -54,5 +55,5 @@ void main(){
     vec3 hsv = RGBtoHSV(rgb);
     vec3 HSVAsRGB = HueMatrix*hsv.x + SatMatrix*hsv.y + ValMatrix*hsv.z;
 
-    fragColor = vec4(mix(HSVAsRGB, RGBAsHSV, Direction), 1.0);
+    fragColor = vec4(mix(rgb, mix(HSVAsRGB, RGBAsHSV, Direction), luminance_alpha_smooth), 1.0);
 }

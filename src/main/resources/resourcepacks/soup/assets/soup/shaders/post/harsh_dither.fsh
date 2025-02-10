@@ -9,6 +9,7 @@ out vec4 fragColor;
 
 uniform int Steps;
 uniform float Mix;
+uniform float luminance_alpha_smooth;
 
 float getPositionThreshold(vec2 positionInPattern) {
     if (positionInPattern.x == 3) {
@@ -56,5 +57,5 @@ void main(){
 
     color = mix(color, (floor(target*Steps)/Steps), Mix);
 
-    fragColor = vec4(color.rgb, 1);
+    fragColor = vec4(mix(target, color, luminance_alpha_smooth).rgb, 1);
 }

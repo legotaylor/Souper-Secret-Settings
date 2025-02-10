@@ -1,6 +1,7 @@
 {
     "targets": {
-        "0": {}
+        "0": {},
+        "1": {}
     },
     "passes": [
         {
@@ -31,7 +32,7 @@
                     "target": "0"
                 }
             ],
-            "output": "minecraft:main",
+            "output": "1",
             "uniforms": [
                 {
                     "name": "BlurDir",
@@ -48,17 +49,31 @@
             "inputs": [
                 {
                     "sampler_name": "In",
-                    "target": "minecraft:main"
+                    "target": "1"
                 }
             ],
             "output": "0"
+        },
+        {
+            "program": "luminance:post/merge",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "0"
+                },
+                {
+                    "sampler_name": "Merge",
+                    "target": "minecraft:main"
+                }
+            ],
+            "output": "1"
         },
         {
             "program": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
-                    "target": "0"
+                    "target": "1"
                 }
             ],
             "output": "minecraft:main"

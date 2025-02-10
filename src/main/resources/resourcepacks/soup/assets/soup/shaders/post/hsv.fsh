@@ -8,6 +8,7 @@ in vec2 oneTexel;
 uniform vec2 Hue;
 uniform vec2 Saturation;
 uniform vec2 Value;
+uniform float luminance_alpha_smooth;
 
 out vec4 fragColor;
 
@@ -54,5 +55,5 @@ float offset(float value, vec2 off) {
 void main(){
     vec4 rgb = texture(InSampler, texCoord);
     vec3 hsv = RGBtoHSV(rgb.rgb);
-    fragColor = vec4(HSVtoRGB(vec3(offset(hsv.x, Hue), offset(hsv.y, Saturation), offset(hsv.z, Value))), 1.0);
+    fragColor = vec4(mix(rgb.rgb, HSVtoRGB(vec3(offset(hsv.x, Hue), offset(hsv.y, Saturation), offset(hsv.z, Value))), luminance_alpha_smooth), 1.0);
 }

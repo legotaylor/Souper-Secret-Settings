@@ -8,6 +8,7 @@ in vec2 oneTexel;
 out vec4 fragColor;
 
 uniform vec3 Levels;
+uniform float luminance_alpha_smooth;
 
 void main(){
     vec3 col = texture(InSampler, texCoord).rgb;
@@ -15,7 +16,5 @@ void main(){
     float m = max(max(col.r,col.g),col.b);
     vec3 normalised = m == 0 ? col : col/m;
 
-    col = normalised*ceil(m*Levels)/Levels;
-
-    fragColor = vec4(col, 1.0);
+    fragColor = vec4(mix(col, normalised*ceil(m*Levels)/Levels, luminance_alpha_smooth), 1.0);
 }

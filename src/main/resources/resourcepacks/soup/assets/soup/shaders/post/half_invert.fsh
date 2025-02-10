@@ -8,6 +8,7 @@ out vec4 fragColor;
 
 uniform float Iterations;
 uniform vec2 Scale;
+uniform float luminance_alpha_smooth;
 
 const float roundingFactor = 0.5/255.0;
 
@@ -23,11 +24,12 @@ vec4 limit(vec4 v) {
 }
 
 void main(){
-    vec4 col = texture(InSampler, texCoord);
+    vec4 base = texture(InSampler, texCoord);
+    vec4 col = base;
 
     for (int i = 0; i < Iterations; i++) {
         col = limit(abs(col - vec4(Scale.x)) * Scale.y);
     }
 
-    fragColor = vec4(col.rgb, 1.0);
+    fragColor = vec4(mix(base, col, luminance_alpha_smooth).rgb, 1.0);
 }

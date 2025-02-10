@@ -17,6 +17,7 @@ uniform vec3 XI;
 uniform vec3 CR;
 uniform vec3 CI;
 uniform float Radius;
+uniform float luminance_alpha_smooth;
 
 //https://www.shadertoy.com/view/ml2fDh
 vec2 complexPow(vec2 z, vec2 n) {
@@ -66,5 +67,5 @@ void main() {
         }
         col *= 1 - (1 - duration/ceil(Iterations)) * Coloring.r;
     }
-    fragColor = vec4(col, 1.0);
+    fragColor = vec4(mix(texture(InSampler, texCoord).rgb, col, luminance_alpha_smooth), 1.0);
 }

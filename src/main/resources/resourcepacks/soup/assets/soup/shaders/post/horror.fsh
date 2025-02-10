@@ -8,6 +8,7 @@ in vec2 texCoord;
 out vec4 fragColor;
 
 uniform float Scale;
+uniform float luminance_alpha_smooth;
 
 float near = 0.1;
 float far = 1000.0;
@@ -21,5 +22,5 @@ void main(){
     float depth = LinearizeDepth(texture(InDepthSampler, texCoord).r);
     float brightness = min((Scale/depth), 1.0);
     float s = (brightness*brightness);
-    fragColor = vec4(col.rgb*(s+brightness-s*brightness), 1.0);
+    fragColor = vec4(col.rgb*(1-(1-(s+brightness-s*brightness))*luminance_alpha_smooth), 1.0);
 }

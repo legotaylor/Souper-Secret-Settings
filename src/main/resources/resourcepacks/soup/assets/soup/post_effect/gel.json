@@ -1,6 +1,7 @@
 {
     "targets": {
-        "swap": {},
+        "0": {},
+        "1": {},
         "previous": {"persistent": true}
     },
     "passes": [
@@ -27,14 +28,14 @@
                 { "name" : "BlueTurnOn",      "values": [  5.0,  32.0,  1.0 ]},
                 { "name" : "BlueTurnOff",     "values": [ -32.0, 4.0,   1.0 ]}
             ],
-            "output": "swap"
+            "output": "0"
         },
         {
             "program": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
-                    "target": "swap"
+                    "target": "0"
                 }
             ],
             "output": "previous"
@@ -44,21 +45,21 @@
             "inputs": [
                 {
                     "sampler_name": "In",
-                    "target": "previous"
+                    "target": "0"
                 },
                 {
                     "sampler_name": "Merge",
                     "target": "minecraft:main"
                 }
             ],
-            "output": "swap"
+            "output": "1"
         },
         {
             "program": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
-                    "target": "swap"
+                    "target": "1"
                 }
             ],
             "output": "minecraft:main"

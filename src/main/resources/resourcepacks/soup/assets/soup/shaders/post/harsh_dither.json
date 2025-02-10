@@ -9,6 +9,7 @@
         { "name": "InSize",  "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
         { "name": "OutSize", "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
         { "name": "Steps",   "type": "int",       "count": 1,  "values": [ 4 ] },
-        { "name": "Mix",     "type": "float",     "count": 1,  "values": [ 0.5 ] }
+        { "name": "Mix",     "type": "float",     "count": 1,  "values": [ 0.5 ] },
+        { "name": "luminance_alpha_smooth",     "type": "float",     "count": 1,  "values": [ 1.0 ] }
     ]
 }

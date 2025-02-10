@@ -1,6 +1,7 @@
 {
     "targets": {
-        "swap": {},
+        "0": {},
+        "1": {},
         "previous": {"persistent": true}
     },
     "passes": [
@@ -16,14 +17,14 @@
                     "target": "previous"
                 }
             ],
-            "output": "swap"
+            "output": "0"
         },
         {
             "program": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
-                    "target": "swap"
+                    "target": "0"
                 }
             ],
             "output": "previous"
@@ -33,21 +34,21 @@
             "inputs": [
                 {
                     "sampler_name": "In",
-                    "target": "previous"
+                    "target": "0"
                 },
                 {
                     "sampler_name": "Merge",
                     "target": "minecraft:main"
                 }
             ],
-            "output": "swap"
+            "output": "1"
         },
         {
             "program": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
-                    "target": "swap"
+                    "target": "1"
                 }
             ],
             "output": "minecraft:main"
