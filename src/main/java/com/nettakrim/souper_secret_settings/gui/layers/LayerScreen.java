@@ -27,7 +27,9 @@ public class LayerScreen extends ListScreen<ShaderLayer> {
 
     @Override
     public @Nullable ShaderLayer tryGetAddition(String addition) {
-        return new ShaderLayer(addition);
+        ShaderLayer shaderLayer = new ShaderLayer(addition);
+        SouperSecretSettingsClient.soupRenderer.activeLayer = shaderLayer;
+        return shaderLayer;
     }
 
     @Override
