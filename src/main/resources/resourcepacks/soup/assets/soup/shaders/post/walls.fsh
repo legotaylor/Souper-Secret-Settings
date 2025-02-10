@@ -16,6 +16,8 @@ uniform vec4 FloorUV;
 uniform vec4 WallUV;
 uniform vec4 CeilUV;
 
+uniform float luminance_alpha_smooth;
+
 float near = 0.1;
 float far = 1000.0;
 float LinearizeDepth(float depth) {
@@ -44,5 +46,5 @@ void main(){
     samplePos = fract(samplePos*scale+vec2(0.5, 0));
     vec4 col = texture(InSampler, vec2(mix(uv.x, uv.z, samplePos.x), mix(uv.y, uv.w, samplePos.y)));
 
-    fragColor = vec4(col.rgb, 1.0);
+    fragColor = vec4(mix(texture(InSampler, texCoord), col, luminance_alpha_smooth).rgb, 1.0);
 }

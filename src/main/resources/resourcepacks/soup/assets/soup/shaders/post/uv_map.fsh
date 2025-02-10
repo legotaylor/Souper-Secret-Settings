@@ -9,6 +9,7 @@ in vec2 oneTexel;
 out vec4 fragColor;
 
 uniform vec4 UVDistances;
+uniform float luminance_alpha_smooth;
 
 void main() {
     vec3 pos = texture(InSampler, texCoord).rgb;
@@ -29,5 +30,5 @@ void main() {
         uv = pos.xy;
     }
 
-    fragColor = vec4(texture(BaseSampler, uv).rgb, 1.0);
+    fragColor = vec4(mix(pos, texture(BaseSampler, uv).rgb, luminance_alpha_smooth), 1.0);
 }

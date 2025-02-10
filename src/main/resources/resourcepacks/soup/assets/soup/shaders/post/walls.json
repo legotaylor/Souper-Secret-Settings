@@ -14,6 +14,7 @@
         { "name": "TextureScale", "type": "float",     "count": 4,  "values": [ 0.6666, 3.0, 0.6666, 1.0 ] },
         { "name": "FloorUV",      "type": "float",     "count": 4,  "values": [ 0.0, 0.3333, 1.0, 0.0    ] },
         { "name": "WallUV",       "type": "float",     "count": 4,  "values": [ 0.0, 0.3333, 1.0, 0.6666 ] },
-        { "name": "CeilUV",       "type": "float",     "count": 4,  "values": [ 0.0, 1.0   , 1.0, 0.6666 ] }
+        { "name": "CeilUV",       "type": "float",     "count": 4,  "values": [ 0.0, 1.0   , 1.0, 0.6666 ] },
+        { "name": "luminance_alpha_smooth",     "type": "float",     "count": 1,  "values": [ 1.0 ] }
     ]
 }

@@ -9,6 +9,13 @@ uniform float LumaRamp;
 uniform float LumaLevel;
 uniform float OutlineBlur;
 
+uniform vec4 MainHSV;
+uniform vec4 OutlineHSV;
+
+uniform vec3 Gray;
+
+uniform float luminance_alpha_smooth;
+
 out vec4 fragColor;
 
 vec3 hue(float h) {
@@ -20,6 +27,10 @@ vec3 hue(float h) {
 
 vec3 HSVtoRGB(vec3 hsv) {
     return ((hue(hsv.x) - 1.0) * hsv.y + 1.0) * hsv.z;
+}
+
+vec3 GetHSV(vec4 value, float hue) {
+    return HSVtoRGB(vec3(fract(hue*value.w + value.x), value.y, value.z));
 }
 
 void main(){
@@ -41,23 +52,21 @@ void main(){
     vec4 l2Diff = abs(center - left2);
     vec4 r2Diff = abs(center - right2);
     vec4 sum = uDiff + dDiff + lDiff + rDiff + u2Diff + d2Diff + l2Diff + r2Diff;
-    vec4 gray = vec4(0.3, 0.59, 0.11, 0.0);
-    float sumLuma = 1.0 - dot(clamp(sum, 0.0, 1.0), gray);
+    float sumLuma = 1.0 - dot(clamp(sum, 0.0, 1.0).rgb, Gray);
 
     // Get luminance of center pixel and adjust
-    float centerLuma = dot(center + (center - pow(center, vec4(LumaRamp))), gray);
+    float centerLuma = dot((center + (center - pow(center, vec4(LumaRamp)))).rgb, Gray);
 
     // Quantize the luma value
     centerLuma = min(centerLuma - fract(centerLuma * LumaLevel) / LumaLevel, 1.0);
 
     float h = centerLuma * ((LumaLevel-1)/LumaLevel);
-    vec3 color = HSVtoRGB(vec3(h, 1 , 1));
-
-    vec3 outlineColor = HSVtoRGB(vec3(h, 1 , 0.5));
+    vec3 color = GetHSV(MainHSV, h);
+    vec3 outlineColor = GetHSV(OutlineHSV, h);
 
     // Blend with outline
     color = color * sumLuma;
     outlineColor = outlineColor * (1.0 - sumLuma);
 
-    fragColor = vec4(color + outlineColor, 1.0);
+    fragColor = vec4(mix(center.rgb, color + outlineColor, luminance_alpha_smooth), 1.0);
 }
