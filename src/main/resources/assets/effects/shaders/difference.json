@@ -1,6 +1,6 @@
 {
     "vertex": "minecraft:post/sobel",
-    "fragment": "soup:post/difference",
+    "fragment": "effects:difference",
     "samplers": [
         { "name": "InSampler" },
         { "name": "SubtractSampler" }
