@@ -21,6 +21,7 @@ uniform float luminance_viewDistance;
 uniform vec2 ShadowFade;
 uniform float luminance_sunAngle;
 uniform float SunFade;
+uniform float luminance_alpha_smooth;
 
 float near = 0.1;
 float far = 1000.0;
@@ -94,7 +95,8 @@ void main(){
     shadowScale *= min(SunFade/4 - abs(SunFade*(angle-0.25)), 1);
 
     float offset = length(hitOffset*upVector);
-    vec3 color = mix(ShadowColor, texture(InSampler, texCoord).rgb, mix(1, (offset / (offset + DepthScale)), shadowScale));
+    vec3 base = texture(InSampler, texCoord).rgb;
+    vec3 color = mix(ShadowColor, base, mix(1, (offset / (offset + DepthScale)), shadowScale));
 
-    fragColor = vec4(color, 1.0);
+    fragColor = vec4(mix(base, color, luminance_alpha_smooth), 1.0);
 }

@@ -44,6 +44,8 @@ uniform vec4 OutputX;
 uniform vec4 OutputY;
 uniform vec2 OutputOffset;
 
+uniform float luminance_alpha_smooth;
+
 vec4 derivative(vec4 state) {
     vec2 theta = state.xy;
     vec2 pTheta = state.zw;
@@ -92,5 +94,5 @@ void main(){
 
     vec4 col = texture(InSampler, fract(vec2(dot(OutputX, pendulum), dot(OutputY, pendulum)) + OutputOffset));
 
-    fragColor = vec4(col.rgb, 1.0);
+    fragColor = vec4(mix(texture(InSampler, texCoord), col, luminance_alpha_smooth).rgb, 1.0);
 }

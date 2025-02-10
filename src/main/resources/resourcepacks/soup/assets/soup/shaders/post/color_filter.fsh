@@ -9,17 +9,14 @@ out vec4 fragColor;
 uniform vec3 Gray;
 uniform vec3 Mask;
 uniform vec3 Threshold;
+uniform float luminance_alpha_smooth;
 
 float maxRGB(vec3 v) {
     return max(max(v.r, v.g), v.b);
 }
 
 void main(){
-    vec3 col = texture(InSampler, texCoord).rgb;
-
-    if (maxRGB(col*Mask) > maxRGB(col*Threshold)) {
-        fragColor = vec4(col.rgb, 1.0);
-    } else {
-        fragColor = vec4(vec3(dot(col, Gray)), 1.0);
-    }
+    vec3 base = texture(InSampler, texCoord).rgb;
+    vec3 col = maxRGB(base*Mask) > maxRGB(base*Threshold) ? base.rgb : vec3(dot(base, Gray));
+    fragColor = vec4(mix(base, col, luminance_alpha_smooth), 1.0);
 }

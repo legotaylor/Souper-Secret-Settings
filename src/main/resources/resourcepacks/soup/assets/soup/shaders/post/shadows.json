@@ -21,6 +21,7 @@
         { "name": "luminance_viewDistance", "type": "float",     "count": 1,  "values": [ 0.0 ]},
         { "name": "ShadowFade",             "type": "float",     "count": 2,  "values": [ 16.0, 16.0 ]},
         { "name": "luminance_sunAngle",     "type": "float",     "count": 1,  "values": [ 0.0 ]},
-        { "name": "SunFade",                "type": "float",     "count": 1,  "values": [ 50.0 ]}
+        { "name": "SunFade",                "type": "float",     "count": 1,  "values": [ 50.0 ]},
+        { "name": "luminance_alpha_smooth",     "type": "float",     "count": 1,  "values": [ 1.0 ] }
     ]
 }

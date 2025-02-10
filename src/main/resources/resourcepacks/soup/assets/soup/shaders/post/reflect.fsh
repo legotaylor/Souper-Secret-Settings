@@ -18,6 +18,7 @@ uniform int Iterations;
 uniform vec4 UVDistances;
 uniform float MaxDistance;
 uniform vec2 OutOfBounds;
+uniform float luminance_alpha_smooth;
 
 float near = 0.1;
 float far = 1000.0;
@@ -121,5 +122,5 @@ void main(){
     if ((rotation*pos).z > 0) {
         color *= OutOfBounds.y;
     }
-    fragColor = vec4(color.rgb, 1.0);
+    fragColor = vec4(mix(texture2D(InSampler, texCoord), color, luminance_alpha_smooth).rgb, 1.0);
 }
