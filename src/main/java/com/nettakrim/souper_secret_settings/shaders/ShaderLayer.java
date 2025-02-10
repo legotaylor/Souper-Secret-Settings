@@ -7,6 +7,7 @@ import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.shaders.calculations.Calculation;
 import net.minecraft.client.render.DefaultFramebufferSet;
 import net.minecraft.client.render.FrameGraphBuilder;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
@@ -86,6 +87,22 @@ public class ShaderLayer {
         }
 
         return List.of();
+    }
+
+    public Text[] getInfo() {
+        int passes = 0;
+        for (ShaderData shaderData : shaderDatas) {
+            passes += shaderData.getRenderPassCount();
+        }
+        for (ShaderData shaderData : layerEffects) {
+            passes += shaderData.getRenderPassCount();
+        }
+
+        return new Text[]{
+                Text.literal("shaders: "+ shaderDatas.size()),
+                Text.literal("effects: "+layerEffects.size()),
+                Text.literal("render passes: "+passes)
+        };
     }
 
     private static ShaderLayer renderingLayer;

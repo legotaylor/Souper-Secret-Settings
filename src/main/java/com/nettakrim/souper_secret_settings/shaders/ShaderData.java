@@ -14,7 +14,7 @@ import java.util.*;
 public class ShaderData {
     public Shader shader;
 
-    public Map<Identifier, PassData> passData;
+    public Map<Identifier, PassData> passDatas;
 
     public boolean active = true;
 
@@ -30,16 +30,16 @@ public class ShaderData {
         List<PostEffectPass> defaultPasses = processor.luminance$getPasses(null);
 
         if (defaultPasses.isEmpty()) {
-            passData = new HashMap<>(customPasses.size());
+            passDatas = new HashMap<>(customPasses.size());
         } else {
-            passData = new HashMap<>(customPasses.size() + 1);
-            passData.put(null, new PassData(defaultPasses));
+            passDatas = new HashMap<>(customPasses.size() + 1);
+            passDatas.put(null, new PassData(defaultPasses));
         }
 
         for (Identifier customPass : customPasses) {
             List<PostEffectPass> passes = processor.luminance$getPasses(customPass);
             assert passes != null;
-            passData.put(customPass, new PassData(passes));
+            passDatas.put(customPass, new PassData(passes));
         }
     }
 
@@ -57,6 +57,14 @@ public class ShaderData {
     }
 
     public PassData getPassData(@Nullable Identifier customPasses) {
-        return passData.get(customPasses);
+        return passDatas.get(customPasses);
+    }
+
+    public int getRenderPassCount() {
+        int i = 0;
+        for (PassData passData : passDatas.values()) {
+            i += passData.configs.size();
+        }
+        return i;
     }
 }
