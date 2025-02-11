@@ -24,6 +24,8 @@ public class SoupGui {
     protected static final int listGap = 2;
     protected static final int headerHeight = 20;
 
+    private ScreenType currentScreenType;
+
     public SoupGui() {
         header = new ArrayList<>();
         int radioWidth = 70;
@@ -33,10 +35,13 @@ public class SoupGui {
             x += listGap + radioWidth;
         }
 
+        header.add(ButtonWidget.builder(Text.literal("undo"), (widget) -> undo()).dimensions(x, listGap, 40, headerHeight).build());
+
         currentScroll = new int[ScreenType.values().length];
     }
 
     public void open(ScreenType screenType) {
+        currentScreenType = screenType;
         int index = screenType.ordinal();
 
         Screen screen = switch(screenType) {
@@ -61,6 +66,11 @@ public class SoupGui {
 
     public List<ClickableWidget> getHeader() {
         return header;
+    }
+
+    protected void undo() {
+        SouperSecretSettingsClient.actions.undo();
+        open(currentScreenType);
     }
 
     public enum ScreenType {

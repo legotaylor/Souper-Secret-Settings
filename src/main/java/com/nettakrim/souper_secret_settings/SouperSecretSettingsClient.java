@@ -1,6 +1,7 @@
 package com.nettakrim.souper_secret_settings;
 
 import com.mclegoman.luminance.client.data.ClientData;
+import com.nettakrim.souper_secret_settings.actions.Actions;
 import com.nettakrim.souper_secret_settings.gui.SoupGui;
 import com.nettakrim.souper_secret_settings.shaders.SoupRenderer;
 import com.nettakrim.souper_secret_settings.shaders.SoupUniforms;
@@ -26,11 +27,13 @@ public class SouperSecretSettingsClient implements ClientModInitializer {
 
 	public static SoupRenderer soupRenderer;
 	public static SoupGui soupGui;
+	public static Actions actions;
 
 	@Override
 	public void onInitializeClient() {
 		soupRenderer = new SoupRenderer();
 		soupGui = new SoupGui();
+		actions = new Actions();
 
 		ResourceManagerHelper.registerBuiltinResourcePack(Identifier.of("soup"), FabricLoader.getInstance().getModContainer(MODID).orElseThrow(), Text.literal("Extra Soup"), ResourcePackActivationType.DEFAULT_ENABLED);
 
