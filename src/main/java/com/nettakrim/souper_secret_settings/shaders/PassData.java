@@ -25,7 +25,7 @@ public class PassData {
     public final ArrayList<Map<String, UniformData<UniformConfig>>> configs;
 
     public boolean expanded;
-    public ArrayList<Map<String, Boolean>> uniformExpanded;
+    public ArrayList<Set<String>> uniformExpanded;
 
     public static final Identifier overridePath = Identifier.of(SouperSecretSettingsClient.MODID, "uniform_override");
     public static final Identifier configPath = Identifier.of(SouperSecretSettingsClient.MODID, "uniform_config");
@@ -48,7 +48,7 @@ public class PassData {
 
             this.overrides.add(override);
             this.configs.add(config);
-            this.uniformExpanded.add(new HashMap<>());
+            this.uniformExpanded.add(new HashSet<>());
         }
     }
 
