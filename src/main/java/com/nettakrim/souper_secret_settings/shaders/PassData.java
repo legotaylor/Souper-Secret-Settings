@@ -1,5 +1,6 @@
 package com.nettakrim.souper_secret_settings.shaders;
 
+import com.mclegoman.luminance.client.shaders.ShaderTime;
 import com.mclegoman.luminance.client.shaders.interfaces.PostEffectPassInterface;
 import com.mclegoman.luminance.client.shaders.interfaces.ShaderProgramInterface;
 import com.mclegoman.luminance.client.shaders.overrides.*;
@@ -95,7 +96,7 @@ public class PassData {
 
         String[] defaults = new String[uniform.getCount()];
 
-        List<Float> baseValues = getBaseValues(pass, uniform.getName());
+        List<Float> baseValues = getDefinitionValues(pass, uniform.getName());
         for (int i = 0; i < defaults.length; i++) {
             defaults[i] = Float.toString(baseValues.get(i));
         }
@@ -150,7 +151,7 @@ public class PassData {
         return new MapConfig(List.of(new ConfigData(i +"_soup_range", List.of(a,b))));
     }
 
-    public static List<Float> getBaseValues(PostEffectPassInterface pass, String uniform) {
+    public static List<Float> getDefinitionValues(PostEffectPassInterface pass, String uniform) {
         List<Float> values = null;
         for (PostEffectPipeline.Uniform u : pass.luminance$getUniforms()) {
             if (u.name().equals(uniform)) {
@@ -172,6 +173,23 @@ public class PassData {
             return combined;
         }
 
+        return values;
+    }
+
+    @SuppressWarnings({"OptionalGetWithoutIsPresent", "unchecked"})
+    public static List<Float> getDefaultValues(PostEffectPassInterface pass, String uniform, ShaderTime shaderTime) {
+        List<Float> values = new ArrayList<>(getDefinitionValues(pass, uniform));
+
+        LuminanceUniformOverride defaultOverride = ((Map<String,LuminanceUniformOverride>)(pass).luminance$getCustomData(overridePath).get()).get(uniform);
+        UniformConfig defaultConfig = ((Map<String,UniformConfig>)(pass).luminance$getCustomData(configPath).get()).get(uniform);
+        List<Float> overrides = defaultOverride.getOverride(defaultConfig, shaderTime);
+
+        for (int i = 0; i < Math.min(values.size(), overrides.size()); i++) {
+            Float f = overrides.get(i);
+            if (f != null) {
+                values.set(i, f);
+            }
+        }
         return values;
     }
 

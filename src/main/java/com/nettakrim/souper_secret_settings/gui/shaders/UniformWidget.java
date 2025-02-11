@@ -75,6 +75,8 @@ public class UniformWidget extends DisplayWidget<Couple<UniformData<String>,Unif
             configs.value = widget.getConfig(prefix);
         }
 
+        widget.dragValue = null;
+
         listScreen.updateSpacing();
     }
 
@@ -82,10 +84,18 @@ public class UniformWidget extends DisplayWidget<Couple<UniformData<String>,Unif
     protected List<Float> getDisplayFloats() {
         //TODO: this needs to update the value of soup_shader_index etc to be correct
         List<Float> display = override.getOverride(pass.shader.shaderData.getPassData(pass.customPass).configs.get(pass.passIndex).get(uniform.getName()).value, Uniforms.shaderTime);
-        List<Float> base = PassData.getBaseValues((PostEffectPassInterface)pass.postEffectPass, uniform.getName());
+        List<Float> base = PassData.getDefaultValues((PostEffectPassInterface)pass.postEffectPass, uniform.getName(), Uniforms.shaderTime);
         for (int i = 0; i < display.size(); i++) {
             if (display.get(i) == null) {
                 display.set(i, base.get(i));
+            }
+
+            //allow dragging luminance_alpha_smooth to replace it with its current value
+            if (expanded) {
+                ConfigWidget configWidget = ((ConfigWidget)children.get(i));
+                if (configWidget.getText().equals("luminance_alpha_smooth")) {
+                    configWidget.dragValue = display.get(i);
+                }
             }
         }
         return display;
