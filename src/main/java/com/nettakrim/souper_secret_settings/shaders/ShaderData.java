@@ -60,11 +60,12 @@ public class ShaderData {
         return passDatas.get(customPasses);
     }
 
-    public int getRenderPassCount() {
-        int i = 0;
-        for (PassData passData : passDatas.values()) {
-            i += passData.configs.size();
+    public int getRenderPassCount(@Nullable Identifier customPasses) {
+        PassData passData = passDatas.get(customPasses);
+        if (passData == null) {
+            return 0;
         }
-        return i;
+
+        return passData.configs.size();
     }
 }

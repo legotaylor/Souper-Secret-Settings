@@ -24,6 +24,11 @@ public class ShaderLayer {
 
     public boolean active = true;
 
+    private static final Identifier beforeLayerRender = Identifier.of(SouperSecretSettingsClient.MODID, "before_layer_render");
+    private static final Identifier beforeShaderRender = Identifier.of(SouperSecretSettingsClient.MODID, "before_shader_render");
+    private static final Identifier afterShaderRender = Identifier.of(SouperSecretSettingsClient.MODID, "after_shader_render");
+    private static final Identifier afterLayerRender = Identifier.of(SouperSecretSettingsClient.MODID, "after_layer_render");
+
     public ShaderLayer(String name) {
         this.name = name;
 
@@ -51,18 +56,18 @@ public class ShaderLayer {
             OverrideManager.startShaderQueue(shaderQueue);
         });
 
-        renderList(layerEffects, shaderQueue, builder, textureWidth, textureHeight, framebufferSet, Identifier.of(SouperSecretSettingsClient.MODID, "before_layer_render"));
+        renderList(layerEffects, shaderQueue, builder, textureWidth, textureHeight, framebufferSet, beforeLayerRender);
 
         for (ShaderData shaderData : shaderDatas) {
             if (shaderData.active) {
-                renderList(layerEffects, shaderQueue, builder, textureWidth, textureHeight, framebufferSet, Identifier.of(SouperSecretSettingsClient.MODID, "before_shader_render"));
+                renderList(layerEffects, shaderQueue, builder, textureWidth, textureHeight, framebufferSet, beforeShaderRender);
                 renderShader(shaderData, shaderQueue, builder, textureWidth, textureHeight, framebufferSet, null);
-                renderList(layerEffects.reversed(), shaderQueue, builder, textureWidth, textureHeight, framebufferSet, Identifier.of(SouperSecretSettingsClient.MODID, "after_shader_render"));
+                renderList(layerEffects.reversed(), shaderQueue, builder, textureWidth, textureHeight, framebufferSet, afterShaderRender);
                 shaderQueue.add(null);
             }
         }
 
-        renderList(layerEffects.reversed(), shaderQueue, builder, textureWidth, textureHeight, framebufferSet, Identifier.of(SouperSecretSettingsClient.MODID, "after_layer_render"));
+        renderList(layerEffects.reversed(), shaderQueue, builder, textureWidth, textureHeight, framebufferSet, afterLayerRender);
     }
 
     public void renderList(List<ShaderData> shaders, Queue<Couple<ShaderData, Identifier>> shaderQueue, FrameGraphBuilder builder, int textureWidth, int textureHeight, DefaultFramebufferSet framebufferSet, @Nullable Identifier customPasses) {
@@ -90,17 +95,28 @@ public class ShaderLayer {
     }
 
     public Text[] getInfo() {
+        int shaders = 0;
+        int effects = 0;
         int passes = 0;
+
         for (ShaderData shaderData : shaderDatas) {
-            passes += shaderData.getRenderPassCount();
+            if (!shaderData.active) continue;
+            passes += shaderData.getRenderPassCount(null);
+            shaders++;
         }
-        for (ShaderData shaderData : layerEffects) {
-            passes += shaderData.getRenderPassCount();
+
+        for (ShaderData effect : layerEffects) {
+            if (!effect.active) continue;
+            passes += effect.getRenderPassCount(beforeLayerRender);
+            passes += effect.getRenderPassCount(beforeShaderRender)*shaders;
+            passes += effect.getRenderPassCount(afterShaderRender)*shaders;
+            passes += effect.getRenderPassCount(afterLayerRender);
+            effects++;
         }
 
         return new Text[]{
-                Text.literal("shaders: "+ shaderDatas.size()),
-                Text.literal("effects: "+layerEffects.size()),
+                Text.literal("shaders: "+shaders),
+                Text.literal("effects: "+effects),
                 Text.literal("render passes: "+passes)
         };
     }
