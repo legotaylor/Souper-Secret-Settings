@@ -132,7 +132,7 @@ public class SoupRenderer implements Runnables.WorldRender {
     public void clearAll() {
         shaderLayers = new ArrayList<>();
 
-        activeLayer = new ShaderLayer("base");
+        activeLayer = new ShaderLayer("default");
         shaderLayers.add(activeLayer);
     }
 
