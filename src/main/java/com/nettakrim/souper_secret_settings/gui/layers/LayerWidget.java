@@ -7,28 +7,35 @@ import com.nettakrim.souper_secret_settings.gui.ListWidget;
 import com.nettakrim.souper_secret_settings.gui.SuggestionTextFieldWidget;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 
 public class LayerWidget extends ListWidget {
     public final ShaderLayer layer;
 
+    private final ButtonWidget saveButton;
+    private final ButtonWidget loadButton;
+
     private static final int infoHeight = 15;
 
     public LayerWidget(ShaderLayer layer, ListScreen<?> listScreen, int x, int width) {
-        super(x, width, Text.literal(layer.name), listScreen);
+        super(x, width, Text.literal(""), listScreen);
         this.layer = layer;
 
+        saveButton = ButtonWidget.builder(Text.literal("save"), (buttonWidget) -> {}).dimensions(x,0,width/2,20).build();
+        loadButton = ButtonWidget.builder(Text.literal("load"), (buttonWidget) -> {}).dimensions(x + width/2,0,width/2,20).build();
 
         SuggestionTextFieldWidget nameWidget = new SuggestionTextFieldWidget(x, width, 20, Text.of("layer name"), false);
+        nameWidget.setChangedListener(this::setName);
         nameWidget.setText(layer.name);
-        nameWidget.setChangedListener((s) -> {
-            layer.name = s;
-            setMessage(Text.literal(s));
-        });
 
         children.add(nameWidget);
         listScreen.addSelectable(nameWidget);
+
+        children.add(saveButton);
+        listScreen.addSelectable(saveButton);
+        listScreen.addSelectable(loadButton);
     }
 
     @Override
@@ -43,9 +50,10 @@ public class LayerWidget extends ListWidget {
         if (!expanded) {
             return;
         }
+        loadButton.render(context, mouseX, mouseY, delta);
 
         Text[] info = layer.getInfo();
-        int infoPos = this.getY()+collapseHeight - info.length*infoHeight - 2;
+        int infoPos = this.getY()+collapseHeight - info.length*infoHeight - 1;
         for (Text text : info) {
             int next = infoPos + infoHeight;
             drawScrollableText(context, ClientData.minecraft.textRenderer, text, this.getX(), infoPos, this.getX() + this.getWidth(), next, (this.active ? 16777215 : 10526880) | MathHelper.ceil(this.alpha * 255.0F) << 24);
@@ -78,6 +86,21 @@ public class LayerWidget extends ListWidget {
         super.updateCollapse(y);
         if (expanded) {
             collapseHeight += layer.getInfo().length * infoHeight;
+            loadButton.setY(saveButton.getY());
         }
+    }
+
+    @Override
+    public void setY(int y) {
+        super.setY(y);
+        loadButton.setY(saveButton.getY());
+    }
+
+    private void setName(String name) {
+        layer.name = name;
+        setMessage(Text.literal(name));
+
+        saveButton.active = false;
+        loadButton.active = false;
     }
 }
