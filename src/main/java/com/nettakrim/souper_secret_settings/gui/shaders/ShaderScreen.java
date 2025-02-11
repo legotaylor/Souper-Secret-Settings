@@ -5,8 +5,10 @@ import com.mclegoman.luminance.client.shaders.Shaders;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.ListWidget;
+import com.nettakrim.souper_secret_settings.shaders.OverrideManager;
 import com.nettakrim.souper_secret_settings.shaders.ShaderData;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
@@ -60,5 +62,11 @@ public class ShaderScreen extends ListScreen<ShaderData> {
             }
         }
         return null;
+    }
+
+    @Override
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        OverrideManager.currentShaderIndex = 0;
+        super.render(context, mouseX, mouseY, delta);
     }
 }

@@ -7,6 +7,7 @@ import com.mclegoman.luminance.client.shaders.uniforms.config.ConfigData;
 import com.mclegoman.luminance.client.shaders.uniforms.config.EmptyConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.MapConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
+import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 
 import java.util.List;
 import java.util.Objects;
@@ -35,17 +36,19 @@ public class SoupUniforms {
     public static void getLayerSize(UniformConfig config, ShaderTime shaderTime, UniformValue uniformValue) {
         ShaderLayer layer = ShaderLayer.getRenderingLayer();
         float count = 0;
-        if (layer != null) {
-            for (ShaderData shaderData : layer.shaderDatas) {
-                if (shaderData.active) {
-                    count++;
-                }
+        if (layer == null) {
+            layer = SouperSecretSettingsClient.soupRenderer.activeLayer;
+        }
+
+        for (ShaderData shaderData : layer.shaderDatas) {
+            if (shaderData.active) {
+                count++;
             }
         }
         uniformValue.values.set(0, count);
     }
 
     public static void getShaderIndex(UniformConfig config, ShaderTime shaderTime, UniformValue uniformValue) {
-        uniformValue.values.set(0, (float)OverrideManager.getCurrentShaderIndex());
+        uniformValue.values.set(0, (float)OverrideManager.currentShaderIndex);
     }
 }

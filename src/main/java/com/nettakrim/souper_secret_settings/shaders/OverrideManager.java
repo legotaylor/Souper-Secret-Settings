@@ -18,7 +18,7 @@ public class OverrideManager {
     private static Queue<Couple<ShaderData, Identifier>> currentShaders;
     private static int currentPassIndex;
 
-    private static int currentShaderIndex;
+    public static int currentShaderIndex;
 
     private static final Replacement<UniformOverride> overrideReplacement = new Replacement<>();
     private static final Replacement<UniformConfig> configReplacement = new Replacement<>();
@@ -124,9 +124,5 @@ public class OverrideManager {
             nullValues.forEach(removeFunction);
             nullValues.clear();
         }
-    }
-
-    public static int getCurrentShaderIndex() {
-        return currentShaderIndex;
     }
 }

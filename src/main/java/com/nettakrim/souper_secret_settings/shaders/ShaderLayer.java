@@ -29,6 +29,8 @@ public class ShaderLayer {
     private static final Identifier afterShaderRender = Identifier.of(SouperSecretSettingsClient.MODID, "after_shader_render");
     private static final Identifier afterLayerRender = Identifier.of(SouperSecretSettingsClient.MODID, "after_layer_render");
 
+    private static ShaderLayer renderingLayer;
+
     public ShaderLayer(String name) {
         this.name = name;
 
@@ -51,7 +53,7 @@ public class ShaderLayer {
         }
 
         Queue<Couple<ShaderData, Identifier>> shaderQueue = new LinkedList<>();
-        FramePassInterface.createForcedPass(builder, Identifier.of(SouperSecretSettingsClient.MODID, "layer"), () -> {
+        FramePassInterface.createForcedPass(builder, Identifier.of(SouperSecretSettingsClient.MODID, "layer_start"), () -> {
             renderingLayer = this;
             OverrideManager.startShaderQueue(shaderQueue);
         });
@@ -121,8 +123,12 @@ public class ShaderLayer {
         };
     }
 
-    private static ShaderLayer renderingLayer;
     public static ShaderLayer getRenderingLayer() {
         return renderingLayer;
+    }
+
+    public static void renderCleanup(FrameGraphBuilder builder) {
+        renderingLayer = null;
+        FramePassInterface.createForcedPass(builder, Identifier.of(SouperSecretSettingsClient.MODID, "layer_cleanup"), () -> renderingLayer = null);
     }
 }

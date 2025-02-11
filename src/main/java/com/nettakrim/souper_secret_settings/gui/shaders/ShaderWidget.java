@@ -3,9 +3,11 @@ package com.nettakrim.souper_secret_settings.gui.shaders;
 import com.mclegoman.luminance.client.shaders.interfaces.PostEffectProcessorInterface;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.ListWidget;
+import com.nettakrim.souper_secret_settings.shaders.OverrideManager;
 import com.nettakrim.souper_secret_settings.shaders.ShaderData;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import net.minecraft.client.gl.PostEffectPass;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -49,5 +51,13 @@ public class ShaderWidget extends ListWidget {
     @Override
     public void setActive(boolean to) {
         shaderData.active = to;
+    }
+
+    @Override
+    protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.renderWidget(context, mouseX, mouseY, delta);
+        if (shaderData.active) {
+            OverrideManager.currentShaderIndex++;
+        }
     }
 }

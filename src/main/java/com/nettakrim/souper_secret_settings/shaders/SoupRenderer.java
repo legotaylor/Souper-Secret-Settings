@@ -43,6 +43,8 @@ public class SoupRenderer implements Runnables.WorldRender {
         for (ShaderLayer layer : shaderLayers) {
             layer.render(builder, textureWidth, textureHeight, framebufferSet);
         }
+
+        ShaderLayer.renderCleanup(builder);
     }
 
     @Nullable
