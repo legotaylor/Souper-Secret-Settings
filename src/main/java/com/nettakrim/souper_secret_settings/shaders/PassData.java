@@ -24,7 +24,7 @@ public class PassData {
     public final ArrayList<Map<String, UniformData<UniformOverride>>> overrides;
     public final ArrayList<Map<String, UniformData<UniformConfig>>> configs;
 
-    public boolean expanded;
+    public BitSet expanded;
     public ArrayList<Set<String>> uniformExpanded;
 
     public static final Identifier overridePath = Identifier.of(SouperSecretSettingsClient.MODID, "uniform_override");
@@ -33,6 +33,7 @@ public class PassData {
     public PassData(List<PostEffectPass> passes) {
         this.overrides = new ArrayList<>(passes.size());
         this.configs = new ArrayList<>(passes.size());
+        this.expanded = new BitSet(passes.size());
         this.uniformExpanded = new ArrayList<>(passes.size());
 
         for (PostEffectPass pass : passes) {

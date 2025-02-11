@@ -85,11 +85,11 @@ public class PassWidget extends CollapseWidget {
 
     @Override
     protected boolean getStoredExpanded() {
-        return shader.shaderData.getPassData(customPass).expanded;
+        return shader.shaderData.getPassData(customPass).expanded.get(passIndex);
     }
 
     @Override
     protected void setStoredExpanded(boolean to) {
-        shader.shaderData.getPassData(customPass).expanded = to;
+        shader.shaderData.getPassData(customPass).expanded.set(passIndex, to);
     }
 }
