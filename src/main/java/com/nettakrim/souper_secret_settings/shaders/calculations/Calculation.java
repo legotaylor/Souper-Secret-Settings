@@ -20,6 +20,7 @@ public abstract class Calculation {
     private final String id;
 
     public boolean active = true;
+    public boolean expanded = false;
 
     public Calculation(String id) {
         this.id = id;

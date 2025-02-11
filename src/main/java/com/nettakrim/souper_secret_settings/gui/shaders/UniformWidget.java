@@ -99,4 +99,14 @@ public class UniformWidget extends DisplayWidget<Couple<UniformData<String>,Unif
         }
         return display;
     }
+
+    @Override
+    protected boolean getStoredExpanded() {
+        return pass.shader.shaderData.getPassData(pass.customPass).uniformExpanded.get(pass.passIndex).getOrDefault(uniform.getName(), false);
+    }
+
+    @Override
+    protected void setStoredExpanded(boolean to) {
+        pass.shader.shaderData.getPassData(pass.customPass).uniformExpanded.get(pass.passIndex).put(uniform.getName(), to);
+    }
 }

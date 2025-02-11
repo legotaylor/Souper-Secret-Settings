@@ -13,7 +13,8 @@ import java.util.List;
 public class ParameterScreen extends ListScreen<Calculation> {
     public final ShaderLayer layer;
 
-    public ParameterScreen(ShaderLayer layer) {
+    public ParameterScreen(int scrollIndex, ShaderLayer layer) {
+        super(scrollIndex);
         this.layer = layer;
     }
 

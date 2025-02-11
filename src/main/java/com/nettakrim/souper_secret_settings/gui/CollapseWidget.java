@@ -20,6 +20,8 @@ public abstract class CollapseWidget extends ClickableWidget implements ListChil
 
     protected int collapseHeight;
 
+    private boolean initExpanded = true;
+
     public CollapseWidget(int x, int width, Text message, ListScreen<?> listScreen) {
         super(x, 0, width, 20, message);
 
@@ -38,6 +40,11 @@ public abstract class CollapseWidget extends ClickableWidget implements ListChil
     }
 
     public void updateCollapse(int y) {
+        if (initExpanded) {
+            initExpanded = false;
+            expanded = getStoredExpanded();
+        }
+
         offset = y;
 
         int height = getHeight();
@@ -104,6 +111,7 @@ public abstract class CollapseWidget extends ClickableWidget implements ListChil
 
     protected void setExpanded(boolean to) {
         expanded = to;
+        setStoredExpanded(to);
         listScreen.updateSpacing();
     }
 
@@ -123,4 +131,8 @@ public abstract class CollapseWidget extends ClickableWidget implements ListChil
             }
         }
     }
+
+    protected abstract boolean getStoredExpanded();
+
+    protected abstract void setStoredExpanded(boolean to);
 }

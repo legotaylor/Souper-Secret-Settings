@@ -80,7 +80,7 @@ public abstract class ListWidget extends CollapseWidget {
 
     }
 
-    public abstract boolean isActive();
+    protected abstract boolean isActive();
 
-    public abstract void setActive(boolean to);
+    protected abstract void setActive(boolean to);
 }

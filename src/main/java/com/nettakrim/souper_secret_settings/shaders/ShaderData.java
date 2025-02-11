@@ -17,6 +17,7 @@ public class ShaderData {
     public Map<Identifier, PassData> passDatas;
 
     public boolean active = true;
+    public boolean expanded = true;
 
     public ShaderData(Shader shader) {
         this.shader = shader;

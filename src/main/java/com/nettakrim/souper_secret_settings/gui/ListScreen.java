@@ -27,8 +27,11 @@ public abstract class ListScreen<V> extends Screen {
     protected ScrollWidget scrollWidget;
     protected int currentListSize;
 
-    protected ListScreen() {
+    private final int scrollIndex;
+
+    protected ListScreen(int scrollIndex) {
         super(Text.literal(""));
+        this.scrollIndex = scrollIndex;
     }
 
     @Override
@@ -52,7 +55,9 @@ public abstract class ListScreen<V> extends Screen {
         suggestionTextFieldWidget.setListeners(this::getAdditions, this::addAddition);
         addDrawableChild(suggestionTextFieldWidget);
 
+        int scroll = SouperSecretSettingsClient.soupGui.currentScroll[scrollIndex];
         updateSpacing();
+        scrollWidget.offsetScroll(scroll);
     }
 
     @Override
@@ -95,6 +100,7 @@ public abstract class ListScreen<V> extends Screen {
         }
 
         suggestionTextFieldWidget.setY(currentListSize - scroll);
+        SouperSecretSettingsClient.soupGui.currentScroll[scrollIndex] = scroll;
     }
 
     @Override

@@ -82,4 +82,14 @@ public class PassWidget extends CollapseWidget {
         }
         super.onClick(mouseX, mouseY);
     }
+
+    @Override
+    protected boolean getStoredExpanded() {
+        return shader.shaderData.getPassData(customPass).expanded;
+    }
+
+    @Override
+    protected void setStoredExpanded(boolean to) {
+        shader.shaderData.getPassData(customPass).expanded = to;
+    }
 }

@@ -62,13 +62,23 @@ public class LayerWidget extends ListWidget {
     }
 
     @Override
-    public boolean isActive() {
+    protected boolean isActive() {
         return layer.active;
     }
 
     @Override
-    public void setActive(boolean to) {
+    protected void setActive(boolean to) {
         layer.active = to;
+    }
+
+    @Override
+    protected boolean getStoredExpanded() {
+        return layer.expanded;
+    }
+
+    @Override
+    protected void setStoredExpanded(boolean to) {
+        layer.expanded = to;
     }
 
     @Override

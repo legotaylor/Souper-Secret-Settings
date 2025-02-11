@@ -94,6 +94,16 @@ public class CalculationDisplayWidget extends DisplayWidget<OverrideSource> {
 
     }
 
+    @Override
+    protected boolean getStoredExpanded() {
+        return calculation.expanded;
+    }
+
+    @Override
+    protected void setStoredExpanded(boolean to) {
+
+    }
+
     public void setExpandedWithoutUpdate(boolean to) {
         expanded = to;
         for (ParameterTextWidget parameterTextWidget : outputs) {

@@ -23,6 +23,7 @@ public class ShaderLayer {
     public Map<String, Float> parameterValues;
 
     public boolean active = true;
+    public boolean expanded = false;
 
     private static final Identifier beforeLayerRender = Identifier.of(SouperSecretSettingsClient.MODID, "before_layer_render");
     private static final Identifier beforeShaderRender = Identifier.of(SouperSecretSettingsClient.MODID, "before_shader_render");

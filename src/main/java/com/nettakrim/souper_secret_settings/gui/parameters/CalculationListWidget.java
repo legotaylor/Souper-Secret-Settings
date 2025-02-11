@@ -26,12 +26,22 @@ public class CalculationListWidget extends ListWidget {
     }
 
     @Override
-    public boolean isActive() {
+    protected boolean isActive() {
         return calculation.active;
     }
 
     @Override
-    public void setActive(boolean to) {
+    protected void setActive(boolean to) {
         calculation.active = to;
+    }
+
+    @Override
+    protected boolean getStoredExpanded() {
+        return calculation.expanded;
+    }
+
+    @Override
+    protected void setStoredExpanded(boolean to) {
+        calculation.expanded = to;
     }
 }

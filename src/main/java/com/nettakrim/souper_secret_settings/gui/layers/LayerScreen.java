@@ -10,6 +10,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class LayerScreen extends ListScreen<ShaderLayer> {
+    public LayerScreen(int scrollIndex) {
+        super(scrollIndex);
+    }
+
     @Override
     protected List<ShaderLayer> getListValues() {
         return SouperSecretSettingsClient.soupRenderer.shaderLayers;

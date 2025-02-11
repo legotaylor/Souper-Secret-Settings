@@ -44,13 +44,23 @@ public class ShaderWidget extends ListWidget {
     }
 
     @Override
-    public boolean isActive() {
+    protected boolean isActive() {
         return shaderData.active;
     }
 
     @Override
-    public void setActive(boolean to) {
+    protected void setActive(boolean to) {
         shaderData.active = to;
+    }
+
+    @Override
+    protected boolean getStoredExpanded() {
+        return shaderData.expanded;
+    }
+
+    @Override
+    protected void setStoredExpanded(boolean to) {
+        shaderData.expanded = expanded;
     }
 
     @Override

@@ -19,6 +19,8 @@ import java.util.List;
 public class SoupGui {
     private final List<ClickableWidget> header;
 
+    public final int[] currentScroll;
+
     protected static final int listGap = 2;
     protected static final int headerHeight = 20;
 
@@ -30,27 +32,29 @@ public class SoupGui {
             header.add(ButtonWidget.builder(Text.literal(screenType.name().toLowerCase()), (widget) -> open(screenType)).dimensions(x, listGap, radioWidth, headerHeight).build());
             x += listGap + radioWidth;
         }
+
+        currentScroll = new int[ScreenType.values().length];
     }
 
     public void open(ScreenType screenType) {
+        int index = screenType.ordinal();
+
         Screen screen = switch(screenType) {
-            case LAYERS -> new LayerScreen();
-            case SHADERS -> new ShaderScreen(SouperSecretSettingsClient.soupRenderer.activeLayer, Shaders.getMainRegistryId(),new Identifier[] {null});
-            case EFFECTS -> new ShaderScreen(SouperSecretSettingsClient.soupRenderer.activeLayer, SoupRenderer.layerEffectRegistry, new Identifier[] {
+            case LAYERS -> new LayerScreen(index);
+            case SHADERS -> new ShaderScreen(index, SouperSecretSettingsClient.soupRenderer.activeLayer, Shaders.getMainRegistryId(),new Identifier[] {null});
+            case EFFECTS -> new ShaderScreen(index, SouperSecretSettingsClient.soupRenderer.activeLayer, SoupRenderer.layerEffectRegistry, new Identifier[] {
                     Identifier.of(SouperSecretSettingsClient.MODID, "before_layer_render"),
                     Identifier.of(SouperSecretSettingsClient.MODID, "before_shader_render"),
                     Identifier.of(SouperSecretSettingsClient.MODID, "after_shader_render"),
                     Identifier.of(SouperSecretSettingsClient.MODID, "after_layer_render")
             });
-            case PARAMETERS -> new ParameterScreen(SouperSecretSettingsClient.soupRenderer.activeLayer);
+            case PARAMETERS -> new ParameterScreen(index, SouperSecretSettingsClient.soupRenderer.activeLayer);
         };
         ClientData.minecraft.setScreen(screen);
 
-        int radio = screenType.ordinal();
-
         for (int i = 0; i < ScreenType.values().length; i++) {
             ClickableWidget clickableWidget = header.get(i);
-            clickableWidget.active = radio != i;
+            clickableWidget.active = index != i;
             clickableWidget.setFocused(false);
         }
     }
