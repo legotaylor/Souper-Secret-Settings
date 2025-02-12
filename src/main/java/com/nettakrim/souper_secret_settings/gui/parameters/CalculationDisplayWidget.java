@@ -1,6 +1,7 @@
 package com.nettakrim.souper_secret_settings.gui.parameters;
 
 import com.mclegoman.luminance.client.shaders.overrides.OverrideSource;
+import com.nettakrim.souper_secret_settings.actions.ArrSetAction;
 import com.nettakrim.souper_secret_settings.gui.DisplayWidget;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.ParameterTextWidget;
@@ -74,10 +75,12 @@ public class CalculationDisplayWidget extends DisplayWidget<OverrideSource> {
     }
 
     protected void onOutputChanged(int i, String s) {
+        new ArrSetAction<>(calculation.outputs, i).addToHistory();
         calculation.outputs[i] = s;
     }
 
     protected void onInputChanged(int i, String s) {
+        new ArrSetAction<>(calculation.inputs, i).addToHistory();
         calculation.inputs[i] = ParameterOverrideSource.parameterSourceFromString(s);
     }
 
