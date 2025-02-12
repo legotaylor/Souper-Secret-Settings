@@ -14,17 +14,18 @@ public class Actions {
         updateHistoryButtons();
     }
 
-    protected void addToHistory(Action action) {
+    protected boolean addToHistory(Action action) {
         if (!history.isEmpty()) {
             Action previous = history.peek();
             if (previous != null && previous.getClass().equals(action.getClass()) && previous.mergeWith(action)) {
-                return;
+                return false;
             }
         }
-        action.backup();
+
         history.add(action);
         undone.clear();
         updateHistoryButtons();
+        return true;
     }
 
     public void undo() {

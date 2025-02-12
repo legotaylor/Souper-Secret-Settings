@@ -1,6 +1,8 @@
 package com.nettakrim.souper_secret_settings.gui;
 
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
+import com.nettakrim.souper_secret_settings.actions.ListAddAction;
+import com.nettakrim.souper_secret_settings.actions.ListRemoveAction;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
@@ -127,6 +129,7 @@ public abstract class ListScreen<V> extends Screen {
     protected void addAddition(String addition) {
         V entry = tryGetAddition(addition);
         if (entry != null) {
+            new ListAddAction<>(getListValues(), entry).addToHistory();
             ListWidget listWidget = createListWidget(entry);
             addEntry(listWidgets.size(), entry, listWidget);
             addSelectable(listWidget);
@@ -150,8 +153,11 @@ public abstract class ListScreen<V> extends Screen {
     }
 
     public void removeEntry(ListWidget listWidget) {
+        int index = listWidgets.indexOf(listWidget);
+        new ListRemoveAction<>(getListValues(), index).addToHistory();
+
         remove(listWidget);
-        removeEntry(listWidgets.indexOf(listWidget), true);
+        removeEntry(index, true);
 
         updateSpacing();
     }

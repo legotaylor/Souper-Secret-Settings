@@ -3,6 +3,7 @@ package com.nettakrim.souper_secret_settings.actions;
 import com.mclegoman.luminance.client.shaders.overrides.LuminanceUniformOverride;
 import com.mclegoman.luminance.client.shaders.overrides.OverrideSource;
 import com.mclegoman.luminance.client.shaders.uniforms.config.MapConfig;
+import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,12 +24,6 @@ public class UniformValueChangedAction implements Action {
         this.i = i;
         this.uniformOverride = uniformOverride;
         this.uniformConfig = uniformConfig;
-    }
-
-    @Override
-    public void backup() {
-        sourceBackup = uniformOverride.overrideSources.get(i);
-        mapBackup = new HashMap<>(uniformConfig.config);
     }
 
     @Override
@@ -54,5 +49,13 @@ public class UniformValueChangedAction implements Action {
     public boolean mergeWith(Action other) {
         UniformValueChangedAction o = (UniformValueChangedAction)other;
         return uniform.equals(o.uniform) && i == o.i;
+    }
+
+    @Override
+    public void addToHistory() {
+        if (SouperSecretSettingsClient.actions.addToHistory(this)) {
+            sourceBackup = uniformOverride.overrideSources.get(i);
+            mapBackup = new HashMap<>(uniformConfig.config);
+        }
     }
 }
