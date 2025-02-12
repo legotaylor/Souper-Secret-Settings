@@ -33,9 +33,21 @@ public class UniformValueChangedAction implements Action {
 
     @Override
     public void undo() {
-        uniformOverride.overrideSources.set(i, sourceBackup);
+        swap();
+    }
+
+    @Override
+    public void redo() {
+        swap();
+    }
+
+    protected void swap() {
+        sourceBackup = uniformOverride.overrideSources.set(i, sourceBackup);
+
+        Map<String, List<Object>> prev = new HashMap<>(uniformConfig.config);
         uniformConfig.config.clear();
         uniformConfig.config.putAll(mapBackup);
+        mapBackup = prev;
     }
 
     @Override

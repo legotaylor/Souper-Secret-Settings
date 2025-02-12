@@ -7,6 +7,8 @@ public interface Action {
 
     void undo();
 
+    void redo();
+
     boolean mergeWith(Action other);
 
     default void addToHistory() {

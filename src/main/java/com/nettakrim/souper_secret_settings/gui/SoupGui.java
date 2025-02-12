@@ -35,7 +35,8 @@ public class SoupGui {
             x += listGap + radioWidth;
         }
 
-        header.add(ButtonWidget.builder(Text.literal("undo"), (widget) -> undo()).dimensions(x, listGap, 40, headerHeight).build());
+        header.add(ButtonWidget.builder(Text.literal("undo"), (widget) -> undo()).dimensions(x, listGap, 34, headerHeight).build());
+        header.add(ButtonWidget.builder(Text.literal("redo"), (widget) -> redo()).dimensions(x+36, listGap, 34, headerHeight).build());
 
         currentScroll = new int[ScreenType.values().length];
     }
@@ -71,6 +72,16 @@ public class SoupGui {
     protected void undo() {
         SouperSecretSettingsClient.actions.undo();
         open(currentScreenType);
+    }
+
+    protected void redo() {
+        SouperSecretSettingsClient.actions.redo();
+        open(currentScreenType);
+    }
+
+    public void setHistoryButtons(boolean undo, boolean redo) {
+        header.get(ScreenType.values().length).active = undo;
+        header.get(ScreenType.values().length+1).active = redo;
     }
 
     public enum ScreenType {
