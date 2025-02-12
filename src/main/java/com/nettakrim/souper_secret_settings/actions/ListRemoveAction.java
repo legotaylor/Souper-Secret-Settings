@@ -3,8 +3,8 @@ package com.nettakrim.souper_secret_settings.actions;
 import java.util.List;
 
 public class ListRemoveAction<T> implements Action {
-    public final List<T> list;
-    public final int index;
+    protected final List<T> list;
+    protected final int index;
     protected T value;
 
     public ListRemoveAction(List<T> list, int index) {
@@ -14,8 +14,9 @@ public class ListRemoveAction<T> implements Action {
     }
 
     @Override
-    public void undo() {
+    public boolean undo() {
         list.add(index, value);
+        return true;
     }
 
     @Override

@@ -30,13 +30,17 @@ public class Actions {
 
     public void undo() {
         if (history.isEmpty()) {
+            updateHistoryButtons();
             return;
         }
 
         Action action = history.pop();
-        action.undo();
-        undone.add(action);
-        updateHistoryButtons();
+        if (action.undo()) {
+            undone.add(action);
+            updateHistoryButtons();
+        } else {
+            undo();
+        }
     }
 
     public void redo() {
@@ -50,7 +54,7 @@ public class Actions {
         updateHistoryButtons();
     }
 
-    public void updateHistoryButtons() {
+    private void updateHistoryButtons() {
         SouperSecretSettingsClient.soupGui.setHistoryButtons(!history.isEmpty(), !undone.isEmpty());
     }
 }

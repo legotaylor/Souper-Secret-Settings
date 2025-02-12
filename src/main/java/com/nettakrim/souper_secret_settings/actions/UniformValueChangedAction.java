@@ -27,8 +27,9 @@ public class UniformValueChangedAction implements Action {
     }
 
     @Override
-    public void undo() {
+    public boolean undo() {
         swap();
+        return true;
     }
 
     @Override

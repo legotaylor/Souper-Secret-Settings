@@ -4,8 +4,9 @@ import java.util.List;
 
 public record ListAddAction<T>(List<T> list, T value) implements Action {
     @Override
-    public void undo() {
+    public boolean undo() {
         list.remove(value);
+        return true;
     }
 
     @Override

@@ -3,7 +3,7 @@ package com.nettakrim.souper_secret_settings.actions;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 
 public interface Action {
-    void undo();
+    boolean undo();
 
     void redo();
 
