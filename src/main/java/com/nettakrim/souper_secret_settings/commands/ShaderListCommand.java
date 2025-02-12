@@ -7,6 +7,8 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
+import com.nettakrim.souper_secret_settings.actions.ListAddAction;
+import com.nettakrim.souper_secret_settings.actions.ListRemoveAction;
 import com.nettakrim.souper_secret_settings.shaders.ShaderData;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
@@ -77,12 +79,22 @@ public class ShaderListCommand {
             return -1;
         }
 
-        layer.getList(registry).addAll(shaders);
+        List<ShaderData> list = layer.getList(registry);
+        for (ShaderData shaderData : shaders) {
+            new ListAddAction<>(list, shaderData).addToHistory();
+        }
+        list.addAll(shaders);
         return 1;
     }
 
     public int removeAll() {
-        SouperSecretSettingsClient.soupRenderer.activeLayer.getList(registry).clear();
+        ShaderLayer layer = SouperSecretSettingsClient.soupRenderer.activeLayer;
+
+        List<ShaderData> shaders = layer.getList(registry);
+        for (int i = shaders.size()-1; i >= 0; i--) {
+            new ListRemoveAction<>(shaders, i).addToHistory();
+        }
+        shaders.clear();
         return 1;
     }
 
@@ -91,6 +103,7 @@ public class ShaderListCommand {
         if (shaders.isEmpty()) {
             return -1;
         }
+        new ListRemoveAction<>(shaders, shaders.size()-1).addToHistory();
         shaders.removeLast();
         return 1;
     }

@@ -2,6 +2,7 @@ package com.nettakrim.souper_secret_settings.gui.layers;
 
 import com.mclegoman.luminance.client.data.ClientData;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
+import com.nettakrim.souper_secret_settings.actions.LayerRenameAction;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.ListWidget;
 import com.nettakrim.souper_secret_settings.gui.SuggestionTextFieldWidget;
@@ -20,15 +21,15 @@ public class LayerWidget extends ListWidget {
     private static final int infoHeight = 15;
 
     public LayerWidget(ShaderLayer layer, ListScreen<?> listScreen, int x, int width) {
-        super(x, width, Text.literal(""), listScreen);
+        super(x, width, Text.literal(layer.name), listScreen);
         this.layer = layer;
 
         saveButton = ButtonWidget.builder(Text.literal("save"), (buttonWidget) -> {}).dimensions(x,0,width/2,20).build();
         loadButton = ButtonWidget.builder(Text.literal("load"), (buttonWidget) -> {}).dimensions(x + width/2,0,width/2,20).build();
 
         SuggestionTextFieldWidget nameWidget = new SuggestionTextFieldWidget(x, width, 20, Text.of("layer name"), false);
-        nameWidget.setChangedListener(this::setName);
         nameWidget.setText(layer.name);
+        nameWidget.setChangedListener(this::setName);
 
         children.add(nameWidget);
         listScreen.addSelectable(nameWidget);
@@ -36,6 +37,9 @@ public class LayerWidget extends ListWidget {
         children.add(saveButton);
         listScreen.addSelectable(saveButton);
         listScreen.addSelectable(loadButton);
+
+        saveButton.active = false;
+        loadButton.active = false;
     }
 
     @Override
@@ -107,6 +111,9 @@ public class LayerWidget extends ListWidget {
     }
 
     private void setName(String name) {
+        if (layer.name.equals(name)) return;
+
+        new LayerRenameAction(layer).addToHistory();
         layer.name = name;
         setMessage(Text.literal(name));
 

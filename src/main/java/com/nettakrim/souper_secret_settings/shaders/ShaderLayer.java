@@ -9,18 +9,20 @@ import net.minecraft.client.render.DefaultFramebufferSet;
 import net.minecraft.client.render.FrameGraphBuilder;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
 public class ShaderLayer {
+    @NotNull
     public String name;
 
-    public List<ShaderData> shaderDatas;
-    public List<ShaderData> layerEffects;
+    public final List<ShaderData> shaderDatas;
+    public final List<ShaderData> layerEffects;
 
-    public List<Calculation> calculations;
-    public Map<String, Float> parameterValues;
+    public final List<Calculation> calculations;
+    public final Map<String, Float> parameterValues;
 
     public boolean active = true;
     public boolean expanded = false;
@@ -32,7 +34,7 @@ public class ShaderLayer {
 
     private static ShaderLayer renderingLayer;
 
-    public ShaderLayer(String name) {
+    public ShaderLayer(@NotNull String name) {
         this.name = name;
 
         shaderDatas = new ArrayList<>();
