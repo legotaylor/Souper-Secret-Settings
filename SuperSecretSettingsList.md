@@ -68,6 +68,7 @@ All builtin resourcepacks should be enabled by default, but they may need to ena
 |                                    |                  | sequins         |
 |                                    |                  | shadows         |
 |                                    |                  | sorting         |
+|                                    |                  | split_tone      |
 |                                    |                  | stereogram      |
 |                                    |                  | suspicious      |
 |                                    |                  | texture_map     |
