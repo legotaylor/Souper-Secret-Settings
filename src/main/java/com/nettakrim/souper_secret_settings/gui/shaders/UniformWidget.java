@@ -7,7 +7,7 @@ import com.mclegoman.luminance.client.shaders.overrides.UniformOverride;
 import com.mclegoman.luminance.client.shaders.uniforms.config.MapConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
 import com.mclegoman.luminance.common.util.Couple;
-import com.nettakrim.souper_secret_settings.actions.UniformValueChangedAction;
+import com.nettakrim.souper_secret_settings.actions.UniformChangeAction;
 import com.nettakrim.souper_secret_settings.gui.ConfigWidget;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.DisplayWidget;
@@ -63,7 +63,7 @@ public class UniformWidget extends DisplayWidget<Couple<UniformData<String>,Unif
         LuminanceUniformOverride override = (LuminanceUniformOverride)passData.overrides.get(pass.passIndex).get(uniform.getName()).value;
         MapConfig config = (MapConfig)passData.configs.get(pass.passIndex).get(uniform.getName()).value;
 
-        new UniformValueChangedAction(uniform.getName(), i, override, config).addToHistory();
+        new UniformChangeAction(uniform.getName(), i, override, config).addToHistory();
 
         override.overrideSources.set(i, widget.overrideSource);
 

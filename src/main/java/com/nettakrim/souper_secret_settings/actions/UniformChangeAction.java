@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class UniformValueChangedAction implements Action {
+public class UniformChangeAction implements Action {
     private final String uniform;
     private final int i;
 
@@ -19,7 +19,7 @@ public class UniformValueChangedAction implements Action {
     private OverrideSource sourceBackup;
     private Map<String, List<Object>> mapBackup;
 
-    public UniformValueChangedAction(String uniform, int i, LuminanceUniformOverride uniformOverride, MapConfig uniformConfig) {
+    public UniformChangeAction(String uniform, int i, LuminanceUniformOverride uniformOverride, MapConfig uniformConfig) {
         this.uniform = uniform;
         this.i = i;
         this.uniformOverride = uniformOverride;
@@ -40,23 +40,36 @@ public class UniformValueChangedAction implements Action {
     protected void swap() {
         sourceBackup = uniformOverride.overrideSources.set(i, sourceBackup);
 
-        Map<String, List<Object>> prev = new HashMap<>(uniformConfig.config);
-        uniformConfig.config.clear();
+        Map<String, List<Object>> prev = backup();
+        String prefix = i+"_";
+        uniformConfig.config.forEach((key, value) -> SouperSecretSettingsClient.log(prefix, key, value));
+        uniformConfig.config.keySet().removeIf((s) -> s.startsWith(prefix));
         uniformConfig.config.putAll(mapBackup);
         mapBackup = prev;
     }
 
     @Override
     public boolean mergeWith(Action other) {
-        UniformValueChangedAction o = (UniformValueChangedAction)other;
-        return uniform.equals(o.uniform) && i == o.i;
+        UniformChangeAction o = (UniformChangeAction)other;
+        return uniformOverride == o.uniformOverride && uniform.equals(o.uniform) && i == o.i;
     }
 
     @Override
     public void addToHistory() {
         if (SouperSecretSettingsClient.actions.addToHistory(this)) {
             sourceBackup = uniformOverride.overrideSources.get(i);
-            mapBackup = new HashMap<>(uniformConfig.config);
+            mapBackup = backup();
         }
+    }
+
+    private Map<String, List<Object>> backup() {
+        String prefix = i+"_";
+        Map<String, List<Object>> map = new HashMap<>();
+        uniformConfig.config.forEach((key, value) -> {
+            if (key.startsWith(prefix)) {
+                map.put(key, value);
+            }
+        });
+        return map;
     }
 }
