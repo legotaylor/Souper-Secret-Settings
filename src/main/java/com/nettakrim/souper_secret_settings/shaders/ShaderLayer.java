@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class ShaderLayer {
+public class ShaderLayer implements Toggleable {
     @NotNull
     public String name;
 
@@ -133,5 +133,15 @@ public class ShaderLayer {
     public static void renderCleanup(FrameGraphBuilder builder) {
         renderingLayer = null;
         FramePassInterface.createForcedPass(builder, Identifier.of(SouperSecretSettingsClient.MODID, "layer_cleanup"), () -> renderingLayer = null);
+    }
+
+    @Override
+    public boolean isActive() {
+        return active;
+    }
+
+    @Override
+    public void setActive(boolean to) {
+        active = to;
     }
 }

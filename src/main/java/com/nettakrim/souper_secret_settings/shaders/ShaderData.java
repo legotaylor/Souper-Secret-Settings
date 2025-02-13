@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class ShaderData {
+public class ShaderData implements Toggleable {
     public Shader shader;
 
     public Map<Identifier, PassData> passDatas;
@@ -68,5 +68,15 @@ public class ShaderData {
         }
 
         return passData.configs.size();
+    }
+
+    @Override
+    public boolean isActive() {
+        return active;
+    }
+
+    @Override
+    public void setActive(boolean to) {
+        active = to;
     }
 }

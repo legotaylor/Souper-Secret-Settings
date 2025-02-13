@@ -2,6 +2,8 @@ package com.nettakrim.souper_secret_settings.gui;
 
 import com.mclegoman.luminance.client.data.ClientData;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
+import com.nettakrim.souper_secret_settings.actions.ToggleAction;
+import com.nettakrim.souper_secret_settings.shaders.Toggleable;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
@@ -24,7 +26,7 @@ public abstract class ListWidget extends CollapseWidget {
 
     @Override
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-        float buttonColor = isActive() ? 1f : 0.5f;
+        float buttonColor = getToggleable().isActive() ? 1f : 0.5f;
         float dragColor = dragState > 0 ? 1f : 0f;
         float deleteColor = dragState < 0 ? 1f : 0f;
 
@@ -53,7 +55,9 @@ public abstract class ListWidget extends CollapseWidget {
     @Override
     public void onRelease(double mouseX, double mouseY) {
         if (dragState == 1) {
-            setActive(!isActive());
+            Toggleable toggleable = getToggleable();
+            new ToggleAction(toggleable).addToHistory();
+            toggleable.toggle();
         }
         if (dragState == -1 && mouseX < getX()+10 && mouseY > getY() && mouseY < getY()+getHeight()) {
             listScreen.removeEntry(this);
@@ -80,7 +84,5 @@ public abstract class ListWidget extends CollapseWidget {
 
     }
 
-    protected abstract boolean isActive();
-
-    protected abstract void setActive(boolean to);
+    protected abstract Toggleable getToggleable();
 }

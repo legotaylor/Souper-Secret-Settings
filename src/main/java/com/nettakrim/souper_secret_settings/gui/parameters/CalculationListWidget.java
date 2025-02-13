@@ -3,6 +3,7 @@ package com.nettakrim.souper_secret_settings.gui.parameters;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.ListWidget;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
+import com.nettakrim.souper_secret_settings.shaders.Toggleable;
 import com.nettakrim.souper_secret_settings.shaders.calculations.Calculation;
 import net.minecraft.text.Text;
 
@@ -26,16 +27,6 @@ public class CalculationListWidget extends ListWidget {
     }
 
     @Override
-    protected boolean isActive() {
-        return calculation.active;
-    }
-
-    @Override
-    protected void setActive(boolean to) {
-        calculation.active = to;
-    }
-
-    @Override
     protected boolean getStoredExpanded() {
         return calculation.expanded;
     }
@@ -43,5 +34,10 @@ public class CalculationListWidget extends ListWidget {
     @Override
     protected void setStoredExpanded(boolean to) {
         calculation.expanded = to;
+    }
+
+    @Override
+    protected Toggleable getToggleable() {
+        return calculation;
     }
 }

@@ -6,6 +6,7 @@ import com.nettakrim.souper_secret_settings.gui.ListWidget;
 import com.nettakrim.souper_secret_settings.shaders.OverrideManager;
 import com.nettakrim.souper_secret_settings.shaders.ShaderData;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
+import com.nettakrim.souper_secret_settings.shaders.Toggleable;
 import net.minecraft.client.gl.PostEffectPass;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
@@ -44,16 +45,6 @@ public class ShaderWidget extends ListWidget {
     }
 
     @Override
-    protected boolean isActive() {
-        return shaderData.active;
-    }
-
-    @Override
-    protected void setActive(boolean to) {
-        shaderData.active = to;
-    }
-
-    @Override
     protected boolean getStoredExpanded() {
         return shaderData.expanded;
     }
@@ -69,5 +60,10 @@ public class ShaderWidget extends ListWidget {
         if (shaderData.active) {
             OverrideManager.currentShaderIndex++;
         }
+    }
+
+    @Override
+    protected Toggleable getToggleable() {
+        return shaderData;
     }
 }

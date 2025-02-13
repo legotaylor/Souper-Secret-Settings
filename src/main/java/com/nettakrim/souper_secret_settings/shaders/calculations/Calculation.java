@@ -5,11 +5,12 @@ import com.mclegoman.luminance.client.shaders.overrides.OverrideSource;
 import com.mclegoman.luminance.client.shaders.uniforms.config.EmptyConfig;
 import com.nettakrim.souper_secret_settings.shaders.ParameterOverrideSource;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
+import com.nettakrim.souper_secret_settings.shaders.Toggleable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Calculation {
+public abstract class Calculation implements Toggleable {
     public final OverrideSource[] inputs;
     public final String[] inputNames;
     public final String[] outputs;
@@ -87,5 +88,15 @@ public abstract class Calculation {
             list.add(outputValue);
         }
         return list;
+    }
+
+    @Override
+    public boolean isActive() {
+        return active;
+    }
+
+    @Override
+    public void setActive(boolean to) {
+        active = to;
     }
 }

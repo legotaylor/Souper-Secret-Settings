@@ -7,6 +7,7 @@ import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.ListWidget;
 import com.nettakrim.souper_secret_settings.gui.SuggestionTextFieldWidget;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
+import com.nettakrim.souper_secret_settings.shaders.Toggleable;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
@@ -66,16 +67,6 @@ public class LayerWidget extends ListWidget {
     }
 
     @Override
-    protected boolean isActive() {
-        return layer.active;
-    }
-
-    @Override
-    protected void setActive(boolean to) {
-        layer.active = to;
-    }
-
-    @Override
     protected boolean getStoredExpanded() {
         return layer.expanded;
     }
@@ -93,6 +84,11 @@ public class LayerWidget extends ListWidget {
             return;
         }
         super.onClick(mouseX, mouseY);
+    }
+
+    @Override
+    protected Toggleable getToggleable() {
+        return layer;
     }
 
     @Override
