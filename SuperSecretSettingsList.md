@@ -36,14 +36,15 @@ All builtin resourcepacks should be enabled by default, but they may need to ena
 | shareware*                         |                  | frigid          |
 | sobel                              |                  | ghost           |
 | spider**                           |                  | gel             |
-| wobble                             |                  | glass           |
+| wobble                             |                  | ghost           |
+|                                    |                  | glass           |
 |                                    |                  | glitchy         |
 |                                    |                  | half_invert     |
 |                                    |                  | halftone        |
 |                                    |                  | harsh_dither    |
-|                                    |                  | hsv_map         |
 |                                    |                  | highpass        |
 |                                    |                  | horror          |
+|                                    |                  | hsv_map         |
 |                                    |                  | hue_rotate      |
 |                                    |                  | hyperspace      |
 |                                    |                  | infrared        |
@@ -56,7 +57,6 @@ All builtin resourcepacks should be enabled by default, but they may need to ena
 |                                    |                  | normalise       |
 |                                    |                  | out_of_bounds   |
 |                                    |                  | pendulum        |
-|                                    |                  | pixels          |
 |                                    |                  | plants          |
 |                                    |                  | plasma          |
 |                                    |                  | reflect         |
