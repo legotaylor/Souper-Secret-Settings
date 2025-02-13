@@ -25,10 +25,10 @@ public class LayerWidget extends ListWidget {
         super(x, width, Text.literal(layer.name), listScreen);
         this.layer = layer;
 
-        saveButton = ButtonWidget.builder(Text.literal("save"), (buttonWidget) -> {}).dimensions(x,0,width/2,20).build();
-        loadButton = ButtonWidget.builder(Text.literal("load"), (buttonWidget) -> {}).dimensions(x + width/2,0,width/2,20).build();
+        saveButton = ButtonWidget.builder(Text.literal("save"), (buttonWidget) -> save()).dimensions(x,0,width/2,20).build();
+        loadButton = ButtonWidget.builder(Text.literal("load"), (buttonWidget) -> load()).dimensions(x + width/2,0,width/2,20).build();
 
-        SuggestionTextFieldWidget nameWidget = new SuggestionTextFieldWidget(x, width, 20, Text.of("layer name"), false);
+        SuggestionTextFieldWidget nameWidget = new SuggestionTextFieldWidget(x, width, 20, Text.of("layer id"), false);
         nameWidget.setText(layer.name);
         nameWidget.setChangedListener(this::setName);
 
@@ -39,8 +39,7 @@ public class LayerWidget extends ListWidget {
         listScreen.addSelectable(saveButton);
         listScreen.addSelectable(loadButton);
 
-        saveButton.active = false;
-        loadButton.active = false;
+        updateDataButtons();
     }
 
     @Override
@@ -113,7 +112,22 @@ public class LayerWidget extends ListWidget {
         layer.name = name;
         setMessage(Text.literal(name));
 
-        saveButton.active = false;
-        loadButton.active = false;
+        updateDataButtons();
+    }
+
+    private void save() {
+        SouperSecretSettingsClient.soupData.saveLayer(layer, this::updateDataButtons);
+        updateDataButtons();
+    }
+
+    private void load() {
+        layer.clear();
+        SouperSecretSettingsClient.soupData.loadLayer(layer);
+        updateDataButtons();
+    }
+
+    private void updateDataButtons() {
+        saveButton.active = true;
+        loadButton.active = SouperSecretSettingsClient.soupData.getLayerPath(layer).toFile().exists();
     }
 }

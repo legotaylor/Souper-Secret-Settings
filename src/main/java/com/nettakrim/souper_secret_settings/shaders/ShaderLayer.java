@@ -18,10 +18,10 @@ public class ShaderLayer implements Toggleable {
     @NotNull
     public String name;
 
-    public final List<ShaderData> shaderDatas;
-    public final List<ShaderData> layerEffects;
-
+    public final List<ShaderData> shaders;
+    public final List<ShaderData> effects;
     public final List<Calculation> calculations;
+
     public final Map<String, Float> parameterValues;
 
     public boolean active = true;
@@ -37,11 +37,19 @@ public class ShaderLayer implements Toggleable {
     public ShaderLayer(@NotNull String name) {
         this.name = name;
 
-        shaderDatas = new ArrayList<>();
-        layerEffects = new ArrayList<>();
-
+        shaders = new ArrayList<>();
+        effects = new ArrayList<>();
         calculations = new ArrayList<>();
+
+        SouperSecretSettingsClient.soupData.loadLayer(this);
+
         parameterValues = new HashMap<>();
+    }
+
+    public void clear() {
+        shaders.clear();
+        effects.clear();
+        calculations.clear();
     }
 
     public void render(FrameGraphBuilder builder, int textureWidth, int textureHeight, DefaultFramebufferSet framebufferSet) {
@@ -61,18 +69,18 @@ public class ShaderLayer implements Toggleable {
             OverrideManager.startShaderQueue(shaderQueue);
         });
 
-        renderList(layerEffects, shaderQueue, builder, textureWidth, textureHeight, framebufferSet, beforeLayerRender);
+        renderList(effects, shaderQueue, builder, textureWidth, textureHeight, framebufferSet, beforeLayerRender);
 
-        for (ShaderData shaderData : shaderDatas) {
+        for (ShaderData shaderData : shaders) {
             if (shaderData.active) {
-                renderList(layerEffects, shaderQueue, builder, textureWidth, textureHeight, framebufferSet, beforeShaderRender);
+                renderList(effects, shaderQueue, builder, textureWidth, textureHeight, framebufferSet, beforeShaderRender);
                 renderShader(shaderData, shaderQueue, builder, textureWidth, textureHeight, framebufferSet, null);
-                renderList(layerEffects.reversed(), shaderQueue, builder, textureWidth, textureHeight, framebufferSet, afterShaderRender);
+                renderList(effects.reversed(), shaderQueue, builder, textureWidth, textureHeight, framebufferSet, afterShaderRender);
                 shaderQueue.add(null);
             }
         }
 
-        renderList(layerEffects.reversed(), shaderQueue, builder, textureWidth, textureHeight, framebufferSet, afterLayerRender);
+        renderList(effects.reversed(), shaderQueue, builder, textureWidth, textureHeight, framebufferSet, afterLayerRender);
     }
 
     public void renderList(List<ShaderData> shaders, Queue<Couple<ShaderData, Identifier>> shaderQueue, FrameGraphBuilder builder, int textureWidth, int textureHeight, DefaultFramebufferSet framebufferSet, @Nullable Identifier customPasses) {
@@ -89,11 +97,11 @@ public class ShaderLayer implements Toggleable {
 
     public List<ShaderData> getList(Identifier registry) {
         if (Shaders.getMainRegistryId().equals(registry)) {
-            return shaderDatas;
+            return shaders;
         }
 
-        if (SoupRenderer.layerEffectRegistry.equals(registry)) {
-            return layerEffects;
+        if (SoupRenderer.effectRegistry.equals(registry)) {
+            return effects;
         }
 
         return List.of();
@@ -104,13 +112,13 @@ public class ShaderLayer implements Toggleable {
         int effects = 0;
         int passes = 0;
 
-        for (ShaderData shaderData : shaderDatas) {
+        for (ShaderData shaderData : this.shaders) {
             if (!shaderData.active) continue;
             passes += shaderData.getRenderPassCount(null);
             shaders++;
         }
 
-        for (ShaderData effect : layerEffects) {
+        for (ShaderData effect : this.effects) {
             if (!effect.active) continue;
             passes += effect.getRenderPassCount(beforeLayerRender);
             passes += effect.getRenderPassCount(beforeShaderRender)*shaders;

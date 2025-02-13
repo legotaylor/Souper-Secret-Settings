@@ -40,7 +40,7 @@ public class SoupUniforms {
             layer = SouperSecretSettingsClient.soupRenderer.activeLayer;
         }
 
-        for (ShaderData shaderData : layer.shaderDatas) {
+        for (ShaderData shaderData : layer.shaders) {
             if (shaderData.active) {
                 count++;
             }

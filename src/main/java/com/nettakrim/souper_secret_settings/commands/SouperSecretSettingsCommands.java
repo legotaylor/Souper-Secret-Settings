@@ -13,7 +13,7 @@ public class SouperSecretSettingsCommands {
             RootCommandNode<FabricClientCommandSource> root = dispatcher.getRoot();
 
             new ShaderListCommand("shader", Shaders.getMainRegistryId()).register(root);
-            new ShaderListCommand("effect", SoupRenderer.layerEffectRegistry).register(root);
+            new ShaderListCommand("effect", SoupRenderer.effectRegistry).register(root);
         });
     }
 }

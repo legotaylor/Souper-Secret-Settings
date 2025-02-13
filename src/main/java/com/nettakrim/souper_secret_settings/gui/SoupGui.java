@@ -48,7 +48,7 @@ public class SoupGui {
         Screen screen = switch(screenType) {
             case LAYERS -> new LayerScreen(index);
             case SHADERS -> new ShaderScreen(index, SouperSecretSettingsClient.soupRenderer.activeLayer, Shaders.getMainRegistryId(),new Identifier[] {null});
-            case EFFECTS -> new ShaderScreen(index, SouperSecretSettingsClient.soupRenderer.activeLayer, SoupRenderer.layerEffectRegistry, new Identifier[] {
+            case EFFECTS -> new ShaderScreen(index, SouperSecretSettingsClient.soupRenderer.activeLayer, SoupRenderer.effectRegistry, new Identifier[] {
                     Identifier.of(SouperSecretSettingsClient.MODID, "before_layer_render"),
                     Identifier.of(SouperSecretSettingsClient.MODID, "before_shader_render"),
                     Identifier.of(SouperSecretSettingsClient.MODID, "after_shader_render"),

@@ -25,11 +25,9 @@ public class SoupRenderer implements Runnables.WorldRender {
 
     private List<String> validUniforms;
 
-    public static final Identifier layerEffectRegistry = Identifier.of(SouperSecretSettingsClient.MODID, "effects");
+    public static final Identifier effectRegistry = Identifier.of(SouperSecretSettingsClient.MODID, "effects");
 
     public SoupRenderer() {
-        clearAll();
-
         Events.AfterWeatherRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "rendering"), this);
 
         Events.OnShaderDataReset.register(Identifier.of(SouperSecretSettingsClient.MODID, "reload"), this::clearAll);
@@ -74,7 +72,7 @@ public class SoupRenderer implements Runnables.WorldRender {
     @Nullable
     private List<ShaderData> getRandomShaders(ShaderLayer layer, Identifier registry, int amount) {
         List<ShaderData> shaders = new ArrayList<>();
-        ShaderRegistryEntry shaderRegistry = (layer == null || layer.shaderDatas.isEmpty()) ? null : layer.shaderDatas.getLast().shader.getShaderData();
+        ShaderRegistryEntry shaderRegistry = (layer == null || layer.shaders.isEmpty()) ? null : layer.shaders.getLast().shader.getShaderData();
 
         int i = 0;
         while (i < amount) {
