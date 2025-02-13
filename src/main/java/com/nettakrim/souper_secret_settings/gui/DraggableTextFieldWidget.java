@@ -27,7 +27,6 @@ public class DraggableTextFieldWidget extends TextFieldWidget implements ListChi
                 dragValue = null;
             }
             setText(Float.toString(f + (float)(deltaX/50.0 * Math.max(Math.abs(f), 0.5f))));
-            this.setCursorToStart(false);
         } catch (Exception ignored) {}
     }
 
@@ -39,5 +38,11 @@ public class DraggableTextFieldWidget extends TextFieldWidget implements ListChi
     @Override
     public void onRemove() {
 
+    }
+
+    @Override
+    public void setText(String text) {
+        super.setText(text);
+        this.setCursorToStart(false);
     }
 }
