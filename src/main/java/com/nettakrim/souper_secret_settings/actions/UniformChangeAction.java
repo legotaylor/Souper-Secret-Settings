@@ -5,6 +5,7 @@ import com.mclegoman.luminance.client.shaders.overrides.OverrideSource;
 import com.mclegoman.luminance.client.shaders.uniforms.config.MapConfig;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,10 +42,11 @@ public class UniformChangeAction implements Action {
         sourceBackup = uniformOverride.overrideSources.set(i, sourceBackup);
 
         Map<String, List<Object>> prev = backup();
+
         String prefix = i+"_";
-        uniformConfig.config.forEach((key, value) -> SouperSecretSettingsClient.log(prefix, key, value));
         uniformConfig.config.keySet().removeIf((s) -> s.startsWith(prefix));
         uniformConfig.config.putAll(mapBackup);
+
         mapBackup = prev;
     }
 
@@ -67,7 +69,7 @@ public class UniformChangeAction implements Action {
         Map<String, List<Object>> map = new HashMap<>();
         uniformConfig.config.forEach((key, value) -> {
             if (key.startsWith(prefix)) {
-                map.put(key, value);
+                map.put(key, new ArrayList<>(value));
             }
         });
         return map;
