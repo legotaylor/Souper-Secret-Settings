@@ -29,6 +29,7 @@ public class LayerWidget extends ListWidget {
         loadButton = ButtonWidget.builder(Text.literal("load"), (buttonWidget) -> load()).dimensions(x + width/2,0,width/2,20).build();
 
         SuggestionTextFieldWidget nameWidget = new SuggestionTextFieldWidget(x, width, 20, Text.of("layer id"), false);
+        nameWidget.setListeners(SouperSecretSettingsClient.soupData::getSavedLayers, null);
         nameWidget.setText(layer.name);
         nameWidget.setChangedListener(this::setName);
 

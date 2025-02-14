@@ -9,9 +9,13 @@ import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.DataWriter;
+
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SoupData {
     protected final Path configDir;
@@ -41,5 +45,19 @@ public class SoupData {
 
     public Path getLayerPath(ShaderLayer shaderLayer) {
         return configDir.resolve("layers").resolve(shaderLayer.name+".json");
+    }
+
+    public List<String> getSavedLayers() {
+        List<String> names = new ArrayList<>();
+        File[] files = configDir.resolve("layers").toFile().listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isFile()) {
+                    String name = file.getName();
+                    names.add(name.substring(0, name.length()-5));
+                }
+            }
+        }
+        return names;
     }
 }

@@ -26,7 +26,7 @@ public class LayerScreen extends ListScreen<ShaderLayer> {
 
     @Override
     public List<String> getAdditions() {
-        return List.of();
+        return SouperSecretSettingsClient.soupData.getSavedLayers();
     }
 
     @Override
