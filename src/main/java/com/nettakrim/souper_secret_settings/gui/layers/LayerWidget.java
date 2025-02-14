@@ -22,7 +22,7 @@ public class LayerWidget extends ListWidget {
     private static final int infoHeight = 15;
 
     public LayerWidget(ShaderLayer layer, ListScreen<?> listScreen, int x, int width) {
-        super(x, width, Text.literal(layer.name), listScreen);
+        super(x, width, getNameText(layer.name), listScreen);
         this.layer = layer;
 
         saveButton = ButtonWidget.builder(Text.literal("save"), (buttonWidget) -> save()).dimensions(x,0,width/2,20).build();
@@ -111,9 +111,13 @@ public class LayerWidget extends ListWidget {
 
         new LayerRenameAction(layer).addToHistory();
         layer.name = name;
-        setMessage(Text.literal(name));
+        setMessage(getNameText(name));
 
         updateDataButtons();
+    }
+
+    private static Text getNameText(String name) {
+        return Text.literal(name.isBlank() ? "<unnamed>" : name);
     }
 
     private void save() {
@@ -128,7 +132,7 @@ public class LayerWidget extends ListWidget {
     }
 
     private void updateDataButtons() {
-        saveButton.active = true;
+        saveButton.active = SouperSecretSettingsClient.soupData.isValidName(layer.name);
         loadButton.active = SouperSecretSettingsClient.soupData.getLayerPath(layer).toFile().exists();
     }
 }
