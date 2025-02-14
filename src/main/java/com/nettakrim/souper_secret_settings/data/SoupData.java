@@ -40,6 +40,10 @@ public class SoupData {
     }
 
     public void saveLayer(ShaderLayer shaderLayer, Runnable onComplete) {
+        if (!isValidName(shaderLayer.name)) {
+            return;
+        }
+
         DataProvider.writeCodecToPath(DataWriter.UNCACHED, LayerCodecs.CODEC, LayerCodecs.from(shaderLayer), getLayerPath(shaderLayer)).whenComplete((a,b) -> onComplete.run());
     }
 
