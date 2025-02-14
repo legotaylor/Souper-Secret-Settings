@@ -62,6 +62,6 @@ public class SoupData {
     }
 
     public boolean isValidName(String name) {
-        return name != null && name.matches("^[A-Za-z0-9._ ]{1,255}$");
+        return name != null && !name.isBlank() && name.matches("^[A-Za-z0-9._ ]{1,255}$");
     }
 }
