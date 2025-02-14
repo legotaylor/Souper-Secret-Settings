@@ -203,4 +203,49 @@ public class PassData {
     public static boolean allowUniform(String uniform) {
         return !uniformsToIgnore.contains(uniform);
     }
+
+    public static boolean isChanged(UniformData<UniformOverride> override, UniformData<UniformConfig> config) {
+        if (!((LuminanceUniformOverride)override.value).getStrings().equals(((LuminanceUniformOverride)override.defaultValue).getStrings())) {
+            return true;
+        }
+
+        MapConfig mapConfig = (MapConfig)config.value;
+
+        if (mapConfig.config.isEmpty() && config.defaultValue == EmptyConfig.INSTANCE) {
+            return false;
+        }
+
+        if (config.defaultValue instanceof MapConfig defaultMap) {
+            if (!defaultMap.config.keySet().equals(mapConfig.config.keySet())) {
+                return true;
+            }
+
+            for (String s : defaultMap.config.keySet()) {
+                List<Object> defaultObjects = defaultMap.config.get(s);
+                List<Object> currentObjects = mapConfig.config.get(s);
+                if (defaultObjects.size() != currentObjects.size()) {
+                    return true;
+                }
+
+                for (int i = 0; i < defaultObjects.size(); i++) {
+                    Object defaultObject = defaultObjects.get(i);
+                    Object currentObject = currentObjects.get(i);
+
+                    if (defaultObject.equals(currentObject)) {
+                        continue;
+                    }
+
+                    if (defaultObject instanceof Number defaultNumber && currentObject instanceof Number currentNumber) {
+                        if (defaultNumber.doubleValue() != currentNumber.doubleValue()) {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        return true;
+    }
 }

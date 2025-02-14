@@ -14,6 +14,7 @@ import com.nettakrim.souper_secret_settings.shaders.calculations.Calculation;
 import com.nettakrim.souper_secret_settings.shaders.calculations.Calculations;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.dynamic.Codecs;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -36,8 +37,8 @@ public record LayerCodecs(List<Shader> shaders, List<Shader> effects, List<Calcu
         }
     }
 
-    protected record Shader(String id, Map<String, List<Pass>> passes) {
-        public static final Codec<Shader> CODEC = RecordCodecBuilder.create((instance) -> instance.group(Codec.STRING.fieldOf("id").forGetter(Shader::id), Codec.unboundedMap(Codec.STRING, Pass.CODEC.listOf()).fieldOf("passes").forGetter(Shader::passes)).apply(instance, Shader::new));
+    protected record Shader(String id, Optional<Map<String, List<Pass>>> passes) {
+        public static final Codec<Shader> CODEC = RecordCodecBuilder.create((instance) -> instance.group(Codec.STRING.fieldOf("id").forGetter(Shader::id), Codec.unboundedMap(Codec.STRING, Pass.CODEC.listOf()).optionalFieldOf("passes").forGetter(Shader::passes)).apply(instance, Shader::new));
 
         public static List<Shader> fromList(List<ShaderData> shaderDatas) {
             List<Shader> shaders = new ArrayList<>(shaderDatas.size());
@@ -49,8 +50,13 @@ public record LayerCodecs(List<Shader> shaders, List<Shader> effects, List<Calcu
 
         public static Shader from(ShaderData shader) {
             Map<String, List<Pass>> passes = new HashMap<>(shader.passDatas.size());
-            shader.passDatas.forEach((identifier, passData) -> passes.put(identifier == null ? "default" : identifier.toString(), Pass.from(passData)));
-            return new Shader(shader.shader.getShaderId().toString(), passes);
+            shader.passDatas.forEach((identifier, passData) -> {
+                List<Pass> pass = Pass.from(passData);
+                if (!pass.isEmpty()) {
+                    passes.put(identifier == null ? "default" : identifier.toString(), pass);
+                }
+            });
+            return new Shader(shader.shader.getShaderId().toString(), passes.isEmpty() ? Optional.empty() : Optional.of(passes));
         }
 
         public void apply(ShaderLayer layer, Identifier registry) {
@@ -60,17 +66,16 @@ public record LayerCodecs(List<Shader> shaders, List<Shader> effects, List<Calcu
                 return;
             }
             ShaderData shaderData = shaderDatas.getFirst();
-            shaderData.passDatas.forEach((identifier, passData) -> {
-                List<Pass> passList = passes.get(identifier == null ? "default" : identifier.toString());
+            passes.ifPresent(stringListMap -> shaderData.passDatas.forEach((identifier, passData) -> {
+                List<Pass> passList = stringListMap.get(identifier == null ? "default" : identifier.toString());
                 if (passList == null) {
-                    SouperSecretSettingsClient.log("couldn't find pass list", identifier, "in shader", id);
                     return;
                 }
 
-                for (int i = 0; i < passList.size(); i++) {
+                for (int i = 0; i < passList.size() && i < passData.overrides.size(); i++) {
                     passList.get(i).apply(passData.overrides.get(i), passData.configs.get(i));
                 }
-            });
+            }));
             layer.getList(registry).add(shaderData);
         }
     }
@@ -82,21 +87,39 @@ public record LayerCodecs(List<Shader> shaders, List<Shader> effects, List<Calcu
             List<Pass> passes = new ArrayList<>(passData.overrides.size());
 
             for (int passIndex = 0; passIndex < passData.overrides.size(); passIndex++) {
-                Map<String, UniformData<UniformOverride>> overrides = passData.overrides.get(passIndex);
-                Map<String, UniformData<UniformConfig>> configs = passData.configs.get(passIndex);
-
-                Map<String, Uniform> uniforms = new HashMap<>();
-                overrides.forEach((uniform, override) -> uniforms.put(uniform, Uniform.from((LuminanceUniformOverride)override.value, (MapConfig)configs.get(uniform).value)));
-                passes.add(new Pass(uniforms));
+                passes.add(new Pass(getUniforms(passData, passIndex)));
             }
+
+            for (int passIndex = passes.size()-1; passIndex >= 0; passIndex--) {
+                Pass pass = passes.get(passIndex);
+                if (pass.uniforms.isEmpty()) {
+                    passes.removeLast();
+                } else {
+                    break;
+                }
+            }
+
             return passes;
+        }
+
+        private static @NotNull Map<String, Uniform> getUniforms(PassData passData, int passIndex) {
+            Map<String, UniformData<UniformOverride>> overrides = passData.overrides.get(passIndex);
+            Map<String, UniformData<UniformConfig>> configs = passData.configs.get(passIndex);
+
+            Map<String, Uniform> uniforms = new HashMap<>();
+            overrides.forEach((uniform, override) -> {
+                UniformData<UniformConfig> config = configs.get(uniform);
+                if (PassData.isChanged(override, config)) {
+                    uniforms.put(uniform, Uniform.from((LuminanceUniformOverride) override.value, (MapConfig) config.value));
+                }
+            });
+            return uniforms;
         }
 
         public void apply(Map<String, UniformData<UniformOverride>> overrides, Map<String, UniformData<UniformConfig>> configs) {
             overrides.forEach((uniform, override) -> {
                 Uniform uniformData = uniforms.get(uniform);
                 if (uniformData == null) {
-                    SouperSecretSettingsClient.log("couldn't find uniform", uniform);
                     return;
                 }
 
@@ -105,19 +128,22 @@ public record LayerCodecs(List<Shader> shaders, List<Shader> effects, List<Calcu
         }
     }
 
-    protected record Uniform(List<String> values, Map<String, List<Object>> config) {
-        public static final Codec<Uniform> CODEC = RecordCodecBuilder.create((instance) -> instance.group(Codec.STRING.listOf().fieldOf("values").forGetter(Uniform::values), Codec.unboundedMap(Codec.STRING, Codecs.BASIC_OBJECT.listOf()).fieldOf("config").forGetter(Uniform::config)).apply(instance, Uniform::new));
+    protected record Uniform(List<String> values, Optional<Map<String, List<Object>>> config) {
+        public static final Codec<Uniform> CODEC = RecordCodecBuilder.create((instance) -> instance.group(Codec.STRING.listOf().fieldOf("values").forGetter(Uniform::values), Codec.unboundedMap(Codec.STRING, Codecs.BASIC_OBJECT.listOf()).optionalFieldOf("config").forGetter(Uniform::config)).apply(instance, Uniform::new));
 
         public static Uniform from(LuminanceUniformOverride override, MapConfig config) {
-            return new Uniform(override.getStrings(), config.config);
+            return new Uniform(override.getStrings(), config.config.isEmpty() ? Optional.empty() : Optional.of(config.config));
         }
 
         public void apply(LuminanceUniformOverride override, MapConfig config) {
             for (int i = 0; i < override.overrideSources.size() && i < values().size(); i++) {
                 override.overrideSources.set(i, ParameterOverrideSource.parameterSourceFromString(values().get(i)));
             }
-            config.config.clear();
-            config.config.putAll(this.config);
+
+            this.config.ifPresent(c -> {
+                config.config.clear();
+                config.config.putAll(c);
+            });
         }
     }
 
