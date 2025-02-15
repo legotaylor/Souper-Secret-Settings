@@ -51,6 +51,10 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
         }
     }
 
+    public boolean isEmpty() {
+        return shaders().isEmpty() && effects.isEmpty() && calculations.isEmpty();
+    }
+
     protected record Shader(String id, Optional<Map<String, List<Pass>>> passes) {
         public static final Codec<Shader> CODEC = RecordCodecBuilder.create((instance) -> instance.group(Codec.STRING.fieldOf("id").forGetter(Shader::id), Codec.unboundedMap(Codec.STRING, Pass.CODEC.listOf()).optionalFieldOf("passes").forGetter(Shader::passes)).apply(instance, Shader::new));
 
