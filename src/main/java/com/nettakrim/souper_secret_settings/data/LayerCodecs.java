@@ -18,22 +18,36 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public record LayerCodecs(List<Shader> shaders, List<Shader> effects, List<CalculationData> calculations) {
-    public static final Codec<LayerCodecs> CODEC = RecordCodecBuilder.create((instance) -> instance.group(Shader.CODEC.listOf().fieldOf("shaders").forGetter(LayerCodecs::shaders), Shader.CODEC.listOf().fieldOf("effects").forGetter(LayerCodecs::effects), CalculationData.CODEC.listOf().fieldOf("calculations").forGetter(LayerCodecs::calculations)).apply(instance, LayerCodecs::new));
+public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>> effects, Optional<List<CalculationData>> calculations) {
+    public static final Codec<LayerCodecs> CODEC = RecordCodecBuilder.create((instance) -> instance.group(Shader.CODEC.listOf().optionalFieldOf("shaders").forGetter(LayerCodecs::shaders), Shader.CODEC.listOf().optionalFieldOf("effects").forGetter(LayerCodecs::effects), CalculationData.CODEC.listOf().optionalFieldOf("calculations").forGetter(LayerCodecs::calculations)).apply(instance, LayerCodecs::new));
 
     public static LayerCodecs from(ShaderLayer layer) {
-        return new LayerCodecs(Shader.fromList(layer.shaders), Shader.fromList(layer.effects), CalculationData.fromList(layer.calculations));
+        List<Shader> shaders = Shader.fromList(layer.shaders);
+        List<Shader> effects = Shader.fromList(layer.effects);
+        List<CalculationData> calculations = CalculationData.fromList(layer.calculations);
+
+        return new LayerCodecs(
+                shaders.isEmpty() ? Optional.empty() : Optional.of(shaders),
+                effects.isEmpty() ? Optional.empty() : Optional.of(effects),
+                calculations.isEmpty() ? Optional.empty() : Optional.of(calculations)
+        );
     }
 
     public void apply(ShaderLayer layer) {
-        for (Shader shader : shaders) {
-            shader.apply(layer, Shaders.getMainRegistryId());
+        if (shaders.isPresent()) {
+            for (Shader shader : shaders.get()) {
+                shader.apply(layer, Shaders.getMainRegistryId());
+            }
         }
-        for (Shader shader : effects) {
-            shader.apply(layer, SoupRenderer.effectRegistry);
+        if (effects.isPresent()) {
+            for (Shader shader : effects.get()) {
+                shader.apply(layer, SoupRenderer.effectRegistry);
+            }
         }
-        for (CalculationData calculationData : calculations) {
-            calculationData.apply(layer);
+        if (calculations.isPresent()) {
+            for (CalculationData calculationData : calculations.get()) {
+                calculationData.apply(layer);
+            }
         }
     }
 
@@ -80,14 +94,15 @@ public record LayerCodecs(List<Shader> shaders, List<Shader> effects, List<Calcu
         }
     }
 
-    protected record Pass(Map<String,Uniform> uniforms) {
-        public static final Codec<Pass> CODEC = RecordCodecBuilder.create((instance) -> instance.group(Codec.unboundedMap(Codec.STRING, Uniform.CODEC).fieldOf("uniforms").forGetter(Pass::uniforms)).apply(instance, Pass::new));
+    protected record Pass(Optional<Map<String,Uniform>> uniforms) {
+        public static final Codec<Pass> CODEC = RecordCodecBuilder.create((instance) -> instance.group(Codec.unboundedMap(Codec.STRING, Uniform.CODEC).optionalFieldOf("uniforms").forGetter(Pass::uniforms)).apply(instance, Pass::new));
 
         public static List<Pass> from(PassData passData) {
             List<Pass> passes = new ArrayList<>(passData.overrides.size());
 
             for (int passIndex = 0; passIndex < passData.overrides.size(); passIndex++) {
-                passes.add(new Pass(getUniforms(passData, passIndex)));
+                Map<String,Uniform> uniforms = getUniforms(passData, passIndex);
+                passes.add(new Pass(uniforms.isEmpty() ? Optional.empty() : Optional.of(uniforms)));
             }
 
             for (int passIndex = passes.size()-1; passIndex >= 0; passIndex--) {
@@ -117,8 +132,12 @@ public record LayerCodecs(List<Shader> shaders, List<Shader> effects, List<Calcu
         }
 
         public void apply(Map<String, UniformData<UniformOverride>> overrides, Map<String, UniformData<UniformConfig>> configs) {
+            if (uniforms.isEmpty()) {
+                return;
+            }
+
             overrides.forEach((uniform, override) -> {
-                Uniform uniformData = uniforms.get(uniform);
+                Uniform uniformData = uniforms.get().get(uniform);
                 if (uniformData == null) {
                     return;
                 }
