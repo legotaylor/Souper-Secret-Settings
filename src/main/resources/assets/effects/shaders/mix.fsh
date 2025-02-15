@@ -7,7 +7,7 @@ in vec2 texCoord;
 
 out vec4 fragColor;
 
-uniform float Amount;
+uniform vec3 Amount;
 
 void main() {
     vec4 col = texture(InSampler, texCoord);
