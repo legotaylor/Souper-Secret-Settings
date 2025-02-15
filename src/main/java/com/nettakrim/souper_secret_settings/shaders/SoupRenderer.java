@@ -6,9 +6,8 @@ import com.mclegoman.luminance.client.shaders.Shader;
 import com.mclegoman.luminance.client.shaders.ShaderRegistryEntry;
 import com.mclegoman.luminance.client.shaders.Shaders;
 import com.mclegoman.luminance.client.shaders.uniforms.Uniform;
+import com.mclegoman.luminance.client.util.Accessors;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
-import com.nettakrim.souper_secret_settings.mixin.GameRendererAccessor;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.DefaultFramebufferSet;
 import net.minecraft.client.render.FrameGraphBuilder;
 import net.minecraft.util.Identifier;
@@ -95,7 +94,7 @@ public class SoupRenderer implements Runnables.WorldRender {
             return null;
         }
 
-        Random random = ((GameRendererAccessor)MinecraftClient.getInstance().gameRenderer).getRandom();
+        Random random = Accessors.getGameRenderer().getRandom();
         ShaderRegistryEntry newShader;
 
         int attempts = 0;
