@@ -38,8 +38,6 @@ public class SouperSecretSettingsClient implements ClientModInitializer {
 		soupGui = new SoupGui();
 		actions = new Actions();
 
-		soupRenderer.clearAll();
-
 		ResourceManagerHelper.registerBuiltinResourcePack(Identifier.of("soup"), FabricLoader.getInstance().getModContainer(MODID).orElseThrow(), Text.literal("Extra Soup"), ResourcePackActivationType.DEFAULT_ENABLED);
 
 		SoupUniforms.register();

@@ -30,7 +30,8 @@ public class SoupRenderer implements Runnables.WorldRender {
     public SoupRenderer() {
         Events.AfterWeatherRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "rendering"), this);
 
-        Events.OnShaderDataReset.register(Identifier.of(SouperSecretSettingsClient.MODID, "reload"), this::clearAll);
+        Events.OnShaderDataReset.register(Identifier.of(SouperSecretSettingsClient.MODID, "reset"), this::clearAll);
+        Events.AfterShaderDataRegistered.register(Identifier.of(SouperSecretSettingsClient.MODID, "reload"), this::loadDefault);
 
         Events.BeforeShaderRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "before_render"), new OverrideManager.BeforeShaderRender());
         Events.AfterShaderRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "after_render"), new OverrideManager.AfterShaderRender());
@@ -129,7 +130,9 @@ public class SoupRenderer implements Runnables.WorldRender {
 
     public void clearAll() {
         shaderLayers = new ArrayList<>();
+    }
 
+    public void loadDefault() {
         activeLayer = new ShaderLayer("default");
         shaderLayers.add(activeLayer);
     }
