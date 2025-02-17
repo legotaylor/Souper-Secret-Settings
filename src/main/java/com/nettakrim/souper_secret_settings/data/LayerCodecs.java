@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>> effects, Optional<List<CalculationData>> calculations) {
+public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>> effects, Optional<List<CalculationData>> calculations) implements DeletableCodec {
     public static final Codec<LayerCodecs> CODEC = RecordCodecBuilder.create((instance) -> instance.group(Shader.CODEC.listOf().optionalFieldOf("shaders").forGetter(LayerCodecs::shaders), Shader.CODEC.listOf().optionalFieldOf("effects").forGetter(LayerCodecs::effects), CalculationData.CODEC.listOf().optionalFieldOf("calculations").forGetter(LayerCodecs::calculations)).apply(instance, LayerCodecs::new));
 
     public static LayerCodecs from(ShaderLayer layer) {

@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.stream.JsonWriter;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
@@ -25,28 +26,31 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public class SoupData {
     protected final Path configDir;
     protected final Gson gson;
 
+    public final Config config;
+
     public SoupData() {
         configDir = FabricLoader.getInstance().getConfigDir().resolve(SouperSecretSettingsClient.MODID);
         gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
+
+        Optional<Config> data = loadFromPath(Config.CODEC, configDir.resolve("config.json"));
+        config = data.orElseGet(Config::getDefaultConfig);
     }
 
     public void loadLayer(ShaderLayer shaderLayer) {
-        Path path = getLayerPath(shaderLayer);
+        Path path = getLayerPath(shaderLayer.name);
         if (!path.toFile().exists()) {
             return;
         }
 
-        try {
-            LayerCodecs.CODEC.parse(JsonOps.INSTANCE, gson.fromJson(Files.newBufferedReader(getLayerPath(shaderLayer)), JsonElement.class)).result().ifPresent((data) -> data.apply(shaderLayer));
-        } catch (IOException e) {
-            SouperSecretSettingsClient.log("Failed to load layer "+shaderLayer.name);
-        }
+        Optional<LayerCodecs> data = loadFromPath(LayerCodecs.CODEC, getLayerPath(shaderLayer.name));
+        data.ifPresent(layerCodecs -> layerCodecs.apply(shaderLayer));
     }
 
     public void saveLayer(ShaderLayer shaderLayer, Runnable onComplete) {
@@ -54,10 +58,51 @@ public class SoupData {
             return;
         }
 
-        LayerCodecs layerCodec = LayerCodecs.from(shaderLayer);
-        JsonElement jsonElement = layerCodec.isEmpty() ? null : LayerCodecs.CODEC.encodeStart(JsonOps.INSTANCE, layerCodec).getOrThrow();
+        saveToPath(LayerCodecs.CODEC, getLayerPath(shaderLayer.name), LayerCodecs.from(shaderLayer)).whenComplete((a,b) -> onComplete.run());
+    }
 
-        writeToPath(jsonElement, getLayerPath(shaderLayer)).whenComplete((a,b) -> onComplete.run());
+    public Path getLayerPath(String name) {
+        return configDir.resolve("layers").resolve(name+".json");
+    }
+
+    public List<String> getSavedLayers() {
+        List<String> names = new ArrayList<>();
+        File[] files = configDir.resolve("layers").toFile().listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isFile()) {
+                    String name = file.getName();
+                    names.add(name.substring(0, name.length()-5));
+                }
+            }
+        }
+        return names;
+    }
+
+    public boolean isValidName(String name) {
+        return name != null && !name.isBlank() && name.matches("^[A-Za-z0-9._ ]{1,255}$");
+    }
+
+    public void saveConfig() {
+        writeToPath(Config.CODEC.encodeStart(JsonOps.INSTANCE, config).getOrThrow(), configDir.resolve("config.json"));
+    }
+
+    public <T> Optional<T> loadFromPath(Codec<T> codec, Path path) {
+        try {
+            return codec.parse(JsonOps.INSTANCE, gson.fromJson(Files.newBufferedReader(path), JsonElement.class)).result();
+        } catch (IOException e) {
+            return Optional.empty();
+        }
+    }
+
+    public static <T> CompletableFuture<?> saveToPath(Codec<T> codec, Path path, T value) {
+        JsonElement jsonElement;
+        if (value instanceof DeletableCodec deletableCodec && deletableCodec.isEmpty()) {
+            jsonElement = null;
+        } else {
+            jsonElement = codec.encodeStart(JsonOps.INSTANCE, value).getOrThrow();
+        }
+        return writeToPath(jsonElement, path);
     }
 
     private static CompletableFuture<?> writeToPath(@Nullable JsonElement json, Path path) {
@@ -92,32 +137,10 @@ public class SoupData {
 
                 jsonWriter.close();
                 DataWriter.UNCACHED.write(path, byteArrayOutputStream.toByteArray(), hashingOutputStream.hash());
-            } catch (IOException var10) {
-                SouperSecretSettingsClient.log("Failed to save file to", path, var10);
+            } catch (IOException e) {
+                SouperSecretSettingsClient.log("Failed to save file to", path, e);
             }
 
         }, Util.getMainWorkerExecutor().named("saveStable"));
-    }
-
-    public Path getLayerPath(ShaderLayer shaderLayer) {
-        return configDir.resolve("layers").resolve(shaderLayer.name+".json");
-    }
-
-    public List<String> getSavedLayers() {
-        List<String> names = new ArrayList<>();
-        File[] files = configDir.resolve("layers").toFile().listFiles();
-        if (files != null) {
-            for (File file : files) {
-                if (file.isFile()) {
-                    String name = file.getName();
-                    names.add(name.substring(0, name.length()-5));
-                }
-            }
-        }
-        return names;
-    }
-
-    public boolean isValidName(String name) {
-        return name != null && !name.isBlank() && name.matches("^[A-Za-z0-9._ ]{1,255}$");
     }
 }

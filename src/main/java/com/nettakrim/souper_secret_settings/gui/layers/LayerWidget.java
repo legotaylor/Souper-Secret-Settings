@@ -133,6 +133,6 @@ public class LayerWidget extends ListWidget {
 
     private void updateDataButtons() {
         saveButton.active = SouperSecretSettingsClient.soupData.isValidName(layer.name);
-        loadButton.active = SouperSecretSettingsClient.soupData.getLayerPath(layer).toFile().exists();
+        loadButton.active = SouperSecretSettingsClient.soupData.getLayerPath(layer.name).toFile().exists();
     }
 }
