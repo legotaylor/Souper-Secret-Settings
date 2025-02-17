@@ -10,7 +10,7 @@
 		{ "name": "InSize",      "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
 		{ "name": "OutSize",     "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
 		{ "name": "GridSize",    "type": "float",     "count": 1,  "values": [ 16 ] },
-		{ "name": "Iterations",  "type": "int",       "count": 1,  "values": [ 1 ] },
+		{ "name": "Iterations",  "type": "float",     "count": 1,  "values": [ 1 ] },
 		{ "name": "luminance_alpha_smooth",     "type": "float",     "count": 1,  "values": [ 1.0 ] }
 	]
 }
