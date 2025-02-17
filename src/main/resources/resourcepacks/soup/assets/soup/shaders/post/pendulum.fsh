@@ -33,7 +33,7 @@ out vec4 fragColor;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-uniform int Iterations;
+uniform float Iterations;
 uniform float TimeStep;
 
 uniform vec4 InputX;
@@ -88,8 +88,11 @@ vec4 updatePendulum(vec4 yn, float dt) {
 void main(){
     vec4 pendulum = InputX*texCoord.x + InputY*texCoord.y + InputOffset;
 
-    for (int i = 0; i < Iterations; i++) {
-        pendulum = updatePendulum(pendulum, TimeStep);
+    float a = abs(Iterations);
+    float s = sign(Iterations);
+    for (int i = 0; i < a; i++) {
+        vec4 target = updatePendulum(pendulum, TimeStep);
+        pendulum = mix(pendulum, target, s*min(a-i,1));
     }
 
     vec4 col = texture(InSampler, fract(vec2(dot(OutputX, pendulum), dot(OutputY, pendulum)) + OutputOffset));
