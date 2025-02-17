@@ -27,8 +27,11 @@ void main(){
     vec4 base = texture(InSampler, texCoord);
     vec4 col = base;
 
-    for (int i = 0; i < Iterations; i++) {
-        col = limit(abs(col - vec4(Scale.x)) * Scale.y);
+    float a = abs(Iterations);
+    float s = sign(Iterations);
+    for (int i = 0; i < a; i++) {
+        vec4 target = limit(abs(col - vec4(Scale.x)) * Scale.y);
+        col = mix(col, target, s*min(a-i,1));
     }
 
     fragColor = vec4(mix(base, col, luminance_alpha_smooth).rgb, 1.0);
