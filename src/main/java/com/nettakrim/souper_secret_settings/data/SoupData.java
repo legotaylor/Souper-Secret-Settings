@@ -105,8 +105,9 @@ public class SoupData {
         return writeToPath(jsonElement, path);
     }
 
+    //see DataProvider.writeCodecToPath - it uses various @Beta and @Deprecated methods/classes
+    @SuppressWarnings({"UnstableApiUsage", "deprecation"})
     private static CompletableFuture<?> writeToPath(@Nullable JsonElement json, Path path) {
-        //see DataProvider.writeCodecToPath
         return CompletableFuture.runAsync(() -> {
             try {
                 if (json == null) {
