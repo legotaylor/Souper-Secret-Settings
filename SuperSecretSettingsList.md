@@ -59,6 +59,7 @@ All builtin resourcepacks should be enabled by default, but they may need to ena
 |                                    |                  | pendulum        |
 |                                    |                  | plants          |
 |                                    |                  | plasma          |
+|                                    |                  | quilted         |
 |                                    |                  | reflect         |
 |                                    |                  | retro           |
 |                                    |                  | rings           |
