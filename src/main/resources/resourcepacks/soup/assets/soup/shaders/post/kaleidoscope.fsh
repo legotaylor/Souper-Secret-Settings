@@ -13,7 +13,7 @@ uniform float Wrapping;
 uniform float luminance_alpha_smooth;
 
 vec4 wrapTexture(sampler2D tex, vec2 coord) {
-    return texture2D(tex, mix(coord, fract(coord), Wrapping));
+    return texture(tex, mix(coord, fract(coord), Wrapping));
 }
 
 vec2 mirrorAlongLines(vec2 point, vec3 lineA, vec3 lineB, float iterations) {
