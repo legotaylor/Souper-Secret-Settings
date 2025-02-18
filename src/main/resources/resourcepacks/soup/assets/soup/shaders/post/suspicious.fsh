@@ -10,8 +10,8 @@ out vec4 fragColor;
 uniform float Scale;
 uniform float luminance_alpha_smooth;
 
-const uniform int XOffset [22] = int[22](1, 0, -1, -2, 1, 1, -1, -1, 2, 1, 0, -1, 2, 1, 1, 0, -1, 1, 0, -1, -1, -2);
-const uniform int YOffset [22] = int[22](-1, -1, -1, -1, -2, 2, -2, 2, 1, 1, 1, 1, 0, 0, 1, 1, 1, -1, -1, -1, 0, 0);
+const int XOffset [22] = int[](1, 0, -1, -2, 1, 1, -1, -1, 2, 1, 0, -1, 2, 1, 1, 0, -1, 1, 0, -1, -1, -2);
+const int YOffset [22] = int[](-1, -1, -1, -1, -2, 2, -2, 2, 1, 1, 1, 1, 0, 0, 1, 1, 1, -1, -1, -1, 0, 0);
 
 void main(){
     vec2 pos = floor(texCoord/oneTexel / Scale);
