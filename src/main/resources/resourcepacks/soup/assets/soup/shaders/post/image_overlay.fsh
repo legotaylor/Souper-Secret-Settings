@@ -10,6 +10,7 @@ out vec4 fragColor;
 
 uniform vec2 Position;
 uniform vec2 Scale;
+uniform vec4 Color;
 uniform vec4 DropShadow;
 uniform vec3 Strength;
 
@@ -23,7 +24,7 @@ void main() {
 
     if (inside) {
         pos.y = 1-pos.y;
-        vec4 image = texture(OverlaySampler, pos);
+        vec4 image = texture(OverlaySampler, pos)*Color;
         col = mix(col, image.rgb, image.a);
     } else {
         size *= Scale;
