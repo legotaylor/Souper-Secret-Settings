@@ -14,7 +14,9 @@ import java.util.Optional;
 import java.util.Scanner;
 
 public class Config {
-    public static final Codec<Config> CODEC = RecordCodecBuilder.create((instance) -> instance.group(Codec.BOOL.fieldOf("transferredOldData").forGetter((config) -> config.transferredOldData)).apply(instance, Config::new));
+    public static final Codec<Config> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+            Codec.BOOL.fieldOf("transferredOldData").forGetter((config) -> config.transferredOldData)
+    ).apply(instance, Config::new));
 
     boolean transferredOldData;
 
@@ -83,7 +85,7 @@ public class Config {
                 case "blur" -> "box_blur";
                 default -> id;
             };
-            LayerCodecs.Shader shader = new LayerCodecs.Shader(id, Optional.empty());
+            LayerCodecs.Shader shader = new LayerCodecs.Shader(id, Optional.empty(), true);
             for (int i = 0; i < count; i++) {
                 shaders.add(shader);
             }
