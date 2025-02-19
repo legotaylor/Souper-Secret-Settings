@@ -13,6 +13,7 @@
         { "name": "UseNoise",  "type": "float",     "count": 1,  "values": [ 0.0 ] },
         { "name": "Scale",     "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
         { "name": "Offset",    "type": "float",     "count": 2,  "values": [ 0.0, 0.0 ] },
+        { "name": "Pixelate",  "type": "float",     "count": 1,  "values": [ 0.0 ] },
         { "name": "Seed",      "type": "float",     "count": 1,  "values": [ 0.0 ] }
     ]
 }

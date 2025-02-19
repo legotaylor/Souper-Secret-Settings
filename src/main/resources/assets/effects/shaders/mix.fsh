@@ -12,6 +12,7 @@ uniform vec3 Amount;
 uniform float UseNoise;
 uniform vec2 Scale;
 uniform vec2 Offset;
+uniform float Pixelate;
 uniform float Seed;
 
 float hash(vec3 p3){
@@ -36,7 +37,11 @@ void main() {
 
     vec3 mixAmounts = Amount;
     if (UseNoise != 0) {
-        mixAmounts = mix(mixAmounts, step(mixAmounts, vec3(noise(vec3((texCoord-vec2(0.5))/Scale/oneTexel - Offset, Seed)))), UseNoise);
+        vec2 noiseCoord = (texCoord-vec2(0.5))/oneTexel;
+        if (Pixelate != 0) {
+            noiseCoord = floor(noiseCoord/Pixelate)*Pixelate;
+        }
+        mixAmounts = mix(mixAmounts, step(mixAmounts, vec3(noise(vec3(noiseCoord/Scale - Offset, Seed)))), UseNoise);
     }
 
     fragColor = vec4(mix(col.rgb, baseCol.rgb, mixAmounts), 1.0);
