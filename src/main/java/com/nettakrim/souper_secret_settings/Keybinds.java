@@ -2,7 +2,6 @@ package com.nettakrim.souper_secret_settings;
 
 import com.mclegoman.luminance.client.data.ClientData;
 import com.mclegoman.luminance.client.keybindings.KeybindingHelper;
-import com.nettakrim.souper_secret_settings.gui.SoupGui;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.option.KeyBinding;
 import org.lwjgl.glfw.GLFW;
@@ -23,7 +22,7 @@ public class Keybinds {
 
     public static void tick() {
         if (openGUI.wasPressed()) {
-            SouperSecretSettingsClient.soupGui.open(SoupGui.ScreenType.SHADERS);
+            SouperSecretSettingsClient.soupGui.open(SouperSecretSettingsClient.soupGui.getCurrentScreenType());
         }
     }
 }

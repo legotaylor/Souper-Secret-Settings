@@ -15,6 +15,7 @@ import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class SoupGui {
     private final List<ClickableWidget> header;
@@ -82,6 +83,10 @@ public class SoupGui {
     public void setHistoryButtons(boolean undo, boolean redo) {
         header.get(ScreenType.values().length).active = undo;
         header.get(ScreenType.values().length+1).active = redo;
+    }
+
+    public ScreenType getCurrentScreenType() {
+        return Objects.requireNonNullElse(currentScreenType, ScreenType.SHADERS);
     }
 
     public enum ScreenType {
