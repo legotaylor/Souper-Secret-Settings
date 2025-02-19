@@ -26,11 +26,11 @@ All builtin resourcepacks should be enabled by default, but they may need to ena
 | fxaa                               | pixelated        | color_blind     |
 | green                              | rainbow          | color_shuffle   |
 | invert**                           | saturate         | contrast        |
-| love*                              | silhouette       | crystallize     |
-| notch                              | silhouette2      | depth_outline   |
-| ntsc                               | sixteen_colors   | dither          |
-| outline                            | tiltshift        | dramatic        |
-| pencil                             |                  | film_grain      |
+| love*                              | sepia            | crystallize     |
+| notch                              | silhouette       | depth_outline   |
+| ntsc                               | silhouette2      | dither          |
+| outline                            | sixteen_colors   | dramatic        |
+| pencil                             | tiltshift        | film_grain      |
 | phosphor                           |                  | fisheye         |
 | scan_pincushion                    |                  | fractal         |
 | shareware*                         |                  | frigid          |

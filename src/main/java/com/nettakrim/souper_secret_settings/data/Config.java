@@ -1,9 +1,11 @@
 package com.nettakrim.souper_secret_settings.data;
 
+import com.mclegoman.luminance.client.shaders.Shaders;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.util.Identifier;
 
 import java.io.File;
 import java.io.IOException;
@@ -83,8 +85,15 @@ public class Config {
             id = switch(id) {
                 case "pixels" -> "pixelated";
                 case "blur" -> "box_blur";
+                case "sepia" -> "soup:sepia";
                 default -> id;
             };
+
+            Identifier guessed = Shaders.guessPostShader(id);
+            if (guessed != null) {
+                id = guessed.toString();
+            }
+
             LayerCodecs.Shader shader = new LayerCodecs.Shader(id, Optional.empty(), true);
             for (int i = 0; i < count; i++) {
                 shaders.add(shader);
