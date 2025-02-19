@@ -4,7 +4,7 @@ import com.mclegoman.luminance.client.shaders.Shader;
 import com.mclegoman.luminance.client.shaders.Shaders;
 import com.mclegoman.luminance.client.shaders.interfaces.PostEffectProcessorInterface;
 import net.minecraft.client.gl.PostEffectPass;
-import net.minecraft.client.render.DefaultFramebufferSet;
+import net.minecraft.client.gl.PostEffectProcessor;
 import net.minecraft.client.render.FrameGraphBuilder;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
@@ -44,7 +44,7 @@ public class ShaderData implements Toggleable {
         }
     }
 
-    public boolean render(FrameGraphBuilder builder, int textureWidth, int textureHeight, DefaultFramebufferSet framebufferSet, @Nullable Identifier customPasses) {
+    public boolean render(FrameGraphBuilder builder, int textureWidth, int textureHeight, PostEffectProcessor.FramebufferSet framebufferSet, @Nullable Identifier customPasses) {
         if (!active) return false;
         PostEffectProcessorInterface processor = (PostEffectProcessorInterface)shader.getPostProcessor();
         if (customPasses != null && !processor.luminance$getCustomPassNames().contains(customPasses)) {

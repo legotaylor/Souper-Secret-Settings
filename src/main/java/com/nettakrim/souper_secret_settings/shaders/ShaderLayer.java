@@ -5,7 +5,7 @@ import com.mclegoman.luminance.client.shaders.interfaces.FramePassInterface;
 import com.mclegoman.luminance.common.util.Couple;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.shaders.calculations.Calculation;
-import net.minecraft.client.render.DefaultFramebufferSet;
+import net.minecraft.client.gl.PostEffectProcessor;
 import net.minecraft.client.render.FrameGraphBuilder;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -52,7 +52,7 @@ public class ShaderLayer implements Toggleable {
         calculations.clear();
     }
 
-    public void render(FrameGraphBuilder builder, int textureWidth, int textureHeight, DefaultFramebufferSet framebufferSet) {
+    public void render(FrameGraphBuilder builder, int textureWidth, int textureHeight, PostEffectProcessor.FramebufferSet framebufferSet) {
         if (!active) {
             return;
         }
@@ -83,13 +83,13 @@ public class ShaderLayer implements Toggleable {
         renderList(effects.reversed(), shaderQueue, builder, textureWidth, textureHeight, framebufferSet, afterLayerRender);
     }
 
-    public void renderList(List<ShaderData> shaders, Queue<Couple<ShaderData, Identifier>> shaderQueue, FrameGraphBuilder builder, int textureWidth, int textureHeight, DefaultFramebufferSet framebufferSet, @Nullable Identifier customPasses) {
+    public void renderList(List<ShaderData> shaders, Queue<Couple<ShaderData, Identifier>> shaderQueue, FrameGraphBuilder builder, int textureWidth, int textureHeight, PostEffectProcessor.FramebufferSet framebufferSet, @Nullable Identifier customPasses) {
         for (ShaderData shaderData : shaders) {
             renderShader(shaderData, shaderQueue, builder, textureWidth, textureHeight, framebufferSet, customPasses);
         }
     }
 
-    public void renderShader(ShaderData shaderData, Queue<Couple<ShaderData, Identifier>> shaderQueue, FrameGraphBuilder builder, int textureWidth, int textureHeight, DefaultFramebufferSet framebufferSet, @Nullable Identifier customPasses) {
+    public void renderShader(ShaderData shaderData, Queue<Couple<ShaderData, Identifier>> shaderQueue, FrameGraphBuilder builder, int textureWidth, int textureHeight, PostEffectProcessor.FramebufferSet framebufferSet, @Nullable Identifier customPasses) {
         if (shaderData.render(builder, textureWidth, textureHeight, framebufferSet, customPasses)) {
             shaderQueue.add(new Couple<>(shaderData, customPasses));
         }

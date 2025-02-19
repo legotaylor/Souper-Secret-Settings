@@ -8,8 +8,13 @@ import com.mclegoman.luminance.client.shaders.Shaders;
 import com.mclegoman.luminance.client.shaders.uniforms.Uniform;
 import com.mclegoman.luminance.client.util.Accessors;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
+import net.minecraft.client.gl.Framebuffer;
+import net.minecraft.client.gl.PostEffectProcessor;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.DefaultFramebufferSet;
 import net.minecraft.client.render.FrameGraphBuilder;
+import net.minecraft.client.util.ObjectAllocator;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.Nullable;
@@ -19,15 +24,31 @@ import java.util.List;
 import java.util.Map;
 
 public class SoupRenderer implements Runnables.WorldRender {
-    public List<ShaderLayer> shaderLayers;
+    public final List<ShaderLayer> shaderLayers;
     public ShaderLayer activeLayer;
 
     private List<String> validUniforms;
 
     public static final Identifier effectRegistry = Identifier.of(SouperSecretSettingsClient.MODID, "effects");
 
+    public Shader.RenderType renderType;
+
     public SoupRenderer() {
+        shaderLayers = new ArrayList<>();
+        renderType = Shader.RenderType.WORLD;
+
         Events.AfterWeatherRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "rendering"), this);
+        Events.AfterGameRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "rendering"), new Runnables.GameRender() {
+            @Override
+            public void run(Framebuffer framebuffer, ObjectAllocator objectAllocator) {
+                if (renderType == Shader.RenderType.GAME) {
+                    FrameGraphBuilder frameGraphBuilder = new FrameGraphBuilder();
+                    PostEffectProcessor.FramebufferSet framebufferSet = PostEffectProcessor.FramebufferSet.singleton(PostEffectProcessor.MAIN, frameGraphBuilder.createObjectNode("main", framebuffer));
+                    SoupRenderer.this.render(frameGraphBuilder, framebuffer.textureWidth, framebuffer.textureHeight, framebufferSet);
+                    frameGraphBuilder.run(objectAllocator);
+                }
+            }
+        });
 
         Events.OnShaderDataReset.register(Identifier.of(SouperSecretSettingsClient.MODID, "reset"), this::clearAll);
         Events.AfterShaderDataRegistered.register(Identifier.of(SouperSecretSettingsClient.MODID, "reload"), this::loadDefault);
@@ -38,6 +59,16 @@ public class SoupRenderer implements Runnables.WorldRender {
 
     @Override
     public void run(FrameGraphBuilder builder, int textureWidth, int textureHeight, DefaultFramebufferSet framebufferSet) {
+        if (renderType == Shader.RenderType.WORLD) {
+            render(builder, textureWidth, textureHeight, framebufferSet);
+        }
+    }
+
+    public void render(FrameGraphBuilder builder, int textureWidth, int textureHeight, PostEffectProcessor.FramebufferSet framebufferSet) {
+        if (shaderLayers == null) {
+            return;
+        }
+
         for (ShaderLayer layer : shaderLayers) {
             layer.render(builder, textureWidth, textureHeight, framebufferSet);
         }
@@ -107,7 +138,7 @@ public class SoupRenderer implements Runnables.WorldRender {
     }
 
     private Shader.RenderType getRenderType() {
-        return Shader.RenderType.WORLD;
+        return renderType;
     }
 
     public static ShaderRegistryEntry getRegistryEntry(Identifier registry, Identifier identifier) {
@@ -128,7 +159,7 @@ public class SoupRenderer implements Runnables.WorldRender {
     }
 
     public void clearAll() {
-        shaderLayers = new ArrayList<>();
+        shaderLayers.clear();
     }
 
     public void loadDefault() {
@@ -147,5 +178,10 @@ public class SoupRenderer implements Runnables.WorldRender {
         }
 
         return validUniforms;
+    }
+
+    public void cycleRenderType(ButtonWidget buttonWidget) {
+        renderType = Shader.RenderType.values()[(renderType.ordinal()+1)%Shader.RenderType.values().length];
+        buttonWidget.setMessage(Text.literal(renderType.toString()));
     }
 }
