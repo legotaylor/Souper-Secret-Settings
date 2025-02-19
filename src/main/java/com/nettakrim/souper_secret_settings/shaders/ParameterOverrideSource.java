@@ -6,6 +6,7 @@ import com.mclegoman.luminance.client.shaders.overrides.OverrideSource;
 import com.mclegoman.luminance.client.shaders.overrides.UniformSource;
 import com.mclegoman.luminance.client.shaders.uniforms.UniformValue;
 import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
+import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 
 import java.util.Optional;
 
@@ -20,6 +21,10 @@ public class ParameterOverrideSource implements OverrideSource {
     @Override
     public Float get(UniformConfig uniformConfig, ShaderTime shaderTime) {
         ShaderLayer layer = ShaderLayer.getRenderingLayer();
+        if (layer == null) {
+            layer = SouperSecretSettingsClient.soupRenderer.activeLayer;
+        }
+
         if (layer != null) {
             String parameter = source.getString();
             if (!parameter.isEmpty() && layer.parameterValues.containsKey(parameter)) {
