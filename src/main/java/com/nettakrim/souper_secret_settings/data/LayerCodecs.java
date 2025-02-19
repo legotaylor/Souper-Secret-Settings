@@ -19,7 +19,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>> effects, Optional<List<CalculationData>> calculations) implements DeletableCodec {
-    public static final Codec<LayerCodecs> CODEC = RecordCodecBuilder.create((instance) -> instance.group(Shader.CODEC.listOf().optionalFieldOf("shaders").forGetter(LayerCodecs::shaders), Shader.CODEC.listOf().optionalFieldOf("effects").forGetter(LayerCodecs::effects), CalculationData.CODEC.listOf().optionalFieldOf("calculations").forGetter(LayerCodecs::calculations)).apply(instance, LayerCodecs::new));
+    public static final Codec<LayerCodecs> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+            Shader.CODEC.listOf().optionalFieldOf("shaders").forGetter(LayerCodecs::shaders),
+            Shader.CODEC.listOf().optionalFieldOf("effects").forGetter(LayerCodecs::effects),
+            CalculationData.CODEC.listOf().optionalFieldOf("calculations").forGetter(LayerCodecs::calculations)
+    ).apply(instance, LayerCodecs::new));
 
     public static LayerCodecs from(ShaderLayer layer) {
         List<Shader> shaders = Shader.fromList(layer.shaders);
@@ -55,8 +59,12 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
         return shaders().isEmpty() && effects.isEmpty() && calculations.isEmpty();
     }
 
-    protected record Shader(String id, Optional<Map<String, List<Pass>>> passes) {
-        public static final Codec<Shader> CODEC = RecordCodecBuilder.create((instance) -> instance.group(Codec.STRING.fieldOf("id").forGetter(Shader::id), Codec.unboundedMap(Codec.STRING, Pass.CODEC.listOf()).optionalFieldOf("passes").forGetter(Shader::passes)).apply(instance, Shader::new));
+    protected record Shader(String id, Optional<Map<String, List<Pass>>> passes, Boolean active) {
+        public static final Codec<Shader> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+                Codec.STRING.fieldOf("id").forGetter(Shader::id),
+                Codec.unboundedMap(Codec.STRING, Pass.CODEC.listOf()).optionalFieldOf("passes").forGetter(Shader::passes),
+                Codec.BOOL.optionalFieldOf("active", true).forGetter(Shader::active)
+        ).apply(instance, Shader::new));
 
         public static List<Shader> fromList(List<ShaderData> shaderDatas) {
             List<Shader> shaders = new ArrayList<>(shaderDatas.size());
@@ -74,7 +82,7 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
                     passes.put(identifier == null ? "default" : identifier.toString(), pass);
                 }
             });
-            return new Shader(shader.shader.getShaderId().toString(), passes.isEmpty() ? Optional.empty() : Optional.of(passes));
+            return new Shader(shader.shader.getShaderId().toString(), passes.isEmpty() ? Optional.empty() : Optional.of(passes), shader.active);
         }
 
         public void apply(ShaderLayer layer, Identifier registry) {
@@ -94,12 +102,15 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
                     passList.get(i).apply(passData.overrides.get(i), passData.configs.get(i));
                 }
             }));
+            shaderData.active = active;
             layer.getList(registry).add(shaderData);
         }
     }
 
     protected record Pass(Optional<Map<String,Uniform>> uniforms) {
-        public static final Codec<Pass> CODEC = RecordCodecBuilder.create((instance) -> instance.group(Codec.unboundedMap(Codec.STRING, Uniform.CODEC).optionalFieldOf("uniforms").forGetter(Pass::uniforms)).apply(instance, Pass::new));
+        public static final Codec<Pass> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+                Codec.unboundedMap(Codec.STRING, Uniform.CODEC).optionalFieldOf("uniforms").forGetter(Pass::uniforms)
+        ).apply(instance, Pass::new));
 
         public static List<Pass> from(PassData passData) {
             List<Pass> passes = new ArrayList<>(passData.overrides.size());
@@ -152,7 +163,10 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
     }
 
     protected record Uniform(List<String> values, Optional<Map<String, List<Object>>> config) {
-        public static final Codec<Uniform> CODEC = RecordCodecBuilder.create((instance) -> instance.group(Codec.STRING.listOf().fieldOf("values").forGetter(Uniform::values), Codec.unboundedMap(Codec.STRING, Codecs.BASIC_OBJECT.listOf()).optionalFieldOf("config").forGetter(Uniform::config)).apply(instance, Uniform::new));
+        public static final Codec<Uniform> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+                Codec.STRING.listOf().fieldOf("values").forGetter(Uniform::values),
+                Codec.unboundedMap(Codec.STRING, Codecs.BASIC_OBJECT.listOf()).optionalFieldOf("config").forGetter(Uniform::config)
+        ).apply(instance, Uniform::new));
 
         public static Uniform from(LuminanceUniformOverride override, MapConfig config) {
             return new Uniform(override.getStrings(), config.config.isEmpty() ? Optional.empty() : Optional.of(config.config));
@@ -170,8 +184,13 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
         }
     }
 
-    protected record CalculationData(String id, List<String> outputs, List<String> inputs) {
-        public static final Codec<CalculationData> CODEC = RecordCodecBuilder.create((instance) -> instance.group(Codec.STRING.fieldOf("id").forGetter(CalculationData::id), Codec.STRING.listOf().fieldOf("outputs").forGetter(CalculationData::outputs), Codec.STRING.listOf().fieldOf("inputs").forGetter(CalculationData::inputs)).apply(instance, CalculationData::new));
+    protected record CalculationData(String id, List<String> outputs, List<String> inputs, Boolean active) {
+        public static final Codec<CalculationData> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+                Codec.STRING.fieldOf("id").forGetter(CalculationData::id),
+                Codec.STRING.listOf().fieldOf("outputs").forGetter(CalculationData::outputs),
+                Codec.STRING.listOf().fieldOf("inputs").forGetter(CalculationData::inputs),
+                Codec.BOOL.optionalFieldOf("active", true).forGetter(CalculationData::active)
+        ).apply(instance, CalculationData::new));
 
         public static List<CalculationData> fromList(List<Calculation> calculations) {
             List<CalculationData> calculationDatas = new ArrayList<>(calculations.size());
@@ -186,7 +205,7 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
             for (OverrideSource overrideSource : calculation.inputs) {
                 inputs.add(overrideSource.getString());
             }
-            return new CalculationData(calculation.getID(), Arrays.stream(calculation.outputs).toList(), inputs);
+            return new CalculationData(calculation.getID(), Arrays.stream(calculation.outputs).toList(), inputs, calculation.active);
         }
 
         public void apply(ShaderLayer layer) {
@@ -203,6 +222,8 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
             for (int i = 0; i < inputs.size() && i < calculation.inputs.length; i++) {
                 calculation.inputs[i] = ParameterOverrideSource.parameterSourceFromString(inputs.get(i));
             }
+
+            calculation.active = active;
 
             layer.calculations.add(calculation);
         }

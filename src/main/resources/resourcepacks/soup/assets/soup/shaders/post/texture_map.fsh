@@ -92,7 +92,7 @@ void main(){
     }
 
     uv = mix(texCoord, mix(uv, ((uv-vec2(0.5))/vec2(aspect, 1.0))+vec2(0.5), Aspect), dist < UVMix.y ? UVMix.x : 0.0);
-    vec3 color = texture2D(InSampler, uv).rgb;
+    vec3 color = texture(InSampler, uv).rgb;
     color = mix(color, color*mix(totalOffset, normalize(totalOffset), Coloring.y), Coloring.x);
     color = mix(color, color*pos, Coloring.z);
     //returning totalOffset or normalise(totalOffset) as the color looks very cool

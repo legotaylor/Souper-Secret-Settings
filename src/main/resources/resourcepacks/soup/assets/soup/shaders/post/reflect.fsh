@@ -115,12 +115,12 @@ void main(){
         coord = GetScreenPos(projection, pos);
     }
 
-    vec4 color = texture2D(InSampler, coord);
+    vec4 color = texture(InSampler, coord);
     if (coord.x < 0 || coord.y < 0 || coord.x > 1 || coord.y > 1) {
         color *= OutOfBounds.x;
     }
     if ((rotation*pos).z > 0) {
         color *= OutOfBounds.y;
     }
-    fragColor = vec4(mix(texture2D(InSampler, texCoord), color, luminance_alpha_smooth).rgb, 1.0);
+    fragColor = vec4(mix(texture(InSampler, texCoord), color, luminance_alpha_smooth).rgb, 1.0);
 }

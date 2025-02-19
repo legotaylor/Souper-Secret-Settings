@@ -16,7 +16,7 @@ uniform float Wrapping;
 uniform float luminance_alpha_smooth;
 
 vec4 wrapTexture(sampler2D tex, vec2 coord) {
-    return texture2D(tex, mix(coord, fract(coord), Wrapping));
+    return texture(tex, mix(coord, fract(coord), Wrapping));
 }
 
 //https://www.shadertoy.com/view/XdXGW8

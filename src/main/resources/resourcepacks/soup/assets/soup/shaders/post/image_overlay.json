@@ -1,0 +1,18 @@
+{
+	"vertex": "minecraft:post/sobel",
+	"fragment": "soup:post/image_overlay",
+	"samplers": [
+		{ "name": "InSampler" },
+		{ "name": "OverlaySampler" }
+	],
+	"uniforms": [
+		{ "name": "ProjMat",     "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+		{ "name": "InSize",      "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
+		{ "name": "OutSize",     "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
+		{ "name": "Position",    "type": "float",     "count": 2,  "values": [ 0.5, 0.5 ] },
+		{ "name": "Scale",       "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
+		{ "name": "Color",       "type": "float",     "count": 4,  "values": [ 1.0, 1.0, 1.0, 1.0 ] },
+		{ "name": "DropShadow",  "type": "float",     "count": 4,  "values": [ 0.0, 0.0, -1.0, 1.0 ] },
+		{ "name": "Strength",    "type": "float",     "count": 3,  "values": [ 1.0, 1.0, 1.0 ] }
+	]
+}
