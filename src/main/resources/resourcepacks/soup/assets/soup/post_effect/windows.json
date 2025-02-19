@@ -1,0 +1,77 @@
+{
+    "targets": {
+        "0": {},
+        "1": {}
+    },
+    "passes": [
+        {
+            "program": "minecraft:post/color_convolve",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "minecraft:main"
+                }
+            ],
+            "output": "0",
+            "uniforms": [
+                {
+                    "name": "RedMatrix",
+                    "values": [ 0.3333, 0.0, 0.0 ]
+                },
+                {
+                    "name": "GreenMatrix",
+                    "values": [ 0.0, 0.3333, 0.0 ]
+                },
+                {
+                    "name": "BlueMatrix",
+                    "values": [ 0.0, 0.0, 0.3333 ]
+                },
+                {
+                    "name": "Offset",
+                    "values": [ 0.6667, 0.6667, 0.6667 ]
+                },
+                {
+                    "name": "Saturation",
+                    "values": [ 1.0 ]
+                }
+            ]
+        },
+        {
+            "program": "soup:post/image_overlay",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "0"
+                },
+                {
+                    "sampler_name": "Overlay",
+                    "location": "soup:crash",
+                    "width": 351,
+                    "height": 199,
+                    "bilinear": false
+                }
+            ],
+            "uniforms": [
+                {
+                    "name": "DropShadow",
+                    "values": [ 1.0, -2.0, -5.0, 15.0 ]
+                },
+                {
+                    "name": "Strength",
+                    "values": [ 0.333, 0.333, 0.333 ]
+                }
+            ],
+            "output": "1"
+        },
+        {
+            "program": "minecraft:post/blit",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "1"
+                }
+            ],
+            "output": "minecraft:main"
+        }
+    ]
+}
