@@ -39,8 +39,7 @@ public class SoupGui {
         header.add(ButtonWidget.builder(Text.literal("undo"), (widget) -> undo()).dimensions(x, listGap, 34, headerHeight).build());
         header.add(ButtonWidget.builder(Text.literal("redo"), (widget) -> redo()).dimensions(x+36, listGap, 34, headerHeight).build());
 
-        header.add(ButtonWidget.builder(Text.literal(SouperSecretSettingsClient.soupRenderer.renderType.toString()), SouperSecretSettingsClient.soupRenderer::cycleRenderType).dimensions(x+72, listGap, 34, headerHeight).build());
-
+        header.add(ButtonWidget.builder(SouperSecretSettingsClient.soupRenderer.getRenderTypeText(), SouperSecretSettingsClient.soupRenderer::cycleRenderType).dimensions(x+72, listGap, 34, headerHeight).build());
 
         currentScroll = new int[ScreenType.values().length];
     }

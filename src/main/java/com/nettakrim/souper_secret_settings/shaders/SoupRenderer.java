@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class SoupRenderer implements Runnables.WorldRender {
+public class SoupRenderer {
     public final List<ShaderLayer> shaderLayers;
     public ShaderLayer activeLayer;
 
@@ -31,24 +31,15 @@ public class SoupRenderer implements Runnables.WorldRender {
 
     public static final Identifier effectRegistry = Identifier.of(SouperSecretSettingsClient.MODID, "effects");
 
-    public Shader.RenderType renderType;
+    private RenderType renderType;
 
     public SoupRenderer() {
         shaderLayers = new ArrayList<>();
-        renderType = Shader.RenderType.WORLD;
+        renderType = RenderType.WORLD;
 
-        Events.AfterWeatherRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "rendering"), this);
-        Events.AfterGameRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "rendering"), new Runnables.GameRender() {
-            @Override
-            public void run(Framebuffer framebuffer, ObjectAllocator objectAllocator) {
-                if (renderType == Shader.RenderType.GAME) {
-                    FrameGraphBuilder frameGraphBuilder = new FrameGraphBuilder();
-                    PostEffectProcessor.FramebufferSet framebufferSet = PostEffectProcessor.FramebufferSet.singleton(PostEffectProcessor.MAIN, frameGraphBuilder.createObjectNode("main", framebuffer));
-                    SoupRenderer.this.render(frameGraphBuilder, framebuffer.textureWidth, framebuffer.textureHeight, framebufferSet);
-                    frameGraphBuilder.run(objectAllocator);
-                }
-            }
-        });
+        Events.AfterWeatherRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "rendering"), ((builder, width, height, defaultFramebufferSet) -> this.render(RenderType.WORLD, builder, width, height, defaultFramebufferSet)));
+        Events.AfterHandRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "rendering"), (framebuffer, objectAllocator) -> this.renderWithAllocator(RenderType.HAND, framebuffer, objectAllocator));
+        Events.AfterGameRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "rendering"), (framebuffer, objectAllocator) -> this.renderWithAllocator(RenderType.GAME, framebuffer, objectAllocator));
 
         Events.OnShaderDataReset.register(Identifier.of(SouperSecretSettingsClient.MODID, "reset"), this::clearAll);
         Events.AfterShaderDataRegistered.register(Identifier.of(SouperSecretSettingsClient.MODID, "reload"), this::loadDefault);
@@ -57,15 +48,15 @@ public class SoupRenderer implements Runnables.WorldRender {
         Events.AfterShaderRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "after_render"), new OverrideManager.AfterShaderRender());
     }
 
-    @Override
-    public void run(FrameGraphBuilder builder, int textureWidth, int textureHeight, DefaultFramebufferSet framebufferSet) {
-        if (renderType == Shader.RenderType.WORLD) {
-            render(builder, textureWidth, textureHeight, framebufferSet);
-        }
+    private void renderWithAllocator(RenderType renderType, Framebuffer framebuffer, ObjectAllocator objectAllocator) {
+        FrameGraphBuilder frameGraphBuilder = new FrameGraphBuilder();
+        PostEffectProcessor.FramebufferSet framebufferSet = PostEffectProcessor.FramebufferSet.singleton(PostEffectProcessor.MAIN, frameGraphBuilder.createObjectNode("main", framebuffer));
+        render(renderType, frameGraphBuilder, framebuffer.textureWidth, framebuffer.textureHeight, framebufferSet);
+        frameGraphBuilder.run(objectAllocator);
     }
 
-    public void render(FrameGraphBuilder builder, int textureWidth, int textureHeight, PostEffectProcessor.FramebufferSet framebufferSet) {
-        if (shaderLayers == null) {
+    private void render(RenderType renderType, FrameGraphBuilder builder, int textureWidth, int textureHeight, PostEffectProcessor.FramebufferSet framebufferSet) {
+        if (this.renderType != renderType || shaderLayers == null) {
             return;
         }
 
@@ -138,7 +129,7 @@ public class SoupRenderer implements Runnables.WorldRender {
     }
 
     private Shader.RenderType getRenderType() {
-        return renderType;
+        return renderType.renderType;
     }
 
     public static ShaderRegistryEntry getRegistryEntry(Identifier registry, Identifier identifier) {
@@ -181,7 +172,23 @@ public class SoupRenderer implements Runnables.WorldRender {
     }
 
     public void cycleRenderType(ButtonWidget buttonWidget) {
-        renderType = Shader.RenderType.values()[(renderType.ordinal()+1)%Shader.RenderType.values().length];
-        buttonWidget.setMessage(Text.literal(renderType.toString()));
+        renderType = RenderType.values()[(renderType.ordinal()+1)%RenderType.values().length];
+        buttonWidget.setMessage(getRenderTypeText());
+    }
+
+    public Text getRenderTypeText() {
+        return Text.literal(renderType.toString());
+    }
+
+    private enum RenderType {
+        WORLD(Shader.RenderType.WORLD),
+        HAND(Shader.RenderType.GAME),
+        GAME(Shader.RenderType.GAME);
+
+        public final Shader.RenderType renderType;
+
+        RenderType(Shader.RenderType renderType) {
+            this.renderType = renderType;
+        }
     }
 }
