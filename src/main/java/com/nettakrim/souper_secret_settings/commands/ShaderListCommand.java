@@ -17,6 +17,7 @@ import net.minecraft.command.argument.IdentifierArgumentType;
 import net.minecraft.util.Identifier;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class ShaderListCommand {
@@ -108,12 +109,21 @@ public class ShaderListCommand {
         return 1;
     }
 
-    private static SuggestionProvider<FabricClientCommandSource> getRegistrySuggestions(Identifier identifier) {
+    private static SuggestionProvider<FabricClientCommandSource> getRegistrySuggestions(Identifier registry) {
         return (context, builder) -> {
-            for (ShaderRegistryEntry shaderRegistry : Shaders.getRegistry(identifier)) {
+            List<ShaderRegistryEntry> registryEntries = Shaders.getRegistry(registry);
+            for (ShaderRegistryEntry shaderRegistry : registryEntries) {
                 builder.suggest(shaderRegistry.getID().toString());
             }
-            if (Shaders.getShaderAmount(identifier) > 1) builder.suggest("random");
+            if (registryEntries.size() >= 2) builder.suggest("random");
+
+            Map<String, List<ShaderRegistryEntry>> registryGroups = SouperSecretSettingsClient.soupRenderer.shaderGroups.get(registry);
+            if (registryGroups != null) {
+                for (String s : registryGroups.keySet()) {
+                    builder.suggest("random_"+s);
+                }
+            }
+
             return CompletableFuture.completedFuture(builder.build());
         };
     }

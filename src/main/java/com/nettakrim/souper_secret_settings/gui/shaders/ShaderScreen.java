@@ -14,6 +14,7 @@ import net.minecraft.util.Identifier;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class ShaderScreen extends ListScreen<ShaderData> {
     public final ShaderLayer layer;
@@ -46,6 +47,13 @@ public class ShaderScreen extends ListScreen<ShaderData> {
         }
         if (shaders.size() > 1) {
             shaders.add("random");
+        }
+
+        Map<String, List<ShaderRegistryEntry>> registryGroups = SouperSecretSettingsClient.soupRenderer.shaderGroups.get(registry);
+        if (registryGroups != null) {
+            for (String s : registryGroups.keySet()) {
+                shaders.add("random_"+s);
+            }
         }
 
         Collections.sort(shaders);
