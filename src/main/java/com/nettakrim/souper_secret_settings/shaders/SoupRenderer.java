@@ -7,6 +7,7 @@ import com.mclegoman.luminance.client.shaders.ShaderRegistryEntry;
 import com.mclegoman.luminance.client.shaders.Shaders;
 import com.mclegoman.luminance.client.shaders.uniforms.Uniform;
 import com.mclegoman.luminance.client.util.Accessors;
+import com.mclegoman.luminance.client.util.CompatHelper;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import net.minecraft.client.gl.PostEffectProcessor;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -28,24 +29,24 @@ public class SoupRenderer implements Runnables.WorldRender {
 
     public static final Identifier effectRegistry = Identifier.of(SouperSecretSettingsClient.MODID, "effects");
 
-    private RenderType renderType;
+    private Shader.RenderType renderType;
 
     public SoupRenderer() {
         shaderLayers = new ArrayList<>();
-        renderType = RenderType.WORLD;
+        renderType = Shader.RenderType.WORLD;
 
         Events.AfterWeatherRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "rendering"), ((builder, width, height, framebufferSet) -> {
-            if (renderType == RenderType.WORLD) {
+            if (renderType == Shader.RenderType.WORLD && !CompatHelper.isIrisShadersEnabled()) {
                 this.run(builder, width, height, framebufferSet);
             }
         }));
         Events.AfterHandRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "rendering"), (framebuffer, objectAllocator) -> {
-            if (renderType == RenderType.HAND) {
+            if (renderType == Shader.RenderType.WORLD && CompatHelper.isIrisShadersEnabled()) {
                 Runnables.WorldRender.fromGameRender(this, framebuffer, objectAllocator);
             }
         });
         Events.AfterGameRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "rendering"), (framebuffer, objectAllocator) -> {
-            if (renderType == RenderType.GAME) {
+            if (renderType == Shader.RenderType.GAME) {
                 Runnables.WorldRender.fromGameRender(this, framebuffer, objectAllocator);
             }
         });
@@ -132,7 +133,7 @@ public class SoupRenderer implements Runnables.WorldRender {
     }
 
     private Shader.RenderType getRenderType() {
-        return renderType.renderType;
+        return renderType;
     }
 
     public static ShaderRegistryEntry getRegistryEntry(Identifier registry, Identifier identifier) {
@@ -144,6 +145,7 @@ public class SoupRenderer implements Runnables.WorldRender {
 
         if (identifier.getNamespace().equals("minecraft")) {
             Identifier guessed = Shaders.guessPostShader(registry, identifier.getPath());
+            assert guessed != null;
             if (!guessed.getNamespace().equals("minecraft")) {
                 return getRegistryEntry(registry, guessed);
             }
@@ -175,23 +177,11 @@ public class SoupRenderer implements Runnables.WorldRender {
     }
 
     public void cycleRenderType(ButtonWidget buttonWidget) {
-        renderType = RenderType.values()[(renderType.ordinal()+1)%RenderType.values().length];
+        renderType = Shader.RenderType.values()[(renderType.ordinal()+1)%Shader.RenderType.values().length];
         buttonWidget.setMessage(getRenderTypeText());
     }
 
     public Text getRenderTypeText() {
         return Text.literal(renderType.toString());
-    }
-
-    private enum RenderType {
-        WORLD(Shader.RenderType.WORLD),
-        HAND(Shader.RenderType.GAME),
-        GAME(Shader.RenderType.GAME);
-
-        public final Shader.RenderType renderType;
-
-        RenderType(Shader.RenderType renderType) {
-            this.renderType = renderType;
-        }
     }
 }
