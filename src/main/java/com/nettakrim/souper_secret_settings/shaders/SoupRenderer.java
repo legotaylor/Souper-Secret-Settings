@@ -8,12 +8,9 @@ import com.mclegoman.luminance.client.shaders.Shaders;
 import com.mclegoman.luminance.client.shaders.uniforms.Uniform;
 import com.mclegoman.luminance.client.util.Accessors;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
-import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gl.PostEffectProcessor;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.render.DefaultFramebufferSet;
 import net.minecraft.client.render.FrameGraphBuilder;
-import net.minecraft.client.util.ObjectAllocator;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.Random;
@@ -23,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class SoupRenderer {
+public class SoupRenderer implements Runnables.WorldRender {
     public final List<ShaderLayer> shaderLayers;
     public ShaderLayer activeLayer;
 
@@ -37,9 +34,21 @@ public class SoupRenderer {
         shaderLayers = new ArrayList<>();
         renderType = RenderType.WORLD;
 
-        Events.AfterWeatherRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "rendering"), ((builder, width, height, defaultFramebufferSet) -> this.render(RenderType.WORLD, builder, width, height, defaultFramebufferSet)));
-        Events.AfterHandRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "rendering"), (framebuffer, objectAllocator) -> this.renderWithAllocator(RenderType.HAND, framebuffer, objectAllocator));
-        Events.AfterGameRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "rendering"), (framebuffer, objectAllocator) -> this.renderWithAllocator(RenderType.GAME, framebuffer, objectAllocator));
+        Events.AfterWeatherRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "rendering"), ((builder, width, height, framebufferSet) -> {
+            if (renderType == RenderType.WORLD) {
+                this.run(builder, width, height, framebufferSet);
+            }
+        }));
+        Events.AfterHandRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "rendering"), (framebuffer, objectAllocator) -> {
+            if (renderType == RenderType.HAND) {
+                Runnables.WorldRender.fromGameRender(this, framebuffer, objectAllocator);
+            }
+        });
+        Events.AfterGameRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "rendering"), (framebuffer, objectAllocator) -> {
+            if (renderType == RenderType.GAME) {
+                Runnables.WorldRender.fromGameRender(this, framebuffer, objectAllocator);
+            }
+        });
 
         Events.OnShaderDataReset.register(Identifier.of(SouperSecretSettingsClient.MODID, "reset"), this::clearAll);
         Events.AfterShaderDataRegistered.register(Identifier.of(SouperSecretSettingsClient.MODID, "reload"), this::loadDefault);
@@ -48,15 +57,9 @@ public class SoupRenderer {
         Events.AfterShaderRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "after_render"), new OverrideManager.AfterShaderRender());
     }
 
-    private void renderWithAllocator(RenderType renderType, Framebuffer framebuffer, ObjectAllocator objectAllocator) {
-        FrameGraphBuilder frameGraphBuilder = new FrameGraphBuilder();
-        PostEffectProcessor.FramebufferSet framebufferSet = PostEffectProcessor.FramebufferSet.singleton(PostEffectProcessor.MAIN, frameGraphBuilder.createObjectNode("main", framebuffer));
-        render(renderType, frameGraphBuilder, framebuffer.textureWidth, framebuffer.textureHeight, framebufferSet);
-        frameGraphBuilder.run(objectAllocator);
-    }
-
-    private void render(RenderType renderType, FrameGraphBuilder builder, int textureWidth, int textureHeight, PostEffectProcessor.FramebufferSet framebufferSet) {
-        if (this.renderType != renderType || shaderLayers == null) {
+    @Override
+    public void run(FrameGraphBuilder builder, int textureWidth, int textureHeight, PostEffectProcessor.FramebufferSet framebufferSet) {
+        if (shaderLayers == null) {
             return;
         }
 
