@@ -215,7 +215,7 @@ public class SoupRenderer implements Runnables.WorldRender {
     }
 
     public void cycleRenderType(ButtonWidget buttonWidget) {
-        renderType = Shader.RenderType.values()[(renderType.ordinal()+1)%Shader.RenderType.values().length];
+        renderType = Shader.RenderType.values()[(renderType.getId()+1)%2];
         buttonWidget.setMessage(getRenderTypeText());
     }
 
