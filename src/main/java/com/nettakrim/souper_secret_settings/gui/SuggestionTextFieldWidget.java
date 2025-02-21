@@ -106,6 +106,7 @@ public class SuggestionTextFieldWidget extends DraggableTextFieldWidget {
                 if (keyCode == 258) {
                     String text = getText();
                     setText(text + currentSuggestions.get(currentSuggestionIndex).substring(text.length()));
+                    setCursorToEnd(false);
                     return true;
                 } else if (keyCode == 265) {
                     cycleSuggestion(-1);
