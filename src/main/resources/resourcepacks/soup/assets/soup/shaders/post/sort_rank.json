@@ -2,7 +2,8 @@
     "vertex": "minecraft:post/sobel",
     "fragment": "soup:post/sort_rank",
     "samplers": [
-        { "name": "InSampler" }
+        { "name": "InSampler" },
+        { "name": "InDepthSampler" }
     ],
     "uniforms": [
         { "name": "ProjMat",       "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
@@ -12,6 +13,7 @@
         { "name": "RGBLoop",       "type": "float",     "count": 3,  "values": [ 0.0, 0.0, 0.0 ] },
         { "name": "HSVInfluence",  "type": "float",     "count": 3,  "values": [ 0.0, 0.0, 0.0 ] },
         { "name": "HSVLoop",       "type": "float",     "count": 3,  "values": [ 0.0, 0.0, 0.0 ] },
+        { "name": "Depth",         "type": "float",     "count": 3,  "values": [ 0.0, 0.0, 1.0 ] },
         { "name": "Flip",          "type": "float",     "count": 1,  "values": [ 0.0 ] },
         { "name": "SortThreshold", "type": "float",     "count": 1,  "values": [ 0.0 ] }
     ]

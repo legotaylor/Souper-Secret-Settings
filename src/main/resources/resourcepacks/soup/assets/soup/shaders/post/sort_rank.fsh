@@ -1,6 +1,7 @@
 #version 150
 
 uniform sampler2D InSampler;
+uniform sampler2D InDepthSampler;
 
 in vec2 texCoord;
 in vec2 oneTexel;
@@ -11,6 +12,7 @@ uniform vec3 RGBInfluence;
 uniform vec3 RGBLoop;
 uniform vec3 HSVInfluence;
 uniform vec3 HSVLoop;
+uniform vec3 Depth;
 
 uniform float Flip;
 uniform float SortThreshold;
@@ -50,7 +52,8 @@ float Influence(vec3 vec, vec3 influence, vec3 loop) {
 
 void main(){
     vec3 color = texture(InSampler, texCoord).rgb;
-    float value = (Influence(color, RGBInfluence, RGBLoop) + Influence(RGBtoHSV(color), HSVInfluence, HSVLoop));
+    float depth = texture(InDepthSampler, texCoord).r;
+    float value = Influence(color, RGBInfluence, RGBLoop) + Influence(RGBtoHSV(color), HSVInfluence, HSVLoop) + fract(pow(depth, Depth.z)*Depth.x + Depth.y);
     float t = ThresholdValue(value);
     value *= (0.5 - Flip) * 32.0;
     fragColor = vec4(vec3(fract(value), floor(value+127.0)/255.0, t), 1.0);

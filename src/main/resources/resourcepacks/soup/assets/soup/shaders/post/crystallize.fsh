@@ -11,6 +11,7 @@ uniform float Scale;
 uniform vec2 Offset;
 uniform vec3 Angle;
 uniform float Seed;
+uniform float UVMix;
 uniform float luminance_alpha_smooth;
 
 //https://www.shadertoy.com/view/3sGSWV
@@ -52,7 +53,7 @@ void main(){
 
     vec2 pos = texCoord*scale;
     vec2 cell = voronoiNoise(pos);
-    vec3 color = texture(InSampler, cell/scale).rgb;
+    vec3 color = texture(InSampler, mix(texCoord, cell/scale, UVMix)).rgb;
 
     vec2 slope = (vec2(hash(vec3(cell.x, cell.y, Seed))-0.5, hash(vec3(Seed, cell.x, cell.y))-0.5)*Angle.xy)*pos;
     float angle = fract(slope.x + slope.y);
