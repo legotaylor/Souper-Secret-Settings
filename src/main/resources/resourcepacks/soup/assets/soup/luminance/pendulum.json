@@ -2,7 +2,8 @@
     "post_effect": "soup:pendulum",
     "enabled": true,
     "translatable": true,
-    "disable_game_rendertype": false,
+    "description": false,
+    "disable_game_rendertype": true,
     "custom": {
         "souper_secret_settings": {
             "disable_soup": false
