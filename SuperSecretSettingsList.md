@@ -28,15 +28,16 @@ All builtin resourcepacks should be enabled by default, but they may need to ena
 | invert**                           | saturate         | contrast        |
 | love*                              | sepia            | crystallize     |
 | notch                              | silhouette       | depth_outline   |
-| ntsc                               | silhouette2      | dither          |
-| outline                            | sixteen_colors   | dramatic        |
-| pencil                             | tiltshift        | film_grain      |
-| phosphor                           |                  | fisheye         |
-| scan_pincushion                    |                  | fractal         |
-| shareware*                         |                  | frigid          |
-| sobel                              |                  | ghost           |
-| spider**                           |                  | gel             |
-| wobble                             |                  | ghost           |
+| ntsc                               | silhouette2      | dissolve        |
+| outline                            | sixteen_colors   | dither          |
+| pencil                             | tiltshift        | dramatic        |
+| phosphor                           |                  | film_grain      |
+| scan_pincushion                    |                  | fisheye         |
+| shareware*                         |                  | fractal         |
+| sobel                              |                  | frigid          |
+| spider**                           |                  | ghost           |
+| wobble                             |                  | gel             |
+|                                    |                  | ghost           |
 |                                    |                  | glass           |
 |                                    |                  | glitchy         |
 |                                    |                  | half_invert     |
@@ -53,6 +54,7 @@ All builtin resourcepacks should be enabled by default, but they may need to ena
 |                                    |                  | kaleidoscope    |
 |                                    |                  | life            |
 |                                    |                  | mandelbrot      |
+|                                    |                  | motion_blur     |
 |                                    |                  | mouse           |
 |                                    |                  | noise3d         |
 |                                    |                  | normalise       |

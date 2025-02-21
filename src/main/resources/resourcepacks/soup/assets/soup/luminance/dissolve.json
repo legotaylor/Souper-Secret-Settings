@@ -1,0 +1,12 @@
+{
+    "post_effect": "soup:dissolve",
+    "enabled": true,
+    "translatable": true,
+    "description": false,
+    "disable_game_rendertype": true,
+    "custom": {
+        "souper_secret_settings": {
+            "groups": [ "edible", "persistent" ]
+        }
+    }
+}

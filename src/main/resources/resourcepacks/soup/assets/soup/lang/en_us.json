@@ -35,6 +35,8 @@
     "gui.luminance.shader.soup.crystallize.description": "",
     "gui.luminance.shader.soup.depth_outline": "Depth Outline",
     "gui.luminance.shader.soup.depth_outline.description": "",
+    "gui.luminance.shader.soup.dissolve": "Dissolve",
+    "gui.luminance.shader.soup.dissolve.description": "",
     "gui.luminance.shader.soup.dither": "Dither",
     "gui.luminance.shader.soup.dither.description": "",
     "gui.luminance.shader.soup.dramatic": "Dramatic",
