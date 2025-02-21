@@ -1,12 +1,12 @@
 {
-    "post_effect": "soup:texture_map",
+    "post_effect": "soup:noise3d",
     "enabled": true,
     "translatable": true,
     "description": false,
     "disable_game_rendertype": true,
     "custom": {
         "souper_secret_settings": {
-            "groups": [ "edible", "warp" ]
+            "groups": [ "edible", "depth" ]
         }
     }
 }

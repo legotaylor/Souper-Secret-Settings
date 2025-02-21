@@ -1,0 +1,54 @@
+{
+    "targets": {
+        "0": {}
+    },
+    "passes": [
+        {
+            "program": "soup:post/noise3d",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "minecraft:main"
+                },
+                {
+                    "sampler_name": "InDepth",
+                    "target": "minecraft:main",
+                    "use_depth_buffer": true
+                }
+            ],
+            "uniforms": [
+                {
+                    "name": "Mode",
+                    "values": [ 1.0, 0.5, 1.0, 0.0 ]
+                },
+                {
+                    "name": "Colored",
+                    "values": [ 1.0 ]
+                },
+                {
+                    "name": "NoiseCurve",
+                    "values": [ 32.0, 0.0 ]
+                },
+                {
+                    "name": "Scroll",
+                    "values": [ 0.5, 0.5, 0.5 ]
+                },
+                {
+                    "name": "Scale",
+                    "values": [ 4.0, 4.0, 4.0 ]
+                }
+            ],
+            "output": "0"
+        },
+        {
+            "program": "minecraft:post/blit",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "0"
+                }
+            ],
+            "output": "minecraft:main"
+        }
+    ]
+}

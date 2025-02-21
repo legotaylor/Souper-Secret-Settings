@@ -54,8 +54,10 @@ All builtin resourcepacks should be enabled by default, but they may need to ena
 |                                    |                  | life            |
 |                                    |                  | mandelbrot      |
 |                                    |                  | mouse           |
+|                                    |                  | noise3d         |
 |                                    |                  | normalise       |
 |                                    |                  | out_of_bounds   |
+|                                    |                  | patchwork       |
 |                                    |                  | pendulum        |
 |                                    |                  | plants          |
 |                                    |                  | plasma          |
