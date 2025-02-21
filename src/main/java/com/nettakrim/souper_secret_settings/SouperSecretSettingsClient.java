@@ -21,7 +21,7 @@ import com.nettakrim.souper_secret_settings.commands.SouperSecretSettingsCommand
 
 public class SouperSecretSettingsClient implements ClientModInitializer {
 	public static final String MODID = "souper_secret_settings";
-	private static final Logger LOGGER = LoggerFactory.getLogger("souper_secret_settings");
+	private static final Logger LOGGER = LoggerFactory.getLogger(MODID);
 
 	private static final TextColor textColor = TextColor.fromRgb(0xAAAAAA);
 	private static final TextColor nameTextColor = TextColor.fromRgb(0xB6484C);

@@ -70,8 +70,9 @@ void main(){
     vec3 flip = offsetLeft - offsetRight + offsetUp - offsetDown;
     flip.y = pos.y;
 
-    vec3 offset = vec3(-luminance_eye_fract.x, luminance_eye_fract.y, -luminance_eye_fract.z)/TextureScale - fract(floor(luminance_eye)/TextureScale);
-    pos = fract(pos/TextureScale + offset);
+    vec3 offset = luminance_eye_fract/TextureScale + fract(floor(luminance_eye)/TextureScale);
+    offset.y = -offset.y;
+    pos = fract(pos/TextureScale - offset);
 
     vec2 uv;
     if (totalOffset.x < totalOffset.y && totalOffset.x < totalOffset.z) {
