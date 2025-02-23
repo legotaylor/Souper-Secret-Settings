@@ -39,4 +39,14 @@ public class ParameterScreen extends ListScreen<Calculation> {
     public Calculation tryGetAddition(String addition) {
         return Calculations.createCalcultion(addition);
     }
+
+    @Override
+    protected boolean canUseRandom() {
+        return false;
+    }
+
+    @Override
+    protected boolean canPreview() {
+        return false;
+    }
 }

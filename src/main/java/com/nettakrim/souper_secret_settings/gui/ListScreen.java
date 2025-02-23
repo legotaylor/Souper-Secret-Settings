@@ -172,4 +172,10 @@ public abstract class ListScreen<V> extends ScrollScreen {
     protected void removeAddition(String addition) {
 
     }
+
+    protected abstract boolean canUseRandom();
+
+    protected boolean canPreview() {
+        return true;
+    }
 }

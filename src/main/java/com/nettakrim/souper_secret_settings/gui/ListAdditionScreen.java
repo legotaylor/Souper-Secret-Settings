@@ -31,6 +31,7 @@ public class ListAdditionScreen<V> extends ScrollScreen {
 
         boolean canRemove = listScreen.canRemoveAdditions();
         additions = new ArrayList<>();
+
         for (String addition : listScreen.getAdditions()) {
             AdditionButton additionButton = new AdditionButton(addition, ListScreen.listX, ListScreen.listWidth, 20, this::add);
             if (canRemove) {
@@ -45,7 +46,7 @@ public class ListAdditionScreen<V> extends ScrollScreen {
 
     protected void add(String addition) {
         if (lastAddition != null) {
-            if (lastAddition.equals(addition) && (listScreen.canRemoveAdditions() || !lastAddition.startsWith("random"))) {
+            if (lastAddition.equals(addition) && !(listScreen.canUseRandom() && lastAddition.startsWith("random"))) {
                 close();
                 return;
             }
@@ -56,6 +57,10 @@ public class ListAdditionScreen<V> extends ScrollScreen {
 
         listScreen.addAddition(addition);
         lastAddition = addition;
+
+        if (!listScreen.canPreview()) {
+            close();
+        }
     }
 
     @Override

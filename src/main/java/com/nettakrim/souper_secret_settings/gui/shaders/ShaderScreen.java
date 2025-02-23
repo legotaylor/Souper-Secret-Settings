@@ -40,23 +40,28 @@ public class ShaderScreen extends ListScreen<ShaderData> {
 
     @Override
     public List<String> getAdditions() {
-        List<String> shaders = new ArrayList<>(Shaders.getRegistry(registry).size()+1);
+        List<String> shaders = new ArrayList<>(Shaders.getRegistry(registry).size());
 
         for (ShaderRegistryEntry shaderRegistry : Shaders.getRegistry(registry)) {
             shaders.add(shaderRegistry.getID().toString());
         }
-        if (shaders.size() > 1) {
-            shaders.add("random");
-        }
+
+        Collections.sort(shaders);
 
         Map<String, List<ShaderRegistryEntry>> registryGroups = SouperSecretSettingsClient.soupRenderer.shaderGroups.get(registry);
         if (registryGroups != null) {
+            List<String> random = new ArrayList<>(registryGroups.keySet().size()+1);
             for (String s : registryGroups.keySet()) {
-                shaders.add("random_"+s);
+                random.add("random_"+s);
             }
+            if (shaders.size() > 1) {
+                random.add("random");
+            }
+            Collections.sort(random);
+            shaders.addAll(random);
+        } else if (shaders.size() > 1){
+            shaders.add("random");
         }
-
-        Collections.sort(shaders);
 
         return shaders;
     }
@@ -77,5 +82,10 @@ public class ShaderScreen extends ListScreen<ShaderData> {
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         OverrideManager.currentShaderIndex = 0;
         super.render(context, mouseX, mouseY, delta);
+    }
+
+    @Override
+    protected boolean canUseRandom() {
+        return true;
     }
 }

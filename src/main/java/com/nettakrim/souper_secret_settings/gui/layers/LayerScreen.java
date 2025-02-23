@@ -61,4 +61,9 @@ public class LayerScreen extends ListScreen<ShaderLayer> {
     protected void removeAddition(String addition) {
         SouperSecretSettingsClient.soupData.deleteSavedLayer(addition);
     }
+
+    @Override
+    protected boolean canUseRandom() {
+        return false;
+    }
 }
