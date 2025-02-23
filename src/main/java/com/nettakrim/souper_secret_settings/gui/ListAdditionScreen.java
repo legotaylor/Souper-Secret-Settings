@@ -25,9 +25,9 @@ public class ListAdditionScreen<V> extends ScrollScreen {
 
     @Override
     protected void init() {
-        addDrawableChild(ButtonWidget.builder(Text.literal("back"), (widget) -> close()).dimensions(SoupGui.listGap, SoupGui.listGap, ListScreen.listWidth+ListScreen.scrollWidth, SoupGui.headerHeight).build());
+        addDrawableChild(ButtonWidget.builder(Text.literal("back"), (widget) -> close()).dimensions(SoupGui.listGap, SoupGui.listGap, ListScreen.listWidth+ListScreen.scrollWidth, 20).build());
 
-        createScrollWidget();
+        createScrollWidget(20+SoupGui.listGap*2);
 
         boolean canRemove = listScreen.canRemoveAdditions();
         additions = new ArrayList<>();
@@ -72,7 +72,7 @@ public class ListAdditionScreen<V> extends ScrollScreen {
 
     @Override
     public void setScroll(int scroll) {
-        int y = ListScreen.listStart - scroll;
+        int y = 20 + SoupGui.listGap*2 - scroll;
         for (ClickableWidget widget : additions) {
             widget.setY(y);
             y += widget.getHeight()+SoupGui.listGap;

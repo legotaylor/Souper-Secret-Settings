@@ -33,6 +33,7 @@ public class LayerScreen extends ListScreen<ShaderLayer> {
     public @Nullable ShaderLayer tryGetAddition(String addition) {
         ShaderLayer shaderLayer = new ShaderLayer(addition);
         SouperSecretSettingsClient.soupRenderer.activeLayer = shaderLayer;
+        SouperSecretSettingsClient.soupGui.updateActiveLayer();
         return shaderLayer;
     }
 
@@ -49,6 +50,7 @@ public class LayerScreen extends ListScreen<ShaderLayer> {
             SouperSecretSettingsClient.soupGui.open(SoupGui.ScreenType.LAYERS);
         } else {
             SouperSecretSettingsClient.soupRenderer.activeLayer = SouperSecretSettingsClient.soupRenderer.shaderLayers.getFirst();
+            SouperSecretSettingsClient.soupGui.updateActiveLayer();
         }
     }
 

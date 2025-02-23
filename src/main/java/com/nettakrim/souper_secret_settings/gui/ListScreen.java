@@ -43,7 +43,7 @@ public abstract class ListScreen<V> extends ScrollScreen {
             addDrawableChild(clickableWidget);
         }
 
-        createScrollWidget();
+        createScrollWidget(listStart);
 
         List<V> listValues = getListValues();
         listWidgets = new ArrayList<>(listValues.size());

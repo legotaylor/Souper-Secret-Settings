@@ -23,25 +23,34 @@ public class SoupGui {
     public final int[] currentScroll;
 
     protected static final int listGap = 2;
-    protected static final int headerHeight = 20;
+    protected static final int headerHeight = 42;
 
     private ScreenType currentScreenType;
 
     public SoupGui() {
         header = new ArrayList<>();
-        int radioWidth = 70;
-        int x = listGap;
-        for (ScreenType screenType : ScreenType.values()) {
-            header.add(ButtonWidget.builder(Text.literal(screenType.name().toLowerCase()), (widget) -> open(screenType)).dimensions(x, listGap, radioWidth, headerHeight).build());
-            x += listGap + radioWidth;
-        }
 
-        header.add(ButtonWidget.builder(Text.literal("undo"), (widget) -> undo()).dimensions(x, listGap, 34, headerHeight).build());
-        header.add(ButtonWidget.builder(Text.literal("redo"), (widget) -> redo()).dimensions(x+36, listGap, 34, headerHeight).build());
+        int x;
+        int mainWidth = 70;
+        int smallWidth = 34;
 
-        header.add(ButtonWidget.builder(SouperSecretSettingsClient.soupRenderer.getRenderTypeText(), SouperSecretSettingsClient.soupRenderer::cycleRenderType).dimensions(x+72, listGap, 34, headerHeight).build());
+        x = listGap;
+        x += addHeaderButton(ButtonWidget.builder(Text.literal("..."),  (widget) -> open(ScreenType.LAYERS)).dimensions(x, listGap, (mainWidth*3+listGap*2)-(smallWidth*3+listGap*2)-listGap, 20).build());
+        x += addHeaderButton(ButtonWidget.builder(Text.literal("undo"), (widget) -> undo()).dimensions(x, listGap, smallWidth, 20).build());
+        x += addHeaderButton(ButtonWidget.builder(Text.literal("redo"), (widget) -> redo()).dimensions(x, listGap, smallWidth, 20).build());
+             addHeaderButton(ButtonWidget.builder(SouperSecretSettingsClient.soupRenderer.getRenderTypeText(), SouperSecretSettingsClient.soupRenderer::cycleRenderType).dimensions(x, listGap, smallWidth, 20).build());
+
+        x = listGap;
+        x += addHeaderButton(ButtonWidget.builder(Text.literal("shaders"),    (widget) -> open(ScreenType.SHADERS   )).dimensions(x, listGap*2 + 20, mainWidth, 20).build());
+        x += addHeaderButton(ButtonWidget.builder(Text.literal("effects"),    (widget) -> open(ScreenType.EFFECTS   )).dimensions(x, listGap*2 + 20, mainWidth, 20).build());
+             addHeaderButton(ButtonWidget.builder(Text.literal("parameters"), (widget) -> open(ScreenType.PARAMETERS)).dimensions(x, listGap*2 + 20, mainWidth, 20).build());
 
         currentScroll = new int[ScreenType.values().length];
+    }
+
+    protected int addHeaderButton(ButtonWidget buttonWidget) {
+        header.add(buttonWidget);
+        return listGap + buttonWidget.getWidth();
     }
 
     public void open(ScreenType screenType) {
@@ -62,10 +71,11 @@ public class SoupGui {
         ClientData.minecraft.setScreen(screen);
 
         for (int i = 0; i < ScreenType.values().length; i++) {
-            ClickableWidget clickableWidget = header.get(i);
+            ClickableWidget clickableWidget = header.get(i > 0 ? i+3 : i);
             clickableWidget.active = index != i;
             clickableWidget.setFocused(false);
         }
+        updateActiveLayer();
     }
 
     public List<ClickableWidget> getHeader() {
@@ -89,6 +99,10 @@ public class SoupGui {
 
     public ScreenType getCurrentScreenType() {
         return Objects.requireNonNullElse(currentScreenType, ScreenType.SHADERS);
+    }
+
+    public void updateActiveLayer() {
+        header.getFirst().setMessage(Text.literal("layer: "+SouperSecretSettingsClient.soupRenderer.activeLayer.name));
     }
 
     public enum ScreenType {

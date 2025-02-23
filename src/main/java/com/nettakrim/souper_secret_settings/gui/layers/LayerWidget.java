@@ -81,6 +81,7 @@ public class LayerWidget extends ListWidget {
         int distance = getX()+getWidth() - (int)mouseX;
         if (distance < 20 && distance > 10) {
             SouperSecretSettingsClient.soupRenderer.activeLayer = layer;
+            SouperSecretSettingsClient.soupGui.updateActiveLayer();
             return;
         }
         super.onClick(mouseX, mouseY);
