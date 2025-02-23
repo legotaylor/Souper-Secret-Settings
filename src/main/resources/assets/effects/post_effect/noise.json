@@ -1,0 +1,56 @@
+{
+    "targets": {
+        "0": {},
+        "base": {"persistent": true}
+    },
+    "custom_passes": {
+        "souper_secret_settings:before_layer_render": [
+            {
+                "program": "minecraft:post/blit",
+                "inputs": [
+                    {
+                        "sampler_name": "In",
+                        "target": "minecraft:main"
+                    }
+                ],
+                "output": "base"
+            }
+        ],
+        "souper_secret_settings:after_layer_render": [
+            {
+                "program": "effects:mix",
+                "inputs": [
+                    {
+                        "sampler_name": "In",
+                        "target": "base"
+                    },
+                    {
+                        "sampler_name": "Base",
+                        "target": "minecraft:main"
+                    }
+                ],
+                "uniforms": [
+                    {
+                        "name": "UseNoise",
+                        "values": [ 1.0 ]
+                    },
+                    {
+                        "name": "Scale",
+                        "values": [ 4.0, 4.0 ]
+                    }
+                ],
+                "output": "0"
+            },
+            {
+                "program": "minecraft:post/blit",
+                "inputs": [
+                    {
+                        "sampler_name": "In",
+                        "target": "0"
+                    }
+                ],
+                "output": "minecraft:main"
+            }
+        ]
+    }
+}
