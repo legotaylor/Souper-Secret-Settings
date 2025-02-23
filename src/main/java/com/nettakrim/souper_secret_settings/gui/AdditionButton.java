@@ -15,8 +15,8 @@ public class AdditionButton extends ButtonWidget {
 
     protected boolean deleting;
 
-    public AdditionButton(String addition, int x, int width, int height, Consumer<String> onPress) {
-        super(x, 0, width, height, Text.literal(addition), (widget) -> onPress.accept(addition), ButtonWidget.DEFAULT_NARRATION_SUPPLIER);
+    public AdditionButton(String addition, Text message, int x, int width, int height, Consumer<String> onPress) {
+        super(x, 0, width, height, message, (widget) -> onPress.accept(addition), ButtonWidget.DEFAULT_NARRATION_SUPPLIER);
         this.addition = addition;
         this.onRemove = null;
     }

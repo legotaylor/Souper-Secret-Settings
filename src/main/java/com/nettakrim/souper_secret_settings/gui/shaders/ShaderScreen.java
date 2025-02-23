@@ -9,6 +9,7 @@ import com.nettakrim.souper_secret_settings.shaders.OverrideManager;
 import com.nettakrim.souper_secret_settings.shaders.ShaderData;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
@@ -87,5 +88,14 @@ public class ShaderScreen extends ListScreen<ShaderData> {
     @Override
     protected boolean canUseRandom() {
         return true;
+    }
+
+    @Override
+    protected Text getAdditionText(String addition) {
+        if (addition.startsWith("random")) {
+            return super.getAdditionText(addition);
+        }
+
+        return Text.translatableWithFallback("gui.luminance.shader."+addition.replace(':','.'), addition);
     }
 }

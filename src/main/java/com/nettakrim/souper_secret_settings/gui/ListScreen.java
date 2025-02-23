@@ -178,4 +178,8 @@ public abstract class ListScreen<V> extends ScrollScreen {
     protected boolean canPreview() {
         return true;
     }
+
+    protected Text getAdditionText(String addition) {
+        return Text.literal(addition);
+    }
 }

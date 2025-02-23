@@ -33,7 +33,7 @@ public class ListAdditionScreen<V> extends ScrollScreen {
         additions = new ArrayList<>();
 
         for (String addition : listScreen.getAdditions()) {
-            AdditionButton additionButton = new AdditionButton(addition, ListScreen.listX, ListScreen.listWidth, 20, this::add);
+            AdditionButton additionButton = new AdditionButton(addition, listScreen.getAdditionText(addition), ListScreen.listX, ListScreen.listWidth, 20, this::add);
             if (canRemove) {
                 additionButton.addRemoveListener(this::removeAddition);
             }

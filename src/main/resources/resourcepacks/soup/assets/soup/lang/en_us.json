@@ -85,6 +85,8 @@
     "gui.luminance.shader.soup.life.description": "",
     "gui.luminance.shader.soup.mandelbrot": "Mandelbrot",
     "gui.luminance.shader.soup.mandelbrot.description": "",
+    "gui.luminance.shader.soup.motion_blur": "Motion Blur",
+    "gui.luminance.shader.soup.motion_blur.description": "",
     "gui.luminance.shader.soup.mouse": "Mouse",
     "gui.luminance.shader.soup.mouse.description": "",
     "gui.luminance.shader.soup.noise3d": "Noise 3D",
