@@ -220,7 +220,8 @@ public class SoupRenderer implements Runnables.WorldRender {
     }
 
     public Text getRenderTypeText() {
-        return Text.literal(renderType.toString());
+        //                                                          💻               🌎
+        return Text.literal(renderType == Shader.RenderType.GAME ? "\uD83D\uDCBB" : "\uD83C\uDF0E");
     }
 
     private void runForGroups(ShaderRegistryEntry shaderRegistryEntry, List<Identifier> registries, BiConsumer<Identifier, String> consumer) {

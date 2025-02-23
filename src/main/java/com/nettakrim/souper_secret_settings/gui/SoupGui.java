@@ -32,12 +32,12 @@ public class SoupGui {
 
         int x;
         int mainWidth = 70;
-        int smallWidth = 34;
+        int smallWidth = 12;
 
         x = listGap;
-        x += addHeaderButton(ButtonWidget.builder(Text.literal("..."),  (widget) -> open(ScreenType.LAYERS)).dimensions(x, listGap, (mainWidth*3+listGap*2)-(smallWidth*3+listGap*2)-listGap, 20).build());
-        x += addHeaderButton(ButtonWidget.builder(Text.literal("undo"), (widget) -> undo()).dimensions(x, listGap, smallWidth, 20).build());
-        x += addHeaderButton(ButtonWidget.builder(Text.literal("redo"), (widget) -> redo()).dimensions(x, listGap, smallWidth, 20).build());
+        x += addHeaderButton(ButtonWidget.builder(Text.literal(""),  (widget) -> open(ScreenType.LAYERS)).dimensions(x, listGap, (mainWidth*3+listGap*2)-(smallWidth*3+listGap*2)-listGap, 20).build());
+        x += addHeaderButton(ButtonWidget.builder(Text.literal("⟲"), (widget) -> undo()).dimensions(x, listGap, smallWidth, 20).build());
+        x += addHeaderButton(ButtonWidget.builder(Text.literal("⟳"), (widget) -> redo()).dimensions(x, listGap, smallWidth, 20).build());
              addHeaderButton(ButtonWidget.builder(SouperSecretSettingsClient.soupRenderer.getRenderTypeText(), SouperSecretSettingsClient.soupRenderer::cycleRenderType).dimensions(x, listGap, smallWidth, 20).build());
 
         x = listGap;
