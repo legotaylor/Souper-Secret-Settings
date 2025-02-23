@@ -1,0 +1,62 @@
+{
+    "targets": {
+        "0": {},
+        "1": {}
+    },
+    "passes": [
+        {
+            "program": "minecraft:post/color_convolve",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "minecraft:main"
+                }
+            ],
+            "uniforms": [
+                {
+                    "name": "Saturation",
+                    "values": [ 0.0 ]
+                }
+            ],
+            "output": "0"
+        },
+        {
+            "program": "effects:difference",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "minecraft:main"
+                },
+                {
+                    "sampler_name": "Subtract",
+                    "target": "0"
+                }
+            ],
+            "output": "1"
+        },
+        {
+            "program": "luminance:post/merge",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "1"
+                },
+                {
+                    "sampler_name": "Merge",
+                    "target": "minecraft:main"
+                }
+            ],
+            "output": "0"
+        },
+        {
+            "program": "minecraft:post/blit",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "0"
+                }
+            ],
+            "output": "minecraft:main"
+        }
+    ]
+}

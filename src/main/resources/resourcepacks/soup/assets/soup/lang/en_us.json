@@ -141,6 +141,8 @@
     "gui.luminance.shader.soup.voronoi.description": "",
     "gui.luminance.shader.soup.walls": "Walls",
     "gui.luminance.shader.soup.walls.description": "",
+    "gui.luminance.shader.soup.washed_out": "Washed Out",
+    "gui.luminance.shader.soup.washed_out.description": "",
     "gui.luminance.shader.soup.windows": "Windows",
     "gui.luminance.shader.soup.windows.description": "",
     "gui.luminance.shader.soup.xor": "XOR",

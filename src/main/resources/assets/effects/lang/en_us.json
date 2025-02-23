@@ -17,6 +17,8 @@
     "gui.luminance.shader.effects.half.description": "",
     "gui.luminance.shader.effects.mix": "Mix",
     "gui.luminance.shader.effects.mix.description": "",
+    "gui.luminance.shader.effects.noise": "Noise",
+    "gui.luminance.shader.effects.noise.description": "",
     "gui.luminance.shader.effects.vignette": "Vignette",
     "gui.luminance.shader.effects.vignette.description": "",
     "gui.luminance.shader.effects.vignette_inverted": "Vignette Inverted",

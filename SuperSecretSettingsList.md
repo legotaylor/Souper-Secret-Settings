@@ -83,4 +83,7 @@ All builtin resourcepacks should be enabled by default, but they may need to ena
 |                                    |                  | uv_map          |
 |                                    |                  | voronoi         |
 |                                    |                  | walls           |
+|                                    |                  | washed_out      |
+|                                    |                  | windows         |
 |                                    |                  | xor             |
+|                                    |                  | zigzag          |
