@@ -37,6 +37,20 @@ public class ShaderLayer implements Toggleable {
     public ShaderLayer(@NotNull String name) {
         this.name = name;
 
+        int i = 1;
+        while (true) {
+            int lastI = i;
+            for (ShaderLayer layer : SouperSecretSettingsClient.soupRenderer.shaderLayers) {
+                if (layer.name.equals(this.name)) {
+                    i++;
+                    this.name = name+"_"+i;
+                }
+            }
+            if (i == lastI) {
+                break;
+            }
+        }
+
         shaders = new ArrayList<>();
         effects = new ArrayList<>();
         calculations = new ArrayList<>();
