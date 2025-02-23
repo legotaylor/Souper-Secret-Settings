@@ -79,6 +79,10 @@ public class SoupData {
         return names;
     }
 
+    public void deleteSavedLayer(String name) {
+        deleteFile(configDir.resolve("layers").resolve(name+".json"));
+    }
+
     public boolean isValidName(String name) {
         return name != null && !name.isBlank() && name.matches("^[A-Za-z0-9._ ]{1,255}$");
     }
@@ -111,10 +115,7 @@ public class SoupData {
         return CompletableFuture.runAsync(() -> {
             try {
                 if (json == null) {
-                    File file = path.toFile();
-                    if (file.exists() && !file.delete()) {
-                        SouperSecretSettingsClient.log("failed to delete file", path);
-                    }
+                    deleteFile(path);
                     return;
                 }
 
@@ -143,5 +144,12 @@ public class SoupData {
             }
 
         }, Util.getMainWorkerExecutor().named("saveStable"));
+    }
+
+    protected static void deleteFile(Path path) {
+        File file = path.toFile();
+        if (file.exists() && !file.delete()) {
+            SouperSecretSettingsClient.log("failed to delete file", path);
+        }
     }
 }

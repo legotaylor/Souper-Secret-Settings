@@ -29,11 +29,15 @@ public class ListAdditionScreen<V> extends ScrollScreen {
 
         createScrollWidget();
 
+        boolean canRemove = listScreen.canRemoveAdditions();
         additions = new ArrayList<>();
         for (String addition : listScreen.getAdditions()) {
-            ClickableWidget clickableWidget = ButtonWidget.builder(Text.literal(addition), (widget) -> add(addition)).dimensions(ListScreen.listX, 0, ListScreen.listWidth, 20).build();
-            additions.add(clickableWidget);
-            addSelectableChild(clickableWidget);
+            AdditionButton additionButton = new AdditionButton(addition, ListScreen.listX, ListScreen.listWidth, 20, this::add);
+            if (canRemove) {
+                additionButton.addRemoveListener(this::removeAddition);
+            }
+            additions.add(additionButton);
+            addSelectableChild(additionButton);
         }
 
         scrollWidget.setContentHeight(additions.size()*(20+SoupGui.listGap) - SoupGui.listGap);
@@ -41,7 +45,7 @@ public class ListAdditionScreen<V> extends ScrollScreen {
 
     protected void add(String addition) {
         if (lastAddition != null) {
-            if (lastAddition.equals(addition) && !lastAddition.startsWith("random")) {
+            if (lastAddition.equals(addition) && (listScreen.canRemoveAdditions() || !lastAddition.startsWith("random"))) {
                 close();
                 return;
             }
@@ -74,5 +78,13 @@ public class ListAdditionScreen<V> extends ScrollScreen {
     public void close() {
         assert client != null;
         client.setScreen(listScreen);
+    }
+
+    protected void removeAddition(AdditionButton button) {
+        remove(button);
+        additions.remove(button);
+        scrollWidget.setContentHeight(additions.size()*(20+SoupGui.listGap) - SoupGui.listGap);
+
+        listScreen.removeAddition(button.addition);
     }
 }

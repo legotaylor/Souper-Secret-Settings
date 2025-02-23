@@ -14,9 +14,9 @@ import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.MathHelper;
 
 public abstract class ListWidget extends CollapseWidget {
-    private static final ButtonTextures TEXTURES = new ButtonTextures(Identifier.ofVanilla("widget/button"), Identifier.ofVanilla("widget/button_disabled"), Identifier.ofVanilla("widget/button_highlighted"));
+    protected static final ButtonTextures TEXTURES = new ButtonTextures(Identifier.ofVanilla("widget/button"), Identifier.ofVanilla("widget/button_disabled"), Identifier.ofVanilla("widget/button_highlighted"));
 
-    private static final Identifier ICON_TEXTURE = Identifier.of(SouperSecretSettingsClient.MODID, "textures/gui/icons.png");
+    protected static final Identifier ICON_TEXTURE = Identifier.of(SouperSecretSettingsClient.MODID, "textures/gui/icons.png");
 
     protected int dragState;
 

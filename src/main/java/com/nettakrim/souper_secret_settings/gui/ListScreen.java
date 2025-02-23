@@ -164,4 +164,12 @@ public abstract class ListScreen<V> extends ScrollScreen {
         assert client != null;
         client.setScreen(new ListAdditionScreen<>(this));
     }
+
+    protected boolean canRemoveAdditions() {
+        return false;
+    }
+
+    protected void removeAddition(String addition) {
+
+    }
 }

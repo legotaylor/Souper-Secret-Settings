@@ -51,4 +51,14 @@ public class LayerScreen extends ListScreen<ShaderLayer> {
             SouperSecretSettingsClient.soupRenderer.activeLayer = SouperSecretSettingsClient.soupRenderer.shaderLayers.getFirst();
         }
     }
+
+    @Override
+    protected boolean canRemoveAdditions() {
+        return true;
+    }
+
+    @Override
+    protected void removeAddition(String addition) {
+        SouperSecretSettingsClient.soupData.deleteSavedLayer(addition);
+    }
 }
