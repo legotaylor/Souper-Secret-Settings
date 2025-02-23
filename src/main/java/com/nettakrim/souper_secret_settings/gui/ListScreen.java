@@ -8,7 +8,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
@@ -17,17 +17,17 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ListScreen<V> extends Screen {
+public abstract class ListScreen<V> extends ScrollScreen {
     protected ArrayList<ListWidget> listWidgets;
 
     protected SuggestionTextFieldWidget suggestionTextFieldWidget;
+    protected ButtonWidget suggestionScreenButton;
 
     protected static final int listWidth = 150;
     protected static final int listStart = SoupGui.headerHeight + SoupGui.listGap*2;
     protected static final int scrollWidth = 6;
     protected static final int listX = SoupGui.listGap*2+scrollWidth;
 
-    protected ScrollWidget scrollWidget;
     protected int currentListSize;
 
     private final int scrollIndex;
@@ -43,8 +43,7 @@ public abstract class ListScreen<V> extends Screen {
             addDrawableChild(clickableWidget);
         }
 
-        scrollWidget = new ScrollWidget(SoupGui.listGap, listStart, scrollWidth, height-listStart-SoupGui.listGap, Text.literal("scroll"), this::setScroll);
-        addDrawableChild(scrollWidget);
+        createScrollWidget();
 
         List<V> listValues = getListValues();
         listWidgets = new ArrayList<>(listValues.size());
@@ -54,9 +53,12 @@ public abstract class ListScreen<V> extends Screen {
             listWidgets.add(listWidget);
         }
 
-        suggestionTextFieldWidget = new SuggestionTextFieldWidget(listX, listWidth, 20, Text.literal("list addition"), false);
+        suggestionTextFieldWidget = new SuggestionTextFieldWidget(listX, listWidth-22, 20, Text.literal("list addition"), false);
         suggestionTextFieldWidget.setListeners(this::getAdditions, this::addAddition);
         addDrawableChild(suggestionTextFieldWidget);
+
+        suggestionScreenButton = ButtonWidget.builder(Text.literal("+"), (widget) -> enterAdditionScreen()).dimensions(listX+listWidth-20, 0, 20, 20).build();
+        addDrawableChild(suggestionScreenButton);
 
         int scroll = SouperSecretSettingsClient.soupGui.currentScroll[scrollIndex];
         updateSpacing();
@@ -64,14 +66,10 @@ public abstract class ListScreen<V> extends Screen {
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        super.render(context, mouseX, mouseY, delta);
-
-        context.enableScissor(listX, listStart, width, height);
+    public void renderScrollables(DrawContext context, int mouseX, int mouseY, float delta) {
         for (Drawable drawable : listWidgets) {
             drawable.render(context, mouseX, mouseY, delta);
         }
-        context.disableScissor();
     }
 
     protected abstract List<V> getListValues();
@@ -97,34 +95,15 @@ public abstract class ListScreen<V> extends Screen {
         scrollWidget.setContentHeight(currentListSize-listStart + suggestionTextFieldWidget.getHeight());
     }
 
+    @Override
     public void setScroll(int scroll) {
         for (CollapseWidget collapseWidget : listWidgets) {
             collapseWidget.setY(collapseWidget.offset - scroll);
         }
 
         suggestionTextFieldWidget.setY(currentListSize - scroll);
+        suggestionScreenButton.setY(suggestionTextFieldWidget.getY());
         SouperSecretSettingsClient.soupGui.currentScroll[scrollIndex] = scroll;
-    }
-
-    @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
-        scrollWidget.offsetScroll(verticalAmount*-20);
-        return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
-    }
-
-    @Override
-    protected void applyBlur() {
-
-    }
-
-    @Override
-    protected void renderDarkening(DrawContext context, int x, int y, int width, int height) {
-
-    }
-
-    @Override
-    public boolean shouldPause() {
-        return false;
     }
 
     protected void addAddition(String addition) {
@@ -179,5 +158,10 @@ public abstract class ListScreen<V> extends Screen {
             listWidget.onRemove();
         }
         return getListValues().remove(index);
+    }
+
+    protected void enterAdditionScreen() {
+        assert client != null;
+        client.setScreen(new ListAdditionScreen<>(this));
     }
 }
