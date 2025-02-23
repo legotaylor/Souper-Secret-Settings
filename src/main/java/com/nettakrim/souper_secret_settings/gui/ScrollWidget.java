@@ -7,6 +7,7 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
+import net.minecraft.util.math.MathHelper;
 
 import java.util.function.IntConsumer;
 
@@ -33,7 +34,7 @@ public class ScrollWidget extends ClickableWidget {
         int y = scrollHeight > 0 ? (int)Math.round(scrollY/scrollHeight * (getHeight()-barHeight)) : 0;
 
         context.drawGuiTexture(RenderLayer::getGuiTextured, SCROLLER_TEXTURE, getX(), y + getY(), getWidth(), barHeight, ColorHelper.getWhite(alpha));
-        context.drawGuiTexture(RenderLayer::getGuiTextured, SCROLLER_TEXTURE, getX(), y + getY() + Math.round(barHeight/2f), getWidth(), 1, ColorHelper.getArgb(255, 128, 128, 128));
+        context.drawGuiTexture(RenderLayer::getGuiTextured, SCROLLER_TEXTURE, getX(), y + getY() + MathHelper.floor(barHeight/2f), getWidth(), 1, ColorHelper.getArgb(255, 128, 128, 128));
     }
 
     @Override

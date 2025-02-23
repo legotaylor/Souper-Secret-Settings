@@ -1,5 +1,6 @@
 package com.nettakrim.souper_secret_settings.gui;
 
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.RenderLayer;
@@ -33,6 +34,13 @@ public class AdditionButton extends ButtonWidget {
 
         float deleteColor = deleting ? 1f : 0f;
         context.drawTexture(RenderLayer::getGuiTextured, ListWidget.ICON_TEXTURE, getX(), getY(), 0, 0, 10, 20, 20, 20, ColorHelper.fromFloats(0.5f, deleteColor, deleteColor, deleteColor));
+    }
+
+    @Override
+    public void drawMessage(DrawContext context, TextRenderer textRenderer, int color) {
+        int i = this.getX() + (onRemove == null ? 4 : 12);
+        int j = this.getX() + this.getWidth() - 2;
+        drawScrollableText(context, textRenderer, this.getMessage(), i, i, getY(), j, this.getY() + this.getHeight(), color);
     }
 
     @Override
