@@ -7,5 +7,9 @@
     "registries": [
         "souper_secret_settings:effects"
     ],
-    "custom": {}
+    "custom": {
+        "souper_secret_settings": {
+            "groups": []
+        }
+    }
 }
