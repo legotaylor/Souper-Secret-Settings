@@ -32,9 +32,12 @@ public abstract class ListScreen<V> extends ScrollScreen {
 
     private final int scrollIndex;
 
+    protected List<String> additions;
+
     protected ListScreen(int scrollIndex) {
         super(Text.literal(""));
         this.scrollIndex = scrollIndex;
+        this.additions = null;
     }
 
     @Override
@@ -118,7 +121,19 @@ public abstract class ListScreen<V> extends ScrollScreen {
         suggestionTextFieldWidget.setText("");
     }
 
-    public abstract List<String> getAdditions();
+    public List<String> getAdditions() {
+        if (additions == null) {
+            additions = calculateAdditions();
+        }
+
+        return additions;
+    }
+
+    public abstract List<String> calculateAdditions();
+
+    public void recalculateAdditions() {
+        additions = null;
+    }
 
     @Nullable
     public abstract V tryGetAddition(String addition);
@@ -170,7 +185,7 @@ public abstract class ListScreen<V> extends ScrollScreen {
     }
 
     protected void removeAddition(String addition) {
-
+        additions.remove(addition);
     }
 
     protected abstract boolean canUseRandom();

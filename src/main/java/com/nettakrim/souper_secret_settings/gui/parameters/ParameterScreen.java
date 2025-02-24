@@ -29,7 +29,7 @@ public class ParameterScreen extends ListScreen<Calculation> {
     }
 
     @Override
-    public List<String> getAdditions() {
+    public List<String> calculateAdditions() {
         List<String> calculations = new ArrayList<>(Calculations.getIds());
         Collections.sort(calculations);
         return calculations;

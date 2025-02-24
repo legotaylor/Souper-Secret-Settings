@@ -25,7 +25,7 @@ public class LayerScreen extends ListScreen<ShaderLayer> {
     }
 
     @Override
-    public List<String> getAdditions() {
+    public List<String> calculateAdditions() {
         return SouperSecretSettingsClient.soupData.getSavedLayers();
     }
 
@@ -62,6 +62,7 @@ public class LayerScreen extends ListScreen<ShaderLayer> {
     @Override
     protected void removeAddition(String addition) {
         SouperSecretSettingsClient.soupData.deleteSavedLayer(addition);
+        super.removeAddition(addition);
     }
 
     @Override

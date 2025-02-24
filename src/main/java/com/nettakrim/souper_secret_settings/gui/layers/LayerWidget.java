@@ -126,6 +126,7 @@ public class LayerWidget extends ListWidget {
     private void save() {
         SouperSecretSettingsClient.soupData.saveLayer(layer, this::updateDataButtons);
         updateDataButtons();
+        listScreen.recalculateAdditions();
     }
 
     private void load() {

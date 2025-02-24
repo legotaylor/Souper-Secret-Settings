@@ -40,7 +40,7 @@ public class ShaderScreen extends ListScreen<ShaderData> {
     }
 
     @Override
-    public List<String> getAdditions() {
+    public List<String> calculateAdditions() {
         List<String> shaders = new ArrayList<>(Shaders.getRegistry(registry).size());
 
         for (ShaderRegistryEntry shaderRegistry : Shaders.getRegistry(registry)) {
