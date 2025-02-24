@@ -116,6 +116,7 @@ public class LayerWidget extends ListWidget {
         setMessage(getNameText(name));
 
         updateDataButtons();
+        SouperSecretSettingsClient.soupGui.updateActiveLayer();
     }
 
     private static Text getNameText(String name) {
