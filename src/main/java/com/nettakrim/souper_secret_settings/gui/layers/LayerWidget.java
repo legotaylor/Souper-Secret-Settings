@@ -3,6 +3,7 @@ package com.nettakrim.souper_secret_settings.gui.layers;
 import com.mclegoman.luminance.client.data.ClientData;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.actions.LayerRenameAction;
+import com.nettakrim.souper_secret_settings.actions.ShaderLoadAction;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.ListWidget;
 import com.nettakrim.souper_secret_settings.gui.SuggestionTextFieldWidget;
@@ -127,6 +128,7 @@ public class LayerWidget extends ListWidget {
     }
 
     private void load() {
+        new ShaderLoadAction(layer).addToHistory();
         layer.clear();
         SouperSecretSettingsClient.soupData.loadLayer(layer);
         updateDataButtons();
