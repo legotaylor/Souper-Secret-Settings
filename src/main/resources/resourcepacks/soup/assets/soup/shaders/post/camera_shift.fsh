@@ -42,40 +42,43 @@ vec2 GetRayPos(mat4 projection, mat4 coord, float xSlope, float ySlope, float d)
     return ((pos.xy/pos.z) + vec2(1.0))/2;
 }
 
-vec2 SubStepRaycast(mat4 projection, mat4 coord, float xSlope, float ySlope, float start, float end) {
-    vec2 screen;
-    for (float i = 0; i < SubSteps; i++) {
-        float t = i/SubSteps;
-
-        float d = mix(start, end, t);
-        screen = GetRayPos(projection, coord, xSlope, ySlope, d);
-        float depth = LinearizeDepth(texture(InDepthSampler, wrapCoord(screen)).r);
-
-        if (depth < d) {
-            return screen;
-        }
-    }
-    return screen;
-}
-
 vec2 ExponentialRaycast(mat4 projection, mat4 coord, float xSlope, float ySlope) {
     vec2 screen;
     float zStep = ZStep;
-    for (float i = 1; i < Steps; i++) {
+    float i;
+    float d;
+    float depth;
+
+    for (i = 1; i < Steps; i++) {
         //d = ZStep * (ZGrowth^i) * i
-        float d = i*zStep;
+        d = i*zStep;
 
         screen = GetRayPos(projection, coord, xSlope, ySlope, d);
-        float depth = LinearizeDepth(texture(InDepthSampler, wrapCoord(screen)).r);
+        depth = LinearizeDepth(texture(InDepthSampler, wrapCoord(screen)).r);
 
         if (depth < d) {
-            if (depth < SubThreshold) {
-                return SubStepRaycast(projection, coord, xSlope, ySlope, i * zStep/ZGrowth, d);
-            }
-            return screen;
+            break;
         }
+
         zStep *= ZGrowth;
     }
+
+    if (depth < SubThreshold) {
+        float start = i * zStep / ZGrowth;
+
+        for (i = 0; i < SubSteps; i++) {
+            float t = i / SubSteps;
+
+            float d2 = mix(start, d, t);
+            screen = GetRayPos(projection, coord, xSlope, ySlope, d2);
+            depth = LinearizeDepth(texture(InDepthSampler, wrapCoord(screen)).r);
+
+            if (depth < d2) {
+                break;
+            }
+        }
+    }
+
     return screen;
 }
 
