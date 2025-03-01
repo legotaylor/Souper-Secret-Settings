@@ -100,6 +100,7 @@ public class LayerWidget extends ListWidget {
             collapseHeight += layer.getInfo().length * infoHeight;
             loadButton.setY(saveButton.getY());
         }
+        loadButton.visible = expanded;
     }
 
     @Override
@@ -139,5 +140,11 @@ public class LayerWidget extends ListWidget {
     private void updateDataButtons() {
         saveButton.active = SouperSecretSettingsClient.soupData.isValidName(layer.name);
         loadButton.active = SouperSecretSettingsClient.soupData.getLayerPath(layer.name).toFile().exists();
+    }
+
+    @Override
+    public void onRemove() {
+        super.onRemove();
+        listScreen.removeSelectable(loadButton);
     }
 }
