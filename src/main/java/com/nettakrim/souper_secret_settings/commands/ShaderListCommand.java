@@ -8,7 +8,6 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.actions.ListAddAction;
-import com.nettakrim.souper_secret_settings.actions.ListRemoveAction;
 import com.nettakrim.souper_secret_settings.shaders.ShaderData;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
@@ -20,16 +19,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-public class ShaderListCommand {
+public class ShaderListCommand extends ListCommand<ShaderData> {
     protected final String name;
     protected final Identifier registry;
-    protected final SuggestionProvider<FabricClientCommandSource> suggestionProvider;
+    protected final SuggestionProvider<FabricClientCommandSource> registrySuggestions;
 
     public ShaderListCommand(String name, Identifier registry) {
         this.name = name;
         this.registry = registry;
 
-        this.suggestionProvider = getRegistrySuggestions(registry);
+        this.registrySuggestions = getRegistrySuggestions(registry);
     }
 
     public void register(RootCommandNode<FabricClientCommandSource> root) {
@@ -40,7 +39,7 @@ public class ShaderListCommand {
                 .literal("add")
                 .then(
                         ClientCommandManager.argument("shader", IdentifierArgumentType.identifier())
-                                .suggests(suggestionProvider)
+                                .suggests(registrySuggestions)
                                 .executes((context -> add(context.getArgument("shader", Identifier.class), 1)))
                                 .then(
                                         ClientCommandManager.argument("amount", IntegerArgumentType.integer(1))
@@ -51,25 +50,7 @@ public class ShaderListCommand {
 
         commandNode.addChild(addNode);
 
-
-
-        LiteralCommandNode<FabricClientCommandSource> removeNode = ClientCommandManager
-                .literal("remove")
-                .build();
-
-        LiteralCommandNode<FabricClientCommandSource> clearNode = ClientCommandManager
-                .literal("all")
-                .executes(context -> removeAll())
-                .build();
-
-        LiteralCommandNode<FabricClientCommandSource> topNode = ClientCommandManager
-                .literal("top")
-                .executes(context -> removeTop())
-                .build();
-
-        commandNode.addChild(removeNode);
-        removeNode.addChild(clearNode);
-        removeNode.addChild(topNode);
+        registerList(commandNode);
     }
 
     public int add(Identifier id, int amount) {
@@ -85,27 +66,6 @@ public class ShaderListCommand {
             new ListAddAction<>(list, shaderData).addToHistory();
         }
         list.addAll(shaders);
-        return 1;
-    }
-
-    public int removeAll() {
-        ShaderLayer layer = SouperSecretSettingsClient.soupRenderer.activeLayer;
-
-        List<ShaderData> shaders = layer.getList(registry);
-        for (int i = shaders.size()-1; i >= 0; i--) {
-            new ListRemoveAction<>(shaders, i).addToHistory();
-        }
-        shaders.clear();
-        return 1;
-    }
-
-    public int removeTop() {
-        List<ShaderData> shaders = SouperSecretSettingsClient.soupRenderer.activeLayer.getList(registry);
-        if (shaders.isEmpty()) {
-            return -1;
-        }
-        new ListRemoveAction<>(shaders, shaders.size()-1).addToHistory();
-        shaders.removeLast();
         return 1;
     }
 
@@ -126,5 +86,10 @@ public class ShaderListCommand {
 
             return CompletableFuture.completedFuture(builder.build());
         };
+    }
+
+    @Override
+    List<ShaderData> getList() {
+        return SouperSecretSettingsClient.soupRenderer.activeLayer.getList(registry);
     }
 }
