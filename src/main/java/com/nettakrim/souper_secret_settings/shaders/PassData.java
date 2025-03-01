@@ -1,6 +1,7 @@
 package com.nettakrim.souper_secret_settings.shaders;
 
 import com.mclegoman.luminance.client.shaders.ShaderTime;
+import com.mclegoman.luminance.client.shaders.interfaces.CustomPassData;
 import com.mclegoman.luminance.client.shaders.interfaces.PostEffectPassInterface;
 import com.mclegoman.luminance.client.shaders.interfaces.ShaderProgramInterface;
 import com.mclegoman.luminance.client.shaders.overrides.*;
@@ -83,8 +84,8 @@ public class PassData {
             return;
         }
 
-        Map<String, LuminanceUniformOverride> overrideMap = new HashMap<>(names.size());
-        Map<String,UniformConfig> configMap = new HashMap<>(names.size());
+        CustomPassData.CustomPassDataMap<String,LuminanceUniformOverride> overrideMap = new CustomPassData.CustomPassDataMap<>(names.size());
+        CustomPassData.CustomPassDataMap<String,UniformConfig> configMap = new CustomPassData.CustomPassDataMap<>(names.size());
 
         for (String name : names) {
             setUniformInitial(pass, program.getUniform(name), overrideMap, configMap);
