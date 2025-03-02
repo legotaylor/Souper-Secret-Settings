@@ -27,7 +27,7 @@ public class PassWidget extends CollapseWidget {
     protected static int firstCustomHeight = 10;
 
     public PassWidget(ShaderWidget shader, PostEffectPass postEffectPass, Identifier customPass, int passIndex, int x, int width, ListScreen<?> listScreen) {
-        super(x, width, Text.literal(((PostEffectPassInterface)postEffectPass).luminance$getID()), listScreen);
+        super(x, width, Text.literal(((PostEffectPassInterface)postEffectPass).luminance$getID().replace(":post/",":")), listScreen);
 
         this.shader = shader;
         this.postEffectPass = postEffectPass;
