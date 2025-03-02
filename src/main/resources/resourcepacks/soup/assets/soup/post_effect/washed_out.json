@@ -21,7 +21,7 @@
             "output": "0"
         },
         {
-            "program": "effects:difference",
+            "program": "soup:post/difference",
             "inputs": [
                 {
                     "sampler_name": "In",

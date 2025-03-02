@@ -6,7 +6,7 @@
     },
     "passes": [
         {
-            "program": "effects:mix",
+            "program": "soup:post/mix",
             "inputs": [
                 {
                     "sampler_name": "In",

@@ -1,0 +1,11 @@
+{
+    "post_effect": "soup:flashlight",
+    "enabled": true,
+    "translatable": true,
+    "description": false,
+    "disable_game_rendertype": true,
+    "registries": [
+        "souper_secret_settings:effects"
+    ],
+    "custom": {}
+}

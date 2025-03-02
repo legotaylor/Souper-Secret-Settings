@@ -1,0 +1,46 @@
+{
+    "targets": {
+        "0": {},
+        "base": {"persistent": true}
+    },
+    "custom_passes": {
+        "souper_secret_settings:before_layer_render": [
+            {
+                "program": "minecraft:post/blit",
+                "inputs": [
+                    {
+                        "sampler_name": "In",
+                        "target": "minecraft:main"
+                    }
+                ],
+                "output": "base"
+            }
+        ],
+        "souper_secret_settings:after_layer_render": [
+            {
+                "program": "soup:post/compare",
+                "inputs": [
+                    {
+                        "sampler_name": "In",
+                        "target": "base"
+                    },
+                    {
+                        "sampler_name": "Base",
+                        "target": "minecraft:main"
+                    }
+                ],
+                "output": "0"
+            },
+            {
+                "program": "minecraft:post/blit",
+                "inputs": [
+                    {
+                        "sampler_name": "In",
+                        "target": "0"
+                    }
+                ],
+                "output": "minecraft:main"
+            }
+        ]
+    }
+}

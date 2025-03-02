@@ -1,0 +1,15 @@
+{
+    "post_effect": "soup:cycle_additive",
+    "enabled": true,
+    "translatable": true,
+    "description": false,
+    "disable_game_rendertype": true,
+    "registries": [
+        "souper_secret_settings:effects"
+    ],
+    "custom": {
+        "souper_secret_settings": {
+            "groups": []
+        }
+    }
+}

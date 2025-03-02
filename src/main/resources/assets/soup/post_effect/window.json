@@ -1,0 +1,102 @@
+{
+    "targets": {
+        "0": {},
+        "base": {"persistent": true}
+    },
+    "custom_passes": {
+        "souper_secret_settings:before_layer_render": [
+            {
+                "program": "minecraft:post/blit",
+                "inputs": [
+                    {
+                        "sampler_name": "In",
+                        "target": "minecraft:main"
+                    }
+                ],
+                "output": "base"
+            },
+            {
+                "program": "soup:post/projection",
+                "inputs": [
+                    {
+                        "sampler_name": "In",
+                        "target": "minecraft:main"
+                    }
+                ],
+                "output": "0",
+                "uniforms": [
+                    {
+                        "name": "Corner00",
+                        "values": [ 0.1, 0.1 ]
+                    },
+                    {
+                        "name": "Corner01",
+                        "values": [ 0.1, 0.9 ]
+                    },
+                    {
+                        "name": "Corner10",
+                        "values": [ 0.9, 0.1 ]
+                    },
+                    {
+                        "name": "Corner11",
+                        "values": [ 0.9, 0.9 ]
+                    }
+                ]
+            },
+            {
+                "program": "minecraft:post/blit",
+                "inputs": [
+                    {
+                        "sampler_name": "In",
+                        "target": "0"
+                    }
+                ],
+                "output": "minecraft:main"
+            }
+        ],
+        "souper_secret_settings:after_layer_render": [
+            {
+                "program": "soup:post/projection_merge",
+                "inputs": [
+                    {
+                        "sampler_name": "In",
+                        "target": "minecraft:main"
+                    },
+                    {
+                        "sampler_name": "Base",
+                        "target": "base"
+                    }
+                ],
+                "output": "0",
+                "uniforms": [
+                    {
+                        "name": "Corner00",
+                        "values": [ 0.1, 0.1 ]
+                    },
+                    {
+                        "name": "Corner01",
+                        "values": [ 0.1, 0.9 ]
+                    },
+                    {
+                        "name": "Corner10",
+                        "values": [ 0.9, 0.1 ]
+                    },
+                    {
+                        "name": "Corner11",
+                        "values": [ 0.9, 0.9 ]
+                    }
+                ]
+            },
+            {
+                "program": "minecraft:post/blit",
+                "inputs": [
+                    {
+                        "sampler_name": "In",
+                        "target": "0"
+                    }
+                ],
+                "output": "minecraft:main"
+            }
+        ]
+    }
+}
