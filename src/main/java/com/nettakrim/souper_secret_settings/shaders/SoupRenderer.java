@@ -31,7 +31,7 @@ public class SoupRenderer implements Runnables.WorldRender {
 
     private List<String> validUniforms;
 
-    public static final Identifier effectRegistry = Identifier.of(SouperSecretSettingsClient.MODID, "effects");
+    public static final Identifier modifierRegistry = Identifier.of(SouperSecretSettingsClient.MODID, "modifiers");
 
     private Shader.RenderType renderType;
 

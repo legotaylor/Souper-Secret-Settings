@@ -16,7 +16,7 @@ public class SouperSecretSettingsCommands {
 
             new LayerCommand().register(root);
             new ShaderListCommand("shader", Shaders.getMainRegistryId()).register(root);
-            new ShaderListCommand("effect", SoupRenderer.effectRegistry).register(root);
+            new ShaderListCommand("modifier", SoupRenderer.modifierRegistry).register(root);
             new ParameterCommand().register(root);
         });
     }

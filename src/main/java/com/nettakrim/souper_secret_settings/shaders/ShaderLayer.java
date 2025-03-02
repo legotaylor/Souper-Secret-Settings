@@ -19,7 +19,7 @@ public class ShaderLayer implements Toggleable {
     public String name;
 
     public final List<ShaderData> shaders;
-    public final List<ShaderData> effects;
+    public final List<ShaderData> modifiers;
     public final List<Calculation> calculations;
 
     public final Map<String, Float> parameterValues;
@@ -38,7 +38,7 @@ public class ShaderLayer implements Toggleable {
         this.name = name;
 
         shaders = new ArrayList<>();
-        effects = new ArrayList<>();
+        modifiers = new ArrayList<>();
         calculations = new ArrayList<>();
 
         SouperSecretSettingsClient.soupData.loadLayer(this);
@@ -62,7 +62,7 @@ public class ShaderLayer implements Toggleable {
 
     public void clear() {
         shaders.clear();
-        effects.clear();
+        modifiers.clear();
         calculations.clear();
     }
 
@@ -83,18 +83,18 @@ public class ShaderLayer implements Toggleable {
             OverrideManager.startShaderQueue(shaderQueue);
         });
 
-        renderList(effects, shaderQueue, builder, textureWidth, textureHeight, framebufferSet, beforeLayerRender);
+        renderList(modifiers, shaderQueue, builder, textureWidth, textureHeight, framebufferSet, beforeLayerRender);
 
         for (ShaderData shaderData : shaders) {
             if (shaderData.active) {
-                renderList(effects, shaderQueue, builder, textureWidth, textureHeight, framebufferSet, beforeShaderRender);
+                renderList(modifiers, shaderQueue, builder, textureWidth, textureHeight, framebufferSet, beforeShaderRender);
                 renderShader(shaderData, shaderQueue, builder, textureWidth, textureHeight, framebufferSet, null);
-                renderList(effects.reversed(), shaderQueue, builder, textureWidth, textureHeight, framebufferSet, afterShaderRender);
+                renderList(modifiers.reversed(), shaderQueue, builder, textureWidth, textureHeight, framebufferSet, afterShaderRender);
                 shaderQueue.add(null);
             }
         }
 
-        renderList(effects.reversed(), shaderQueue, builder, textureWidth, textureHeight, framebufferSet, afterLayerRender);
+        renderList(modifiers.reversed(), shaderQueue, builder, textureWidth, textureHeight, framebufferSet, afterLayerRender);
     }
 
     public void renderList(List<ShaderData> shaders, Queue<Couple<ShaderData, Identifier>> shaderQueue, FrameGraphBuilder builder, int textureWidth, int textureHeight, PostEffectProcessor.FramebufferSet framebufferSet, @Nullable Identifier customPasses) {
@@ -114,8 +114,8 @@ public class ShaderLayer implements Toggleable {
             return shaders;
         }
 
-        if (SoupRenderer.effectRegistry.equals(registry)) {
-            return effects;
+        if (SoupRenderer.modifierRegistry.equals(registry)) {
+            return modifiers;
         }
 
         return List.of();
@@ -123,7 +123,7 @@ public class ShaderLayer implements Toggleable {
 
     public Text[] getInfo() {
         int shaders = 0;
-        int effects = 0;
+        int modifiers = 0;
         int passes = 0;
 
         for (ShaderData shaderData : this.shaders) {
@@ -132,18 +132,18 @@ public class ShaderLayer implements Toggleable {
             shaders++;
         }
 
-        for (ShaderData effect : this.effects) {
-            if (!effect.active) continue;
-            passes += effect.getRenderPassCount(beforeLayerRender);
-            passes += effect.getRenderPassCount(beforeShaderRender)*shaders;
-            passes += effect.getRenderPassCount(afterShaderRender)*shaders;
-            passes += effect.getRenderPassCount(afterLayerRender);
-            effects++;
+        for (ShaderData modifier : this.modifiers) {
+            if (!modifier.active) continue;
+            passes += modifier.getRenderPassCount(beforeLayerRender);
+            passes += modifier.getRenderPassCount(beforeShaderRender)*shaders;
+            passes += modifier.getRenderPassCount(afterShaderRender)*shaders;
+            passes += modifier.getRenderPassCount(afterLayerRender);
+            modifiers++;
         }
 
         return new Text[]{
                 Text.literal("shaders: "+shaders),
-                Text.literal("effects: "+effects),
+                Text.literal("modifiers: "+modifiers),
                 Text.literal("render passes: "+passes)
         };
     }

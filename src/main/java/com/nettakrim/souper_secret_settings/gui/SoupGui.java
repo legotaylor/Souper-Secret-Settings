@@ -42,7 +42,7 @@ public class SoupGui {
 
         x = listGap;
         x += addHeaderButton(ButtonWidget.builder(Text.literal("shaders"),    (widget) -> open(ScreenType.SHADERS   )).dimensions(x, listGap*2 + 20, mainWidth, 20).build());
-        x += addHeaderButton(ButtonWidget.builder(Text.literal("effects"),    (widget) -> open(ScreenType.EFFECTS   )).dimensions(x, listGap*2 + 20, mainWidth, 20).build());
+        x += addHeaderButton(ButtonWidget.builder(Text.literal("modifiers"),  (widget) -> open(ScreenType.MODIFIERS )).dimensions(x, listGap*2 + 20, mainWidth, 20).build());
              addHeaderButton(ButtonWidget.builder(Text.literal("parameters"), (widget) -> open(ScreenType.PARAMETERS)).dimensions(x, listGap*2 + 20, mainWidth, 20).build());
 
         currentScroll = new int[ScreenType.values().length];
@@ -60,7 +60,7 @@ public class SoupGui {
         Screen screen = switch(screenType) {
             case LAYERS -> new LayerScreen(index);
             case SHADERS -> new ShaderScreen(index, SouperSecretSettingsClient.soupRenderer.activeLayer, Shaders.getMainRegistryId(),new Identifier[] {null});
-            case EFFECTS -> new ShaderScreen(index, SouperSecretSettingsClient.soupRenderer.activeLayer, SoupRenderer.effectRegistry, new Identifier[] {
+            case MODIFIERS -> new ShaderScreen(index, SouperSecretSettingsClient.soupRenderer.activeLayer, SoupRenderer.modifierRegistry, new Identifier[] {
                     Identifier.of(SouperSecretSettingsClient.MODID, "before_layer_render"),
                     Identifier.of(SouperSecretSettingsClient.MODID, "before_shader_render"),
                     Identifier.of(SouperSecretSettingsClient.MODID, "after_shader_render"),
@@ -108,7 +108,7 @@ public class SoupGui {
     public enum ScreenType {
         LAYERS,
         SHADERS,
-        EFFECTS,
+        MODIFIERS,
         PARAMETERS
     }
 }

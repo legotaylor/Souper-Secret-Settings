@@ -18,21 +18,21 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>> effects, Optional<List<CalculationData>> calculations) implements DeletableCodec {
+public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>> modifiers, Optional<List<CalculationData>> calculations) implements DeletableCodec {
     public static final Codec<LayerCodecs> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             Shader.CODEC.listOf().optionalFieldOf("shaders").forGetter(LayerCodecs::shaders),
-            Shader.CODEC.listOf().optionalFieldOf("effects").forGetter(LayerCodecs::effects),
+            Shader.CODEC.listOf().optionalFieldOf("modifiers").forGetter(LayerCodecs::modifiers),
             CalculationData.CODEC.listOf().optionalFieldOf("calculations").forGetter(LayerCodecs::calculations)
     ).apply(instance, LayerCodecs::new));
 
     public static LayerCodecs from(ShaderLayer layer) {
         List<Shader> shaders = Shader.fromList(layer.shaders);
-        List<Shader> effects = Shader.fromList(layer.effects);
+        List<Shader> modifiers = Shader.fromList(layer.modifiers);
         List<CalculationData> calculations = CalculationData.fromList(layer.calculations);
 
         return new LayerCodecs(
                 shaders.isEmpty() ? Optional.empty() : Optional.of(shaders),
-                effects.isEmpty() ? Optional.empty() : Optional.of(effects),
+                modifiers.isEmpty() ? Optional.empty() : Optional.of(modifiers),
                 calculations.isEmpty() ? Optional.empty() : Optional.of(calculations)
         );
     }
@@ -43,9 +43,9 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
                 shader.apply(layer, Shaders.getMainRegistryId());
             }
         }
-        if (effects.isPresent()) {
-            for (Shader shader : effects.get()) {
-                shader.apply(layer, SoupRenderer.effectRegistry);
+        if (modifiers.isPresent()) {
+            for (Shader shader : modifiers.get()) {
+                shader.apply(layer, SoupRenderer.modifierRegistry);
             }
         }
         if (calculations.isPresent()) {
@@ -56,7 +56,7 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
     }
 
     public boolean isEmpty() {
-        return shaders().isEmpty() && effects.isEmpty() && calculations.isEmpty();
+        return shaders().isEmpty() && modifiers.isEmpty() && calculations.isEmpty();
     }
 
     protected record Shader(String id, Optional<Map<String, List<Pass>>> passes, Boolean active) {
