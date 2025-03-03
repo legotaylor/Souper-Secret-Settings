@@ -7,17 +7,10 @@
     "souper_secret_settings.query.multiple.join" : " -> %s x%s",
     "souper_secret_settings.query.none" : "none",
 
-    "souper_secret_settings.recipe.warn_overwrite" : "Recipe named \"%s\" already exists, run again to confirm overwrite",
-    "souper_secret_settings.recipe.missing" : "Cannot find recipe named \"%s\"",
-    "souper_secret_settings.recipe.remove" : "Removed recipe \"%s\"",
-    "souper_secret_settings.recipe.save" : "Saved recipe \"%s\"",
-    "souper_secret_settings.recipe.missing_part" : "Recipe cannot find shader named \"%s\"",
-
-    "souper_secret_settings.share.click" : "[Click Here] ",
-    "souper_secret_settings.share.send" : "To share recipe \"%s\"",
-    "souper_secret_settings.share.send.current" : "To share the currently active layer",
-    "souper_secret_settings.share.receive" : "To apply recipe with %s different shaders",
-    "souper_secret_settings.share.long" : "Recipe is too long to send in chat - copied to clipboard instead",
+    "souper_secret_settings.layer.warn_overwrite" : "Saved layer named \"%s\" already exists, run again to confirm overwrite",
+    "souper_secret_settings.layer.missing" : "Cannot find layer named \"%s\"",
+    "souper_secret_settings.layer.delete" : "Removed saved layer \"%s\"",
+    "souper_secret_settings.layer.save" : "Saved layer \"%s\"",
 
     "souper_secret_settings.shader.toggle_prompt" : "Soup toggled back on automatically, use \"/soup:toggle stay\" if you want it to stay off",
     "souper_secret_settings.shader.warn_stacking" : "Stacking more than %s shaders might crash the game\n! Proceed with caution !",
