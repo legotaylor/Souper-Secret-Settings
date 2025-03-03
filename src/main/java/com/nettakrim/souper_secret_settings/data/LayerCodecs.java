@@ -56,7 +56,7 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
     }
 
     public boolean isEmpty() {
-        return shaders().isEmpty() && modifiers.isEmpty() && calculations.isEmpty();
+        return shaders.isEmpty() && modifiers.isEmpty() && calculations.isEmpty();
     }
 
     protected record Shader(String id, Optional<Map<String, List<Pass>>> passes, Boolean active) {

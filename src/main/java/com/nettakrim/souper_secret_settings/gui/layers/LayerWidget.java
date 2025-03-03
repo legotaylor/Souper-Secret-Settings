@@ -22,6 +22,8 @@ public class LayerWidget extends ListWidget {
 
     private static final int infoHeight = 15;
 
+    boolean saveConfirmed;
+
     public LayerWidget(ShaderLayer layer, ListScreen<?> listScreen, int x, int width) {
         super(x, width, getNameText(layer.name), listScreen);
         this.layer = layer;
@@ -125,9 +127,15 @@ public class LayerWidget extends ListWidget {
     }
 
     private void save() {
+        if (loadButton.active && !saveConfirmed) {
+            setConfirm(true);
+            return;
+        }
+
         SouperSecretSettingsClient.soupData.saveLayer(layer, this::updateDataButtons);
         updateDataButtons();
         listScreen.recalculateAdditions();
+        setConfirm(false);
     }
 
     private void load() {
@@ -140,6 +148,23 @@ public class LayerWidget extends ListWidget {
     private void updateDataButtons() {
         saveButton.active = SouperSecretSettingsClient.soupData.isValidName(layer.name);
         loadButton.active = SouperSecretSettingsClient.soupData.getLayerPath(layer.name).toFile().exists();
+
+        if (saveButton.active && !loadButton.active && layer.shaders.isEmpty() && layer.modifiers.isEmpty() && layer.calculations.isEmpty()) {
+            saveButton.active = false;
+        }
+    }
+
+    @Override
+    protected void setExpanded(boolean to) {
+        super.setExpanded(to);
+        if (!to) {
+            setConfirm(false);
+        }
+    }
+
+    private void setConfirm(boolean to) {
+        saveConfirmed = to;
+        saveButton.setMessage(to ? Text.literal("confirm") : Text.literal("save"));
     }
 
     @Override
