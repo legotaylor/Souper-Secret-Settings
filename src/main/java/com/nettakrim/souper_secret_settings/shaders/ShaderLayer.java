@@ -157,6 +157,10 @@ public class ShaderLayer implements Toggleable {
         FramePassInterface.createForcedPass(builder, Identifier.of(SouperSecretSettingsClient.MODID, "layer_cleanup"), () -> renderingLayer = null);
     }
 
+    public boolean isEmpty() {
+        return shaders.isEmpty() && modifiers.isEmpty() && calculations.isEmpty();
+    }
+
     @Override
     public boolean isActive() {
         return active;

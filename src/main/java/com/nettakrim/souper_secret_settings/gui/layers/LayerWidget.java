@@ -149,7 +149,7 @@ public class LayerWidget extends ListWidget {
         saveButton.active = SouperSecretSettingsClient.soupData.isValidName(layer.name);
         loadButton.active = SouperSecretSettingsClient.soupData.getLayerPath(layer.name).toFile().exists();
 
-        if (saveButton.active && !loadButton.active && layer.shaders.isEmpty() && layer.modifiers.isEmpty() && layer.calculations.isEmpty()) {
+        if (saveButton.active && !loadButton.active && layer.isEmpty()) {
             saveButton.active = false;
         }
     }

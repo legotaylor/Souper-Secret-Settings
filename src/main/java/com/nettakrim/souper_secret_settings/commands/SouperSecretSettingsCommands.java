@@ -8,16 +8,26 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallba
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 
 public class SouperSecretSettingsCommands {
+    public static LayerCommand layerCommand;
+    public static ShaderListCommand shaderCommand;
+    public static ShaderListCommand modifierCommand;
+    public static ParameterCommand parameterCommand;
+
     public static void initialize() {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
             RootCommandNode<FabricClientCommandSource> root = dispatcher.getRoot();
 
             new GuiCommand().register(root);
 
-            new LayerCommand().register(root);
-            new ShaderListCommand("shader", Shaders.getMainRegistryId()).register(root);
-            new ShaderListCommand("modifier", SoupRenderer.modifierRegistry).register(root);
-            new ParameterCommand().register(root);
+            layerCommand = new LayerCommand();
+            shaderCommand = new ShaderListCommand("shader", Shaders.getMainRegistryId());
+            modifierCommand = new ShaderListCommand("modifier", SoupRenderer.modifierRegistry);
+            parameterCommand = new ParameterCommand();
+
+            layerCommand.register(root);
+            shaderCommand.register(root);
+            modifierCommand.register(root);
+            parameterCommand.register(root);
         });
     }
 }

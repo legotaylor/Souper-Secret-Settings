@@ -11,6 +11,8 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.text.*;
 import net.minecraft.util.Identifier;
 
@@ -18,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.nettakrim.souper_secret_settings.commands.SouperSecretSettingsCommands;
+
 
 public class SouperSecretSettingsClient implements ClientModInitializer {
 	public static final String MODID = "souper_secret_settings";
@@ -69,5 +72,15 @@ public class SouperSecretSettingsClient implements ClientModInitializer {
 			s.append(object);
 		}
 		LOGGER.info(s.toString());
+	}
+
+	public static void consumeItem(ItemStack stack) {
+		if (stack.isOf(Items.BEETROOT_SOUP)) {
+			SouperSecretSettingsCommands.shaderCommand.removeAll();
+			SouperSecretSettingsCommands.shaderCommand.add(Identifier.of("random_edible"), 1);
+			RandomSound.Play();
+		} else if (stack.isOf(Items.MILK_BUCKET)) {
+			SouperSecretSettingsCommands.shaderCommand.removeAll();
+		}
 	}
 }
