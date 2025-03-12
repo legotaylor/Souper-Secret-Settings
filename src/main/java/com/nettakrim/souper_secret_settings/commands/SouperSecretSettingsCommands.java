@@ -18,6 +18,7 @@ public class SouperSecretSettingsCommands {
             RootCommandNode<FabricClientCommandSource> root = dispatcher.getRoot();
 
             new GuiCommand().register(root);
+            new OptionCommand().register(root, registryAccess);
 
             layerCommand = new LayerCommand();
             shaderCommand = new ShaderListCommand("shader", Shaders.getMainRegistryId());

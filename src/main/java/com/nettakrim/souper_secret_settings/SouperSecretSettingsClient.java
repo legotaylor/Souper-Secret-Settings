@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 
 import com.nettakrim.souper_secret_settings.commands.SouperSecretSettingsCommands;
 
-
 public class SouperSecretSettingsClient implements ClientModInitializer {
 	public static final String MODID = "souper_secret_settings";
 	private static final Logger LOGGER = LoggerFactory.getLogger(MODID);
@@ -33,6 +32,9 @@ public class SouperSecretSettingsClient implements ClientModInitializer {
 	public static SoupRenderer soupRenderer;
 	public static SoupGui soupGui;
 	public static Actions actions;
+
+	public static ItemStack randomItem = new ItemStack(Items.BEETROOT_SOUP);
+	public static ItemStack clearItem = new ItemStack(Items.MILK_BUCKET);
 
 	@Override
 	public void onInitializeClient() {
@@ -75,12 +77,16 @@ public class SouperSecretSettingsClient implements ClientModInitializer {
 	}
 
 	public static void consumeItem(ItemStack stack) {
-		if (stack.isOf(Items.BEETROOT_SOUP)) {
+		if (stacksMatch(stack, randomItem)) {
 			SouperSecretSettingsCommands.shaderCommand.removeAll();
 			SouperSecretSettingsCommands.shaderCommand.add(Identifier.of("random_edible"), 1);
 			RandomSound.Play();
-		} else if (stack.isOf(Items.MILK_BUCKET)) {
+		} else if (stacksMatch(stack, clearItem)) {
 			SouperSecretSettingsCommands.shaderCommand.removeAll();
 		}
+	}
+
+	private static boolean stacksMatch(ItemStack stack, ItemStack reference) {
+		return stack.isOf(reference.getItem()) && stack.getComponentChanges().toString().equals(reference.getComponentChanges().toString());
 	}
 }
