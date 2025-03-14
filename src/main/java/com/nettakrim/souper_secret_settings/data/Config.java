@@ -5,6 +5,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 
 import java.io.File;
@@ -16,18 +18,25 @@ import java.util.Optional;
 import java.util.Scanner;
 
 public class Config {
-    public static final Codec<Config> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-            Codec.BOOL.fieldOf("transferredOldData").forGetter((config) -> config.transferredOldData)
-    ).apply(instance, Config::new));
-
     boolean transferredOldData;
 
-    public Config(boolean transferredOldData) {
+    public ItemStack randomItem;
+    public ItemStack clearItem;
+
+    public static final Codec<Config> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+            Codec.BOOL.fieldOf("transferredOldData").forGetter((config) -> config.transferredOldData),
+            ItemStack.CODEC.optionalFieldOf("randomItem", new ItemStack(Items.BEETROOT_SOUP)).forGetter((config -> config.randomItem)),
+            ItemStack.CODEC.optionalFieldOf("clearItem", new ItemStack(Items.MILK_BUCKET)).forGetter((config -> config.clearItem))
+            ).apply(instance, Config::new));
+
+    public Config(boolean transferredOldData, ItemStack randomItem, ItemStack clearItem) {
         this.transferredOldData = transferredOldData;
+        this.randomItem = randomItem;
+        this.clearItem = clearItem;
     }
 
     public static Config getDefaultConfig() {
-        return new Config(false);
+        return new Config(false, new ItemStack(Items.BEETROOT_SOUP), new ItemStack(Items.MILK_BUCKET));
     }
 
     public void transferOldData() {

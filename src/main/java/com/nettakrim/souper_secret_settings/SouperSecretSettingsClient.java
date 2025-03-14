@@ -12,7 +12,6 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.text.*;
 import net.minecraft.util.Identifier;
 
@@ -32,9 +31,6 @@ public class SouperSecretSettingsClient implements ClientModInitializer {
 	public static SoupRenderer soupRenderer;
 	public static SoupGui soupGui;
 	public static Actions actions;
-
-	public static ItemStack randomItem = new ItemStack(Items.BEETROOT_SOUP);
-	public static ItemStack clearItem = new ItemStack(Items.MILK_BUCKET);
 
 	@Override
 	public void onInitializeClient() {
@@ -77,11 +73,11 @@ public class SouperSecretSettingsClient implements ClientModInitializer {
 	}
 
 	public static void consumeItem(ItemStack stack) {
-		if (stacksMatch(stack, randomItem)) {
+		if (stacksMatch(stack, soupData.config.randomItem)) {
 			SouperSecretSettingsCommands.shaderCommand.removeAll();
 			SouperSecretSettingsCommands.shaderCommand.add(Identifier.of("random_edible"), 1);
 			RandomSound.Play();
-		} else if (stacksMatch(stack, clearItem)) {
+		} else if (stacksMatch(stack, soupData.config.clearItem)) {
 			SouperSecretSettingsCommands.shaderCommand.removeAll();
 		}
 	}

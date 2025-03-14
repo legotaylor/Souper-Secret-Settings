@@ -39,12 +39,14 @@ public class OptionCommand {
     }
 
     int setRandomItem(ItemStackArgument itemStack) throws CommandSyntaxException {
-        SouperSecretSettingsClient.randomItem = itemStack.createStack(1, false);
+        SouperSecretSettingsClient.soupData.config.randomItem = itemStack.createStack(1, false);
+        SouperSecretSettingsClient.soupData.saveConfig();
         return 1;
     }
 
     int setClearItem(ItemStackArgument itemStack) throws CommandSyntaxException {
-        SouperSecretSettingsClient.clearItem = itemStack.createStack(1, false);
+        SouperSecretSettingsClient.soupData.config.clearItem = itemStack.createStack(1, false);
+        SouperSecretSettingsClient.soupData.saveConfig();
         return 1;
     }
 
