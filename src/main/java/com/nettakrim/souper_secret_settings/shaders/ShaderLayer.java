@@ -43,19 +43,7 @@ public class ShaderLayer implements Toggleable {
 
         SouperSecretSettingsClient.soupData.loadLayer(this);
 
-        int i = 1;
-        while (true) {
-            int lastI = i;
-            for (ShaderLayer layer : SouperSecretSettingsClient.soupRenderer.shaderLayers) {
-                if (layer.name.equals(this.name)) {
-                    i++;
-                    this.name = name+"_"+i;
-                }
-            }
-            if (i == lastI) {
-                break;
-            }
-        }
+        disambiguateName();
 
         parameterValues = new HashMap<>();
     }
@@ -159,6 +147,23 @@ public class ShaderLayer implements Toggleable {
 
     public boolean isEmpty() {
         return shaders.isEmpty() && modifiers.isEmpty() && calculations.isEmpty();
+    }
+
+    public void disambiguateName() {
+        String oldName = name;
+        int i = 1;
+        while (true) {
+            int lastI = i;
+            for (ShaderLayer layer : SouperSecretSettingsClient.soupRenderer.shaderLayers) {
+                if (layer != this && layer.name.equals(name)) {
+                    i++;
+                    name = oldName+"_"+i;
+                }
+            }
+            if (i == lastI) {
+                break;
+            }
+        }
     }
 
     @Override

@@ -18,6 +18,8 @@ public class SuggestionTextFieldWidget extends DraggableTextFieldWidget {
 
     private final boolean resetOnEmpty;
 
+    public boolean submitOnLostFocus = false;
+
     public SuggestionTextFieldWidget(int x, int width, int height, Text message, boolean resetOnEmpty) {
         super(x, width, height, message);
         super.setChangedListener(this::onChange);
@@ -118,5 +120,13 @@ public class SuggestionTextFieldWidget extends DraggableTextFieldWidget {
             }
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    @Override
+    public void setFocused(boolean focused) {
+        super.setFocused(focused);
+        if (!focused && submitOnLostFocus) {
+            onSubmit.accept(getText());
+        }
     }
 }

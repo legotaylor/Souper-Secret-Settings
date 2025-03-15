@@ -20,6 +20,8 @@ public class LayerWidget extends ListWidget {
     private final ButtonWidget saveButton;
     private final ButtonWidget loadButton;
 
+    private final SuggestionTextFieldWidget nameWidget;
+
     private static final int infoHeight = 15;
 
     boolean saveConfirmed;
@@ -31,8 +33,9 @@ public class LayerWidget extends ListWidget {
         saveButton = ButtonWidget.builder(Text.literal("save"), (buttonWidget) -> save()).dimensions(x,0,width/2,20).build();
         loadButton = ButtonWidget.builder(Text.literal("load"), (buttonWidget) -> load()).dimensions(x + width/2,0,width/2,20).build();
 
-        SuggestionTextFieldWidget nameWidget = new SuggestionTextFieldWidget(x, width, 20, Text.of("layer id"), false);
-        nameWidget.setListeners(SouperSecretSettingsClient.soupData::getSavedLayers, null);
+        nameWidget = new SuggestionTextFieldWidget(x, width, 20, Text.of("layer id"), false);
+        nameWidget.setListeners(SouperSecretSettingsClient.soupData::getSavedLayers, this::setNameDisambiguate);
+        nameWidget.submitOnLostFocus = true;
         nameWidget.setText(layer.name);
         nameWidget.setChangedListener(this::setName);
 
@@ -120,6 +123,19 @@ public class LayerWidget extends ListWidget {
 
         updateDataButtons();
         SouperSecretSettingsClient.soupGui.updateActiveLayer();
+    }
+
+    private void setNameDisambiguate(String name) {
+        new LayerRenameAction(layer).addToHistory();
+        layer.name = name;
+        layer.disambiguateName();
+        setMessage(getNameText(name));
+
+        updateDataButtons();
+
+        nameWidget.setText(layer.name);
+        nameWidget.setCursorToEnd(false);
+        setMessage(Text.literal(layer.name));
     }
 
     private static Text getNameText(String name) {

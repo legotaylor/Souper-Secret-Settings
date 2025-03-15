@@ -54,31 +54,31 @@ public class OptionCommand {
         commandNode.addChild(renderTypeNode);
     }
 
-    int setRandomItem(ItemStackArgument itemStack) throws CommandSyntaxException {
+    private int setRandomItem(ItemStackArgument itemStack) throws CommandSyntaxException {
         SouperSecretSettingsClient.soupData.config.randomItem = itemStack.createStack(1, false);
         sayItem("option.random.set", SouperSecretSettingsClient.soupData.config.randomItem);
         SouperSecretSettingsClient.soupData.saveConfig();
         return 1;
     }
 
-    int queryRandomItem() {
+    private int queryRandomItem() {
         sayItem("option.random.query", SouperSecretSettingsClient.soupData.config.randomItem);
         return 1;
     }
 
-    int setClearItem(ItemStackArgument itemStack) throws CommandSyntaxException {
+    private int setClearItem(ItemStackArgument itemStack) throws CommandSyntaxException {
         SouperSecretSettingsClient.soupData.config.clearItem = itemStack.createStack(1, false);
         sayItem("option.clear.set", SouperSecretSettingsClient.soupData.config.clearItem);
         SouperSecretSettingsClient.soupData.saveConfig();
         return 1;
     }
 
-    int queryClearItem() {
+    private int queryClearItem() {
         sayItem("option.clear.query", SouperSecretSettingsClient.soupData.config.clearItem);
         return 1;
     }
 
-    void sayItem(String key, ItemStack itemStack) {
+    private void sayItem(String key, ItemStack itemStack) {
         String s = itemStack.getItem().toString();
         if (!itemStack.getComponentChanges().isEmpty()) {
             s += " "+itemStack.getComponentChanges().toString();
@@ -86,12 +86,12 @@ public class OptionCommand {
         SouperSecretSettingsClient.say(key, s);
     }
 
-    int setRenderType(Shader.RenderType renderType) {
+    private int setRenderType(Shader.RenderType renderType) {
         SouperSecretSettingsClient.soupRenderer.setRenderType(renderType);
         return queryRenderType();
     }
 
-    int queryRenderType() {
+    private int queryRenderType() {
         SouperSecretSettingsClient.say("option.render_type."+SouperSecretSettingsClient.soupRenderer.getRenderType().toString().toLowerCase());
         return 1;
     }
