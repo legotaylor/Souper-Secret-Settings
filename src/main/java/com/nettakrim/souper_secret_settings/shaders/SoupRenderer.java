@@ -170,10 +170,6 @@ public class SoupRenderer implements Runnables.WorldRender {
         return newShader;
     }
 
-    private Shader.RenderType getRenderType() {
-        return renderType;
-    }
-
     public static ShaderRegistryEntry getRegistryEntry(Identifier registry, Identifier identifier) {
         for (ShaderRegistryEntry shaderRegistry : Shaders.getRegistry(registry)) {
             if (shaderRegistry.getID().equals(identifier)) {
@@ -215,12 +211,20 @@ public class SoupRenderer implements Runnables.WorldRender {
     }
 
     public void cycleRenderType(ButtonWidget buttonWidget) {
-        renderType = Shader.RenderType.values()[(renderType.getId()+1)%2];
+        setRenderType(renderType == Shader.RenderType.GAME ? Shader.RenderType.WORLD : Shader.RenderType.GAME);
         buttonWidget.setMessage(getRenderTypeText());
     }
 
+    public void setRenderType(Shader.RenderType renderType) {
+        this.renderType = renderType;
+    }
+
+    public Shader.RenderType getRenderType() {
+        return renderType;
+    }
+
     public Text getRenderTypeText() {
-        //                                                          💻               🌎
+        //icons:                                                    💻               🌎
         return Text.literal(renderType == Shader.RenderType.GAME ? "\uD83D\uDCBB" : "\uD83C\uDF0E");
     }
 

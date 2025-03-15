@@ -1,5 +1,6 @@
 package com.nettakrim.souper_secret_settings.commands;
 
+import com.mclegoman.luminance.client.shaders.Shader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
@@ -39,29 +40,41 @@ public class OptionCommand {
                 .executes(context -> queryClearItem())
                 .build();
         commandNode.addChild(clearNode);
+
+        LiteralCommandNode<FabricClientCommandSource> renderTypeNode = ClientCommandManager
+                .literal("render_type")
+                .then(
+                        ClientCommandManager.literal("world").executes(context -> setRenderType(Shader.RenderType.WORLD))
+                )
+                .then(
+                        ClientCommandManager.literal("ui").executes(context -> setRenderType(Shader.RenderType.GAME))
+                )
+                .executes(context -> queryRenderType())
+                .build();
+        commandNode.addChild(renderTypeNode);
     }
 
     int setRandomItem(ItemStackArgument itemStack) throws CommandSyntaxException {
         SouperSecretSettingsClient.soupData.config.randomItem = itemStack.createStack(1, false);
-        sayItem("option.random_set", SouperSecretSettingsClient.soupData.config.randomItem);
+        sayItem("option.random.set", SouperSecretSettingsClient.soupData.config.randomItem);
         SouperSecretSettingsClient.soupData.saveConfig();
         return 1;
     }
 
     int queryRandomItem() {
-        sayItem("option.random_query", SouperSecretSettingsClient.soupData.config.randomItem);
+        sayItem("option.random.query", SouperSecretSettingsClient.soupData.config.randomItem);
         return 1;
     }
 
     int setClearItem(ItemStackArgument itemStack) throws CommandSyntaxException {
         SouperSecretSettingsClient.soupData.config.clearItem = itemStack.createStack(1, false);
-        sayItem("option.clear_set", SouperSecretSettingsClient.soupData.config.clearItem);
+        sayItem("option.clear.set", SouperSecretSettingsClient.soupData.config.clearItem);
         SouperSecretSettingsClient.soupData.saveConfig();
         return 1;
     }
 
     int queryClearItem() {
-        sayItem("option.clear_query", SouperSecretSettingsClient.soupData.config.clearItem);
+        sayItem("option.clear.query", SouperSecretSettingsClient.soupData.config.clearItem);
         return 1;
     }
 
@@ -71,5 +84,15 @@ public class OptionCommand {
             s += " "+itemStack.getComponentChanges().toString();
         }
         SouperSecretSettingsClient.say(key, s);
+    }
+
+    int setRenderType(Shader.RenderType renderType) {
+        SouperSecretSettingsClient.soupRenderer.setRenderType(renderType);
+        return queryRenderType();
+    }
+
+    int queryRenderType() {
+        SouperSecretSettingsClient.say("option.render_type."+SouperSecretSettingsClient.soupRenderer.getRenderType().toString().toLowerCase());
+        return 1;
     }
 }
