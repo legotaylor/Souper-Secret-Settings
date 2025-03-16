@@ -45,12 +45,13 @@ void main(){
     vec3 base = texture(InSampler, texCoord).rgb;
     vec3 colAcc = base * BaseMix;
 
+    mat3 pitchCorrection = pitch(luminance_pitch);
     mat3 pitchStep = pitch(luminance_pitch_delta/Steps * RotationScale.x);
     float yawStep = luminance_yaw_delta/Steps * RotationScale.y;
     float count = floor(abs(Steps));
     for (int i = 1; i < count; i++) {
         pos *= pitchStep;
-        vec4 projected = vec4(pos * (yaw(yawStep * i) * pitch(luminance_pitch)), 0.0) * projection;
+        vec4 projected = vec4(pos * (yaw(yawStep * i) * pitchCorrection), 0.0) * projection;
         vec2 uv = ((projected.xy / projected.z) + vec2(1.0)) / 2;
 
         colAcc += texture(InSampler, uv).rgb;
