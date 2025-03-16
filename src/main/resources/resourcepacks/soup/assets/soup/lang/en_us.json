@@ -129,6 +129,8 @@
     "gui.luminance.shader.soup.stereogram.description": "",
     "gui.luminance.shader.soup.suspicious": "Suspicious",
     "gui.luminance.shader.soup.suspicious.description": "",
+    "gui.luminance.shader.soup.temporal_blur": "Temporal Blur",
+    "gui.luminance.shader.soup.temporal_blur.description": "",
     "gui.luminance.shader.soup.texture_map": "Texture Map",
     "gui.luminance.shader.soup.texture_map.description": "",
     "gui.luminance.shader.soup.thermal": "Thermal",

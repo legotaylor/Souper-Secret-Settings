@@ -49,10 +49,6 @@
                 {
                     "sampler_name": "In",
                     "target": "1"
-                },
-                {
-                    "sampler_name": "Aux",
-                    "target": "previous"
                 }
             ],
             "output": "minecraft:main"
