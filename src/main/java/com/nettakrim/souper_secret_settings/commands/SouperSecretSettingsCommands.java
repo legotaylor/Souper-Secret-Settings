@@ -19,6 +19,7 @@ public class SouperSecretSettingsCommands {
 
             new GuiCommand().register(root);
             new OptionCommand().register(root, registryAccess);
+            new ActionCommand().register(root);
 
             layerCommand = new LayerCommand();
             shaderCommand = new ShaderListCommand("shader", Shaders.getMainRegistryId());
