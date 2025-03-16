@@ -10,6 +10,7 @@ out vec4 fragColor;
 uniform float Steps;
 uniform float BaseMix;
 uniform vec2 RotationScale;
+uniform float Wrapping;
 uniform vec4 Offset;
 uniform float luminance_fov;
 uniform float luminance_pitch;
@@ -29,6 +30,10 @@ mat3 yaw(float rotation) {
     float s = sin(rotation);
     float c = cos(rotation);
     return mat3(c, 0, s, 0, 1, 0, -s, 0, c);
+}
+
+vec4 wrapTexture(sampler2D tex, vec2 coord) {
+    return texture(tex, mix(coord, fract(coord), Wrapping));
 }
 
 void main(){
@@ -54,7 +59,7 @@ void main(){
         vec4 projected = vec4(pos * (yaw(yawStep * i) * pitchCorrection), 0.0) * projection;
         vec2 uv = ((projected.xy / projected.z) + vec2(1.0)) / 2;
 
-        colAcc += texture(InSampler, uv).rgb;
+        colAcc += wrapTexture(InSampler, uv).rgb;
     }
 
     colAcc /= count - (1-BaseMix);

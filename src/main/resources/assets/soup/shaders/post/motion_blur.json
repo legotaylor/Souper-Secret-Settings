@@ -11,6 +11,7 @@
         { "name": "Steps",                  "type": "float",     "count": 1,  "values": [ 10.0 ]},
         { "name": "BaseMix",                "type": "float",     "count": 1,  "values": [ 1.0 ]},
         { "name": "RotationScale",          "type": "float",     "count": 2,  "values": [ -1.0, -1.0 ]},
+        { "name": "Wrapping",               "type": "float",     "count": 1,  "values": [ 0.0 ]},
         { "name": "Offset",                 "type": "float",     "count": 4,  "values": [ 0.0, 0.0, 0.0, 1.0 ]},
         { "name": "luminance_fov",          "type": "float",     "count": 1,  "values": [ 0.0 ]},
         { "name": "luminance_pitch",        "type": "float",     "count": 1,  "values": [ 0.0 ]},
