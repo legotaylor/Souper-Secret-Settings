@@ -149,7 +149,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
             return 0;
         }
 
-        int index = 0;
+        int index = -1;
         try {
             index = Integer.parseInt(name.substring(breakIndex+1));
         } catch (Exception ignored) {}
@@ -309,7 +309,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
             String name = StringArgumentType.getString(context, "name");
             int breakIndex = name.lastIndexOf('.');
             if (breakIndex > 0) {
-                int index = 0;
+                int index = -1;
                 try {
                     index = Integer.parseInt(name.substring(breakIndex+1));
                 } catch (Exception ignored) {}
