@@ -1,5 +1,6 @@
 package com.nettakrim.souper_secret_settings.commands;
 
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
@@ -10,6 +11,7 @@ import com.nettakrim.souper_secret_settings.actions.ListAddAction;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.minecraft.text.Text;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -36,9 +38,9 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
         LiteralCommandNode<FabricClientCommandSource> activeNode = ClientCommandManager
                 .literal("active")
                 .then(
-                        ClientCommandManager.argument("name", StringArgumentType.string())
-                                .suggests(layers)
-                                .executes(context -> setActive(StringArgumentType.getString(context, "name")))
+                        ClientCommandManager.argument("index", IntegerArgumentType.integer(0))
+                                .suggests(layerIndexes)
+                                .executes(context -> setActive(IntegerArgumentType.getInteger(context, "index")))
                 )
                 .executes(context -> queryActive())
                 .build();
@@ -67,20 +69,7 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
     }
 
     @Override
-    public int removeAll() {
-        int i = super.removeAll();
-        onRemove();
-        return i;
-    }
-
-    @Override
-    public int removeTop() {
-        int i = super.removeTop();
-        onRemove();
-        return i;
-    }
-
-    private void onRemove() {
+    protected void onRemove() {
         if (SouperSecretSettingsClient.soupRenderer.shaderLayers.isEmpty()) {
             SouperSecretSettingsClient.soupRenderer.clearAll();
             SouperSecretSettingsClient.soupRenderer.loadDefault();
@@ -89,15 +78,13 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
         }
     }
 
-    private int setActive(String name) {
-        for (ShaderLayer layer : SouperSecretSettingsClient.soupRenderer.shaderLayers) {
-            if (layer.name.equals(name)) {
-                SouperSecretSettingsClient.soupRenderer.activeLayer = layer;
-                SouperSecretSettingsClient.say("layer.active.set", layer.name);
-                return 1;
-            }
+    private int setActive(int index) {
+        if (index < SouperSecretSettingsClient.soupRenderer.shaderLayers.size()) {
+            ShaderLayer layer = SouperSecretSettingsClient.soupRenderer.shaderLayers.get(index);
+            SouperSecretSettingsClient.soupRenderer.activeLayer = layer;
+            SouperSecretSettingsClient.say("layer.active.set", layer.name);
+            return 1;
         }
-        SouperSecretSettingsClient.say("layer.missing", name);
         return 0;
     }
 
@@ -111,7 +98,7 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
         SouperSecretSettingsClient.soupRenderer.activeLayer.name = name;
         SouperSecretSettingsClient.soupRenderer.activeLayer.disambiguateName();
         SouperSecretSettingsClient.say("layer.name.set", SouperSecretSettingsClient.soupRenderer.activeLayer.name);
-        return 0;
+        return 1;
     }
 
     private int queryName() {
@@ -127,16 +114,22 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
         return CompletableFuture.completedFuture(builder.build());
     };
 
-    private static final SuggestionProvider<FabricClientCommandSource> layers = (context, builder) -> {
-        for (ShaderLayer layer : SouperSecretSettingsClient.soupRenderer.shaderLayers) {
-            builder.suggest(layer.name);
+    private static final SuggestionProvider<FabricClientCommandSource> layerIndexes = (context, builder) -> {
+        for (int i = 0; i < SouperSecretSettingsClient.soupRenderer.shaderLayers.size(); i++) {
+            builder.suggest(i, Text.literal(SouperSecretSettingsClient.soupRenderer.shaderLayers.get(i).name));
         }
 
         return CompletableFuture.completedFuture(builder.build());
     };
 
+
     @Override
     List<ShaderLayer> getList() {
         return SouperSecretSettingsClient.soupRenderer.shaderLayers;
+    }
+
+    @Override
+    SuggestionProvider<FabricClientCommandSource> getIndexSuggestions() {
+        return layerIndexes;
     }
 }

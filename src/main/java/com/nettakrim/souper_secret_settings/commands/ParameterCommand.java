@@ -10,6 +10,7 @@ import com.nettakrim.souper_secret_settings.shaders.calculations.Calculation;
 import com.nettakrim.souper_secret_settings.shaders.calculations.Calculations;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.minecraft.text.Text;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -56,8 +57,21 @@ public class ParameterCommand extends ListCommand<Calculation> {
         return CompletableFuture.completedFuture(builder.build());
     };
 
+    static SuggestionProvider<FabricClientCommandSource> calculationIndexes = (context, builder) -> {
+        for (int i = 0; i < SouperSecretSettingsClient.soupRenderer.activeLayer.calculations.size(); i++) {
+            builder.suggest(i, Text.literal(SouperSecretSettingsClient.soupRenderer.activeLayer.calculations.get(i).getID()));
+        }
+
+        return CompletableFuture.completedFuture(builder.build());
+    };
+
     @Override
     List<Calculation> getList() {
         return SouperSecretSettingsClient.soupRenderer.activeLayer.calculations;
+    }
+
+    @Override
+    SuggestionProvider<FabricClientCommandSource> getIndexSuggestions() {
+        return calculationIndexes;
     }
 }

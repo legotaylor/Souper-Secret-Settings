@@ -106,7 +106,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
 
         List<ShaderData> shaders = SouperSecretSettingsClient.soupRenderer.getShaderAdditions(registry, id, amount, layer);
         if (shaders == null) {
-            return -1;
+            return 0;
         }
 
         List<ShaderData> list = layer.getList(registry);
@@ -123,7 +123,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
 
         List<ShaderData> shaders = layer.getList(registry);
         if (shaderIndex >= shaders.size()) {
-            return -1;
+            return 0;
         }
 
         ShaderData shaderData = shaders.get(shaderIndex);
@@ -138,7 +138,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
         Couple<Map<String, UniformData<UniformOverride>>,Map<String, UniformData<UniformConfig>>> uniforms = getUniformData(context);
 
         if (uniforms == null) {
-            return -1;
+            return 0;
         }
 
 
@@ -146,16 +146,16 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
         String name = StringArgumentType.getString(context, "name");
         int breakIndex = name.lastIndexOf('.');
         if (breakIndex <= 0) {
-            return -1;
+            return 0;
         }
 
-        int index = -1;
+        int index = 0;
         try {
             index = Integer.parseInt(name.substring(breakIndex+1));
         } catch (Exception ignored) {}
 
         if (index < 0) {
-            return -1;
+            return 0;
         }
 
         LuminanceUniformOverride override = (LuminanceUniformOverride)uniforms.getFirst().get(uniform).value;
@@ -195,7 +195,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
                     try {
                         object = Float.parseFloat(value);
                     } catch (Exception ignored) {
-                        return -1;
+                        return 0;
                     }
                 } else {
                     object = value;
@@ -309,7 +309,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
             String name = StringArgumentType.getString(context, "name");
             int breakIndex = name.lastIndexOf('.');
             if (breakIndex > 0) {
-                int index = -1;
+                int index = 0;
                 try {
                     index = Integer.parseInt(name.substring(breakIndex+1));
                 } catch (Exception ignored) {}
@@ -370,6 +370,11 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
     @Override
     List<ShaderData> getList() {
         return SouperSecretSettingsClient.soupRenderer.activeLayer.getList(registry);
+    }
+
+    @Override
+    SuggestionProvider<FabricClientCommandSource> getIndexSuggestions() {
+        return shaderSuggestions;
     }
 
     public Identifier getRegistry() {

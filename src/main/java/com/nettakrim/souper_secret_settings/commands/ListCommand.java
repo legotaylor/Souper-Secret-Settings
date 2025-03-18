@@ -1,5 +1,7 @@
 package com.nettakrim.souper_secret_settings.commands;
 
+import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.nettakrim.souper_secret_settings.actions.ListRemoveAction;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
@@ -23,29 +25,59 @@ public abstract class ListCommand<T> {
                 .executes(context -> removeTop())
                 .build();
 
+        LiteralCommandNode<FabricClientCommandSource> indexNode = ClientCommandManager
+                .literal("index")
+                .then(
+                        ClientCommandManager.argument("index", IntegerArgumentType.integer(0))
+                                .suggests(getIndexSuggestions())
+                                .executes(context -> removeIndex(IntegerArgumentType.getInteger(context, "index")))
+                )
+                .build();
+
         commandNode.addChild(removeNode);
         removeNode.addChild(clearNode);
         removeNode.addChild(topNode);
+        removeNode.addChild(indexNode);
     }
 
     public int removeAll() {
-        List<T> shaders = getList();
-        for (int i = shaders.size()-1; i >= 0; i--) {
-            new ListRemoveAction<>(shaders, i).addToHistory();
+        List<T> list = getList();
+        for (int i = list.size()-1; i >= 0; i--) {
+            new ListRemoveAction<>(list, i).addToHistory();
         }
-        shaders.clear();
+        list.clear();
+        onRemove();
         return 1;
     }
 
     public int removeTop() {
-        List<T> shaders = getList();
-        if (shaders.isEmpty()) {
+        List<T> list = getList();
+        if (list.isEmpty()) {
             return -1;
         }
-        new ListRemoveAction<>(shaders, shaders.size()-1).addToHistory();
-        shaders.removeLast();
+        new ListRemoveAction<>(list, list.size()-1).addToHistory();
+        list.removeLast();
+        onRemove();
         return 1;
     }
 
+    public int removeIndex(int index) {
+        List<T> list = getList();
+        if (list.isEmpty() || index >= list.size()) {
+            return -1;
+        }
+
+        new ListRemoveAction<>(list, index).addToHistory();
+        list.remove(index);
+        onRemove();
+        return 1;
+    }
+
+    protected void onRemove() {
+
+    }
+
     abstract List<T> getList();
+
+    abstract SuggestionProvider<FabricClientCommandSource> getIndexSuggestions();
 }
