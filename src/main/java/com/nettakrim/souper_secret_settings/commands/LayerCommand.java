@@ -8,6 +8,8 @@ import com.mojang.brigadier.tree.RootCommandNode;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.actions.LayerRenameAction;
 import com.nettakrim.souper_secret_settings.actions.ListAddAction;
+import com.nettakrim.souper_secret_settings.actions.ShaderLoadAction;
+import com.nettakrim.souper_secret_settings.actions.ToggleAction;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -17,6 +19,8 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class LayerCommand extends ListCommand<ShaderLayer> {
+    String saveConfirm = null;
+
     public LayerCommand() {
 
     }
@@ -50,11 +54,38 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
                 .literal("name")
                 .then(
                         ClientCommandManager.argument("name", StringArgumentType.string())
+                                .suggests((context, builder) -> CompletableFuture.completedFuture(builder.suggest(SouperSecretSettingsClient.soupRenderer.activeLayer.name).build()))
                                 .executes(context -> setName(StringArgumentType.getString(context, "name")))
                 )
                 .executes(context -> queryName())
                 .build();
         commandNode.addChild(nameNode);
+
+        LiteralCommandNode<FabricClientCommandSource> toggleNode = ClientCommandManager
+                .literal("toggle")
+                .executes(context -> toggle())
+                .build();
+        commandNode.addChild(toggleNode);
+
+        LiteralCommandNode<FabricClientCommandSource> saveNode = ClientCommandManager
+                .literal("save")
+                .then(
+                        ClientCommandManager.argument("name", StringArgumentType.string())
+                                .suggests(files)
+                                .executes(context -> save(StringArgumentType.getString(context, "name")))
+                )
+                .build();
+        commandNode.addChild(saveNode);
+
+        LiteralCommandNode<FabricClientCommandSource> loadNode = ClientCommandManager
+                .literal("load")
+                .then(
+                        ClientCommandManager.argument("name", StringArgumentType.string())
+                                .suggests(files)
+                                .executes(context -> load(StringArgumentType.getString(context, "name")))
+                )
+                .build();
+        commandNode.addChild(loadNode);
 
         registerList(commandNode);
     }
@@ -106,6 +137,45 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
         return 1;
     }
 
+    private int toggle() {
+        new ToggleAction(SouperSecretSettingsClient.soupRenderer.activeLayer).addToHistory();
+        SouperSecretSettingsClient.soupRenderer.activeLayer.toggle();
+        return 1;
+    }
+
+    private int save(String name) {
+        SouperSecretSettingsClient.log(saveConfirm, name, name.equals(saveConfirm));
+        if (name.equals(saveConfirm)) {
+            ShaderLayer layer = SouperSecretSettingsClient.soupRenderer.activeLayer;
+            String nameTemp = layer.name;
+            layer.name = name;
+
+            SouperSecretSettingsClient.soupData.saveLayer(layer, () -> SouperSecretSettingsClient.say("layer.save", name));
+
+            layer.name = nameTemp;
+            saveConfirm = null;
+        } else {
+            SouperSecretSettingsClient.say("layer.save.prompt", name);
+            saveConfirm = name;
+        }
+        return 1;
+    }
+
+    private int load(String name) {
+        saveConfirm = null;
+
+        ShaderLayer layer = SouperSecretSettingsClient.soupRenderer.activeLayer;
+        String nameTemp = layer.name;
+        layer.name = name;
+
+        new ShaderLoadAction(layer).addToHistory();
+        layer.clear();
+        SouperSecretSettingsClient.soupData.loadLayer(layer);
+
+        layer.name = nameTemp;
+        return 1;
+    }
+
     private static final SuggestionProvider<FabricClientCommandSource> files = (context, builder) -> {
         for (String name : SouperSecretSettingsClient.soupData.getSavedLayers()) {
             builder.suggest(name);
@@ -114,14 +184,10 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
         return CompletableFuture.completedFuture(builder.build());
     };
 
-    private static final SuggestionProvider<FabricClientCommandSource> layerIndexes = (context, builder) -> {
-        for (int i = 0; i < SouperSecretSettingsClient.soupRenderer.shaderLayers.size(); i++) {
-            builder.suggest(i, Text.literal(SouperSecretSettingsClient.soupRenderer.shaderLayers.get(i).name));
-        }
-
-        return CompletableFuture.completedFuture(builder.build());
-    };
-
+    private static final SuggestionProvider<FabricClientCommandSource> layerIndexes = SouperSecretSettingsCommands.createIndexSuggestion(
+            (context) -> SouperSecretSettingsClient.soupRenderer.shaderLayers,
+            (message) -> Text.literal(message.name)
+    );
 
     @Override
     List<ShaderLayer> getList() {

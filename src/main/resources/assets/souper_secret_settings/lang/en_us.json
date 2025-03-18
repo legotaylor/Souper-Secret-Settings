@@ -11,6 +11,7 @@
     "souper_secret_settings.layer.missing" : "Cannot find layer named \"%s\"",
     "souper_secret_settings.layer.delete" : "Removed saved layer \"%s\"",
     "souper_secret_settings.layer.save" : "Saved layer \"%s\"",
+    "souper_secret_settings.layer.save.prompt" : "Run again to confirm saving layer to \"%s\"",
     "souper_secret_settings.layer.active.set" : "Set active layer to \"%s\"",
     "souper_secret_settings.layer.active.query" : "Active layer is \"%s\"",
     "souper_secret_settings.layer.name.set" : "Renamed active layer to \"%s\"",
