@@ -1,6 +1,7 @@
 package com.nettakrim.souper_secret_settings.gui;
 
 import com.mclegoman.luminance.client.data.ClientData;
+import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ClickableWidget;
@@ -41,9 +42,7 @@ public abstract class DisplayWidget<T> extends CollapseWidget {
         drawIndicator(context, currentDisplay);
 
         if (hovered && mouseX > this.getX()+this.getWidth()-displayWidth-2) {
-            Text text = getHoverText(currentDisplay);
-            context.fill(mouseX-2, mouseY-22, mouseX + ClientData.minecraft.textRenderer.getWidth(text)+2, mouseY-10, ColorHelper.getArgb(128,0,0,0));
-            context.drawText(ClientData.minecraft.textRenderer, text, mouseX, mouseY-20, -1, true);
+            SouperSecretSettingsClient.soupGui.drawHoverText(context, mouseX, mouseY, getHoverText(currentDisplay));
         }
     }
 

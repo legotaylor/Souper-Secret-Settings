@@ -1,7 +1,7 @@
 package com.nettakrim.souper_secret_settings.gui;
 
-import com.mclegoman.luminance.client.data.ClientData;
 import com.mclegoman.luminance.common.util.Couple;
+import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -34,8 +34,7 @@ public class AdditionButton extends ButtonWidget {
         super.renderWidget(context, mouseX, mouseY, delta);
 
         if (hovered && hoverText != null && (onRemove == null || mouseX > getX() + 10)) {
-            context.fill(mouseX-2, mouseY-22, mouseX + ClientData.minecraft.textRenderer.getWidth(hoverText)+2, mouseY-10, ColorHelper.getArgb(128,0,0,0));
-            context.drawText(ClientData.minecraft.textRenderer, hoverText, mouseX, mouseY-20, -1, true);
+            SouperSecretSettingsClient.soupGui.drawHoverText(context, mouseX, mouseY, hoverText);
         }
 
         if (onRemove == null) {

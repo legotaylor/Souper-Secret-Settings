@@ -7,10 +7,12 @@ import com.nettakrim.souper_secret_settings.gui.layers.LayerScreen;
 import com.nettakrim.souper_secret_settings.gui.parameters.ParameterScreen;
 import com.nettakrim.souper_secret_settings.gui.shaders.ShaderScreen;
 import com.nettakrim.souper_secret_settings.shaders.SoupRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.ColorHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,6 +99,11 @@ public class SoupGui {
 
     public void updateActiveLayer() {
         header.getFirst().setMessage(Text.literal("layer: "+SouperSecretSettingsClient.soupRenderer.activeLayer.name));
+    }
+
+    public void drawHoverText(DrawContext context, int mouseX, int mouseY, Text text) {
+        context.fill(mouseX-2, mouseY-22, mouseX + ClientData.minecraft.textRenderer.getWidth(text)+2, mouseY-10, ColorHelper.getArgb(128,0,0,0));
+        context.drawText(ClientData.minecraft.textRenderer, text, mouseX, mouseY-20, -1, true);
     }
 
     public enum ScreenType {
