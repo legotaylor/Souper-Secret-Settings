@@ -201,7 +201,13 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
                     object = value;
                 }
 
-                values.set(index, object);
+                try {
+                    values.set(index, object);
+                } catch (Exception e) {
+                    ArrayList<Object> valuesMutable = new ArrayList<>(values);
+                    valuesMutable.set(index, object);
+                    config.config.put(text, valuesMutable);
+                }
             }
         }
 
@@ -228,17 +234,13 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
         };
     }
 
-    protected SuggestionProvider<FabricClientCommandSource> shaderSuggestions = (context, builder) -> {
-        ShaderLayer layer = SouperSecretSettingsClient.soupRenderer.activeLayer;
-
-        List<ShaderData> shaders = layer.getList(getRegistry());
-        for (int i = 0; i < shaders.size(); i++) {
-            String s = shaders.get(i).shader.getShaderId().toString();
-            builder.suggest(i, Text.translatableWithFallback("gui.luminance.shader."+s.replace(':','.'), s));
-        }
-
-        return CompletableFuture.completedFuture(builder.build());
-    };
+    protected SuggestionProvider<FabricClientCommandSource> shaderSuggestions = SouperSecretSettingsCommands.createIndexSuggestion(
+            (context) -> SouperSecretSettingsClient.soupRenderer.activeLayer.getList(getRegistry()),
+            (message) -> {
+                String s = message.shader.getShaderId().toString();
+                return Text.translatableWithFallback("gui.luminance.shader."+s.replace(':','.'), s);
+            }
+    );
 
     protected SuggestionProvider<FabricClientCommandSource> passSuggestions = (context, builder) -> {
         ShaderLayer layer = SouperSecretSettingsClient.soupRenderer.activeLayer;
@@ -315,23 +317,33 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
                 } catch (Exception ignored) {}
 
                 if (index >= 0) {
+                    String defaultValue = null;
+                    String currentValue = null;
+
                     String text = name.substring(0, breakIndex);
                     if (text.equals("value")) {
                         UniformData<UniformOverride> override = uniforms.getFirst().get(uniform);
                         List<String> values = ((LuminanceUniformOverride) override.value).getStrings();
                         if (index < values.size()) {
-                            builder.suggest(values.get(index), Text.literal("Current"));
-                            builder.suggest(((LuminanceUniformOverride) override.defaultValue).getStrings().get(index), Text.literal("Default"));
+                            currentValue = values.get(index);
+                            defaultValue = ((LuminanceUniformOverride) override.defaultValue).getStrings().get(index);
                         }
                     } else {
                         UniformData<UniformConfig> config = uniforms.getSecond().get(uniform);
                         List<Object> values = config.value.getObjects(text);
                         if (values != null && index < values.size()) {
-                            builder.suggest(values.get(index).toString(), Text.literal("Current"));
+                            currentValue = values.get(index).toString();
                             List<Object> defaultObjects = config.defaultValue.getObjects(text);
-                            if (defaultObjects != null && index < defaultObjects.size()) {
-                                builder.suggest(defaultObjects.get(index).toString(), Text.literal("Default"));
-                            }
+                            defaultValue = (defaultObjects == null || index >= defaultObjects.size()) ? null : defaultObjects.get(index).toString();
+                        }
+                    }
+
+                    if (currentValue != null) {
+                        if (!currentValue.equals(defaultValue)) {
+                            builder.suggest(currentValue, Text.literal("Current"));
+                        }
+                        if (defaultValue != null) {
+                            builder.suggest(defaultValue, Text.literal("Default"));
                         }
                     }
                 }
