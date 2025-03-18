@@ -20,13 +20,11 @@ import java.util.Map;
 public class ShaderScreen extends ListScreen<ShaderData> {
     public final ShaderLayer layer;
     public final Identifier registry;
-    public final Identifier[] customPasses;
 
-    public ShaderScreen(int scrollIndex, ShaderLayer layer, Identifier registry, Identifier[] customPasses) {
+    public ShaderScreen(int scrollIndex, ShaderLayer layer, Identifier registry) {
         super(scrollIndex);
         this.layer = layer;
         this.registry = registry;
-        this.customPasses = customPasses;
     }
 
     @Override

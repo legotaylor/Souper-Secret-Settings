@@ -31,11 +31,11 @@ public class SoupRenderer implements Runnables.WorldRender {
 
     private List<String> validUniforms;
 
-    public static final Identifier modifierRegistry = Identifier.of(SouperSecretSettingsClient.MODID, "modifiers");
-
     private Shader.RenderType renderType;
 
     public final Map<Identifier, Map<String, List<ShaderRegistryEntry>>> shaderGroups;
+
+    public static final Identifier modifierRegistry = Identifier.of(SouperSecretSettingsClient.MODID, "modifiers");
 
     public SoupRenderer() {
         shaderLayers = new ArrayList<>();
@@ -256,5 +256,20 @@ public class SoupRenderer implements Runnables.WorldRender {
         }
 
         return List.of("edible");
+    }
+
+    private static final Identifier[] modifierPasses = new Identifier[]{
+            Identifier.of(SouperSecretSettingsClient.MODID, "before_layer_render"),
+            Identifier.of(SouperSecretSettingsClient.MODID, "before_shader_render"),
+            Identifier.of(SouperSecretSettingsClient.MODID, "after_shader_render"),
+            Identifier.of(SouperSecretSettingsClient.MODID, "after_layer_render")
+    };
+
+    public Identifier[] getRegistryPasses(@Nullable Identifier registry) {
+        if (modifierRegistry.equals(registry)) {
+            return modifierPasses;
+        } else {
+            return new Identifier[]{null};
+        }
     }
 }

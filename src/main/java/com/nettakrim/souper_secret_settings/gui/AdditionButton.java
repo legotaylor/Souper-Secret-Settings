@@ -45,7 +45,7 @@ public class AdditionButton extends ButtonWidget {
 
     @Override
     public void onClick(double mouseX, double mouseY) {
-        deleting = mouseX < getX() + 10;
+        deleting = (mouseX < getX() + 10) && (onRemove != null);
         if (!deleting) {
             super.onClick(mouseX, mouseY);
         }
@@ -53,7 +53,7 @@ public class AdditionButton extends ButtonWidget {
 
     @Override
     public void onRelease(double mouseX, double mouseY) {
-        if (deleting && mouseX < getX()+10 && mouseY > getY() && mouseY < getY()+getHeight()) {
+        if (deleting && mouseX < getX()+10 && mouseY > getY() && mouseY < getY()+getHeight() && onRemove != null) {
             onRemove.accept(this);
         }
         deleting = false;

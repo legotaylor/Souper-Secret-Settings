@@ -11,7 +11,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,13 +58,8 @@ public class SoupGui {
 
         Screen screen = switch(screenType) {
             case LAYERS -> new LayerScreen(index);
-            case SHADERS -> new ShaderScreen(index, SouperSecretSettingsClient.soupRenderer.activeLayer, Shaders.getMainRegistryId(),new Identifier[] {null});
-            case MODIFIERS -> new ShaderScreen(index, SouperSecretSettingsClient.soupRenderer.activeLayer, SoupRenderer.modifierRegistry, new Identifier[] {
-                    Identifier.of(SouperSecretSettingsClient.MODID, "before_layer_render"),
-                    Identifier.of(SouperSecretSettingsClient.MODID, "before_shader_render"),
-                    Identifier.of(SouperSecretSettingsClient.MODID, "after_shader_render"),
-                    Identifier.of(SouperSecretSettingsClient.MODID, "after_layer_render")
-            });
+            case SHADERS -> new ShaderScreen(index, SouperSecretSettingsClient.soupRenderer.activeLayer, Shaders.getMainRegistryId());
+            case MODIFIERS -> new ShaderScreen(index, SouperSecretSettingsClient.soupRenderer.activeLayer, SoupRenderer.modifierRegistry);
             case PARAMETERS -> new ParameterScreen(index, SouperSecretSettingsClient.soupRenderer.activeLayer);
         };
         ClientData.minecraft.setScreen(screen);

@@ -1,6 +1,7 @@
 package com.nettakrim.souper_secret_settings.gui.shaders;
 
 import com.mclegoman.luminance.client.shaders.interfaces.PostEffectProcessorInterface;
+import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.ListWidget;
 import com.nettakrim.souper_secret_settings.shaders.OverrideManager;
@@ -24,7 +25,7 @@ public class ShaderWidget extends ListWidget {
         this.layer = layer;
         this.shaderData = shaderData;
 
-        for (Identifier customPasses : ((ShaderScreen)listScreen).customPasses) {
+        for (Identifier customPasses : SouperSecretSettingsClient.soupRenderer.getRegistryPasses(((ShaderScreen)listScreen).registry)) {
             addPasses(customPasses);
         }
     }
