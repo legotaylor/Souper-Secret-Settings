@@ -212,7 +212,8 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
         return (context, builder) -> {
             List<ShaderRegistryEntry> registryEntries = Shaders.getRegistry(registry);
             for (ShaderRegistryEntry shaderRegistry : registryEntries) {
-                builder.suggest(shaderRegistry.getID().toString());
+                Text text = Text.translatableWithFallback("gui.luminance.shader."+shaderRegistry.getID().toString().replace(':','.')+".description", "");
+                builder.suggest(shaderRegistry.getID().toString(), text.getString().isBlank() ? null : text);
             }
             if (registryEntries.size() >= 2) builder.suggest("random");
 

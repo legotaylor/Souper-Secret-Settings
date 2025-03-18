@@ -33,8 +33,7 @@ public abstract class DisplayWidget<T> extends CollapseWidget {
 
     @Override
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-        int color = ColorHelper.getArgb(255,255,255,255);
-        drawScrollableText(context, ClientData.minecraft.textRenderer, this.getMessage(), this.getX()+2, this.getY(), this.getX()+this.getWidth()-displayWidth-2, this.getY()+20, color);
+        drawScrollableText(context, ClientData.minecraft.textRenderer, this.getMessage(), this.getX()+2, this.getY(), this.getX()+this.getWidth()-displayWidth-2, this.getY()+20, -1);
 
         super.renderWidget(context, mouseX, mouseY, delta);
 
@@ -44,7 +43,7 @@ public abstract class DisplayWidget<T> extends CollapseWidget {
         if (hovered && mouseX > this.getX()+this.getWidth()-displayWidth-2) {
             Text text = getHoverText(currentDisplay);
             context.fill(mouseX-2, mouseY-22, mouseX + ClientData.minecraft.textRenderer.getWidth(text)+2, mouseY-10, ColorHelper.getArgb(128,0,0,0));
-            context.drawText(ClientData.minecraft.textRenderer, text, mouseX, mouseY-20, color, true);
+            context.drawText(ClientData.minecraft.textRenderer, text, mouseX, mouseY-20, -1, true);
         }
     }
 
@@ -85,7 +84,7 @@ public abstract class DisplayWidget<T> extends CollapseWidget {
         float g;
         float b;
         if (values.size() == 1) {
-            r = values.get(0)*normalise;
+            r = values.getFirst()*normalise;
             g = -r;
             b = g;
         } else if (values.size() == 2) {

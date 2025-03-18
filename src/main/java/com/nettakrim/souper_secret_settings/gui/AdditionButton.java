@@ -1,5 +1,7 @@
 package com.nettakrim.souper_secret_settings.gui;
 
+import com.mclegoman.luminance.client.data.ClientData;
+import com.mclegoman.luminance.common.util.Couple;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -12,13 +14,15 @@ import java.util.function.Consumer;
 public class AdditionButton extends ButtonWidget {
     protected String addition;
     protected Consumer<AdditionButton> onRemove;
+    protected Text hoverText;
 
     protected boolean deleting;
 
-    public AdditionButton(String addition, Text message, int x, int width, int height, Consumer<String> onPress) {
-        super(x, 0, width, height, message, (widget) -> onPress.accept(addition), ButtonWidget.DEFAULT_NARRATION_SUPPLIER);
+    public AdditionButton(String addition, Couple<Text,Text> message, int x, int width, int height, Consumer<String> onPress) {
+        super(x, 0, width, height, message.getFirst(), (widget) -> onPress.accept(addition), ButtonWidget.DEFAULT_NARRATION_SUPPLIER);
         this.addition = addition;
         this.onRemove = null;
+        this.hoverText = message.getSecond();
     }
 
     public void addRemoveListener(Consumer<AdditionButton> onRemove) {
@@ -28,6 +32,12 @@ public class AdditionButton extends ButtonWidget {
     @Override
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
         super.renderWidget(context, mouseX, mouseY, delta);
+
+        if (hovered && hoverText != null && (onRemove == null || mouseX > getX() + 10)) {
+            context.fill(mouseX-2, mouseY-22, mouseX + ClientData.minecraft.textRenderer.getWidth(hoverText)+2, mouseY-10, ColorHelper.getArgb(128,0,0,0));
+            context.drawText(ClientData.minecraft.textRenderer, hoverText, mouseX, mouseY-20, -1, true);
+        }
+
         if (onRemove == null) {
             return;
         }

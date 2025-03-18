@@ -1,5 +1,6 @@
 package com.nettakrim.souper_secret_settings.gui;
 
+import com.mclegoman.luminance.common.util.Couple;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.actions.ListAddAction;
 import com.nettakrim.souper_secret_settings.actions.ListRemoveAction;
@@ -194,7 +195,7 @@ public abstract class ListScreen<V> extends ScrollScreen {
         return true;
     }
 
-    protected Text getAdditionText(String addition) {
-        return Text.literal(addition);
+    protected Couple<Text,Text> getAdditionText(String addition) {
+        return new Couple<>(Text.literal(addition), null);
     }
 }

@@ -2,6 +2,7 @@ package com.nettakrim.souper_secret_settings.gui.shaders;
 
 import com.mclegoman.luminance.client.shaders.ShaderRegistryEntry;
 import com.mclegoman.luminance.client.shaders.Shaders;
+import com.mclegoman.luminance.common.util.Couple;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.ListWidget;
@@ -89,11 +90,13 @@ public class ShaderScreen extends ListScreen<ShaderData> {
     }
 
     @Override
-    protected Text getAdditionText(String addition) {
+    protected Couple<Text,Text> getAdditionText(String addition) {
         if (addition.startsWith("random")) {
             return super.getAdditionText(addition);
         }
 
-        return Text.translatableWithFallback("gui.luminance.shader."+addition.replace(':','.'), addition);
+        String s = "gui.luminance.shader."+addition.replace(':','.');
+        Text description = Text.translatableWithFallback(s+".description", "");
+        return new Couple<>(Text.translatableWithFallback(s, addition), description.getString().isBlank() ? null : description);
     }
 }
