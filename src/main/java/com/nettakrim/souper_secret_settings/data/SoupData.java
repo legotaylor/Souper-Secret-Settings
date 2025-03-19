@@ -35,6 +35,8 @@ public class SoupData {
 
     public final Config config;
 
+    private int saveChange;
+
     public SoupData() {
         configDir = FabricLoader.getInstance().getConfigDir().resolve(SouperSecretSettingsClient.MODID);
         gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
@@ -88,7 +90,28 @@ public class SoupData {
     }
 
     public void saveConfig() {
+        SouperSecretSettingsClient.log("Saving Config");
         writeToPath(Config.CODEC.encodeStart(JsonOps.INSTANCE, config).getOrThrow(), configDir.resolve("config.json"));
+    }
+
+    public void tick() {
+        if (saveChange > 0) {
+            saveChange--;
+            if (saveChange == 0) {
+                saveConfig();
+            }
+        }
+    }
+
+    public void changeConfig() {
+        saveChange = 1200;
+    }
+
+    public void saveIfChanged() {
+        if (saveChange > 0) {
+            saveConfig();
+            saveChange = 0;
+        }
     }
 
     public <T> Optional<T> loadFromPath(Codec<T> codec, Path path) {

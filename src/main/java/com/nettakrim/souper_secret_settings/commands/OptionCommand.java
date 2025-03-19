@@ -13,11 +13,7 @@ import net.minecraft.command.argument.ItemStackArgumentType;
 import net.minecraft.item.ItemStack;
 
 public class OptionCommand {
-    public OptionCommand() {
-
-    }
-
-    public void register(RootCommandNode<FabricClientCommandSource> root, CommandRegistryAccess commandRegistryAccess) {
+    public static void register(RootCommandNode<FabricClientCommandSource> root, CommandRegistryAccess commandRegistryAccess) {
         LiteralCommandNode<FabricClientCommandSource> commandNode = ClientCommandManager.literal("soup:option").build();
         root.addChild(commandNode);
 
@@ -77,31 +73,31 @@ public class OptionCommand {
         commandNode.addChild(warningNode);
     }
 
-    private int setRandomItem(ItemStackArgument itemStack) throws CommandSyntaxException {
+    public static int setRandomItem(ItemStackArgument itemStack) throws CommandSyntaxException {
         SouperSecretSettingsClient.soupData.config.randomItem = itemStack.createStack(1, false);
         sayItem("option.random.set", SouperSecretSettingsClient.soupData.config.randomItem);
-        SouperSecretSettingsClient.soupData.saveConfig();
+        SouperSecretSettingsClient.soupData.changeConfig();
         return 1;
     }
 
-    private int queryRandomItem() {
+    public static int queryRandomItem() {
         sayItem("option.random.query", SouperSecretSettingsClient.soupData.config.randomItem);
         return 1;
     }
 
-    private int setClearItem(ItemStackArgument itemStack) throws CommandSyntaxException {
+    public static int setClearItem(ItemStackArgument itemStack) throws CommandSyntaxException {
         SouperSecretSettingsClient.soupData.config.clearItem = itemStack.createStack(1, false);
         sayItem("option.clear.set", SouperSecretSettingsClient.soupData.config.clearItem);
-        SouperSecretSettingsClient.soupData.saveConfig();
+        SouperSecretSettingsClient.soupData.changeConfig();
         return 1;
     }
 
-    private int queryClearItem() {
+    public static int queryClearItem() {
         sayItem("option.clear.query", SouperSecretSettingsClient.soupData.config.clearItem);
         return 1;
     }
 
-    private void sayItem(String key, ItemStack itemStack) {
+    public static void sayItem(String key, ItemStack itemStack) {
         String s = itemStack.getItem().toString();
         if (!itemStack.getComponentChanges().isEmpty()) {
             s += " "+itemStack.getComponentChanges().toString();
@@ -109,27 +105,27 @@ public class OptionCommand {
         SouperSecretSettingsClient.say(key, s);
     }
 
-    private int setRenderType(Shader.RenderType renderType) {
+    public static int setRenderType(Shader.RenderType renderType) {
         SouperSecretSettingsClient.soupRenderer.setRenderType(renderType);
         return queryRenderType();
     }
 
-    private int queryRenderType() {
+    public static int queryRenderType() {
         SouperSecretSettingsClient.say("option.render_type."+SouperSecretSettingsClient.soupRenderer.getRenderType().toString().toLowerCase());
         return 1;
     }
 
-    private int toggle(boolean stay) {
+    public static int toggle(boolean stay) {
         SouperSecretSettingsClient.soupData.config.disableState = stay ? 2 : SouperSecretSettingsClient.soupData.config.disableState > 0 ? 0 : 1;
         SouperSecretSettingsClient.say("option.toggle."+SouperSecretSettingsClient.soupData.config.disableState);
-        SouperSecretSettingsClient.soupData.saveConfig();
+        SouperSecretSettingsClient.soupData.changeConfig();
         return 1;
     }
 
-    private int warning(boolean state) {
+    public static int warning(boolean state) {
         SouperSecretSettingsClient.soupData.config.warning = state;
         SouperSecretSettingsClient.say("option.warning."+(state ? "on" : "off"));
-        SouperSecretSettingsClient.soupData.saveConfig();
+        SouperSecretSettingsClient.soupData.changeConfig();
         return 1;
     }
 }

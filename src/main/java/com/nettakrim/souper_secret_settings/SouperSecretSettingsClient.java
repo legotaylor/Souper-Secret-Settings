@@ -8,6 +8,8 @@ import com.nettakrim.souper_secret_settings.shaders.SoupRenderer;
 import com.nettakrim.souper_secret_settings.shaders.SoupUniforms;
 import com.nettakrim.souper_secret_settings.shaders.calculations.Calculations;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
@@ -41,11 +43,22 @@ public class SouperSecretSettingsClient implements ClientModInitializer {
 
 		ResourceManagerHelper.registerBuiltinResourcePack(Identifier.of("soup"), FabricLoader.getInstance().getModContainer(MODID).orElseThrow(), Text.literal("Extra Soup"), ResourcePackActivationType.DEFAULT_ENABLED);
 		soupData.config.transferOldData();
+		Keybinds.tick();
 
 		SoupUniforms.register();
 		Calculations.register();
 		SouperSecretSettingsCommands.initialize();
-		Keybinds.init();
+
+		ClientTickEvents.END_CLIENT_TICK.register((client) -> {
+			if (!ClientData.minecraft.isFinishedLoading()) {
+				return;
+			}
+
+			Keybinds.tick();
+			soupData.tick();
+		});
+
+		ClientLifecycleEvents.CLIENT_STOPPING.register((client) -> soupData.saveIfChanged());
 	}
 
 	public static void say(String key, Object... args) {

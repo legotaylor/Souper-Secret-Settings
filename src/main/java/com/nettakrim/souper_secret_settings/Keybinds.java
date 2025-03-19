@@ -1,28 +1,20 @@
 package com.nettakrim.souper_secret_settings;
 
-import com.mclegoman.luminance.client.data.ClientData;
 import com.mclegoman.luminance.client.keybindings.KeybindingHelper;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import com.nettakrim.souper_secret_settings.commands.OptionCommand;
 import net.minecraft.client.option.KeyBinding;
 import org.lwjgl.glfw.GLFW;
 
 public class Keybinds {
-    public static final KeyBinding openGUI;
-    static {
-        openGUI = KeybindingHelper.getKeybinding(SouperSecretSettingsClient.MODID, SouperSecretSettingsClient.MODID, "open_gui", GLFW.GLFW_KEY_K);
-    }
-
-    public static void init() {
-        ClientTickEvents.END_CLIENT_TICK.register((client) -> {
-            if (ClientData.minecraft.isFinishedLoading()) {
-                tick();
-            }
-        });
-    }
+    public static final KeyBinding openGUI = KeybindingHelper.getKeybinding(SouperSecretSettingsClient.MODID, SouperSecretSettingsClient.MODID, "open_gui", GLFW.GLFW_KEY_K);
+    public static final KeyBinding toggleSoup = KeybindingHelper.getKeybinding(SouperSecretSettingsClient.MODID, SouperSecretSettingsClient.MODID, "toggle_soup", GLFW.GLFW_KEY_UNKNOWN);
 
     public static void tick() {
         if (openGUI.wasPressed()) {
             SouperSecretSettingsClient.soupGui.open(SouperSecretSettingsClient.soupGui.getCurrentScreenType());
+        }
+        if (toggleSoup.wasPressed()) {
+            OptionCommand.toggle(false);
         }
     }
 }
