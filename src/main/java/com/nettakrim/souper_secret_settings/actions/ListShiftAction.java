@@ -2,12 +2,12 @@ package com.nettakrim.souper_secret_settings.actions;
 
 import java.util.List;
 
-public class ListSwapAction<T> implements Action {
+public class ListShiftAction<T> implements Action {
     protected final List<T> list;
     protected final int index;
     protected int direction;
 
-    public ListSwapAction(List<T> list, int index, int direction) {
+    public ListShiftAction(List<T> list, int index, int direction) {
         this.list = list;
         this.index = index;
         this.direction = direction;
@@ -32,7 +32,7 @@ public class ListSwapAction<T> implements Action {
 
     @Override
     public boolean mergeWith(Action other) {
-        ListSwapAction<?> action = (ListSwapAction<?>)other;
+        ListShiftAction<?> action = (ListShiftAction<?>)other;
         if (action.list != list || action.index-direction != index) {
             return false;
         }

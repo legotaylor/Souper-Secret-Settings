@@ -4,7 +4,7 @@ import com.mclegoman.luminance.common.util.Couple;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.actions.ListAddAction;
 import com.nettakrim.souper_secret_settings.actions.ListRemoveAction;
-import com.nettakrim.souper_secret_settings.actions.ListSwapAction;
+import com.nettakrim.souper_secret_settings.actions.ListShiftAction;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
@@ -144,7 +144,7 @@ public abstract class ListScreen<V> extends ScrollScreen {
         int newIndex = MathHelper.clamp(index+direction, 0, listWidgets.size()-1);
 
         if (index != newIndex) {
-            new ListSwapAction<>(getListValues(), index, direction).addToHistory();
+            new ListShiftAction<>(getListValues(), index, direction).addToHistory();
 
             V entry = removeEntry(index, false);
             addEntry(newIndex, entry, listWidget);
