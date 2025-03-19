@@ -38,11 +38,15 @@ import java.util.concurrent.CompletableFuture;
 public class ShaderListCommand extends ListCommand<ShaderData> {
     protected final String name;
     protected final Identifier registry;
+    protected final int warnLimit;
     protected final SuggestionProvider<FabricClientCommandSource> registrySuggestions;
 
-    public ShaderListCommand(String name, Identifier registry) {
+    protected boolean warned;
+
+    public ShaderListCommand(String name, Identifier registry, int warnLimit) {
         this.name = name;
         this.registry = registry;
+        this.warnLimit = warnLimit;
 
         this.registrySuggestions = getRegistrySuggestions(registry);
     }
@@ -117,11 +121,28 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
         }
 
         List<ShaderData> list = layer.getList(registry);
+        if (list.size()+amount > warnLimit) {
+            if (!warned && SouperSecretSettingsClient.soupData.config.warning) {
+                warned = true;
+                SouperSecretSettingsClient.say("shader.warn_stacking", warnLimit);
+                return 1;
+            }
+        } else {
+            warned = false;
+        }
+
         for (ShaderData shaderData : shaders) {
             new ListAddAction<>(list, shaderData).addToHistory();
         }
         list.addAll(shaders);
         return 1;
+    }
+
+    @Override
+    protected void onRemove() {
+        if (getList().size() < warnLimit) {
+            warned = false;
+        }
     }
 
     public int toggle(CommandContext<FabricClientCommandSource> context) {

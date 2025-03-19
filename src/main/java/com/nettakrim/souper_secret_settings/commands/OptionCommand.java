@@ -52,6 +52,29 @@ public class OptionCommand {
                 .executes(context -> queryRenderType())
                 .build();
         commandNode.addChild(renderTypeNode);
+
+        LiteralCommandNode<FabricClientCommandSource> toggleNode = ClientCommandManager
+                .literal("toggle")
+                .then(
+                        ClientCommandManager.literal("stay")
+                                .executes(context -> toggle(true))
+                )
+                .executes(context -> toggle(false))
+                .build();
+        commandNode.addChild(toggleNode);
+
+        LiteralCommandNode<FabricClientCommandSource> warningNode = ClientCommandManager
+                .literal("warning")
+                .then(
+                        ClientCommandManager.literal("enable")
+                                .executes(context -> warning(true))
+                )
+                .then(
+                        ClientCommandManager.literal("disable")
+                                .executes(context -> warning(false))
+                )
+                .build();
+        commandNode.addChild(warningNode);
     }
 
     private int setRandomItem(ItemStackArgument itemStack) throws CommandSyntaxException {
@@ -93,6 +116,20 @@ public class OptionCommand {
 
     private int queryRenderType() {
         SouperSecretSettingsClient.say("option.render_type."+SouperSecretSettingsClient.soupRenderer.getRenderType().toString().toLowerCase());
+        return 1;
+    }
+
+    private int toggle(boolean stay) {
+        SouperSecretSettingsClient.soupData.config.disableState = stay ? 2 : SouperSecretSettingsClient.soupData.config.disableState > 0 ? 0 : 1;
+        SouperSecretSettingsClient.say("option.toggle."+SouperSecretSettingsClient.soupData.config.disableState);
+        SouperSecretSettingsClient.soupData.saveConfig();
+        return 1;
+    }
+
+    private int warning(boolean state) {
+        SouperSecretSettingsClient.soupData.config.warning = state;
+        SouperSecretSettingsClient.say("option.warning."+(state ? "on" : "off"));
+        SouperSecretSettingsClient.soupData.saveConfig();
         return 1;
     }
 }

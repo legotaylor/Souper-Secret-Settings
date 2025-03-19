@@ -80,7 +80,7 @@ public class SoupRenderer implements Runnables.WorldRender {
 
     @Override
     public void run(FrameGraphBuilder builder, int textureWidth, int textureHeight, PostEffectProcessor.FramebufferSet framebufferSet) {
-        if (shaderLayers == null) {
+        if (shaderLayers == null || SouperSecretSettingsClient.soupData.config.disableState > 0) {
             return;
         }
 

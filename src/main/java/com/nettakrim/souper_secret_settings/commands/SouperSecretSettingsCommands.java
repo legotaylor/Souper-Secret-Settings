@@ -30,8 +30,8 @@ public class SouperSecretSettingsCommands {
             new ActionCommand().register(root);
 
             layerCommand = new LayerCommand();
-            shaderCommand = new ShaderListCommand("shader", Shaders.getMainRegistryId());
-            modifierCommand = new ShaderListCommand("modifier", SoupRenderer.modifierRegistry);
+            shaderCommand = new ShaderListCommand("shader", Shaders.getMainRegistryId(), 100);
+            modifierCommand = new ShaderListCommand("modifier", SoupRenderer.modifierRegistry, 25);
             parameterCommand = new ParameterCommand();
 
             layerCommand.register(root);

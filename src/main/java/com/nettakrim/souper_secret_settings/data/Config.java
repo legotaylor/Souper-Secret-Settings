@@ -23,20 +23,27 @@ public class Config {
     public ItemStack randomItem;
     public ItemStack clearItem;
 
+    public int disableState;
+    public boolean warning;
+
     public static final Codec<Config> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             Codec.BOOL.fieldOf("transferredOldData").forGetter((config) -> config.transferredOldData),
             ItemStack.CODEC.optionalFieldOf("randomItem", new ItemStack(Items.BEETROOT_SOUP)).forGetter((config -> config.randomItem)),
-            ItemStack.CODEC.optionalFieldOf("clearItem", new ItemStack(Items.MILK_BUCKET)).forGetter((config -> config.clearItem))
+            ItemStack.CODEC.optionalFieldOf("clearItem", new ItemStack(Items.MILK_BUCKET)).forGetter((config -> config.clearItem)),
+            Codec.INT.optionalFieldOf("disableState", 0).forGetter((config -> config.disableState)),
+            Codec.BOOL.optionalFieldOf("warning", true).forGetter((config) -> config.warning)
             ).apply(instance, Config::new));
 
-    public Config(boolean transferredOldData, ItemStack randomItem, ItemStack clearItem) {
+    public Config(boolean transferredOldData, ItemStack randomItem, ItemStack clearItem, int disableState, boolean warning) {
         this.transferredOldData = transferredOldData;
         this.randomItem = randomItem;
         this.clearItem = clearItem;
+        this.disableState = disableState;
+        this.warning = warning;
     }
 
     public static Config getDefaultConfig() {
-        return new Config(false, new ItemStack(Items.BEETROOT_SOUP), new ItemStack(Items.MILK_BUCKET));
+        return new Config(false, new ItemStack(Items.BEETROOT_SOUP), new ItemStack(Items.MILK_BUCKET), 0, true);
     }
 
     public void transferOldData() {

@@ -11,7 +11,7 @@ public class Actions {
     public Actions() {
         history = new Stack<>();
         undone = new Stack<>();
-        updateHistoryButtons();
+        onChange();
     }
 
     protected boolean addToHistory(Action action) {
@@ -24,20 +24,20 @@ public class Actions {
 
         history.add(action);
         undone.clear();
-        updateHistoryButtons();
+        onChange();
         return true;
     }
 
     public void undo() {
         if (history.isEmpty()) {
-            updateHistoryButtons();
+            onChange();
             return;
         }
 
         Action action = history.pop();
         if (action.undo()) {
             undone.add(action);
-            updateHistoryButtons();
+            onChange();
         } else {
             undo();
         }
@@ -51,10 +51,15 @@ public class Actions {
         Action action = undone.pop();
         action.redo();
         history.add(action);
-        updateHistoryButtons();
+        onChange();
     }
 
-    private void updateHistoryButtons() {
+    private void onChange() {
         SouperSecretSettingsClient.soupGui.setHistoryButtons(!history.isEmpty(), !undone.isEmpty());
+
+        if (SouperSecretSettingsClient.soupData.config.disableState == 1) {
+            SouperSecretSettingsClient.soupData.config.disableState = 0;
+            SouperSecretSettingsClient.say("option.toggle.prompt");
+        }
     }
 }

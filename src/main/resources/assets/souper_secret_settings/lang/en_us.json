@@ -1,22 +1,19 @@
 {
     "souper_secret_settings.say" : "[Soup] ",
 
-    "souper_secret_settings.layer.warn_overwrite" : "Saved layer named \"%s\" already exists, run again to confirm overwrite",
     "souper_secret_settings.layer.missing" : "Cannot find layer named \"%s\"",
     "souper_secret_settings.layer.delete" : "Removed saved layer \"%s\"",
     "souper_secret_settings.layer.save" : "Saved layer \"%s\"",
-    "souper_secret_settings.layer.save.prompt" : "Run again to confirm saving layer to \"%s\"",
+    "souper_secret_settings.layer.save.prompt" : "Saved layer named \"%s\" already exists, run again to confirm overwrite",
     "souper_secret_settings.layer.active.set" : "Set active layer to \"%s\"",
     "souper_secret_settings.layer.active.query" : "Active layer is \"%s\"",
     "souper_secret_settings.layer.name.set" : "Renamed active layer to \"%s\"",
     "souper_secret_settings.layer.name.query" : "Active layer is named \"%s\"",
-    "souper_secret_settings.layer.info.name": "%s:",
+    "souper_secret_settings.layer.info.name": "Layer \"%s\":",
     "souper_secret_settings.layer.info.shaders": "Shaders: %s",
     "souper_secret_settings.layer.info.modifiers": "Modifiers: %s",
     "souper_secret_settings.layer.info.passes": "Render Passes: %s",
 
-    "souper_secret_settings.shader.toggle_prompt" : "Soup toggled back on automatically, use \"/soup:toggle stay\" if you want it to stay off",
-    "souper_secret_settings.shader.warn_stacking" : "Stacking more than %s shaders might crash the game\n! Proceed with caution !",
     "souper_secret_settings.shader.missing" : "Cannot find shader named \"%s\"",
     "souper_secret_settings.shader.registry_empty" : "Failed to find any shaders",
     "souper_secret_settings.shader.info" : "%s",
@@ -24,12 +21,18 @@
     "souper_secret_settings.shader.info.join" : " -> %s",
     "souper_secret_settings.shader.info.multiple.join" : " -> %s x%s",
     "souper_secret_settings.shader.info.none" : "none",
+    "souper_secret_settings.shader.warn_stacking" : "More than %s shaders might cause a lot of lag!\n run again to confirm, or run \"/soup:option warning disable\" to disable this warning",
 
+    "souper_secret_settings.option.warning.on" : "Enabled shader count warning",
+    "souper_secret_settings.option.warning.off" : "Disabled shader count warning",
     "souper_secret_settings.option.random.set" : "Set Random item to %s",
     "souper_secret_settings.option.random.query" : "Random item is %s",
     "souper_secret_settings.option.clear.set" : "Set Clear item to %s",
     "souper_secret_settings.option.clear.query" : "Clear item is %s",
-
     "souper_secret_settings.option.render_type.world" : "Shaders render in World",
-    "souper_secret_settings.option.render_type.game" : "Shaders render in UI"
+    "souper_secret_settings.option.render_type.game" : "Shaders render in UI",
+    "souper_secret_settings.option.toggle.0" : "Soup enabled",
+    "souper_secret_settings.option.toggle.1" : "Soup disabled",
+    "souper_secret_settings.option.toggle.2" : "Soup will stay disabled",
+    "souper_secret_settings.option.toggle.prompt" : "Soup enabled automatically, use \"/soup:option toggle stay\" if you want it to stay off"
 }
