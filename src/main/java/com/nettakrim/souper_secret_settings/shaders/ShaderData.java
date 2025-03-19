@@ -6,6 +6,7 @@ import com.mclegoman.luminance.client.shaders.interfaces.PostEffectProcessorInte
 import net.minecraft.client.gl.PostEffectPass;
 import net.minecraft.client.gl.PostEffectProcessor;
 import net.minecraft.client.render.FrameGraphBuilder;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
@@ -68,6 +69,11 @@ public class ShaderData implements Toggleable {
         }
 
         return passData.configs.size();
+    }
+
+    public Text getTranslatedName() {
+        String s = shader.getShaderId().toString();
+        return Text.translatableWithFallback("gui.luminance.shader."+s.replace(':','.'), s);
     }
 
     @Override

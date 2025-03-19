@@ -185,7 +185,7 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
     }
 
     private int info() {
-        SouperSecretSettingsClient.sayText(Text.translatable(SouperSecretSettingsClient.MODID+".layer.info.name", SouperSecretSettingsClient.soupRenderer.activeLayer.name));
+        SouperSecretSettingsClient.sayStyled(Text.translatable(SouperSecretSettingsClient.MODID+".layer.info.name", SouperSecretSettingsClient.soupRenderer.activeLayer.name));
         for (MutableText text : SouperSecretSettingsClient.soupRenderer.activeLayer.getInfo()) {
             SouperSecretSettingsClient.sayRaw(text.setStyle(Style.EMPTY.withColor(SouperSecretSettingsClient.textColor)));
         }

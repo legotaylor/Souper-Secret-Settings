@@ -1,12 +1,6 @@
 {
     "souper_secret_settings.say" : "[Soup] ",
 
-    "souper_secret_settings.query" : "%s",
-    "souper_secret_settings.query.multiple" : "%s x%s",
-    "souper_secret_settings.query.join" : " -> %s",
-    "souper_secret_settings.query.multiple.join" : " -> %s x%s",
-    "souper_secret_settings.query.none" : "none",
-
     "souper_secret_settings.layer.warn_overwrite" : "Saved layer named \"%s\" already exists, run again to confirm overwrite",
     "souper_secret_settings.layer.missing" : "Cannot find layer named \"%s\"",
     "souper_secret_settings.layer.delete" : "Removed saved layer \"%s\"",
@@ -25,6 +19,11 @@
     "souper_secret_settings.shader.warn_stacking" : "Stacking more than %s shaders might crash the game\n! Proceed with caution !",
     "souper_secret_settings.shader.missing" : "Cannot find shader named \"%s\"",
     "souper_secret_settings.shader.registry_empty" : "Failed to find any shaders",
+    "souper_secret_settings.shader.info" : "%s",
+    "souper_secret_settings.shader.info.multiple" : "%s x%s",
+    "souper_secret_settings.shader.info.join" : " -> %s",
+    "souper_secret_settings.shader.info.multiple.join" : " -> %s x%s",
+    "souper_secret_settings.shader.info.none" : "none",
 
     "souper_secret_settings.option.random.set" : "Set Random item to %s",
     "souper_secret_settings.option.random.query" : "Random item is %s",

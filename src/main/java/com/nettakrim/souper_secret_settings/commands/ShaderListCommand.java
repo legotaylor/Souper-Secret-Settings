@@ -25,6 +25,7 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.gl.PostEffectPass;
 import net.minecraft.command.argument.IdentifierArgumentType;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
@@ -97,6 +98,12 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
                 )
                 .build();
         commandNode.addChild(modifyNode);
+
+        LiteralCommandNode<FabricClientCommandSource> infoNode = ClientCommandManager
+                .literal("info")
+                .executes((context) -> info())
+                .build();
+        commandNode.addChild(infoNode);
 
         registerList(commandNode);
     }
@@ -214,6 +221,39 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
         return 1;
     }
 
+    public int info() {
+        List<ShaderData> shaders = getList();
+
+        if (shaders.isEmpty()) {
+            SouperSecretSettingsClient.say("query.none");
+        } else {
+            MutableText text = Text.empty();
+            String connector = "";
+            Identifier lastId = shaders.getFirst().shader.getShaderId();
+            String key = SouperSecretSettingsClient.MODID+".shader.info";
+            int count = 0;
+            for (int i = 0; i < shaders.size(); i++) {
+                ShaderData shaderData = shaders.get(i);
+                Identifier currentID = shaderData.shader.getShaderId();
+                if (!currentID.equals(lastId) || i == shaders.size()-1) {
+                    String s = shaderData.getTranslatedName().getString();
+                    if (count == 1) {
+                        text.append(Text.translatable(key+connector, s));
+                    } else {
+                        text.append(Text.translatable(key+".multiple"+connector, s, count));
+                    }
+                    connector = ".join";
+                    count = 0;
+                }
+                count++;
+                lastId = currentID;
+            }
+            SouperSecretSettingsClient.sayStyled(text);
+        }
+
+        return 1;
+    }
+
     private static SuggestionProvider<FabricClientCommandSource> getRegistrySuggestions(Identifier registry) {
         return (context, builder) -> {
             List<ShaderRegistryEntry> registryEntries = Shaders.getRegistry(registry);
@@ -236,10 +276,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
 
     protected SuggestionProvider<FabricClientCommandSource> shaderSuggestions = SouperSecretSettingsCommands.createIndexSuggestion(
             (context) -> SouperSecretSettingsClient.soupRenderer.activeLayer.getList(getRegistry()),
-            (message) -> {
-                String s = message.shader.getShaderId().toString();
-                return Text.translatableWithFallback("gui.luminance.shader."+s.replace(':','.'), s);
-            }
+            ShaderData::getTranslatedName
     );
 
     protected SuggestionProvider<FabricClientCommandSource> passSuggestions = (context, builder) -> {
