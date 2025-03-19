@@ -24,8 +24,8 @@ public class SouperSecretSettingsClient implements ClientModInitializer {
 	public static final String MODID = "souper_secret_settings";
 	private static final Logger LOGGER = LoggerFactory.getLogger(MODID);
 
-	private static final TextColor textColor = TextColor.fromRgb(0xAAAAAA);
-	private static final TextColor nameTextColor = TextColor.fromRgb(0xB6484C);
+	public static final TextColor textColor = TextColor.fromRgb(0xAAAAAA);
+	public static final TextColor nameTextColor = TextColor.fromRgb(0xB6484C);
 
 	public static SoupData soupData;
 	public static SoupRenderer soupRenderer;
@@ -53,8 +53,12 @@ public class SouperSecretSettingsClient implements ClientModInitializer {
 	}
 
 	public static void sayText(MutableText text) {
+		sayRaw(Text.translatable(MODID + ".say").setStyle(Style.EMPTY.withColor(nameTextColor)).append(text.setStyle(Style.EMPTY.withColor(textColor))));
+	}
+
+	public static void sayRaw(MutableText text) {
 		if (ClientData.minecraft.player == null) return;
-		ClientData.minecraft.player.sendMessage(Text.translatable(MODID + ".say").setStyle(Style.EMPTY.withColor(nameTextColor)).append(text.setStyle(Style.EMPTY.withColor(textColor))), false);
+		ClientData.minecraft.player.sendMessage(text, false);
 	}
 
 	public static MutableText translate(String key, Object... args) {

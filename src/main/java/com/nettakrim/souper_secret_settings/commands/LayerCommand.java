@@ -13,6 +13,8 @@ import com.nettakrim.souper_secret_settings.actions.ToggleAction;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
 import java.util.List;
@@ -86,6 +88,12 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
                 )
                 .build();
         commandNode.addChild(loadNode);
+
+        LiteralCommandNode<FabricClientCommandSource> infoNode = ClientCommandManager
+                .literal("info")
+                .executes(context -> info())
+                .build();
+        commandNode.addChild(infoNode);
 
         registerList(commandNode);
     }
@@ -173,6 +181,14 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
         SouperSecretSettingsClient.soupData.loadLayer(layer);
 
         layer.name = nameTemp;
+        return 1;
+    }
+
+    private int info() {
+        SouperSecretSettingsClient.sayText(Text.translatable(SouperSecretSettingsClient.MODID+".layer.info.name", SouperSecretSettingsClient.soupRenderer.activeLayer.name));
+        for (MutableText text : SouperSecretSettingsClient.soupRenderer.activeLayer.getInfo()) {
+            SouperSecretSettingsClient.sayRaw(text.setStyle(Style.EMPTY.withColor(SouperSecretSettingsClient.textColor)));
+        }
         return 1;
     }
 

@@ -285,17 +285,19 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
         if (uniforms != null) {
             String uniform = StringArgumentType.getString(context, "uniform");
 
-            UniformOverride override = uniforms.getFirst().get(uniform).value;
-            for (int i = 0; i < ((LuminanceUniformOverride)override).overrideSources.size(); i++) {
-                builder.suggest("value."+i);
-            }
+            UniformData<UniformOverride> override = uniforms.getFirst().get(uniform);
+            if (override != null) {
+                for (int i = 0; i < ((LuminanceUniformOverride)override.value).overrideSources.size(); i++) {
+                    builder.suggest("value." + i);
+                }
 
-            UniformConfig config = uniforms.getSecond().get(uniform).value;
-            for (String string : config.getNames()) {
-                List<Object> objects = config.getObjects(string);
-                assert objects != null;
-                for (int i = 0; i < objects.size(); i++) {
-                    builder.suggest(string+ "."+i);
+                UniformConfig config = uniforms.getSecond().get(uniform).value;
+                for (String string : config.getNames()) {
+                    List<Object> objects = config.getObjects(string);
+                    assert objects != null;
+                    for (int i = 0; i < objects.size(); i++) {
+                        builder.suggest(string + "." + i);
+                    }
                 }
             }
         }

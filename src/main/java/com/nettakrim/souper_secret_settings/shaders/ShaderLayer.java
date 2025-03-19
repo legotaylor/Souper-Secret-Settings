@@ -7,6 +7,7 @@ import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.shaders.calculations.Calculation;
 import net.minecraft.client.gl.PostEffectProcessor;
 import net.minecraft.client.render.FrameGraphBuilder;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
@@ -109,7 +110,7 @@ public class ShaderLayer implements Toggleable {
         return List.of();
     }
 
-    public Text[] getInfo() {
+    public MutableText[] getInfo() {
         int shaders = 0;
         int modifiers = 0;
         int passes = 0;
@@ -129,10 +130,10 @@ public class ShaderLayer implements Toggleable {
             modifiers++;
         }
 
-        return new Text[]{
-                Text.literal("shaders: "+shaders),
-                Text.literal("modifiers: "+modifiers),
-                Text.literal("render passes: "+passes)
+        return new MutableText[]{
+                Text.translatable(SouperSecretSettingsClient.MODID+".layer.info.shaders", shaders),
+                Text.translatable(SouperSecretSettingsClient.MODID+".layer.info.modifiers", modifiers),
+                Text.translatable(SouperSecretSettingsClient.MODID+".layer.info.passes", passes)
         };
     }
 

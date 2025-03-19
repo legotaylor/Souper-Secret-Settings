@@ -16,6 +16,10 @@
     "souper_secret_settings.layer.active.query" : "Active layer is \"%s\"",
     "souper_secret_settings.layer.name.set" : "Renamed active layer to \"%s\"",
     "souper_secret_settings.layer.name.query" : "Active layer is named \"%s\"",
+    "souper_secret_settings.layer.info.name": "%s:",
+    "souper_secret_settings.layer.info.shaders": "Shaders: %s",
+    "souper_secret_settings.layer.info.modifiers": "Modifiers: %s",
+    "souper_secret_settings.layer.info.passes": "Render Passes: %s",
 
     "souper_secret_settings.shader.toggle_prompt" : "Soup toggled back on automatically, use \"/soup:toggle stay\" if you want it to stay off",
     "souper_secret_settings.shader.warn_stacking" : "Stacking more than %s shaders might crash the game\n! Proceed with caution !",
