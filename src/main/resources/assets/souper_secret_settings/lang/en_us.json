@@ -32,8 +32,8 @@
     "souper_secret_settings.shader.info.none": "none",
     "souper_secret_settings.shader.warn_stacking": "More than %s shaders might cause a lot of lag!\n run again to confirm, or run \"/soup:option warning disable\" to disable this warning",
 
-    "souper_secret_settings.option.warning.on": "Enabled shader count warning",
-    "souper_secret_settings.option.warning.off": "Disabled shader count warning",
+    "souper_secret_settings.option.warning.on": "Shader count warning enabled",
+    "souper_secret_settings.option.warning.off": "Shader count warning disabled",
     "souper_secret_settings.option.random.set": "Set Random item to %s",
     "souper_secret_settings.option.random.query": "Random item is %s",
     "souper_secret_settings.option.clear.set": "Set Clear item to %s",

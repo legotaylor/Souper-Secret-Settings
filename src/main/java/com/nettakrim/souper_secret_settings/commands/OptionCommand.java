@@ -69,6 +69,7 @@ public class OptionCommand {
                         ClientCommandManager.literal("disable")
                                 .executes(context -> warning(false))
                 )
+                .executes(context -> warningQuery())
                 .build();
         commandNode.addChild(warningNode);
     }
@@ -124,8 +125,12 @@ public class OptionCommand {
 
     public static int warning(boolean state) {
         SouperSecretSettingsClient.soupData.config.warning = state;
-        SouperSecretSettingsClient.say("option.warning."+(state ? "on" : "off"));
         SouperSecretSettingsClient.soupData.changeConfig();
+        return warningQuery();
+    }
+
+    public static int warningQuery() {
+        SouperSecretSettingsClient.say("option.warning."+(SouperSecretSettingsClient.soupData.config.warning ? "on" : "off"));
         return 1;
     }
 }
