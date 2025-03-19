@@ -2,6 +2,11 @@
     "gui.souper_secret_settings.keybindings.category.souper_secret_settings": "Souper Secret Settings",
     "gui.souper_secret_settings.keybindings.keybinding.open_gui": "Open Gui",
     "gui.souper_secret_settings.keybindings.keybinding.toggle_soup": "Toggle Soup",
+    "gui.souper_secret_settings.keybindings.keybinding.clear": "Clear All",
+    "gui.souper_secret_settings.keybindings.keybinding.undo": "Undo",
+    "gui.souper_secret_settings.keybindings.keybinding.redo": "Redo",
+    "gui.souper_secret_settings.keybindings.keybinding.random": "Add Random Shader",
+    "gui.souper_secret_settings.keybindings.keybinding.sound": "Play Random Sound",
 
     "souper_secret_settings.say": "[Soup] ",
 

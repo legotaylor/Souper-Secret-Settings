@@ -9,7 +9,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.random.Random;
 
 public class RandomSound {
-    public static void Play() {
+    public static void play() {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         if (player != null) {
             int size = soundEvents.length;
