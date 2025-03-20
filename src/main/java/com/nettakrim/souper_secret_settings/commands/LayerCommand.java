@@ -22,6 +22,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class LayerCommand extends ListCommand<ShaderLayer> {
     String saveConfirm = null;
+    String deleteConfirm = null;
 
     public LayerCommand() {
 
@@ -72,22 +73,37 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
         LiteralCommandNode<FabricClientCommandSource> saveNode = ClientCommandManager
                 .literal("save")
                 .then(
-                        ClientCommandManager.argument("name", StringArgumentType.string())
-                                .suggests(files)
-                                .executes(context -> save(StringArgumentType.getString(context, "name")))
+                        ClientCommandManager.literal("create").then(
+                                ClientCommandManager.argument("name", StringArgumentType.string())
+                                        .suggests(files)
+                                        .executes(context -> save(StringArgumentType.getString(context, "name"), false))
+                                        .then(
+                                                ClientCommandManager.literal("force")
+                                                        .executes(context -> save(StringArgumentType.getString(context, "name"), true))
+                                        )
+                        )
+                )
+                .then(
+                        ClientCommandManager.literal("load").then(
+                                ClientCommandManager.argument("name", StringArgumentType.string())
+                                        .suggests(files)
+                                        .executes(context -> load(StringArgumentType.getString(context, "name")))
+                        )
+                )
+                .then(
+                        ClientCommandManager.literal("remove").then(
+                                ClientCommandManager.argument("name", StringArgumentType.string())
+                                        .suggests(files)
+                                        .executes(context -> delete(StringArgumentType.getString(context, "name"), false))
+                                        .then(
+                                                ClientCommandManager.literal("force")
+                                                        .executes(context -> delete(StringArgumentType.getString(context, "name"), true))
+                                        )
+                        )
                 )
                 .build();
         commandNode.addChild(saveNode);
 
-        LiteralCommandNode<FabricClientCommandSource> loadNode = ClientCommandManager
-                .literal("load")
-                .then(
-                        ClientCommandManager.argument("name", StringArgumentType.string())
-                                .suggests(files)
-                                .executes(context -> load(StringArgumentType.getString(context, "name")))
-                )
-                .build();
-        commandNode.addChild(loadNode);
 
         LiteralCommandNode<FabricClientCommandSource> infoNode = ClientCommandManager
                 .literal("info")
@@ -151,9 +167,8 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
         return 1;
     }
 
-    private int save(String name) {
-        SouperSecretSettingsClient.log(saveConfirm, name, name.equals(saveConfirm));
-        if (name.equals(saveConfirm)) {
+    private int save(String name, boolean force) {
+        if (force || name.equals(saveConfirm) || !SouperSecretSettingsClient.soupData.savedLayerExists(name)) {
             ShaderLayer layer = SouperSecretSettingsClient.soupRenderer.activeLayer;
             String nameTemp = layer.name;
             layer.name = name;
@@ -166,11 +181,30 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
             SouperSecretSettingsClient.say("layer.save.prompt", 1, name);
             saveConfirm = name;
         }
+        deleteConfirm = null;
+        return 1;
+    }
+
+    private int delete(String name, boolean force) {
+        if (SouperSecretSettingsClient.soupData.savedLayerExists(name)) {
+            if (force || name.equals(deleteConfirm)) {
+                SouperSecretSettingsClient.soupData.deleteSavedLayer(name);
+                SouperSecretSettingsClient.say("layer.delete", 1, name);
+                deleteConfirm = null;
+            } else {
+                SouperSecretSettingsClient.say("layer.delete.prompt", 1, name);
+                deleteConfirm = name;
+            }
+        } else {
+            SouperSecretSettingsClient.say("layer.missing", 1, name);
+        }
+        saveConfirm = null;
         return 1;
     }
 
     private int load(String name) {
         saveConfirm = null;
+        deleteConfirm = null;
 
         ShaderLayer layer = SouperSecretSettingsClient.soupRenderer.activeLayer;
         String nameTemp = layer.name;
@@ -178,7 +212,9 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
 
         new ShaderLoadAction(layer).addToHistory();
         layer.clear();
-        SouperSecretSettingsClient.soupData.loadLayer(layer);
+        if (!SouperSecretSettingsClient.soupData.loadLayer(layer)) {
+            SouperSecretSettingsClient.say("layer.missing", 1, name);
+        }
 
         layer.name = nameTemp;
         return 1;

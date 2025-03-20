@@ -45,14 +45,19 @@ public class SoupData {
         config = data.orElseGet(Config::getDefaultConfig);
     }
 
-    public void loadLayer(ShaderLayer shaderLayer) {
-        Path path = getLayerPath(shaderLayer.name);
-        if (!path.toFile().exists()) {
-            return;
+    public boolean loadLayer(ShaderLayer shaderLayer) {
+        if (!savedLayerExists(shaderLayer.name)) {
+            return false;
         }
 
         Optional<LayerCodecs> data = loadFromPath(LayerCodecs.CODEC, getLayerPath(shaderLayer.name));
         data.ifPresent(layerCodecs -> layerCodecs.apply(shaderLayer));
+        return true;
+    }
+
+    public boolean savedLayerExists(String name) {
+        Path path = getLayerPath(name);
+        return path.toFile().exists();
     }
 
     public void saveLayer(ShaderLayer shaderLayer, Runnable onComplete) {
