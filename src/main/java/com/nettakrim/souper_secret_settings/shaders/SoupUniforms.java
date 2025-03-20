@@ -23,10 +23,17 @@ public class SoupUniforms {
         String s = (String)Objects.requireNonNull(config.getObjects("value")).getFirst();
         int v = 0;
         if (!s.isEmpty()) {
-            for (int i = 0; i < s.length(); i++) {
-                v *= 2;
-                if (s.charAt(i) == '1') {
-                    v += 1;
+            int hex = s.charAt(0) == '#' ? 1 : s.startsWith("0x") ? 2 : 0;
+            if (hex > 0) {
+                try {
+                    v = Integer.parseInt(s.substring(hex), 16);
+                } catch (Exception ignored) {}
+            } else {
+                for (int i = 0; i < s.length(); i++) {
+                    v *= 2;
+                    if (s.charAt(i) == '1') {
+                        v += 1;
+                    }
                 }
             }
         }
