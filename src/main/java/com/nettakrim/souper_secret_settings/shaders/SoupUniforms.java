@@ -14,9 +14,9 @@ import java.util.Objects;
 
 public class SoupUniforms {
     public static void register() {
-        Uniforms.registerStandardTree("soup", "byte", SoupUniforms::getBinary, 0f, 255f, 1, new MapConfig(List.of(new ConfigData("value", List.of("0")))));
-        Uniforms.registerStandardTree("soup", "shader_index", SoupUniforms::getShaderIndex, 0f, null, 1, EmptyConfig.INSTANCE);
-        Uniforms.registerStandardTree("soup", "layer_size", SoupUniforms::getLayerSize, 0f, null, 1, EmptyConfig.INSTANCE);
+        Uniforms.registerStandardTree("soup", "byte", SoupUniforms::getBinary, 0f, 255f, 1, new MapConfig(List.of(new ConfigData("value", List.of("0")))), false);
+        Uniforms.registerStandardTree("soup", "shader_index", SoupUniforms::getShaderIndex, 0f, null, 1, EmptyConfig.INSTANCE, false);
+        Uniforms.registerStandardTree("soup", "layer_size", SoupUniforms::getLayerSize, 0f, null, 1, EmptyConfig.INSTANCE, false);
     }
 
     public static void getBinary(UniformConfig config, ShaderTime shaderTime, UniformValue uniformValue) {
