@@ -43,4 +43,12 @@ public class MixOverrideSource implements OverrideSource {
     }
 
     private static final UniformConfig template = new MapConfig(List.of(new ConfigData("soup_range", new ArrayList<>(List.of(0, 1)))));
+
+    public static OverrideSource MixParameterSourceFromString(String value) {
+        OverrideSource overrideSource = ParameterOverrideSource.parameterSourceFromString(value);
+        if (!value.isEmpty() && overrideSource instanceof ParameterOverrideSource) {
+            return new MixOverrideSource(overrideSource);
+        }
+        return overrideSource;
+    }
 }

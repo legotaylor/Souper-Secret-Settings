@@ -5,7 +5,6 @@ import com.mclegoman.luminance.client.shaders.overrides.OverrideSource;
 import com.mclegoman.luminance.client.shaders.uniforms.config.MapConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
 import com.nettakrim.souper_secret_settings.shaders.MixOverrideSource;
-import com.nettakrim.souper_secret_settings.shaders.ParameterOverrideSource;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
@@ -76,13 +75,8 @@ public class ConfigWidget extends ParameterTextWidget {
     }
 
     protected boolean updateOverrideSource() {
-        String value = getText();
-        overrideSource = ParameterOverrideSource.parameterSourceFromString(value);
-        if (!value.isEmpty() && overrideSource instanceof ParameterOverrideSource) {
-            overrideSource = new MixOverrideSource(overrideSource);
-            return true;
-        }
-        return false;
+        overrideSource = MixOverrideSource.MixParameterSourceFromString(getText());
+        return overrideSource instanceof MixOverrideSource;
     }
 
     protected void createChildren(OverrideConfig templateConfig) {

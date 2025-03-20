@@ -174,7 +174,7 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
 
         public void apply(LuminanceUniformOverride override, MapConfig config) {
             for (int i = 0; i < override.overrideSources.size() && i < values().size(); i++) {
-                override.overrideSources.set(i, ParameterOverrideSource.parameterSourceFromString(values().get(i)));
+                override.overrideSources.set(i, MixOverrideSource.MixParameterSourceFromString(values.get(i)));
             }
 
             this.config.ifPresent(c -> {

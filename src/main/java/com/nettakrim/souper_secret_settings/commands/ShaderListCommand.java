@@ -195,10 +195,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
 
         if (text.equals("value")) {
             if (index < override.overrideSources.size()) {
-                OverrideSource source = ParameterOverrideSource.parameterSourceFromString(value);
-                if (!value.isEmpty() && source instanceof ParameterOverrideSource) {
-                    source = new MixOverrideSource(source);
-                }
+                OverrideSource source = MixOverrideSource.MixParameterSourceFromString(value);
                 override.overrideSources.set(index, source);
 
                 String prefix = index+"_";
