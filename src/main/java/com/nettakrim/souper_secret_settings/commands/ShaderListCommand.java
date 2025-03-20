@@ -188,13 +188,14 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
 
         LuminanceUniformOverride override = (LuminanceUniformOverride)uniforms.getFirst().get(uniform).value;
         MapConfig config = (MapConfig)uniforms.getSecond().get(uniform).value;
-        new UniformChangeAction(uniform, index, override, config).addToHistory();
 
         String text = name.substring(0, breakIndex);
         String value = StringArgumentType.getString(context, "value");
 
         if (text.equals("value")) {
             if (index < override.overrideSources.size()) {
+                new UniformChangeAction(uniform, index, override, config).addToHistory();
+
                 OverrideSource source = MixOverrideSource.MixParameterSourceFromString(value);
                 override.overrideSources.set(index, source);
 
@@ -212,7 +213,13 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
             }
         } else {
             List<Object> values = config.getObjects(text);
-            if (values != null && index < values.size()) {
+            int variable = -1;
+            try {
+                variable = Integer.parseInt(text.substring(0, text.indexOf('_')));
+            } catch (Exception ignored) {}
+
+            if (values != null && variable >= 0 && variable < override.overrideSources.size()) {
+                new UniformChangeAction(uniform, variable, override, config).addToHistory();
 
                 Object objectAtIndex = values.get(index);
                 Object object;
