@@ -39,7 +39,13 @@
     "souper_secret_settings.shader.error.value": "Value index %s is higher than the maximum of %s",
     "souper_secret_settings.shader.error.object": "Config \"%s\" does not exist",
     "souper_secret_settings.shader.error.object_index": "Config index %s is higher than the maximum of %s",
-    "souper_secret_settings.shader.error.number": "Value \"%s\" is not a number",
+    "souper_secret_settings.shader.error.number": "Config value \"%s\" is not a number",
+
+    "souper_secret_settings.parameter.missing": "Cannot find parameter named \"%s\"",
+    "souper_secret_settings.parameter.error.index": "Parameter index %s is higher than the maximum of %s",
+    "souper_secret_settings.parameter.error.input": "Input index %s is higher than the maximum of %s",
+    "souper_secret_settings.parameter.error.output": "Output index %s is higher than the maximum of %s",
+
 
     "souper_secret_settings.option.warning.on": "Shader count warning enabled",
     "souper_secret_settings.option.warning.off": "Shader count warning disabled",

@@ -84,7 +84,8 @@ public class ParameterCommand extends ListCommand<Calculation> {
     int add(String id) {
         Calculation calculation = Calculations.createCalcultion(id);
         if (calculation == null) {
-            return -1;
+            SouperSecretSettingsClient.say("parameter.missing", 1, id);
+            return 0;
         }
 
         new ListAddAction<>(SouperSecretSettingsClient.soupRenderer.activeLayer.calculations, calculation).addToHistory();
@@ -93,7 +94,7 @@ public class ParameterCommand extends ListCommand<Calculation> {
     }
 
     int toggle(CommandContext<FabricClientCommandSource> context) {
-        Calculation calculation = getCalculation(context);
+        Calculation calculation = getCalculation(context, true);
         if (calculation == null) {
             return 0;
         }
@@ -104,13 +105,14 @@ public class ParameterCommand extends ListCommand<Calculation> {
     }
 
     int setInput(CommandContext<FabricClientCommandSource> context) {
-        Calculation calculation = getCalculation(context);
+        Calculation calculation = getCalculation(context, true);
         if (calculation == null) {
             return 0;
         }
 
         int index = IntegerArgumentType.getInteger(context, "index");
         if (index >= calculation.inputs.length) {
+            SouperSecretSettingsClient.say("parameter.error.input", 1, index, calculation.inputs.length-1);
             return 0;
         }
 
@@ -122,13 +124,14 @@ public class ParameterCommand extends ListCommand<Calculation> {
     }
 
     int setOutput(CommandContext<FabricClientCommandSource> context) {
-        Calculation calculation = getCalculation(context);
+        Calculation calculation = getCalculation(context, true);
         if (calculation == null) {
             return 0;
         }
 
         int index = IntegerArgumentType.getInteger(context, "index");
         if (index >= calculation.outputs.length) {
+            SouperSecretSettingsClient.say("parameter.error.output", 1, index, calculation.outputs.length-1);
             return 0;
         }
 
@@ -140,10 +143,13 @@ public class ParameterCommand extends ListCommand<Calculation> {
     }
 
     @Nullable
-    static Calculation getCalculation(CommandContext<FabricClientCommandSource> context) {
+    static Calculation getCalculation(CommandContext<FabricClientCommandSource> context, boolean feedback) {
         int index = IntegerArgumentType.getInteger(context, "parameter");
         if (index < SouperSecretSettingsClient.soupRenderer.activeLayer.calculations.size()) {
             return SouperSecretSettingsClient.soupRenderer.activeLayer.calculations.get(index);
+        }
+        if (feedback) {
+            SouperSecretSettingsClient.say("parameter.error.index", 1, index, SouperSecretSettingsClient.soupRenderer.activeLayer.calculations.size() - 1);
         }
         return null;
     }
@@ -163,7 +169,7 @@ public class ParameterCommand extends ListCommand<Calculation> {
 
     static SuggestionProvider<FabricClientCommandSource> calculationInputs = SouperSecretSettingsCommands.createIndexSuggestion(
             (context) -> {
-                Calculation calculation = getCalculation(context);
+                Calculation calculation = getCalculation(context, false);
                 return calculation == null ? null : List.of(calculation.inputNames);
             },
             Text::literal
@@ -171,7 +177,7 @@ public class ParameterCommand extends ListCommand<Calculation> {
 
     static SuggestionProvider<FabricClientCommandSource> calculationInputValue = SouperSecretSettingsCommands.createValueSuggestion(
             (context) -> {
-                Calculation calculation = getCalculation(context);
+                Calculation calculation = getCalculation(context, false);
                 return calculation == null ? null : List.of(calculation.inputs);
             },
             OverrideSource::getString,
@@ -180,7 +186,7 @@ public class ParameterCommand extends ListCommand<Calculation> {
 
     static SuggestionProvider<FabricClientCommandSource> calculationOutputs = SouperSecretSettingsCommands.createIndexSuggestion(
             (context) -> {
-                Calculation calculation = getCalculation(context);
+                Calculation calculation = getCalculation(context, false);
                 return calculation == null ? null : List.of(calculation.outputs);
             },
             (message) -> null
@@ -188,7 +194,7 @@ public class ParameterCommand extends ListCommand<Calculation> {
 
     static SuggestionProvider<FabricClientCommandSource> calculationOutputValue = SouperSecretSettingsCommands.createValueSuggestion(
             (context) -> {
-                Calculation calculation = getCalculation(context);
+                Calculation calculation = getCalculation(context, false);
                 return calculation == null ? null : List.of(calculation.outputs);
             },
             (value) -> value,
