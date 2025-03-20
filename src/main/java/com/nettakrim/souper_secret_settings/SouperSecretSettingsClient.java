@@ -92,7 +92,7 @@ public class SouperSecretSettingsClient implements ClientModInitializer {
 	public static void consumeItem(ItemStack stack) {
 		if (stacksMatch(stack, soupData.config.randomItem)) {
 			SouperSecretSettingsCommands.shaderCommand.removeAll();
-			SouperSecretSettingsCommands.shaderCommand.add(Identifier.of("random_edible"), 1);
+			SouperSecretSettingsCommands.shaderCommand.add(Identifier.of("random_edible"), 1, true);
 			RandomSound.play();
 		} else if (stacksMatch(stack, soupData.config.clearItem)) {
 			SouperSecretSettingsCommands.shaderCommand.removeAll();

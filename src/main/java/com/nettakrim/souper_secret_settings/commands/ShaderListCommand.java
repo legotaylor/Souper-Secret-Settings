@@ -60,10 +60,14 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
                 .then(
                         ClientCommandManager.argument("shader", IdentifierArgumentType.identifier())
                                 .suggests(registrySuggestions)
-                                .executes((context -> add(context.getArgument("shader", Identifier.class), 1)))
+                                .executes((context -> add(context.getArgument("shader", Identifier.class), 1, false)))
                                 .then(
                                         ClientCommandManager.argument("amount", IntegerArgumentType.integer(1))
-                                                .executes((context -> add(context.getArgument("shader", Identifier.class), IntegerArgumentType.getInteger(context, "amount"))))
+                                                .executes((context -> add(context.getArgument("shader", Identifier.class), IntegerArgumentType.getInteger(context, "amount"), false)))
+                                                .then(
+                                                        ClientCommandManager.literal("force")
+                                                                .executes((context -> add(context.getArgument("shader", Identifier.class), IntegerArgumentType.getInteger(context, "amount"), true)))
+                                                )
                                 )
                 )
                 .build();
@@ -112,7 +116,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
         registerList(commandNode);
     }
 
-    public int add(Identifier id, int amount) {
+    public int add(Identifier id, int amount, boolean force) {
         ShaderLayer layer = SouperSecretSettingsClient.soupRenderer.activeLayer;
 
         List<ShaderData> shaders = SouperSecretSettingsClient.soupRenderer.getShaderAdditions(registry, id, amount, layer);
@@ -122,7 +126,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
 
         List<ShaderData> list = layer.getList(registry);
         if (list.size()+amount > warnLimit) {
-            if (!warned && SouperSecretSettingsClient.soupData.config.warning) {
+            if (!warned && SouperSecretSettingsClient.soupData.config.warning && !force) {
                 warned = true;
                 SouperSecretSettingsClient.say("shader.warn_stacking", warnLimit);
                 return 1;
