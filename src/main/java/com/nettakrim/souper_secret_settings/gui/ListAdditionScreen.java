@@ -29,12 +29,12 @@ public class ListAdditionScreen<V> extends ScrollScreen {
 
         createScrollWidget(20+SoupGui.listGap*2);
 
-        boolean canRemove = listScreen.canRemoveAdditions();
         additions = new ArrayList<>();
 
         for (String addition : listScreen.getAdditions()) {
+            SouperSecretSettingsClient.log(addition);
             AdditionButton additionButton = new AdditionButton(addition, listScreen.getAdditionText(addition), ListScreen.listX, ListScreen.listWidth, 20, this::add);
-            if (canRemove) {
+            if (listScreen.canRemoveAddition(addition)) {
                 additionButton.addRemoveListener(this::removeAddition);
             }
             additions.add(additionButton);

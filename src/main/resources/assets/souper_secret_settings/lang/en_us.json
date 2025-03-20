@@ -6,6 +6,7 @@
     "souper_secret_settings.layer.delete.prompt": "Run again to confirm deleting layer \"%s\"",
     "souper_secret_settings.layer.save": "Saved layer \"%s\"",
     "souper_secret_settings.layer.save.prompt": "Saved layer named \"%s\" already exists, run again to confirm overwrite",
+    "souper_secret_settings.layer.save.invalid": "Name \"%s\" is invalid, cannot save",
     "souper_secret_settings.layer.active.set": "Set active layer to \"%s\"",
     "souper_secret_settings.layer.active.query": "Active layer is \"%s\"",
     "souper_secret_settings.layer.name.set": "Renamed active layer to \"%s\"",

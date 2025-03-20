@@ -1,9 +1,11 @@
 package com.nettakrim.souper_secret_settings;
 
 import com.mclegoman.luminance.client.data.ClientData;
+import com.mclegoman.luminance.client.events.Events;
 import com.nettakrim.souper_secret_settings.actions.Actions;
 import com.nettakrim.souper_secret_settings.data.SoupData;
 import com.nettakrim.souper_secret_settings.gui.SoupGui;
+import com.nettakrim.souper_secret_settings.shaders.SoupReloader;
 import com.nettakrim.souper_secret_settings.shaders.SoupRenderer;
 import com.nettakrim.souper_secret_settings.shaders.SoupUniforms;
 import com.nettakrim.souper_secret_settings.shaders.calculations.Calculations;
@@ -59,6 +61,8 @@ public class SouperSecretSettingsClient implements ClientModInitializer {
 		});
 
 		ClientLifecycleEvents.CLIENT_STOPPING.register((client) -> soupData.saveIfChanged());
+
+		Events.ClientResourceReloaders.register(Identifier.of(MODID, "shaders"), new SoupReloader());
 	}
 
 	public static void say(String key, int priority, Object... args) {

@@ -85,8 +85,8 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
                 )
                 .then(
                         ClientCommandManager.literal("load").then(
-                                ClientCommandManager.argument("name", StringArgumentType.string())
-                                        .suggests(files)
+                                ClientCommandManager.argument("name", StringArgumentType.greedyString())
+                                        .suggests(layers)
                                         .executes(context -> load(StringArgumentType.getString(context, "name")))
                         )
                 )
@@ -168,6 +168,10 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
     }
 
     private int save(String name, boolean force) {
+        if (!SouperSecretSettingsClient.soupData.isValidName(name)) {
+            SouperSecretSettingsClient.say("layer.save.invalid", 1, name);
+            return 0;
+        }
         if (force || name.equals(saveConfirm) || !SouperSecretSettingsClient.soupData.savedLayerExists(name)) {
             ShaderLayer layer = SouperSecretSettingsClient.soupRenderer.activeLayer;
             String nameTemp = layer.name;
@@ -228,13 +232,19 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
         return 1;
     }
 
-    private static final SuggestionProvider<FabricClientCommandSource> files = (context, builder) -> {
-        for (String name : SouperSecretSettingsClient.soupData.getSavedLayers()) {
-            builder.suggest(name);
-        }
+    private static final SuggestionProvider<FabricClientCommandSource> files = getSavedLayerSuggestion(false);
 
-        return CompletableFuture.completedFuture(builder.build());
-    };
+    private static final SuggestionProvider<FabricClientCommandSource> layers = getSavedLayerSuggestion(true);
+
+    private static SuggestionProvider<FabricClientCommandSource> getSavedLayerSuggestion(boolean includeResources) {
+        return (context, builder) -> {
+            for (String name : SouperSecretSettingsClient.soupData.getSavedLayers(includeResources)) {
+                builder.suggest(name);
+            }
+
+            return CompletableFuture.completedFuture(builder.build());
+        };
+    }
 
     private static final SuggestionProvider<FabricClientCommandSource> layerIndexes = SouperSecretSettingsCommands.createIndexSuggestion(
             (context) -> SouperSecretSettingsClient.soupRenderer.shaderLayers,

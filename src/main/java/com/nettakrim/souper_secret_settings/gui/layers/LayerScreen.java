@@ -26,7 +26,7 @@ public class LayerScreen extends ListScreen<ShaderLayer> {
 
     @Override
     public List<String> calculateAdditions() {
-        return SouperSecretSettingsClient.soupData.getSavedLayers();
+        return SouperSecretSettingsClient.soupData.getSavedLayers(true);
     }
 
     @Override
@@ -58,8 +58,8 @@ public class LayerScreen extends ListScreen<ShaderLayer> {
     }
 
     @Override
-    protected boolean canRemoveAdditions() {
-        return true;
+    protected boolean canRemoveAddition(String addition) {
+        return !addition.contains(":");
     }
 
     @Override

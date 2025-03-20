@@ -13,6 +13,7 @@ import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.DataWriter;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.Nullable;
@@ -24,9 +25,7 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 public class SoupData {
@@ -37,25 +36,42 @@ public class SoupData {
 
     private int saveChange;
 
+    public Map<Identifier, LayerCodecs> resourceLayers;
+
     public SoupData() {
         configDir = FabricLoader.getInstance().getConfigDir().resolve(SouperSecretSettingsClient.MODID);
         gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
 
         Optional<Config> data = loadFromPath(Config.CODEC, configDir.resolve("config.json"));
         config = data.orElseGet(Config::getDefaultConfig);
+
+        resourceLayers = new HashMap<>();
     }
 
     public boolean loadLayer(ShaderLayer shaderLayer) {
-        if (!savedLayerExists(shaderLayer.name)) {
-            return false;
-        }
+        if (shaderLayer.name.contains(":")) {
+            Identifier identifier = Identifier.tryParse(shaderLayer.name);
+            LayerCodecs layerCodecs = resourceLayers.get(identifier);
+            if (layerCodecs == null) {
+                return false;
+            }
 
-        Optional<LayerCodecs> data = loadFromPath(LayerCodecs.CODEC, getLayerPath(shaderLayer.name));
-        data.ifPresent(layerCodecs -> layerCodecs.apply(shaderLayer));
+            layerCodecs.apply(shaderLayer);
+        } else {
+            if (!savedLayerExists(shaderLayer.name)) {
+                return false;
+            }
+
+            Optional<LayerCodecs> data = loadFromPath(LayerCodecs.CODEC, getLayerPath(shaderLayer.name));
+            data.ifPresent(layerCodecs -> layerCodecs.apply(shaderLayer));
+        }
         return true;
     }
 
     public boolean savedLayerExists(String name) {
+        if (!isValidName(name)) {
+            return false;
+        }
         Path path = getLayerPath(name);
         return path.toFile().exists();
     }
@@ -72,7 +88,7 @@ public class SoupData {
         return configDir.resolve("layers").resolve(name+".json");
     }
 
-    public List<String> getSavedLayers() {
+    public List<String> getSavedLayers(boolean includeResources) {
         List<String> names = new ArrayList<>();
         File[] files = configDir.resolve("layers").toFile().listFiles();
         if (files != null) {
@@ -81,6 +97,11 @@ public class SoupData {
                     String name = file.getName();
                     names.add(name.substring(0, name.length()-5));
                 }
+            }
+        }
+        if (includeResources) {
+            for (Identifier identifier : resourceLayers.keySet()) {
+                names.add(identifier.toString());
             }
         }
         return names;

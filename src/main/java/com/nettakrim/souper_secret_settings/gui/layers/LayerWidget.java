@@ -12,6 +12,7 @@ import com.nettakrim.souper_secret_settings.shaders.Toggleable;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
 public class LayerWidget extends ListWidget {
@@ -34,7 +35,7 @@ public class LayerWidget extends ListWidget {
         loadButton = ButtonWidget.builder(Text.literal("load"), (buttonWidget) -> load()).dimensions(x + width/2,0,width/2,20).build();
 
         nameWidget = new SuggestionTextFieldWidget(x, width, 20, Text.of("layer id"), false);
-        nameWidget.setListeners(SouperSecretSettingsClient.soupData::getSavedLayers, this::setNameDisambiguate);
+        nameWidget.setListeners(() -> SouperSecretSettingsClient.soupData.getSavedLayers(true), this::setNameDisambiguate);
         nameWidget.submitOnLostFocus = true;
         nameWidget.setText(layer.name);
         nameWidget.setChangedListener(this::setName);
@@ -163,7 +164,7 @@ public class LayerWidget extends ListWidget {
 
     private void updateDataButtons() {
         saveButton.active = SouperSecretSettingsClient.soupData.isValidName(layer.name);
-        loadButton.active = SouperSecretSettingsClient.soupData.getLayerPath(layer.name).toFile().exists();
+        loadButton.active = SouperSecretSettingsClient.soupData.savedLayerExists(layer.name) || (layer.name.contains(":") && SouperSecretSettingsClient.soupData.resourceLayers.containsKey(Identifier.tryParse(layer.name)));
 
         if (saveButton.active && !loadButton.active && layer.isEmpty()) {
             saveButton.active = false;
