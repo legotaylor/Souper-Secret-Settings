@@ -209,7 +209,7 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
         }
 
         public void apply(ShaderLayer layer) {
-            Calculation calculation = Calculations.createCalcultion(id);
+            Calculation calculation = Calculations.createCalculation(id);
             if (calculation == null) {
                 SouperSecretSettingsClient.log("couldn't find calculation", id);
                 return;

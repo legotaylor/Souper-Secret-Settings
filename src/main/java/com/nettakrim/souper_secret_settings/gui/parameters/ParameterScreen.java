@@ -37,7 +37,7 @@ public class ParameterScreen extends ListScreen<Calculation> {
 
     @Override
     public Calculation tryGetAddition(String addition) {
-        return Calculations.createCalcultion(addition);
+        return Calculations.createCalculation(addition);
     }
 
     @Override

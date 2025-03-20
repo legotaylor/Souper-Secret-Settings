@@ -8,6 +8,9 @@ import com.nettakrim.souper_secret_settings.shaders.calculations.oscillator.SawC
 import com.nettakrim.souper_secret_settings.shaders.calculations.oscillator.SineCalculation;
 import com.nettakrim.souper_secret_settings.shaders.calculations.oscillator.SquareCalculation;
 import com.nettakrim.souper_secret_settings.shaders.calculations.oscillator.TriangleCalculation;
+import com.nettakrim.souper_secret_settings.shaders.calculations.persistent.DeltaCalculation;
+import com.nettakrim.souper_secret_settings.shaders.calculations.persistent.HoldCalculation;
+import com.nettakrim.souper_secret_settings.shaders.calculations.persistent.SmoothCalculation;
 import com.nettakrim.souper_secret_settings.shaders.calculations.remap.ClampCalculation;
 import com.nettakrim.souper_secret_settings.shaders.calculations.remap.LimitCalculation;
 
@@ -31,6 +34,10 @@ public class Calculations {
         registerCalculation("oscillator_square", SquareCalculation::new);
         registerCalculation("oscillator_triangle", TriangleCalculation::new);
 
+        registerCalculation("persistent_delta", DeltaCalculation::new);
+        registerCalculation("persistent_hold", HoldCalculation::new);
+        registerCalculation("persistent_smooth", SmoothCalculation::new);
+
         registerCalculation("remap_clamp", ClampCalculation::new);
         registerCalculation("remap_limit", LimitCalculation::new);
     }
@@ -39,7 +46,7 @@ public class Calculations {
         factories.put(id, supplier);
     }
 
-    public static Calculation createCalcultion(String id) {
+    public static Calculation createCalculation(String id) {
         if (!factories.containsKey(id)) return null;
         return factories.get(id).apply(id);
     }

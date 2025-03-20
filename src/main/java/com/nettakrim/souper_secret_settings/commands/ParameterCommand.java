@@ -82,7 +82,7 @@ public class ParameterCommand extends ListCommand<Calculation> {
     }
 
     int add(String id) {
-        Calculation calculation = Calculations.createCalcultion(id);
+        Calculation calculation = Calculations.createCalculation(id);
         if (calculation == null) {
             SouperSecretSettingsClient.say("parameter.missing", 1, id);
             return 0;
