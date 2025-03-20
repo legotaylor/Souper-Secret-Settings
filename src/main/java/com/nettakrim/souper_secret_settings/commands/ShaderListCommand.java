@@ -466,12 +466,14 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
 
         for (Identifier identifier : SouperSecretSettingsClient.soupRenderer.getRegistryPasses(registry)) {
             PassData passData = shader.passDatas.get(identifier);
-            int size = passData.overrides.size();
-            if (pass < size) {
-                return new Couple<>(passData.overrides.get(pass), passData.configs.get(pass));
+            if (passData != null) {
+                int size = passData.overrides.size();
+                if (pass < size) {
+                    return new Couple<>(passData.overrides.get(pass), passData.configs.get(pass));
+                }
+                pass -= size;
+                total += size;
             }
-            pass -= size;
-            total += size;
         }
 
         if (feedback) {
