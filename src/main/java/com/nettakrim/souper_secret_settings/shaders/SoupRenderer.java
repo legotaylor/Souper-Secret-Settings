@@ -72,7 +72,7 @@ public class SoupRenderer implements Runnables.WorldRender {
                 }
             }
         }));
-        Events.AfterShaderDataRegistered.register(Identifier.of(SouperSecretSettingsClient.MODID, "reload"), this::loadDefault);
+        Events.AfterClientResourceReload.register(Identifier.of(SouperSecretSettingsClient.MODID, "reload"), this::loadDefault);
 
         Events.BeforeShaderRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "before_render"), new OverrideManager.BeforeShaderRender());
         Events.AfterShaderRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "after_render"), new OverrideManager.AfterShaderRender());
