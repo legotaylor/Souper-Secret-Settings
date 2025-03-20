@@ -43,5 +43,8 @@
     "souper_secret_settings.option.toggle.0": "Soup enabled",
     "souper_secret_settings.option.toggle.1": "Soup disabled",
     "souper_secret_settings.option.toggle.2": "Soup will stay disabled",
-    "souper_secret_settings.option.toggle.prompt": "Soup enabled automatically, use \"/soup:option toggle stay\" if you want it to stay off"
+    "souper_secret_settings.option.toggle.prompt": "Soup enabled automatically, use \"/soup:option toggle stay\" if you want it to stay off",
+    "souper_secret_settings.option.filter.0": "All command feedback sent",
+    "souper_secret_settings.option.filter.1": "Only important command feedback sent",
+    "souper_secret_settings.option.filter.2": "No command feedback sent"
 }

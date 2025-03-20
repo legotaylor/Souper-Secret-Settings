@@ -250,7 +250,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
         List<ShaderData> shaders = getList();
 
         if (shaders.isEmpty()) {
-            SouperSecretSettingsClient.say("query.none");
+            SouperSecretSettingsClient.say("query.none", 1);
         } else {
             MutableText text = Text.empty();
             String connector = "";
@@ -273,7 +273,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
                 count++;
                 lastId = currentID;
             }
-            SouperSecretSettingsClient.sayStyled(text);
+            SouperSecretSettingsClient.sayStyled(text, 1);
         }
 
         return 1;

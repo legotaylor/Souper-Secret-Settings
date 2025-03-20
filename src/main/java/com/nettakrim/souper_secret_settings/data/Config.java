@@ -25,25 +25,28 @@ public class Config {
 
     public int disableState;
     public boolean warning;
+    public int messageFilter;
 
     public static final Codec<Config> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             Codec.BOOL.fieldOf("transferredOldData").forGetter((config) -> config.transferredOldData),
             ItemStack.CODEC.optionalFieldOf("randomItem", new ItemStack(Items.BEETROOT_SOUP)).forGetter((config -> config.randomItem)),
             ItemStack.CODEC.optionalFieldOf("clearItem", new ItemStack(Items.MILK_BUCKET)).forGetter((config -> config.clearItem)),
             Codec.INT.optionalFieldOf("disableState", 0).forGetter((config -> config.disableState)),
-            Codec.BOOL.optionalFieldOf("warning", true).forGetter((config) -> config.warning)
+            Codec.BOOL.optionalFieldOf("warning", true).forGetter((config) -> config.warning),
+            Codec.INT.optionalFieldOf("messageFilter", 0).forGetter(config -> config.messageFilter)
             ).apply(instance, Config::new));
 
-    public Config(boolean transferredOldData, ItemStack randomItem, ItemStack clearItem, int disableState, boolean warning) {
+    public Config(boolean transferredOldData, ItemStack randomItem, ItemStack clearItem, int disableState, boolean warning, int messageFilter) {
         this.transferredOldData = transferredOldData;
         this.randomItem = randomItem;
         this.clearItem = clearItem;
         this.disableState = disableState;
         this.warning = warning;
+        this.messageFilter = messageFilter;
     }
 
     public static Config getDefaultConfig() {
-        return new Config(false, new ItemStack(Items.BEETROOT_SOUP), new ItemStack(Items.MILK_BUCKET), 0, true);
+        return new Config(false, new ItemStack(Items.BEETROOT_SOUP), new ItemStack(Items.MILK_BUCKET), 0, true, 0);
     }
 
     public void transferOldData() {

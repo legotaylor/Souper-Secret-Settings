@@ -61,16 +61,16 @@ public class SouperSecretSettingsClient implements ClientModInitializer {
 		ClientLifecycleEvents.CLIENT_STOPPING.register((client) -> soupData.saveIfChanged());
 	}
 
-	public static void say(String key, Object... args) {
-		sayStyled(translate(key, args).setStyle(Style.EMPTY.withColor(textColor)));
+	public static void say(String key, int priority, Object... args) {
+		sayStyled(translate(key, args).setStyle(Style.EMPTY.withColor(textColor)), priority);
 	}
 
-	public static void sayStyled(MutableText text) {
-		sayRaw(Text.translatable(MODID + ".say").setStyle(Style.EMPTY.withColor(nameTextColor)).append(text.setStyle(Style.EMPTY.withColor(textColor))));
+	public static void sayStyled(MutableText text, int priority) {
+		sayRaw(Text.translatable(MODID + ".say").setStyle(Style.EMPTY.withColor(nameTextColor)).append(text.setStyle(Style.EMPTY.withColor(textColor))), priority);
 	}
 
-	public static void sayRaw(MutableText text) {
-		if (ClientData.minecraft.player == null) return;
+	public static void sayRaw(MutableText text, int priority) {
+		if (ClientData.minecraft.player == null || priority < soupData.config.messageFilter) return;
 		ClientData.minecraft.player.sendMessage(text, false);
 	}
 

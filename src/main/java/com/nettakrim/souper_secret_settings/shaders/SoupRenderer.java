@@ -100,7 +100,7 @@ public class SoupRenderer implements Runnables.WorldRender {
 
         ShaderRegistryEntry shaderRegistry = getRegistryEntry(registry, id);
         if (shaderRegistry == null) {
-            SouperSecretSettingsClient.say("shader.missing", id);
+            SouperSecretSettingsClient.say("shader.missing", 1, id);
             return null;
         }
 
@@ -125,7 +125,7 @@ public class SoupRenderer implements Runnables.WorldRender {
         while (i < amount) {
             shaderRegistry = getRandomShader(registry, group, shaderRegistry);
             if (shaderRegistry == null) {
-                SouperSecretSettingsClient.say("shader.registry_empty");
+                SouperSecretSettingsClient.say("shader.registry_empty", 1);
                 return null;
             }
             shaders.add(new ShaderData(new Shader(shaderRegistry, this::getRenderType)));

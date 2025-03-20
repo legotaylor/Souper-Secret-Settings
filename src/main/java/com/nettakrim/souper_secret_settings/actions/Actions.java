@@ -59,7 +59,7 @@ public class Actions {
 
         if (SouperSecretSettingsClient.soupData.config.disableState == 1) {
             SouperSecretSettingsClient.soupData.config.disableState = 0;
-            SouperSecretSettingsClient.say("option.toggle.prompt");
+            SouperSecretSettingsClient.say("option.toggle.prompt", 1);
         }
     }
 }

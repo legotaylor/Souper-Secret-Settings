@@ -121,14 +121,14 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
         if (index < SouperSecretSettingsClient.soupRenderer.shaderLayers.size()) {
             ShaderLayer layer = SouperSecretSettingsClient.soupRenderer.shaderLayers.get(index);
             SouperSecretSettingsClient.soupRenderer.activeLayer = layer;
-            SouperSecretSettingsClient.say("layer.active.set", layer.name);
+            SouperSecretSettingsClient.say("layer.active.set", 0, layer.name);
             return 1;
         }
         return 0;
     }
 
     private int queryActive() {
-        SouperSecretSettingsClient.say("layer.active.query", SouperSecretSettingsClient.soupRenderer.activeLayer.name);
+        SouperSecretSettingsClient.say("layer.active.query", 1, SouperSecretSettingsClient.soupRenderer.activeLayer.name);
         return 1;
     }
 
@@ -136,12 +136,12 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
         new LayerRenameAction(SouperSecretSettingsClient.soupRenderer.activeLayer).addToHistory();
         SouperSecretSettingsClient.soupRenderer.activeLayer.name = name;
         SouperSecretSettingsClient.soupRenderer.activeLayer.disambiguateName();
-        SouperSecretSettingsClient.say("layer.name.set", SouperSecretSettingsClient.soupRenderer.activeLayer.name);
+        SouperSecretSettingsClient.say("layer.name.set", 0, SouperSecretSettingsClient.soupRenderer.activeLayer.name);
         return 1;
     }
 
     private int queryName() {
-        SouperSecretSettingsClient.say("layer.name.query", SouperSecretSettingsClient.soupRenderer.activeLayer.name);
+        SouperSecretSettingsClient.say("layer.name.query", 1, SouperSecretSettingsClient.soupRenderer.activeLayer.name);
         return 1;
     }
 
@@ -158,12 +158,12 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
             String nameTemp = layer.name;
             layer.name = name;
 
-            SouperSecretSettingsClient.soupData.saveLayer(layer, () -> SouperSecretSettingsClient.say("layer.save", name));
+            SouperSecretSettingsClient.soupData.saveLayer(layer, () -> SouperSecretSettingsClient.say("layer.save", 1, name));
 
             layer.name = nameTemp;
             saveConfirm = null;
         } else {
-            SouperSecretSettingsClient.say("layer.save.prompt", name);
+            SouperSecretSettingsClient.say("layer.save.prompt", 1, name);
             saveConfirm = name;
         }
         return 1;
@@ -185,9 +185,9 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
     }
 
     private int info() {
-        SouperSecretSettingsClient.sayStyled(Text.translatable(SouperSecretSettingsClient.MODID+".layer.info.name", SouperSecretSettingsClient.soupRenderer.activeLayer.name));
+        SouperSecretSettingsClient.sayStyled(Text.translatable(SouperSecretSettingsClient.MODID+".layer.info.name", SouperSecretSettingsClient.soupRenderer.activeLayer.name), 1);
         for (MutableText text : SouperSecretSettingsClient.soupRenderer.activeLayer.getInfo()) {
-            SouperSecretSettingsClient.sayRaw(text.setStyle(Style.EMPTY.withColor(SouperSecretSettingsClient.textColor)));
+            SouperSecretSettingsClient.sayRaw(text.setStyle(Style.EMPTY.withColor(SouperSecretSettingsClient.textColor)), 1);
         }
         return 1;
     }

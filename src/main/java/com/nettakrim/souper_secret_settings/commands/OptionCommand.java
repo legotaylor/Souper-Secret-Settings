@@ -45,7 +45,7 @@ public class OptionCommand {
                 .then(
                         ClientCommandManager.literal("ui").executes(context -> setRenderType(Shader.RenderType.GAME))
                 )
-                .executes(context -> queryRenderType())
+                .executes(context -> queryRenderType(1))
                 .build();
         commandNode.addChild(renderTypeNode);
 
@@ -69,56 +69,74 @@ public class OptionCommand {
                         ClientCommandManager.literal("disable")
                                 .executes(context -> warning(false))
                 )
-                .executes(context -> warningQuery())
+                .executes(context -> warningQuery(1))
                 .build();
         commandNode.addChild(warningNode);
+
+        LiteralCommandNode<FabricClientCommandSource> filterNode = ClientCommandManager
+                .literal("message_filter")
+                .then(
+                        ClientCommandManager.literal("all")
+                                .executes(context -> setMessageFilter(0))
+                )
+                .then(
+                        ClientCommandManager.literal("important")
+                                .executes(context -> setMessageFilter(1))
+                )
+                .then(
+                        ClientCommandManager.literal("none")
+                                .executes(context -> setMessageFilter(2))
+                )
+                .executes(context -> queryMessageFilter(1))
+                .build();
+        commandNode.addChild(filterNode);
     }
 
     public static int setRandomItem(ItemStackArgument itemStack) throws CommandSyntaxException {
         SouperSecretSettingsClient.soupData.config.randomItem = itemStack.createStack(1, false);
-        sayItem("option.random.set", SouperSecretSettingsClient.soupData.config.randomItem);
+        sayItem("option.random.set", SouperSecretSettingsClient.soupData.config.randomItem, 0);
         SouperSecretSettingsClient.soupData.changeConfig();
         return 1;
     }
 
     public static int queryRandomItem() {
-        sayItem("option.random.query", SouperSecretSettingsClient.soupData.config.randomItem);
+        sayItem("option.random.query", SouperSecretSettingsClient.soupData.config.randomItem, 1);
         return 1;
     }
 
     public static int setClearItem(ItemStackArgument itemStack) throws CommandSyntaxException {
         SouperSecretSettingsClient.soupData.config.clearItem = itemStack.createStack(1, false);
-        sayItem("option.clear.set", SouperSecretSettingsClient.soupData.config.clearItem);
+        sayItem("option.clear.set", SouperSecretSettingsClient.soupData.config.clearItem, 0);
         SouperSecretSettingsClient.soupData.changeConfig();
         return 1;
     }
 
     public static int queryClearItem() {
-        sayItem("option.clear.query", SouperSecretSettingsClient.soupData.config.clearItem);
+        sayItem("option.clear.query", SouperSecretSettingsClient.soupData.config.clearItem, 1);
         return 1;
     }
 
-    public static void sayItem(String key, ItemStack itemStack) {
+    public static void sayItem(String key, ItemStack itemStack, int priority) {
         String s = itemStack.getItem().toString();
         if (!itemStack.getComponentChanges().isEmpty()) {
             s += " "+itemStack.getComponentChanges().toString();
         }
-        SouperSecretSettingsClient.say(key, s);
+        SouperSecretSettingsClient.say(key, priority, s);
     }
 
     public static int setRenderType(Shader.RenderType renderType) {
         SouperSecretSettingsClient.soupRenderer.setRenderType(renderType);
-        return queryRenderType();
+        return queryRenderType(0);
     }
 
-    public static int queryRenderType() {
-        SouperSecretSettingsClient.say("option.render_type."+SouperSecretSettingsClient.soupRenderer.getRenderType().toString().toLowerCase());
+    public static int queryRenderType(int priority) {
+        SouperSecretSettingsClient.say("option.render_type."+SouperSecretSettingsClient.soupRenderer.getRenderType().toString().toLowerCase(), priority);
         return 1;
     }
 
     public static int toggle(boolean stay) {
         SouperSecretSettingsClient.soupData.config.disableState = stay ? 2 : SouperSecretSettingsClient.soupData.config.disableState > 0 ? 0 : 1;
-        SouperSecretSettingsClient.say("option.toggle."+SouperSecretSettingsClient.soupData.config.disableState);
+        SouperSecretSettingsClient.say("option.toggle."+SouperSecretSettingsClient.soupData.config.disableState, 0);
         SouperSecretSettingsClient.soupData.changeConfig();
         return 1;
     }
@@ -126,11 +144,21 @@ public class OptionCommand {
     public static int warning(boolean state) {
         SouperSecretSettingsClient.soupData.config.warning = state;
         SouperSecretSettingsClient.soupData.changeConfig();
-        return warningQuery();
+        return warningQuery(0);
     }
 
-    public static int warningQuery() {
-        SouperSecretSettingsClient.say("option.warning."+(SouperSecretSettingsClient.soupData.config.warning ? "on" : "off"));
+    public static int warningQuery(int priority) {
+        SouperSecretSettingsClient.say("option.warning."+(SouperSecretSettingsClient.soupData.config.warning ? "on" : "off"), priority);
+        return 1;
+    }
+
+    public static int setMessageFilter(int to) {
+        SouperSecretSettingsClient.soupData.config.messageFilter = to;
+        return queryMessageFilter(2);
+    }
+
+    public static int queryMessageFilter(int priority) {
+        SouperSecretSettingsClient.say("option.filter."+(SouperSecretSettingsClient.soupData.config.messageFilter), priority);
         return 1;
     }
 }
