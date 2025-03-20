@@ -167,17 +167,21 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
 
 
     public int setValue(CommandContext<FabricClientCommandSource> context) {
-        Couple<Map<String, UniformData<UniformOverride>>,Map<String, UniformData<UniformConfig>>> uniforms = getUniformData(context);
-
+        Couple<Map<String, UniformData<UniformOverride>>,Map<String, UniformData<UniformConfig>>> uniforms = getUniformData(context, true);
         if (uniforms == null) {
             return 0;
         }
 
-
         String uniform = StringArgumentType.getString(context, "uniform");
+        if (!uniforms.getFirst().containsKey(uniform)) {
+            SouperSecretSettingsClient.say("shader.error.uniform", 1, uniform);
+            return 0;
+        }
+
         String name = StringArgumentType.getString(context, "name");
         int breakIndex = name.lastIndexOf('.');
         if (breakIndex <= 0) {
+            SouperSecretSettingsClient.say("shader.error.name", 1, name);
             return 0;
         }
 
@@ -187,6 +191,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
         } catch (Exception ignored) {}
 
         if (index < 0) {
+            SouperSecretSettingsClient.say("shader.error.name", 1, name);
             return 0;
         }
 
@@ -197,53 +202,69 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
         String value = StringArgumentType.getString(context, "value");
 
         if (text.equals("value")) {
-            if (index < override.overrideSources.size()) {
-                new UniformChangeAction(uniform, index, override, config).addToHistory();
-
-                OverrideSource source = MixOverrideSource.MixParameterSourceFromString(value);
-                override.overrideSources.set(index, source);
-
-                String prefix = index+"_";
-                MapConfig mapConfig = new MapConfig(List.of());
-                UniformConfig templateConfig = source.getTemplateConfig();
-                for (String templateName : templateConfig.getNames()) {
-                    List<Object> objects = templateConfig.getObjects(templateName);
-                    if (objects != null) {
-                        mapConfig.config.put(prefix + templateName, new ArrayList<>(objects));
-                    }
-                }
-                config.config.keySet().removeIf((s) -> s.startsWith(prefix) && !mapConfig.config.containsKey(s));
-                config.mergeWithConfig(mapConfig);
+            if (index >= override.overrideSources.size()) {
+                SouperSecretSettingsClient.say("shader.error.value", 1, index, override.overrideSources.size()-1);
+                return 0;
             }
+
+            new UniformChangeAction(uniform, index, override, config).addToHistory();
+
+            OverrideSource source = MixOverrideSource.MixParameterSourceFromString(value);
+            override.overrideSources.set(index, source);
+
+            String prefix = index+"_";
+            MapConfig mapConfig = new MapConfig(List.of());
+            UniformConfig templateConfig = source.getTemplateConfig();
+            for (String templateName : templateConfig.getNames()) {
+                List<Object> objects = templateConfig.getObjects(templateName);
+                if (objects != null) {
+                    mapConfig.config.put(prefix + templateName, new ArrayList<>(objects));
+                }
+            }
+            config.config.keySet().removeIf((s) -> s.startsWith(prefix) && !mapConfig.config.containsKey(s));
+            config.mergeWithConfig(mapConfig);
         } else {
             List<Object> values = config.getObjects(text);
+            if (values == null) {
+                SouperSecretSettingsClient.say("shader.error.object", 1, text);
+                return 0;
+            }
+            if (index >= values.size()) {
+                SouperSecretSettingsClient.say("shader.error.object_index", 1, index, values.size()-1);
+                return 0;
+            }
+
             int variable = -1;
             try {
                 variable = Integer.parseInt(text.substring(0, text.indexOf('_')));
             } catch (Exception ignored) {}
 
-            if (values != null && variable >= 0 && variable < override.overrideSources.size()) {
-                new UniformChangeAction(uniform, variable, override, config).addToHistory();
+            if (variable < 0 || variable >= override.overrideSources.size()) {
+                SouperSecretSettingsClient.say("shader.error.value", 1, variable, override.overrideSources.size()-1);
+                return 0;
+            }
 
-                Object objectAtIndex = values.get(index);
-                Object object;
-                if (objectAtIndex instanceof Number) {
-                    try {
-                        object = Float.parseFloat(value);
-                    } catch (Exception ignored) {
-                        return 0;
-                    }
-                } else {
-                    object = value;
-                }
+            new UniformChangeAction(uniform, variable, override, config).addToHistory();
 
+            Object objectAtIndex = values.get(index);
+            Object object;
+            if (objectAtIndex instanceof Number) {
                 try {
-                    values.set(index, object);
-                } catch (Exception e) {
-                    ArrayList<Object> valuesMutable = new ArrayList<>(values);
-                    valuesMutable.set(index, object);
-                    config.config.put(text, valuesMutable);
+                    object = Float.parseFloat(value);
+                } catch (Exception ignored) {
+                    SouperSecretSettingsClient.say("shader.error.number", 1, value);
+                    return 0;
                 }
+            } else {
+                object = value;
+            }
+
+            try {
+                values.set(index, object);
+            } catch (Exception e) {
+                ArrayList<Object> valuesMutable = new ArrayList<>(values);
+                valuesMutable.set(index, object);
+                config.config.put(text, valuesMutable);
             }
         }
 
@@ -334,7 +355,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
     };
 
     protected SuggestionProvider<FabricClientCommandSource> uniformSuggestions = (context, builder) -> {
-        Couple<Map<String, UniformData<UniformOverride>>,Map<String, UniformData<UniformConfig>>> uniforms = getUniformData(context);
+        Couple<Map<String, UniformData<UniformOverride>>,Map<String, UniformData<UniformConfig>>> uniforms = getUniformData(context, false);
 
         if (uniforms != null) {
             for (String string : uniforms.getFirst().keySet()) {
@@ -346,7 +367,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
     };
 
     protected SuggestionProvider<FabricClientCommandSource> uniformNameSuggestions = (context, builder) -> {
-        Couple<Map<String, UniformData<UniformOverride>>,Map<String, UniformData<UniformConfig>>> uniforms = getUniformData(context);
+        Couple<Map<String, UniformData<UniformOverride>>,Map<String, UniformData<UniformConfig>>> uniforms = getUniformData(context, false);
 
         if (uniforms != null) {
             String uniform = StringArgumentType.getString(context, "uniform");
@@ -372,46 +393,49 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
     };
 
     protected SuggestionProvider<FabricClientCommandSource> uniformValueSuggestions = (context, builder) -> {
-        Couple<Map<String, UniformData<UniformOverride>>,Map<String, UniformData<UniformConfig>>> uniforms = getUniformData(context);
+        Couple<Map<String, UniformData<UniformOverride>>,Map<String, UniformData<UniformConfig>>> uniforms = getUniformData(context, false);
 
         if (uniforms != null) {
             String uniform = StringArgumentType.getString(context, "uniform");
-            String name = StringArgumentType.getString(context, "name");
-            int breakIndex = name.lastIndexOf('.');
-            if (breakIndex > 0) {
-                int index = -1;
-                try {
-                    index = Integer.parseInt(name.substring(breakIndex+1));
-                } catch (Exception ignored) {}
-
-                if (index >= 0) {
-                    String defaultValue = null;
-                    String currentValue = null;
-
-                    String text = name.substring(0, breakIndex);
-                    if (text.equals("value")) {
-                        UniformData<UniformOverride> override = uniforms.getFirst().get(uniform);
-                        List<String> values = ((LuminanceUniformOverride) override.value).getStrings();
-                        if (index < values.size()) {
-                            currentValue = values.get(index);
-                            defaultValue = ((LuminanceUniformOverride) override.defaultValue).getStrings().get(index);
-                        }
-                    } else {
-                        UniformData<UniformConfig> config = uniforms.getSecond().get(uniform);
-                        List<Object> values = config.value.getObjects(text);
-                        if (values != null && index < values.size()) {
-                            currentValue = values.get(index).toString();
-                            List<Object> defaultObjects = config.defaultValue.getObjects(text);
-                            defaultValue = (defaultObjects == null || index >= defaultObjects.size()) ? null : defaultObjects.get(index).toString();
-                        }
+            UniformData<UniformOverride> override = uniforms.getFirst().get(uniform);
+            if (override != null) {
+                String name = StringArgumentType.getString(context, "name");
+                int breakIndex = name.lastIndexOf('.');
+                if (breakIndex > 0) {
+                    int index = -1;
+                    try {
+                        index = Integer.parseInt(name.substring(breakIndex + 1));
+                    } catch (Exception ignored) {
                     }
 
-                    if (currentValue != null) {
-                        if (!currentValue.equals(defaultValue)) {
-                            builder.suggest(currentValue, Text.literal("Current"));
+                    if (index >= 0) {
+                        String defaultValue = null;
+                        String currentValue = null;
+
+                        String text = name.substring(0, breakIndex);
+                        if (text.equals("value")) {
+                            List<String> values = ((LuminanceUniformOverride) override.value).getStrings();
+                            if (index < values.size()) {
+                                currentValue = values.get(index);
+                                defaultValue = ((LuminanceUniformOverride) override.defaultValue).getStrings().get(index);
+                            }
+                        } else {
+                            UniformData<UniformConfig> config = uniforms.getSecond().get(uniform);
+                            List<Object> values = config.value.getObjects(text);
+                            if (values != null && index < values.size()) {
+                                currentValue = values.get(index).toString();
+                                List<Object> defaultObjects = config.defaultValue.getObjects(text);
+                                defaultValue = (defaultObjects == null || index >= defaultObjects.size()) ? null : defaultObjects.get(index).toString();
+                            }
                         }
-                        if (defaultValue != null) {
-                            builder.suggest(defaultValue, Text.literal("Default"));
+
+                        if (currentValue != null) {
+                            if (!currentValue.equals(defaultValue)) {
+                                builder.suggest(currentValue, Text.literal("Current"));
+                            }
+                            if (defaultValue != null) {
+                                builder.suggest(defaultValue, Text.literal("Default"));
+                            }
                         }
                     }
                 }
@@ -422,16 +446,21 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
     };
 
     @Nullable
-    protected Couple<Map<String, UniformData<UniformOverride>>,Map<String, UniformData<UniformConfig>>> getUniformData(CommandContext<FabricClientCommandSource> context) {
+    protected Couple<Map<String, UniformData<UniformOverride>>,Map<String, UniformData<UniformConfig>>> getUniformData(CommandContext<FabricClientCommandSource> context, boolean feedback) {
         int shaderIndex = IntegerArgumentType.getInteger(context, "shader");
         ShaderLayer layer = SouperSecretSettingsClient.soupRenderer.activeLayer;
 
         List<ShaderData> shaders = layer.getList(registry);
         if (shaderIndex >= shaders.size()) {
+            if (feedback) {
+                SouperSecretSettingsClient.say("shader.error.shader",1, shaderIndex, shaders.size()-1);
+            }
             return null;
         }
 
-        int pass = IntegerArgumentType.getInteger(context, "pass");
+        int passIndex = IntegerArgumentType.getInteger(context, "pass");
+        int pass = passIndex;
+        int total = 0;
 
         ShaderData shader = shaders.get(shaderIndex);
 
@@ -442,8 +471,12 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
                 return new Couple<>(passData.overrides.get(pass), passData.configs.get(pass));
             }
             pass -= size;
+            total += size;
         }
 
+        if (feedback) {
+            SouperSecretSettingsClient.say("shader.error.pass", 1, passIndex, total-1);
+        }
         return null;
     }
 
