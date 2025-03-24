@@ -1,8 +1,6 @@
 {
     "post_effect": "soup:uv_map",
     "enabled": true,
-    "translatable": true,
-    "description": false,
     "disable_game_rendertype": true,
     "custom": {
         "souper_secret_settings": {
