@@ -115,6 +115,8 @@
     "gui.luminance.shader.soup.rolling_shutter.description": "",
     "gui.luminance.shader.soup.rotate": "Rotate",
     "gui.luminance.shader.soup.rotate.description": "",
+    "gui.luminance.shader.soup.s2xe": "S2xE",
+    "gui.luminance.shader.soup.s2xe.description": "",
     "gui.luminance.shader.soup.sepia": "Sepia",
     "gui.luminance.shader.soup.sepia.description": "",
     "gui.luminance.shader.soup.sequins": "Sequins",
