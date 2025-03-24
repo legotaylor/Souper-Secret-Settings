@@ -11,28 +11,28 @@ All builtin resourcepacks should be enabled by default, but they may need to ena
 |------------------------------------|------------------|-----------------|
 | **[minecraft:]**                   | **[luminance:]** | **[soup:]**     |
 | antialias                          | bloom_dither     | anaglyph        |
-| art                                | crt              | ascii           |
-| bits                               | depth_dither     | autumnal        |
-| blobs                              | dos              | bevel           |
-| blobs2                             | eightbit         | blobs_outline   |
-| bloom*                             | gaussian         | blobs_square    |
-| box_blur**                         | gentoo           | bloom_color     |
-| bumpy                              | golden           | bloom_spike     |
-| color_convolve                     | grayscale        | brightness      |
-| creeper**                          | health_overlay   | checkerboard    |
-| deconverge                         | mirror           | cinematic       |
-| desaturate                         | outlined         | collapse        |
-| flip                               | outlined2        | color_bleed     |
-| fxaa                               | pixelated        | color_blind     |
-| green                              | rainbow          | color_shuffle   |
-| invert**                           | saturate         | contrast        |
-| love*                              | sepia            | crystallize     |
-| notch                              | silhouette       | depth_outline   |
-| ntsc                               | silhouette2      | dissolve        |
-| outline                            | sixteen_colors   | dither          |
-| pencil                             | tiltshift        | dramatic        |
-| phosphor                           |                  | film_grain      |
-| scan_pincushion                    |                  | fisheye         |
+| art                                | blue_blobs2      | ascii           |
+| bits                               | crt              | autumnal        |
+| blobs                              | depth_dither     | bevel           |
+| blobs2                             | dos              | blobs_outline   |
+| bloom*                             | eightbit         | blobs_square    |
+| box_blur**                         | gaussian         | bloom_color     |
+| bumpy                              | gentoo           | bloom_spike     |
+| color_convolve                     | golden_blobs2    | brightness      |
+| creeper**                          | grayscale        | checkerboard    |
+| deconverge                         | health_overlay   | cinematic       |
+| desaturate                         | inverted_colors  | collapse        |
+| flip                               | mirror           | color_bleed     |
+| fxaa                               | outlined         | color_blind     |
+| green                              | outlined2        | color_shuffle   |
+| invert**                           | pixelated        | contrast        |
+| love*                              | rainbow          | crystallize     |
+| notch                              | saturate         | depth_outline   |
+| ntsc                               | sepia            | dissolve        |
+| outline                            | silhouette       | dither          |
+| pencil                             | silhouette2      | dramatic        |
+| phosphor                           | sixteen_colors   | film_grain      |
+| scan_pincushion                    | tiltshift        | fisheye         |
 | shareware*                         |                  | fractal         |
 | sobel                              |                  | frigid          |
 | spider**                           |                  | ghost           |
