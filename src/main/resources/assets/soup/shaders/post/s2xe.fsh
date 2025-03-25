@@ -34,6 +34,7 @@ mat3 rotationAroundAxis(vec3 axis, float rotation)
 }
 
 mat2 rotation2D(float rotation) {
+    rotation *= 6.28318530718;
     float s = sin(rotation);
     float c = cos(rotation);
     return mat2(c, s, -s, c);
@@ -45,7 +46,7 @@ void main(){
     float aspect = oneTexel.y/oneTexel.x;
     float yTan = tan(luminance_fov/114.591559);
     vec3 view = normalize(vec3(yTan * (texCoord.x*2.0 - 1.0) * aspect, yTan * (texCoord.y*2.0 - 1.0), -1));
-    view.yz *= rotation2D(luminance_pitch / 57.2957795131);
+    view.yz *= rotation2D(luminance_pitch);
 
     vec3 pos = Pos;
     mat2 xRotation = rotation2D(Rotation.x);
