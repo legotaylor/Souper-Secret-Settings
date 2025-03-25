@@ -46,6 +46,7 @@ All builtin resourcepacks should be enabled by default, but they may need to ena
 |                                    |                     | highpass        |
 |                                    |                     | horror          |
 |                                    |                     | hsv_map         |
+|                                    |                     | hue_perceptual  |
 |                                    |                     | hue_rotate      |
 |                                    |                     | hyperspace      |
 |                                    |                     | infrared        |

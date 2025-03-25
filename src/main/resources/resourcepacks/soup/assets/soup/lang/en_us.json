@@ -69,6 +69,8 @@
     "gui.luminance.shader.soup.horror.description": "",
     "gui.luminance.shader.soup.hsv_map": "HSV Map",
     "gui.luminance.shader.soup.hsv_map.description": "",
+    "gui.luminance.shader.soup.hue_perceptual": "Hue Perceptual",
+    "gui.luminance.shader.soup.hue_perceptual.description": "",
     "gui.luminance.shader.soup.hue_rotate": "Hue Rotate",
     "gui.luminance.shader.soup.hue_rotate.description": "",
     "gui.luminance.shader.soup.hyperspace": "Hyperspace",

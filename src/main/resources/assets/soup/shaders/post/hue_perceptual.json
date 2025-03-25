@@ -1,0 +1,18 @@
+{
+    "vertex": "minecraft:post/sobel",
+    "fragment": "soup:post/hue_perceptual",
+    "samplers": [
+        { "name": "InSampler" }
+    ],
+    "uniforms": [
+        { "name": "ProjMat",     "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+        { "name": "InSize",      "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
+        { "name": "OutSize",     "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
+        { "name": "Rotation",    "type": "float",     "count": 1,  "values": [ 0.0 ] },
+        { "name": "Gray",        "type": "float",     "count": 3,  "values": [ 0.299, 0.587, 0.114 ] },
+        { "name": "R",           "type": "float",     "count": 3,  "values": [  0.167444,  0.329213, -0.496657 ] },
+        { "name": "G",           "type": "float",     "count": 3,  "values": [ -0.327948,  0.035669,  0.292279 ] },
+        { "name": "B",           "type": "float",     "count": 3,  "values": [  1.250268, -1.047561, -0.202707 ] },
+        { "name": "luminance_alpha_smooth",     "type": "float",     "count": 1,  "values": [ 1.0 ] }
+    ]
+}
