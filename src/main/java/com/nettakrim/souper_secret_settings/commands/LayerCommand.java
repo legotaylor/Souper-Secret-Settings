@@ -1,23 +1,28 @@
 package com.nettakrim.souper_secret_settings.commands;
 
+import com.google.gson.JsonElement;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
+import com.mojang.serialization.JsonOps;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.actions.LayerRenameAction;
 import com.nettakrim.souper_secret_settings.actions.ListAddAction;
 import com.nettakrim.souper_secret_settings.actions.ShaderLoadAction;
 import com.nettakrim.souper_secret_settings.actions.ToggleAction;
+import com.nettakrim.souper_secret_settings.data.LayerCodecs;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public class LayerCommand extends ListCommand<ShaderLayer> {
@@ -111,6 +116,41 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
                 .build();
         commandNode.addChild(infoNode);
 
+        LiteralCommandNode<FabricClientCommandSource> copyNode = ClientCommandManager
+                .literal("copy")
+                .then(
+                        ClientCommandManager.literal("current")
+                                .then(
+                                        ClientCommandManager.argument("index", IntegerArgumentType.integer(0))
+                                                .suggests(layerIndexes)
+                                                .executes(context -> copyCurrent(IntegerArgumentType.getInteger(context, "index")))
+                                )
+                )
+                .then(
+                        ClientCommandManager.literal("saved")
+                                .then(
+                                        ClientCommandManager.argument("name", StringArgumentType.greedyString())
+                                                .suggests(layers)
+                                                .executes(context -> copyFile(StringArgumentType.getString(context, "name")))
+                                )
+                )
+                .then(
+                        ClientCommandManager.literal("load")
+                                .then(
+                                        ClientCommandManager.literal("clipboard")
+                                                .executes(context -> loadFromString(MinecraftClient.getInstance().keyboard.getClipboard()))
+                                )
+                                .then(
+                                        ClientCommandManager.literal("text")
+                                                .then(
+                                                        ClientCommandManager.argument("value", StringArgumentType.greedyString())
+                                                                .executes(context -> loadFromString(StringArgumentType.getString(context, "value")))
+                                                )
+                                )
+                )
+                .build();
+        commandNode.addChild(copyNode);
+
         registerList(commandNode);
     }
 
@@ -140,6 +180,7 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
             SouperSecretSettingsClient.say("layer.active.set", 0, layer.name);
             return 1;
         }
+        SouperSecretSettingsClient.say("layer.error.index", 1, index, SouperSecretSettingsClient.soupRenderer.shaderLayers.size()-1);
         return 0;
     }
 
@@ -229,6 +270,44 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
         for (MutableText text : SouperSecretSettingsClient.soupRenderer.activeLayer.getInfo()) {
             SouperSecretSettingsClient.sayRaw(text.setStyle(Style.EMPTY.withColor(SouperSecretSettingsClient.textColor)), 1);
         }
+        return 1;
+    }
+
+    private int copyFile(String name) {
+        return copyCodec(SouperSecretSettingsClient.soupData.getLayerCodec(name), name);
+    }
+
+    private int copyCurrent(int index) {
+        if (index < SouperSecretSettingsClient.soupRenderer.shaderLayers.size()) {
+            ShaderLayer layer = SouperSecretSettingsClient.soupRenderer.shaderLayers.get(index);
+            return copyCodec(LayerCodecs.from(layer), String.valueOf(index));
+        }
+        SouperSecretSettingsClient.say("layer.error.index", 1, index, SouperSecretSettingsClient.soupRenderer.shaderLayers.size()-1);
+        return 0;
+    }
+
+    private int copyCodec(LayerCodecs layerCodec, String name) {
+        String text = LayerCodecs.CODEC.encodeStart(JsonOps.INSTANCE, layerCodec).getOrThrow().toString();
+        MinecraftClient.getInstance().keyboard.setClipboard(text);
+        SouperSecretSettingsClient.say("layer.copy", 0, name, text.length());
+        return 1;
+    }
+
+    private int loadFromString(String value) {
+        Optional<LayerCodecs> layerCodecs = Optional.empty();
+        try {
+            layerCodecs = LayerCodecs.CODEC.parse(JsonOps.INSTANCE, SouperSecretSettingsClient.soupData.gson.fromJson(value, JsonElement.class)).result();
+        } catch (Exception ignored) {}
+
+        if (layerCodecs.isEmpty()) {
+            SouperSecretSettingsClient.say("layer.error.data", 1);
+            return 0;
+        }
+
+        ShaderLayer layer = SouperSecretSettingsClient.soupRenderer.activeLayer;
+        new ShaderLoadAction(layer).addToHistory();
+        layer.clear();
+        layerCodecs.get().apply(layer);
         return 1;
     }
 

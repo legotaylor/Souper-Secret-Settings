@@ -30,7 +30,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class SoupData {
     protected final Path configDir;
-    protected final Gson gson;
+    public final Gson gson;
 
     public final Config config;
 
@@ -49,23 +49,25 @@ public class SoupData {
     }
 
     public boolean loadLayer(ShaderLayer shaderLayer) {
-        if (shaderLayer.name.contains(":")) {
-            Identifier identifier = Identifier.tryParse(shaderLayer.name);
-            LayerCodecs layerCodecs = resourceLayers.get(identifier);
-            if (layerCodecs == null) {
-                return false;
-            }
-
-            layerCodecs.apply(shaderLayer);
-        } else {
-            if (!savedLayerExists(shaderLayer.name)) {
-                return false;
-            }
-
-            Optional<LayerCodecs> data = loadFromPath(LayerCodecs.CODEC, getLayerPath(shaderLayer.name));
-            data.ifPresent(layerCodecs -> layerCodecs.apply(shaderLayer));
+        LayerCodecs layerCodecs = getLayerCodec(shaderLayer.name);
+        if (layerCodecs == null) {
+            return false;
         }
+
+        layerCodecs.apply(shaderLayer);
         return true;
+    }
+
+    @Nullable
+    public LayerCodecs getLayerCodec(String name) {
+        if (name.contains(":")) {
+            return resourceLayers.get(Identifier.tryParse(name));
+        } else {
+            if (savedLayerExists(name)) {
+                return loadFromPath(LayerCodecs.CODEC, getLayerPath(name)).orElse(null);
+            }
+            return null;
+        }
     }
 
     public boolean savedLayerExists(String name) {
