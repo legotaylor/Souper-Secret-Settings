@@ -37,14 +37,14 @@ public class SoupGui {
 
         x = listGap;
         x += addHeaderButton(ButtonWidget.builder(Text.literal(""),  (widget) -> open(ScreenType.LAYERS)).dimensions(x, listGap, (mainWidth*3+listGap*2)-(smallWidth*3+listGap*2)-listGap, 20).build());
-        x += addHeaderButton(ButtonWidget.builder(Text.literal("⟲"), (widget) -> undo()).dimensions(x, listGap, smallWidth, 20).build());
-        x += addHeaderButton(ButtonWidget.builder(Text.literal("⟳"), (widget) -> redo()).dimensions(x, listGap, smallWidth, 20).build());
+        x += addHeaderButton(ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.undo"), (widget) -> undo()).dimensions(x, listGap, smallWidth, 20).build());
+        x += addHeaderButton(ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.redo"), (widget) -> redo()).dimensions(x, listGap, smallWidth, 20).build());
              addHeaderButton(ButtonWidget.builder(SouperSecretSettingsClient.soupRenderer.getRenderTypeText(), SouperSecretSettingsClient.soupRenderer::cycleRenderType).dimensions(x, listGap, smallWidth, 20).build());
 
         x = listGap;
-        x += addHeaderButton(ButtonWidget.builder(Text.literal("shaders"),    (widget) -> open(ScreenType.SHADERS   )).dimensions(x, listGap*2 + 20, mainWidth, 20).build());
-        x += addHeaderButton(ButtonWidget.builder(Text.literal("modifiers"),  (widget) -> open(ScreenType.MODIFIERS )).dimensions(x, listGap*2 + 20, mainWidth, 20).build());
-             addHeaderButton(ButtonWidget.builder(Text.literal("parameters"), (widget) -> open(ScreenType.PARAMETERS)).dimensions(x, listGap*2 + 20, mainWidth, 20).build());
+        x += addHeaderButton(ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.shaders"),    (widget) -> open(ScreenType.SHADERS   )).dimensions(x, listGap*2 + 20, mainWidth, 20).build());
+        x += addHeaderButton(ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.modifiers"),  (widget) -> open(ScreenType.MODIFIERS )).dimensions(x, listGap*2 + 20, mainWidth, 20).build());
+             addHeaderButton(ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.parameters"), (widget) -> open(ScreenType.PARAMETERS)).dimensions(x, listGap*2 + 20, mainWidth, 20).build());
 
         currentScroll = new int[ScreenType.values().length];
     }
@@ -98,7 +98,7 @@ public class SoupGui {
     }
 
     public void updateActiveLayer() {
-        header.getFirst().setMessage(Text.literal("layer: "+SouperSecretSettingsClient.soupRenderer.activeLayer.name));
+        header.getFirst().setMessage(SouperSecretSettingsClient.soupRenderer.activeLayer.name.isBlank() ? SouperSecretSettingsClient.translate("gui.layers.unnamed") : SouperSecretSettingsClient.translate("gui.layers", SouperSecretSettingsClient.soupRenderer.activeLayer.name));
     }
 
     public void drawHoverText(DrawContext context, int mouseX, int mouseY, Text text) {

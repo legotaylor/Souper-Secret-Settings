@@ -224,8 +224,7 @@ public class SoupRenderer implements Runnables.WorldRender {
     }
 
     public Text getRenderTypeText() {
-        //icons:                                                    💻               🌎
-        return Text.literal(renderType == Shader.RenderType.GAME ? "\uD83D\uDCBB" : "\uD83C\uDF0E");
+        return SouperSecretSettingsClient.translate(renderType == Shader.RenderType.GAME ? "gui.game" : "gui.world");
     }
 
     private void runForGroups(ShaderRegistryEntry shaderRegistryEntry, List<Identifier> registries, BiConsumer<Identifier, String> consumer) {

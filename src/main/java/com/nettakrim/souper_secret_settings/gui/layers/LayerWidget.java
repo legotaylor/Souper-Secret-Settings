@@ -31,8 +31,8 @@ public class LayerWidget extends ListWidget {
         super(x, width, getNameText(layer.name), listScreen);
         this.layer = layer;
 
-        saveButton = ButtonWidget.builder(Text.literal("save"), (buttonWidget) -> save()).dimensions(x,0,width/2,20).build();
-        loadButton = ButtonWidget.builder(Text.literal("load"), (buttonWidget) -> load()).dimensions(x + width/2,0,width/2,20).build();
+        saveButton = ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.save"), (buttonWidget) -> save()).dimensions(x,0,width/2,20).build();
+        loadButton = ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.load"), (buttonWidget) -> load()).dimensions(x + width/2,0,width/2,20).build();
 
         nameWidget = new SuggestionTextFieldWidget(x, width, 20, Text.of("layer id"), false);
         nameWidget.setListeners(() -> SouperSecretSettingsClient.soupData.getSavedLayers(true), this::setNameDisambiguate);
@@ -136,11 +136,11 @@ public class LayerWidget extends ListWidget {
 
         nameWidget.setText(layer.name);
         nameWidget.setCursorToEnd(false);
-        setMessage(Text.literal(layer.name));
+        setMessage(getNameText(layer.name));
     }
 
     private static Text getNameText(String name) {
-        return Text.literal(name.isBlank() ? "<unnamed>" : name);
+        return name.isBlank() ? SouperSecretSettingsClient.translate("gui.unnamed") : Text.literal(name);
     }
 
     private void save() {
@@ -181,7 +181,7 @@ public class LayerWidget extends ListWidget {
 
     private void setConfirm(boolean to) {
         saveConfirmed = to;
-        saveButton.setMessage(to ? Text.literal("confirm") : Text.literal("save"));
+        saveButton.setMessage(SouperSecretSettingsClient.translate(to ? "gui.confirm" : "gui.save"));
     }
 
     @Override

@@ -61,7 +61,7 @@ public abstract class ListScreen<V> extends ScrollScreen {
         suggestionTextFieldWidget.setListeners(this::getAdditions, this::addAddition);
         addDrawableChild(suggestionTextFieldWidget);
 
-        suggestionScreenButton = ButtonWidget.builder(Text.literal("+"), (widget) -> enterAdditionScreen()).dimensions(listX+listWidth-20, 0, 20, 20).build();
+        suggestionScreenButton = ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.addition"), (widget) -> enterAdditionScreen()).dimensions(listX+listWidth-20, 0, 20, 20).build();
         addDrawableChild(suggestionScreenButton);
 
         int scroll = SouperSecretSettingsClient.soupGui.currentScroll[scrollIndex];

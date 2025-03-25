@@ -431,10 +431,10 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
 
                         if (currentValue != null) {
                             if (!currentValue.equals(defaultValue)) {
-                                builder.suggest(currentValue, Text.literal("Current"));
+                                builder.suggest(currentValue, SouperSecretSettingsClient.translate("shader.value.current"));
                             }
                             if (defaultValue != null) {
-                                builder.suggest(defaultValue, Text.literal("Default"));
+                                builder.suggest(defaultValue, SouperSecretSettingsClient.translate("shader.value.default"));
                             }
                         }
                     }

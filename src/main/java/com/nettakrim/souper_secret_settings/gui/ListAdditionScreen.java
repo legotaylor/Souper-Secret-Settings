@@ -25,7 +25,7 @@ public class ListAdditionScreen<V> extends ScrollScreen {
 
     @Override
     protected void init() {
-        addDrawableChild(ButtonWidget.builder(Text.literal("back"), (widget) -> close()).dimensions(SoupGui.listGap, SoupGui.listGap, ListScreen.listWidth+ListScreen.scrollWidth, 20).build());
+        addDrawableChild(ButtonWidget.builder(Text.translatable("gui.back"), (widget) -> close()).dimensions(SoupGui.listGap, SoupGui.listGap, ListScreen.listWidth+ListScreen.scrollWidth, 20).build());
 
         createScrollWidget(20+SoupGui.listGap*2);
 

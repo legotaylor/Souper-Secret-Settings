@@ -35,6 +35,8 @@
     "souper_secret_settings.shader.error.object": "Config \"%s\" does not exist",
     "souper_secret_settings.shader.error.object_index": "Config index %s is higher than the maximum of %s",
     "souper_secret_settings.shader.error.number": "Config value \"%s\" is not a number",
+    "souper_secret_settings.shader.value.current": "Current",
+    "souper_secret_settings.shader.value.default": "Default",
 
     "souper_secret_settings.parameter.missing": "Cannot find parameter named \"%s\"",
     "souper_secret_settings.parameter.error.index": "Parameter index %s is higher than the maximum of %s",
@@ -56,6 +58,23 @@
     "souper_secret_settings.option.filter.0": "All command feedback sent",
     "souper_secret_settings.option.filter.1": "Only important command feedback sent",
     "souper_secret_settings.option.filter.2": "No command feedback sent",
+
+    "souper_secret_settings.resourcepack_soup": "Extra Soup",
+
+    "souper_secret_settings.gui.addition": "+",
+    "souper_secret_settings.gui.undo": "⟲",
+    "souper_secret_settings.gui.redo": "⟳",
+    "souper_secret_settings.gui.layers": "layer: %s",
+    "souper_secret_settings.gui.layers.unnamed": "layer: <unnamed>",
+    "souper_secret_settings.gui.shaders": "shaders",
+    "souper_secret_settings.gui.modifiers": "modifiers",
+    "souper_secret_settings.gui.parameters": "parameters",
+    "souper_secret_settings.gui.save": "save",
+    "souper_secret_settings.gui.confirm": "confirm",
+    "souper_secret_settings.gui.load": "load",
+    "souper_secret_settings.gui.unnamed": "<unnamed>",
+    "souper_secret_settings.gui.game": "\uD83D\uDCBB",
+    "souper_secret_settings.gui.world": "\uD83C\uDF0E",
 
     "gui.souper_secret_settings.keybindings.category.souper_secret_settings": "Souper Secret Settings",
     "gui.souper_secret_settings.keybindings.keybinding.open_gui": "Open Gui",
