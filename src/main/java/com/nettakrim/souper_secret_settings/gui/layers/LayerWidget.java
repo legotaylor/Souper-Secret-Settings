@@ -156,7 +156,7 @@ public class LayerWidget extends ListWidget {
     }
 
     private void load() {
-        new ShaderLoadAction(layer).addToHistory();
+        new ShaderLoadAction(layer, layer.name).addToHistory();
         layer.clear();
         SouperSecretSettingsClient.soupData.loadLayer(layer);
         updateDataButtons();

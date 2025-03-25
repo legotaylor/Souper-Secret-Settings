@@ -255,7 +255,7 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
         String nameTemp = layer.name;
         layer.name = name;
 
-        new ShaderLoadAction(layer).addToHistory();
+        new ShaderLoadAction(layer, layer.name).addToHistory();
         layer.clear();
         if (!SouperSecretSettingsClient.soupData.loadLayer(layer)) {
             SouperSecretSettingsClient.say("layer.missing", 1, name);
@@ -305,7 +305,7 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
         }
 
         ShaderLayer layer = SouperSecretSettingsClient.soupRenderer.activeLayer;
-        new ShaderLoadAction(layer).addToHistory();
+        new ShaderLoadAction(layer, value).addToHistory();
         layer.clear();
         layerCodecs.get().apply(layer);
         return 1;

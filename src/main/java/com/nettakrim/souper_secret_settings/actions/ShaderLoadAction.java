@@ -5,10 +5,12 @@ import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 
 public class ShaderLoadAction implements Action {
     protected ShaderLayer layer;
+    protected String id;
     protected LayerCodecs backup;
 
-    public ShaderLoadAction(ShaderLayer layer) {
+    public ShaderLoadAction(ShaderLayer layer, String id) {
         this.layer = layer;
+        this.id = id;
         backup = LayerCodecs.from(layer);
     }
 
@@ -32,7 +34,6 @@ public class ShaderLoadAction implements Action {
 
     @Override
     public boolean mergeWith(Action other) {
-        // its safe to do a somewhat simple check here because a layer rename action will happen in between shader load actions if they are different
-        return ((ShaderLoadAction)other).layer == layer;
+        return ((ShaderLoadAction)other).layer == layer && id != null && id.equals(((ShaderLoadAction)other).id);
     }
 }
