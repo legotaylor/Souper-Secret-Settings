@@ -141,9 +141,11 @@ public class ShaderLayer implements Toggleable {
         return renderingLayer;
     }
 
-    public static void renderCleanup(FrameGraphBuilder builder) {
+    public static void renderCleanup(@Nullable FrameGraphBuilder builder) {
         renderingLayer = null;
-        FramePassInterface.createForcedPass(builder, Identifier.of(SouperSecretSettingsClient.MODID, "layer_cleanup"), () -> renderingLayer = null);
+        if (builder != null) {
+            FramePassInterface.createForcedPass(builder, Identifier.of(SouperSecretSettingsClient.MODID, "layer_cleanup"), () -> renderingLayer = null);
+        }
     }
 
     public boolean isEmpty() {

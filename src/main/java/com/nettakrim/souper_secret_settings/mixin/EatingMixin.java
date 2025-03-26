@@ -13,16 +13,16 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
-public abstract class StewMixin extends Entity {
+public abstract class EatingMixin extends Entity {
     @Shadow public abstract ItemStack getActiveItem();
 
     @Inject(at = @At("HEAD"), method = "consumeItem")
     protected void finishUsing(CallbackInfo ci) {
-        if (getWorld().isClient) {
+        if (getWorld().isClient && isLocalPlayerOrLogicalSideForUpdatingMovement()) {
             SouperSecretSettingsClient.consumeItem(getActiveItem());
         }
     }
 
     // needed for getWorld() access
-    public StewMixin(EntityType<?> type, World world) {super(type, world);}
+    public EatingMixin(EntityType<?> type, World world) {super(type, world);}
 }

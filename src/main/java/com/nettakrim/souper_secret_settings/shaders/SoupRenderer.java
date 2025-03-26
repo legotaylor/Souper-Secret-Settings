@@ -29,6 +29,8 @@ public class SoupRenderer implements Runnables.WorldRender {
     public final List<ShaderLayer> shaderLayers;
     public ShaderLayer activeLayer;
 
+    private final SoupSpectateHandler spectateHandler;
+
     private List<String> validUniforms;
 
     private Shader.RenderType renderType;
@@ -42,18 +44,33 @@ public class SoupRenderer implements Runnables.WorldRender {
         shaderGroups = new HashMap<>();
         renderType = Shader.RenderType.WORLD;
 
+        spectateHandler = new SoupSpectateHandler();
+        Events.SpectatorHandlers.register(Identifier.of(SouperSecretSettingsClient.MODID, "spectate_handler"), spectateHandler);
+
         Events.AfterWeatherRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "rendering"), ((builder, width, height, framebufferSet) -> {
-            if (renderType == Shader.RenderType.WORLD && !CompatHelper.isIrisShadersEnabled()) {
-                this.run(builder, width, height, framebufferSet);
+            if (!CompatHelper.isIrisShadersEnabled() && SouperSecretSettingsClient.soupData.config.disableState == 0) {
+                if (spectateHandler.shaderLayer != null) {
+                    spectateHandler.shaderLayer.render(builder, width, height, framebufferSet);
+                    ShaderLayer.renderCleanup(builder);
+                }
+                if (renderType == Shader.RenderType.WORLD) {
+                    this.run(builder, width, height, framebufferSet);
+                }
             }
         }));
         Events.AfterHandRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "rendering"), (framebuffer, objectAllocator) -> {
-            if (renderType == Shader.RenderType.WORLD && CompatHelper.isIrisShadersEnabled()) {
-                Runnables.WorldRender.fromGameRender(this, framebuffer, objectAllocator);
+            if (CompatHelper.isIrisShadersEnabled() && SouperSecretSettingsClient.soupData.config.disableState == 0) {
+                if (spectateHandler.shaderLayer != null) {
+                    Runnables.WorldRender.fromGameRender(spectateHandler.shaderLayer::render, framebuffer, objectAllocator);
+                    ShaderLayer.renderCleanup(null);
+                }
+                if (renderType == Shader.RenderType.WORLD) {
+                    Runnables.WorldRender.fromGameRender(this, framebuffer, objectAllocator);
+                }
             }
         });
         Events.AfterGameRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "rendering"), (framebuffer, objectAllocator) -> {
-            if (renderType == Shader.RenderType.GAME) {
+            if (renderType == Shader.RenderType.GAME && SouperSecretSettingsClient.soupData.config.disableState == 0) {
                 Runnables.WorldRender.fromGameRender(this, framebuffer, objectAllocator);
             }
         });
@@ -80,12 +97,10 @@ public class SoupRenderer implements Runnables.WorldRender {
 
     @Override
     public void run(FrameGraphBuilder builder, int textureWidth, int textureHeight, PostEffectProcessor.FramebufferSet framebufferSet) {
-        if (shaderLayers == null || SouperSecretSettingsClient.soupData.config.disableState > 0) {
-            return;
-        }
-
-        for (ShaderLayer layer : shaderLayers) {
-            layer.render(builder, textureWidth, textureHeight, framebufferSet);
+        if (shaderLayers != null) {
+            for (ShaderLayer layer : shaderLayers) {
+                layer.render(builder, textureWidth, textureHeight, framebufferSet);
+            }
         }
 
         ShaderLayer.renderCleanup(builder);
