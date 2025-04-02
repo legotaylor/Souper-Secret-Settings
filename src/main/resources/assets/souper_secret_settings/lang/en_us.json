@@ -64,6 +64,8 @@
     "souper_secret_settings.gui.addition": "+",
     "souper_secret_settings.gui.undo": "⟲",
     "souper_secret_settings.gui.redo": "⟳",
+    "souper_secret_settings.gui.undo_count": "%s",
+    "souper_secret_settings.gui.redo_count": "%s",
     "souper_secret_settings.gui.layers": "layer: %s",
     "souper_secret_settings.gui.layers.unnamed": "layer: <unnamed>",
     "souper_secret_settings.gui.shaders": "shaders",

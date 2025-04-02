@@ -42,7 +42,7 @@ public abstract class DisplayWidget<T> extends CollapseWidget {
         drawIndicator(context, currentDisplay);
 
         if (hovered && mouseX > this.getX()+this.getWidth()-displayWidth-2) {
-            SouperSecretSettingsClient.soupGui.drawHoverText(context, mouseX, mouseY, getHoverText(currentDisplay));
+            SouperSecretSettingsClient.soupGui.setHoverText(getHoverText(currentDisplay));
         }
     }
 

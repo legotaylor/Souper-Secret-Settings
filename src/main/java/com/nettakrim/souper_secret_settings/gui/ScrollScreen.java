@@ -1,5 +1,6 @@
 package com.nettakrim.souper_secret_settings.gui;
 
+import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
@@ -25,6 +26,8 @@ public abstract class ScrollScreen extends Screen {
         context.enableScissor(ListScreen.listX, scrollWidget.getY(), width, height);
         renderScrollables(context, mouseX, mouseY, delta);
         context.disableScissor();
+
+        SouperSecretSettingsClient.soupGui.drawCurrentHoverText(context, mouseX, mouseY);
     }
 
     protected abstract void renderScrollables(DrawContext context, int mouseX, int mouseY, float delta);

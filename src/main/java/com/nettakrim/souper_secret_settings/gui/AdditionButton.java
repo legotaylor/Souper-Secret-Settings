@@ -1,28 +1,24 @@
 package com.nettakrim.souper_secret_settings.gui;
 
 import com.mclegoman.luminance.common.util.Couple;
-import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.ColorHelper;
 
 import java.util.function.Consumer;
 
-public class AdditionButton extends ButtonWidget {
+public class AdditionButton extends HoverButtonWidget {
     protected String addition;
     protected Consumer<AdditionButton> onRemove;
-    protected Text hoverText;
 
     protected boolean deleting;
 
     public AdditionButton(String addition, Couple<Text,Text> message, int x, int width, int height, Consumer<String> onPress) {
-        super(x, 0, width, height, message.getFirst(), (widget) -> onPress.accept(addition), ButtonWidget.DEFAULT_NARRATION_SUPPLIER);
+        super(x, 0, width, height, message.getFirst(), message.getSecond(), (widget) -> onPress.accept(addition));
         this.addition = addition;
         this.onRemove = null;
-        this.hoverText = message.getSecond();
     }
 
     public void addRemoveListener(Consumer<AdditionButton> onRemove) {
@@ -32,10 +28,6 @@ public class AdditionButton extends ButtonWidget {
     @Override
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
         super.renderWidget(context, mouseX, mouseY, delta);
-
-        if (hovered && hoverText != null && (onRemove == null || mouseX > getX() + 10)) {
-            SouperSecretSettingsClient.soupGui.drawHoverText(context, mouseX, mouseY, hoverText);
-        }
 
         if (onRemove == null) {
             return;
@@ -66,5 +58,10 @@ public class AdditionButton extends ButtonWidget {
             onRemove.accept(this);
         }
         deleting = false;
+    }
+
+    @Override
+    protected boolean passesRangeCheck(int mouseX, int mouseY) {
+        return onRemove == null || mouseX > getX() + 10;
     }
 }

@@ -2,6 +2,7 @@ package com.nettakrim.souper_secret_settings.gui;
 
 import com.mclegoman.luminance.client.data.ClientData;
 import com.mclegoman.luminance.client.shaders.Shaders;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.gui.layers.LayerScreen;
 import com.nettakrim.souper_secret_settings.gui.parameters.ParameterScreen;
@@ -27,6 +28,7 @@ public class SoupGui {
     protected static final int headerHeight = 42;
 
     private ScreenType currentScreenType;
+    private Text currentHoverText;
 
     public SoupGui() {
         header = new ArrayList<>();
@@ -37,8 +39,8 @@ public class SoupGui {
 
         x = listGap;
         x += addHeaderButton(ButtonWidget.builder(Text.literal(""),  (widget) -> open(ScreenType.LAYERS)).dimensions(x, listGap, (mainWidth*3+listGap*2)-(smallWidth*3+listGap*2)-listGap, 20).build());
-        x += addHeaderButton(ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.undo"), (widget) -> undo()).dimensions(x, listGap, smallWidth, 20).build());
-        x += addHeaderButton(ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.redo"), (widget) -> redo()).dimensions(x, listGap, smallWidth, 20).build());
+        x += addHeaderButton(new HoverButtonWidget(x, listGap, smallWidth, 20, SouperSecretSettingsClient.translate("gui.undo"), null, (widget) -> undo()));
+        x += addHeaderButton(new HoverButtonWidget(x, listGap, smallWidth, 20, SouperSecretSettingsClient.translate("gui.redo"), null, (widget) -> redo()));
              addHeaderButton(ButtonWidget.builder(SouperSecretSettingsClient.soupRenderer.getRenderTypeText(), SouperSecretSettingsClient.soupRenderer::cycleRenderType).dimensions(x, listGap, smallWidth, 20).build());
 
         x = listGap;
@@ -88,9 +90,13 @@ public class SoupGui {
         open(currentScreenType);
     }
 
-    public void setHistoryButtons(boolean undo, boolean redo) {
-        header.get(1).active = undo;
-        header.get(2).active = redo;
+    public void setHistoryButtons(int undoCount, int redoCount) {
+        HoverButtonWidget undo = (HoverButtonWidget)header.get(1);
+        HoverButtonWidget redo = (HoverButtonWidget)header.get(2);
+        undo.active = undoCount > 0;
+        redo.active = redoCount > 0;
+        undo.setHoverText(undoCount > 0 ? SouperSecretSettingsClient.translate("gui.undo_count", undoCount) : null);
+        redo.setHoverText(redoCount > 0 ? SouperSecretSettingsClient.translate("gui.redo_count", redoCount) : null);
     }
 
     public ScreenType getCurrentScreenType() {
@@ -101,9 +107,20 @@ public class SoupGui {
         header.getFirst().setMessage(SouperSecretSettingsClient.soupRenderer.activeLayer.name.isBlank() ? SouperSecretSettingsClient.translate("gui.layers.unnamed") : SouperSecretSettingsClient.translate("gui.layers", SouperSecretSettingsClient.soupRenderer.activeLayer.name));
     }
 
-    public void drawHoverText(DrawContext context, int mouseX, int mouseY, Text text) {
-        context.fill(mouseX-2, mouseY-22, mouseX + ClientData.minecraft.textRenderer.getWidth(text)+2, mouseY-10, ColorHelper.getArgb(128,0,0,0));
-        context.drawText(ClientData.minecraft.textRenderer, text, mouseX, mouseY-20, -1, true);
+    public void setHoverText(Text text) {
+        currentHoverText = text;
+    }
+
+    public void drawCurrentHoverText(DrawContext context, int mouseX, int mouseY) {
+        if (currentHoverText == null) {
+            return;
+        }
+        int offset = (mouseY > 30 && context.scissorContains(mouseX, mouseY-17)) ? -15 : 8;
+        RenderSystem.depthMask(false);
+        context.fill(mouseX-2, mouseY+offset-2, mouseX + ClientData.minecraft.textRenderer.getWidth(currentHoverText)+2, mouseY+offset+10, 8, ColorHelper.getArgb(128,0,0,0));
+        context.drawText(ClientData.minecraft.textRenderer, currentHoverText, mouseX,  mouseY+offset, -1, true);
+        RenderSystem.depthMask(true);
+        currentHoverText = null;
     }
 
     public enum ScreenType {
