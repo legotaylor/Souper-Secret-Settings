@@ -4,11 +4,14 @@ import com.mclegoman.luminance.client.shaders.ShaderTime;
 import com.mclegoman.luminance.client.shaders.overrides.LuminanceUniformOverride;
 import com.mclegoman.luminance.client.shaders.overrides.OverrideSource;
 import com.mclegoman.luminance.client.shaders.overrides.UniformSource;
-import com.mclegoman.luminance.client.shaders.uniforms.UniformValue;
+import com.mclegoman.luminance.client.shaders.uniforms.config.ConfigData;
+import com.mclegoman.luminance.client.shaders.uniforms.config.DefaultableConfig;
+import com.mclegoman.luminance.client.shaders.uniforms.config.MapConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ParameterOverrideSource implements OverrideSource {
     public UniformSource source;
@@ -29,18 +32,12 @@ public class ParameterOverrideSource implements OverrideSource {
             String parameter = source.getString();
             if (!parameter.isEmpty() && layer.parameterValues.containsKey(parameter)) {
                 lastValue = layer.parameterValues.get(parameter);
-            } else {
-                Float f = source.get(uniformConfig, shaderTime);
-                if (f == null) return null;
-
-                Optional<UniformValue> min = source.getUniform().getMin();
-                Optional<UniformValue> max = source.getUniform().getMax();
-                if (min.isPresent() && max.isPresent()) {
-                    float minValue = min.get().values.getFirst();
-                    float maxValue = max.get().values.getFirst();
-                    f = (f - minValue) / (maxValue - minValue);
+                List<Object> range = uniformConfig.getObjects("range");
+                if (range != null && range.size() >= 2) {
+                    lastValue = UniformSource.remapRange(lastValue, 0f, 1f, range.get(0), range.get(1));
                 }
-                lastValue = f;
+            } else {
+                lastValue = source.get(uniformConfig, shaderTime);
             }
         }
 
@@ -54,8 +51,11 @@ public class ParameterOverrideSource implements OverrideSource {
 
     @Override
     public UniformConfig getTemplateConfig() {
-        return source.getTemplateConfig();
+        UniformConfig config = source.getTemplateConfig();
+        return new DefaultableConfig(config, template);
     }
+
+    private static final UniformConfig template = new MapConfig(List.of(new ConfigData("range", new ArrayList<>(List.of(0.0f, 1.0f)))));
 
     public static OverrideSource parameterSourceFromString(String s) {
         OverrideSource overrideSource = LuminanceUniformOverride.sourceFromString(s);

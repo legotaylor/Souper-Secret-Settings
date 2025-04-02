@@ -5,8 +5,8 @@ import com.mclegoman.luminance.client.shaders.interfaces.CustomPassData;
 import com.mclegoman.luminance.client.shaders.interfaces.PostEffectPassInterface;
 import com.mclegoman.luminance.client.shaders.interfaces.ShaderProgramInterface;
 import com.mclegoman.luminance.client.shaders.overrides.*;
+import com.mclegoman.luminance.client.shaders.uniforms.Uniform;
 import com.mclegoman.luminance.client.shaders.uniforms.UniformValue;
-import com.mclegoman.luminance.client.shaders.uniforms.config.ConfigData;
 import com.mclegoman.luminance.client.shaders.uniforms.config.EmptyConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.MapConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
@@ -16,7 +16,6 @@ import net.minecraft.client.gl.PostEffectPass;
 import net.minecraft.client.gl.PostEffectPipeline;
 import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -68,7 +67,7 @@ public class PassData {
         for (int i = 0; i < uniformOverride.overrideSources.size(); i++) {
             OverrideSource overrideSource = uniformOverride.overrideSources.get(i);
             if (overrideSource instanceof UniformSource uniformSource) {
-                uniformOverride.overrideSources.set(i, new MixOverrideSource(new ParameterOverrideSource(uniformSource)));
+                uniformOverride.overrideSources.set(i, new ParameterOverrideSource(uniformSource));
             }
         }
 
@@ -133,8 +132,8 @@ public class PassData {
 
             OverrideSource overrideSource = defaultOverride.overrideSources.get(i);
             if (overrideSource instanceof UniformSource uniformSource) {
-                defaultOverride.overrideSources.set(i, new MixOverrideSource(new ParameterOverrideSource(uniformSource)));
-                configOverride.mergeWithConfig(getMapConfig(uniformSource, i));
+                defaultOverride.overrideSources.set(i, new ParameterOverrideSource(uniformSource));
+                configOverride.config.putIfAbsent(i + "_range", getRange(uniformSource));
                 OverrideConfig overrideConfig = new OverrideConfig(overrideSource.getTemplateConfig(), i);
                 overrideConfig.setIndex(-1);
                 configOverride.mergeWithConfig(overrideConfig);
@@ -145,17 +144,22 @@ public class PassData {
         configMap.put(uniform.getName(), configOverride.config.isEmpty() ? EmptyConfig.INSTANCE : configOverride);
     }
 
-    private static @NotNull MapConfig getMapConfig(UniformSource uniformSource, int i) {
+    private static List<Object> getRange(UniformSource uniformSource) {
+        Uniform uniform = uniformSource.getUniform();
+        if (uniform == null || uniform.rangeCanChange()) {
+            return new ArrayList<>(Collections.nCopies(2, null));
+        }
+
         float a = 0;
         float b = 1;
-        Optional<UniformValue> min = uniformSource.getUniform().getMin();
-        Optional<UniformValue> max = uniformSource.getUniform().getMax();
+        Optional<UniformValue> min = uniformSource.getUniform().getMin(null, null);
+        Optional<UniformValue> max = uniformSource.getUniform().getMax(null, null);
         if (min.isPresent() && max.isPresent()) {
             a = min.get().values.getFirst();
             b = max.get().values.getFirst();
         }
 
-        return new MapConfig(List.of(new ConfigData(i +"_soup_range", List.of(a,b))));
+        return List.of(a,b);
     }
 
     public static List<Float> getDefinitionValues(PostEffectPassInterface pass, String uniform) {

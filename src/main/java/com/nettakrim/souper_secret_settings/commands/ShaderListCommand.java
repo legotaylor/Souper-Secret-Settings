@@ -209,7 +209,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
 
             new UniformChangeAction(uniform, index, override, config).addToHistory();
 
-            OverrideSource source = MixOverrideSource.MixParameterSourceFromString(value);
+            OverrideSource source = ParameterOverrideSource.parameterSourceFromString(value);
             override.overrideSources.set(index, source);
 
             String prefix = index+"_";
@@ -248,12 +248,16 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
 
             Object objectAtIndex = values.get(index);
             Object object;
-            if (objectAtIndex instanceof Number) {
+            if (objectAtIndex == null || objectAtIndex instanceof Number) {
                 try {
                     object = Float.parseFloat(value);
                 } catch (Exception ignored) {
-                    SouperSecretSettingsClient.say("shader.error.number", 1, value);
-                    return 0;
+                    if (value.equals("null")) {
+                        object = null;
+                    } else {
+                        SouperSecretSettingsClient.say("shader.error.number", 1, value);
+                        return 0;
+                    }
                 }
             } else {
                 object = value;

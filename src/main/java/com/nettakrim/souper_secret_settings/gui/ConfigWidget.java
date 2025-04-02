@@ -4,7 +4,7 @@ import com.mclegoman.luminance.client.shaders.overrides.OverrideConfig;
 import com.mclegoman.luminance.client.shaders.overrides.OverrideSource;
 import com.mclegoman.luminance.client.shaders.uniforms.config.MapConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
-import com.nettakrim.souper_secret_settings.shaders.MixOverrideSource;
+import com.nettakrim.souper_secret_settings.shaders.ParameterOverrideSource;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
@@ -75,8 +75,8 @@ public class ConfigWidget extends ParameterTextWidget {
     }
 
     protected boolean updateOverrideSource() {
-        overrideSource = MixOverrideSource.MixParameterSourceFromString(getText());
-        return overrideSource instanceof MixOverrideSource;
+        overrideSource = ParameterOverrideSource.parameterSourceFromString(getText());
+        return overrideSource instanceof ParameterOverrideSource;
     }
 
     protected void createChildren(OverrideConfig templateConfig) {
@@ -115,7 +115,6 @@ public class ConfigWidget extends ParameterTextWidget {
 
     private @NotNull List<String> getFilteredNames(UniformConfig templateConfig) {
         List<String> names = new ArrayList<>(templateConfig.getNames());
-        int soupValues = 0;
         String prefix = index+"_";
         for (int i = 0; i < names.size(); i++) {
             String name = names.get(i);
@@ -125,17 +124,13 @@ public class ConfigWidget extends ParameterTextWidget {
             } else {
                 names.remove(i);
                 i--;
-                continue;
-            }
-
-            if (i == soupValues) continue;
-
-            if (name.startsWith("soup_")) {
-                names.remove(i);
-                names.add(soupValues, name);
-                soupValues++;
             }
         }
+
+        if (names.remove("range")) {
+            names.addFirst("range");
+        }
+
         return names;
     }
 

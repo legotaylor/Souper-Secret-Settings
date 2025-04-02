@@ -23,7 +23,7 @@ public class ConfigValueWidget extends TextWidget {
     public List<Object> objects;
 
     public ConfigValueWidget(int x, int width, int height, String name, @NotNull List<Object> objects, @NotNull List<Object> defaultObjects) {
-        super(x, 0, width, height, Text.literal(name.startsWith("soup_") ? name.substring(5) : name), ClientData.minecraft.textRenderer);
+        super(x, 0, width, height, Text.literal(name), ClientData.minecraft.textRenderer);
 
         this.name = name;
         this.objects = new ArrayList<>(objects);
@@ -91,11 +91,15 @@ public class ConfigValueWidget extends TextWidget {
     public void valueChanged(String s, int i) {
         Object objectAtIndex = objects.get(i);
         Object object;
-        if (objectAtIndex instanceof Number) {
+        if (objectAtIndex == null || objectAtIndex instanceof Number) {
             try {
                 object = Float.parseFloat(s);
             } catch (Exception ignored) {
-                return;
+                if (s.equals("null")) {
+                    object = null;
+                } else {
+                    return;
+                }
             }
         } else {
             object = s;
