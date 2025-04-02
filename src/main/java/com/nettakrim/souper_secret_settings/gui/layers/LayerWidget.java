@@ -54,11 +54,6 @@ public class LayerWidget extends ListWidget {
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
         super.renderWidget(context, mouseX, mouseY, delta);
 
-        // TODO: replace with icons
-        String indicator = SouperSecretSettingsClient.soupRenderer.activeLayer == layer ? "!" : "/";
-        int buttonStart = this.getX()+getWidth()-20;
-        drawScrollableText(context, ClientData.minecraft.textRenderer, Text.literal(indicator), buttonStart, this.getY(), buttonStart+10, getY()+getHeight(), (this.active ? 16777215 : 10526880) | MathHelper.ceil(this.alpha * 255.0F) << 24);
-
         if (!expanded) {
             return;
         }
@@ -188,5 +183,10 @@ public class LayerWidget extends ListWidget {
     public void onRemove() {
         super.onRemove();
         listScreen.removeSelectable(loadButton);
+    }
+
+    @Override
+    protected int getEditState() {
+        return SouperSecretSettingsClient.soupRenderer.activeLayer == layer ? 2 : 1;
     }
 }
