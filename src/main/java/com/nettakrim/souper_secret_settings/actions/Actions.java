@@ -2,27 +2,35 @@ package com.nettakrim.souper_secret_settings.actions;
 
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Stack;
 
 public class Actions {
-    protected final Stack<Action> history;
+    protected final Deque<Action> history;
     protected final Stack<Action> undone;
 
+    public static int defaultLength = 8192;
+
     public Actions() {
-        history = new Stack<>();
+        history = new ArrayDeque<>();
         undone = new Stack<>();
         onChange();
     }
 
     protected boolean addToHistory(Action action) {
         if (!history.isEmpty()) {
-            Action previous = history.peek();
+            Action previous = history.peekLast();
             if (previous != null && previous.getClass().equals(action.getClass()) && previous.mergeWith(action)) {
                 return false;
             }
         }
 
-        history.add(action);
+        while (history.size() >= SouperSecretSettingsClient.soupData.config.undoLimit) {
+            history.removeFirst();
+        }
+
+        history.addLast(action);
         undone.clear();
         onChange();
         return true;
@@ -34,7 +42,7 @@ public class Actions {
             return;
         }
 
-        Action action = history.pop();
+        Action action = history.removeLast();
         if (action.undo()) {
             undone.add(action);
             onChange();
@@ -50,7 +58,13 @@ public class Actions {
 
         Action action = undone.pop();
         action.redo();
-        history.add(action);
+        history.addLast(action);
+        onChange();
+    }
+
+    public void clear() {
+        history.clear();
+        undone.clear();
         onChange();
     }
 

@@ -81,6 +81,7 @@ public class SoupRenderer implements Runnables.WorldRender {
         Events.OnShaderDataReset.register(Identifier.of(SouperSecretSettingsClient.MODID, "reset"), () -> {
             shaderGroups.clear();
             clearAll();
+            SouperSecretSettingsClient.actions.clear();
         });
         Events.OnShaderDataRegistered.register(Identifier.of(SouperSecretSettingsClient.MODID, "add"), (shaderRegistryEntry, registries) -> runForGroups(shaderRegistryEntry, registries, (registry, group) -> shaderGroups.computeIfAbsent(registry, k -> new HashMap<>()).computeIfAbsent(group, k -> new ArrayList<>()).add(shaderRegistryEntry)));
         Events.OnShaderDataRemoved.register(Identifier.of(SouperSecretSettingsClient.MODID, "remove"), (shaderRegistryEntry, registries) -> runForGroups(shaderRegistryEntry, registries, (registry, group) -> {

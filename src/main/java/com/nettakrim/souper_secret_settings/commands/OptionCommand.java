@@ -9,6 +9,7 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
+import com.nettakrim.souper_secret_settings.actions.Actions;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.command.CommandRegistryAccess;
@@ -135,6 +136,20 @@ public class OptionCommand {
                 .executes(context -> queryMessageFilter(1))
                 .build();
         commandNode.addChild(filterNode);
+
+        LiteralCommandNode<FabricClientCommandSource> undoLimitNode = ClientCommandManager
+                .literal("undo_limit")
+                .then(
+                        ClientCommandManager.argument("amount", IntegerArgumentType.integer(16))
+                                .suggests(((context, builder) -> {
+                                    builder.suggest(Actions.defaultLength);
+                                    return builder.buildFuture();
+                                }))
+                                .executes(context -> setUndoLimit(IntegerArgumentType.getInteger(context, "amount")))
+                )
+                .executes(context -> queryUndoLimit(1))
+                .build();
+        commandNode.addChild(undoLimitNode);
     }
 
     public static int setRandomItem(ItemStackArgument itemStack) throws CommandSyntaxException {
@@ -224,6 +239,7 @@ public class OptionCommand {
 
     public static int setMessageFilter(int to) {
         SouperSecretSettingsClient.soupData.config.messageFilter = to;
+        SouperSecretSettingsClient.soupData.changeConfig();
         return queryMessageFilter(2);
     }
 
@@ -231,6 +247,18 @@ public class OptionCommand {
         SouperSecretSettingsClient.say("option.filter."+(SouperSecretSettingsClient.soupData.config.messageFilter), priority);
         return 1;
     }
+
+    public static int setUndoLimit(int to) {
+        SouperSecretSettingsClient.soupData.config.undoLimit = to;
+        SouperSecretSettingsClient.soupData.changeConfig();
+        return queryUndoLimit(0);
+    }
+
+    public static int queryUndoLimit(int priority) {
+        SouperSecretSettingsClient.say("option.undo_limit", priority, SouperSecretSettingsClient.soupData.config.undoLimit);
+        return 1;
+    }
+
 
     private static final SuggestionProvider<FabricClientCommandSource> durationSuggestion = (context, builder) -> {
         StringReader stringReader = new StringReader(builder.getRemaining());

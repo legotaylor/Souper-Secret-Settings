@@ -4,6 +4,7 @@ import com.mclegoman.luminance.client.shaders.Shaders;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
+import com.nettakrim.souper_secret_settings.actions.Actions;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -29,6 +30,7 @@ public class Config {
     public int disableState;
     public boolean warning;
     public int messageFilter;
+    public int undoLimit;
 
     public static final Codec<Config> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             Codec.BOOL.fieldOf("transferredOldData").forGetter((config) -> config.transferredOldData),
@@ -39,23 +41,27 @@ public class Config {
             Codec.INT.optionalFieldOf("randomDuration", 0).forGetter((config -> config.randomDuration)),
             Codec.INT.optionalFieldOf("disableState", 0).forGetter((config -> config.disableState)),
             Codec.BOOL.optionalFieldOf("warning", true).forGetter((config) -> config.warning),
-            Codec.INT.optionalFieldOf("messageFilter", 0).forGetter(config -> config.messageFilter)
+            Codec.INT.optionalFieldOf("messageFilter", 0).forGetter(config -> config.messageFilter),
+            Codec.INT.optionalFieldOf("undoLimit", Actions.defaultLength).forGetter(config -> config.undoLimit)
             ).apply(instance, Config::new));
 
-    public Config(boolean transferredOldData, ItemStack randomItem, ItemStack clearItem, String randomShader, int randomCount, int randomDuration, int disableState, boolean warning, int messageFilter) {
+    public Config(boolean transferredOldData, ItemStack randomItem, ItemStack clearItem, String randomShader, int randomCount, int randomDuration, int disableState, boolean warning, int messageFilter, int undoLimit) {
         this.transferredOldData = transferredOldData;
+
         this.randomItem = randomItem;
         this.clearItem = clearItem;
         this.randomShader = randomShader;
         this.randomCount = randomCount;
         this.randomDuration = randomDuration;
+
         this.disableState = disableState;
         this.warning = warning;
         this.messageFilter = messageFilter;
+        this.undoLimit = undoLimit;
     }
 
     public static Config getDefaultConfig() {
-        return new Config(false, new ItemStack(Items.BEETROOT_SOUP), new ItemStack(Items.MILK_BUCKET), "random_edible", 1, 0, 0, true, 0);
+        return new Config(false, new ItemStack(Items.BEETROOT_SOUP), new ItemStack(Items.MILK_BUCKET), "random_edible", 1, 0, 0, true, 0, Actions.defaultLength);
     }
 
     public void transferOldData() {
