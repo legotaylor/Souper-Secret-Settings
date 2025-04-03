@@ -336,6 +336,11 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
     }
 
     @Override
+    String getID(ShaderLayer value) {
+        return value.name;
+    }
+
+    @Override
     SuggestionProvider<FabricClientCommandSource> getIndexSuggestions() {
         return layerIndexes;
     }

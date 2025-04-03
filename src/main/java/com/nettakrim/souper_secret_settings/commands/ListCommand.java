@@ -1,14 +1,17 @@
 package com.nettakrim.souper_secret_settings.commands;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.nettakrim.souper_secret_settings.actions.ListRemoveAction;
 import com.nettakrim.souper_secret_settings.actions.ListShiftAction;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public abstract class ListCommand<T> {
     public void registerList(LiteralCommandNode<FabricClientCommandSource> commandNode) {
@@ -18,12 +21,26 @@ public abstract class ListCommand<T> {
 
         LiteralCommandNode<FabricClientCommandSource> clearNode = ClientCommandManager
                 .literal("all")
-                .executes(context -> removeAll())
+                .executes(context -> removeAll(null))
+                .then(
+                        ClientCommandManager.argument("id", StringArgumentType.greedyString())
+                                .suggests(listSuggestions)
+                                .executes(context -> removeAll(StringArgumentType.getString(context, "id")))
+                )
                 .build();
 
         LiteralCommandNode<FabricClientCommandSource> topNode = ClientCommandManager
                 .literal("top")
-                .executes(context -> removeTop())
+                .executes(context -> removeTop(1, null))
+                .then(
+                        ClientCommandManager.argument("amount", IntegerArgumentType.integer(1))
+                                .executes(context -> removeTop(IntegerArgumentType.getInteger(context, "amount"), null))
+                                .then(
+                                        ClientCommandManager.argument("id", StringArgumentType.greedyString())
+                                                .suggests(listSuggestions)
+                                                .executes(context -> removeTop(IntegerArgumentType.getInteger(context, "amount"), StringArgumentType.getString(context, "id")))
+                                )
+                )
                 .build();
 
         LiteralCommandNode<FabricClientCommandSource> indexNode = ClientCommandManager
@@ -55,25 +72,65 @@ public abstract class ListCommand<T> {
         commandNode.addChild(shiftNode);
     }
 
-    public int removeAll() {
+    public int removeAll(@Nullable String filter) {
         List<T> list = getList();
         for (int i = list.size()-1; i >= 0; i--) {
+            if (filter != null) {
+                T value = list.get(i);
+                if (filterDenies(value, filter)) {
+                    continue;
+                }
+            }
+
             new ListRemoveAction<>(list, i).addToHistory();
+            list.remove(i);
         }
-        list.clear();
         onRemove();
         return 1;
     }
 
-    public int removeTop() {
+    public int removeTop(int amount, @Nullable String filter) {
         List<T> list = getList();
         if (list.isEmpty()) {
             return -1;
         }
-        new ListRemoveAction<>(list, list.size()-1).addToHistory();
-        list.removeLast();
+
+        int index = list.size() - 1;
+        while (index >= 0 && amount > 0) {
+            if (filter != null) {
+                T value = list.get(index);
+                if (filterDenies(value, filter)) {
+                    index--;
+                    continue;
+                }
+            }
+
+            new ListRemoveAction<>(list, index).addToHistory();
+            list.remove(index);
+
+            index--;
+            amount--;
+        }
+
         onRemove();
         return 1;
+    }
+
+    protected boolean filterDenies(T value, String filter) {
+        String id = getID(value);
+        boolean starts = filter.startsWith("*");
+        boolean ends = filter.endsWith("*");
+        filter = filter.substring(starts ? 1 : 0, ends ? filter.length()-1 : filter.length());
+        if (starts) {
+            if (ends) {
+                return !id.contains(filter);
+            }
+            return !id.endsWith(filter);
+        }
+        if (ends) {
+            return !id.startsWith(filter);
+        }
+        return !id.equals(filter);
     }
 
     public int removeIndex(int index) {
@@ -103,6 +160,16 @@ public abstract class ListCommand<T> {
     }
 
     abstract List<T> getList();
+
+    protected SuggestionProvider<FabricClientCommandSource> listSuggestions = (context, builder) -> {
+        List<T> list = getList();
+        for (T value : list) {
+            builder.suggest(getID(value));
+        }
+        return CompletableFuture.completedFuture(builder.build());
+    };
+
+    abstract String getID(T value);
 
     abstract SuggestionProvider<FabricClientCommandSource> getIndexSuggestions();
 }

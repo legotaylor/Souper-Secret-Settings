@@ -208,6 +208,11 @@ public class ParameterCommand extends ListCommand<Calculation> {
     }
 
     @Override
+    String getID(Calculation value) {
+        return value.getID();
+    }
+
+    @Override
     SuggestionProvider<FabricClientCommandSource> getIndexSuggestions() {
         return calculationIndexes;
     }

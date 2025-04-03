@@ -492,6 +492,11 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
     }
 
     @Override
+    String getID(ShaderData value) {
+        return value.shader.getShaderId().toString();
+    }
+
+    @Override
     SuggestionProvider<FabricClientCommandSource> getIndexSuggestions() {
         return shaderSuggestions;
     }

@@ -30,7 +30,7 @@ public class Keybinds {
             SouperSecretSettingsClient.actions.redo();
         }
         if (clear.wasPressed()) {
-            SouperSecretSettingsCommands.layerCommand.removeAll();
+            SouperSecretSettingsCommands.layerCommand.removeAll(null);
         }
         if (random.wasPressed()) {
             SouperSecretSettingsCommands.shaderCommand.add(Identifier.of("random_edible"), 1, true);
