@@ -22,6 +22,9 @@ public class Config {
 
     public ItemStack randomItem;
     public ItemStack clearItem;
+    public String randomShader;
+    public int randomCount;
+    public int randomDuration;
 
     public int disableState;
     public boolean warning;
@@ -31,22 +34,28 @@ public class Config {
             Codec.BOOL.fieldOf("transferredOldData").forGetter((config) -> config.transferredOldData),
             ItemStack.CODEC.optionalFieldOf("randomItem", new ItemStack(Items.BEETROOT_SOUP)).forGetter((config -> config.randomItem)),
             ItemStack.CODEC.optionalFieldOf("clearItem", new ItemStack(Items.MILK_BUCKET)).forGetter((config -> config.clearItem)),
+            Codec.STRING.optionalFieldOf("randomShader", "random_edible").forGetter((config -> config.randomShader)),
+            Codec.INT.optionalFieldOf("randomCount", 1).forGetter((config -> config.randomCount)),
+            Codec.INT.optionalFieldOf("randomDuration", 0).forGetter((config -> config.randomDuration)),
             Codec.INT.optionalFieldOf("disableState", 0).forGetter((config -> config.disableState)),
             Codec.BOOL.optionalFieldOf("warning", true).forGetter((config) -> config.warning),
             Codec.INT.optionalFieldOf("messageFilter", 0).forGetter(config -> config.messageFilter)
             ).apply(instance, Config::new));
 
-    public Config(boolean transferredOldData, ItemStack randomItem, ItemStack clearItem, int disableState, boolean warning, int messageFilter) {
+    public Config(boolean transferredOldData, ItemStack randomItem, ItemStack clearItem, String randomShader, int randomCount, int randomDuration, int disableState, boolean warning, int messageFilter) {
         this.transferredOldData = transferredOldData;
         this.randomItem = randomItem;
         this.clearItem = clearItem;
+        this.randomShader = randomShader;
+        this.randomCount = randomCount;
+        this.randomDuration = randomDuration;
         this.disableState = disableState;
         this.warning = warning;
         this.messageFilter = messageFilter;
     }
 
     public static Config getDefaultConfig() {
-        return new Config(false, new ItemStack(Items.BEETROOT_SOUP), new ItemStack(Items.MILK_BUCKET), 0, true, 0);
+        return new Config(false, new ItemStack(Items.BEETROOT_SOUP), new ItemStack(Items.MILK_BUCKET), "random_edible", 1, 0, 0, true, 0);
     }
 
     public void transferOldData() {

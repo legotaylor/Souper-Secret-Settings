@@ -11,6 +11,7 @@ import com.mclegoman.luminance.client.shaders.uniforms.Uniform;
 import com.mclegoman.luminance.client.util.Accessors;
 import com.mclegoman.luminance.client.util.CompatHelper;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
+import com.nettakrim.souper_secret_settings.commands.SouperSecretSettingsCommands;
 import net.minecraft.client.gl.PostEffectProcessor;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.FrameGraphBuilder;
@@ -38,6 +39,8 @@ public class SoupRenderer implements Runnables.WorldRender {
     public final Map<Identifier, Map<String, List<ShaderRegistryEntry>>> shaderGroups;
 
     public static final Identifier modifierRegistry = Identifier.of(SouperSecretSettingsClient.MODID, "modifiers");
+
+    public int randomTimer;
 
     public SoupRenderer() {
         shaderLayers = new ArrayList<>();
@@ -104,6 +107,15 @@ public class SoupRenderer implements Runnables.WorldRender {
         }
 
         ShaderLayer.renderCleanup(builder);
+    }
+
+    public void tick() {
+        if (randomTimer > 0) {
+            randomTimer--;
+            if (randomTimer == 0) {
+                SouperSecretSettingsCommands.shaderCommand.removeAll(null);
+            }
+        }
     }
 
     @Nullable

@@ -25,14 +25,14 @@ public class SouperSecretSettingsCommands {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
             RootCommandNode<FabricClientCommandSource> root = dispatcher.getRoot();
 
-            GuiCommand.register(root);
-            OptionCommand.register(root, registryAccess);
-            ActionCommand.register(root);
-
             layerCommand = new LayerCommand();
             shaderCommand = new ShaderListCommand("shader", Shaders.getMainRegistryId(), 100);
             modifierCommand = new ShaderListCommand("modifier", SoupRenderer.modifierRegistry, 25);
             parameterCommand = new ParameterCommand();
+
+            GuiCommand.register(root);
+            OptionCommand.register(root, registryAccess);
+            ActionCommand.register(root);
 
             layerCommand.register(root);
             shaderCommand.register(root);

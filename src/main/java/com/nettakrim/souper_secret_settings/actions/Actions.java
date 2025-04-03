@@ -61,5 +61,10 @@ public class Actions {
             SouperSecretSettingsClient.soupData.config.disableState = 0;
             SouperSecretSettingsClient.say("option.toggle.prompt", 1);
         }
+
+        if (SouperSecretSettingsClient.soupRenderer.randomTimer > 0) {
+            SouperSecretSettingsClient.soupRenderer.randomTimer = 0;
+            SouperSecretSettingsClient.say("option.random.prompt", 1);
+        }
     }
 }

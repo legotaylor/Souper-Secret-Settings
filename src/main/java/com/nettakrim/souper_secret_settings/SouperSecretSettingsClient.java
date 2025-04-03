@@ -58,6 +58,7 @@ public class SouperSecretSettingsClient implements ClientModInitializer {
 
 			Keybinds.tick();
 			soupData.tick();
+			soupRenderer.tick();
 		});
 
 		ClientLifecycleEvents.CLIENT_STOPPING.register((client) -> soupData.saveIfChanged());
@@ -95,10 +96,13 @@ public class SouperSecretSettingsClient implements ClientModInitializer {
 
 	public static void consumeItem(ItemStack stack) {
 		if (stacksMatch(stack, soupData.config.randomItem)) {
+			SouperSecretSettingsClient.soupRenderer.randomTimer = 0;
 			SouperSecretSettingsCommands.shaderCommand.removeAll(null);
-			SouperSecretSettingsCommands.shaderCommand.add(Identifier.of("random_edible"), 1, true);
+			SouperSecretSettingsCommands.shaderCommand.add(Identifier.of(SouperSecretSettingsClient.soupData.config.randomShader), SouperSecretSettingsClient.soupData.config.randomCount, true);
+			SouperSecretSettingsClient.soupRenderer.randomTimer = SouperSecretSettingsClient.soupData.config.randomDuration;
 			RandomSound.play();
 		} else if (stacksMatch(stack, soupData.config.clearItem)) {
+			SouperSecretSettingsClient.soupRenderer.randomTimer = 0;
 			SouperSecretSettingsCommands.shaderCommand.removeAll(null);
 		}
 	}

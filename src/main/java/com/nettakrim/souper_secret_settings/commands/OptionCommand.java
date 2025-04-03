@@ -1,41 +1,86 @@
 package com.nettakrim.souper_secret_settings.commands;
 
 import com.mclegoman.luminance.client.shaders.Shader;
+import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.ItemStackArgument;
 import net.minecraft.command.argument.ItemStackArgumentType;
+import net.minecraft.command.argument.TimeArgumentType;
 import net.minecraft.item.ItemStack;
+
+import java.util.List;
 
 public class OptionCommand {
     public static void register(RootCommandNode<FabricClientCommandSource> root, CommandRegistryAccess commandRegistryAccess) {
         LiteralCommandNode<FabricClientCommandSource> commandNode = ClientCommandManager.literal("soup:option").build();
         root.addChild(commandNode);
 
+        LiteralCommandNode<FabricClientCommandSource> eatingNode = ClientCommandManager
+                .literal("eating")
+                .build();
+        commandNode.addChild(eatingNode);
+
         LiteralCommandNode<FabricClientCommandSource> randomNode = ClientCommandManager
-                .literal("random_item")
+                .literal("item_random")
                 .then(
                         ClientCommandManager.argument("item", ItemStackArgumentType.itemStack(commandRegistryAccess))
                                 .executes(context -> setRandomItem(ItemStackArgumentType.getItemStackArgument(context, "item")))
                 )
                 .executes(context -> queryRandomItem())
                 .build();
-        commandNode.addChild(randomNode);
+        eatingNode.addChild(randomNode);
 
         LiteralCommandNode<FabricClientCommandSource> clearNode = ClientCommandManager
-                .literal("clear_item")
+                .literal("item_clear")
                 .then(
                         ClientCommandManager.argument("item", ItemStackArgumentType.itemStack(commandRegistryAccess))
                                 .executes(context -> setClearItem(ItemStackArgumentType.getItemStackArgument(context, "item")))
                 )
                 .executes(context -> queryClearItem())
                 .build();
-        commandNode.addChild(clearNode);
+        eatingNode.addChild(clearNode);
+
+        LiteralCommandNode<FabricClientCommandSource> randomShaderNode = ClientCommandManager
+                .literal("shader")
+                .then(
+                        ClientCommandManager.argument("shader", StringArgumentType.string())
+                                .suggests(SouperSecretSettingsCommands.shaderCommand.registrySuggestions)
+                                .executes(context -> setRandomShader(StringArgumentType.getString(context, "shader")))
+                )
+                .executes(context -> queryRandomInfo(1))
+                .build();
+        eatingNode.addChild(randomShaderNode);
+
+        LiteralCommandNode<FabricClientCommandSource> randomCountNode = ClientCommandManager
+                .literal("count")
+                .then(
+                        ClientCommandManager.argument("amount", IntegerArgumentType.integer(1))
+                                .executes(context -> setRandomCount(IntegerArgumentType.getInteger(context, "amount")))
+                )
+                .executes(context -> queryRandomInfo(1))
+                .build();
+        eatingNode.addChild(randomCountNode);
+
+        LiteralCommandNode<FabricClientCommandSource> randomDurationNode = ClientCommandManager
+                .literal("duration")
+                .then(
+                        ClientCommandManager.argument("duration", TimeArgumentType.time())
+                                .suggests(durationSuggestion)
+                                .executes(context -> setRandomDuration(IntegerArgumentType.getInteger(context, "duration")))
+                )
+                .executes(context -> queryRandomInfo(1))
+                .build();
+        eatingNode.addChild(randomDurationNode);
 
         LiteralCommandNode<FabricClientCommandSource> renderTypeNode = ClientCommandManager
                 .literal("render_type")
@@ -116,6 +161,31 @@ public class OptionCommand {
         return 1;
     }
 
+    public static int setRandomShader(String shader) {
+        SouperSecretSettingsClient.soupData.config.randomShader = shader;
+        SouperSecretSettingsClient.soupData.changeConfig();
+        return queryRandomInfo(0);
+    }
+
+    public static int setRandomCount(int amount) {
+        SouperSecretSettingsClient.soupData.config.randomCount = amount;
+        SouperSecretSettingsClient.soupData.changeConfig();
+        return queryRandomInfo(0);
+    }
+
+    public static int setRandomDuration(int amount) {
+        SouperSecretSettingsClient.soupData.config.randomDuration = amount;
+        SouperSecretSettingsClient.soupData.changeConfig();
+        return queryRandomInfo(0);
+    }
+
+
+    public static int queryRandomInfo(int priority) {
+        int time = SouperSecretSettingsClient.soupData.config.randomDuration;
+        SouperSecretSettingsClient.say("option.random_info" + (SouperSecretSettingsClient.soupData.config.randomDuration == 0 ? "" : "_duration"), priority, SouperSecretSettingsClient.soupData.config.randomShader, SouperSecretSettingsClient.soupData.config.randomCount, (time/20) + (time%20 == 0 ? "" : String.valueOf((time%20)/20f).substring(1)));
+        return 1;
+    }
+
     public static void sayItem(String key, ItemStack itemStack, int priority) {
         String s = itemStack.getItem().toString();
         if (!itemStack.getComponentChanges().isEmpty()) {
@@ -161,4 +231,17 @@ public class OptionCommand {
         SouperSecretSettingsClient.say("option.filter."+(SouperSecretSettingsClient.soupData.config.messageFilter), priority);
         return 1;
     }
+
+    private static final SuggestionProvider<FabricClientCommandSource> durationSuggestion = (context, builder) -> {
+        StringReader stringReader = new StringReader(builder.getRemaining());
+
+        try {
+            stringReader.readFloat();
+        } catch (CommandSyntaxException var5) {
+            builder.suggest("0t");
+            return builder.buildFuture();
+        }
+
+        return CommandSource.suggestMatching(List.of("t","s","d"), builder.createOffset(builder.getStart() + stringReader.getCursor()));
+    };
 }
