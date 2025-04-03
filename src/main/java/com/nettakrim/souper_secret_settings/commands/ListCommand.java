@@ -43,6 +43,20 @@ public abstract class ListCommand<T> {
                 )
                 .build();
 
+        LiteralCommandNode<FabricClientCommandSource> firstNode = ClientCommandManager
+                .literal("first")
+                .executes(context -> removeFirst(1, null))
+                .then(
+                        ClientCommandManager.argument("amount", IntegerArgumentType.integer(1))
+                                .executes(context -> removeFirst(IntegerArgumentType.getInteger(context, "amount"), null))
+                                .then(
+                                        ClientCommandManager.argument("id", StringArgumentType.greedyString())
+                                                .suggests(listSuggestions)
+                                                .executes(context -> removeFirst(IntegerArgumentType.getInteger(context, "amount"), StringArgumentType.getString(context, "id")))
+                                )
+                )
+                .build();
+
         LiteralCommandNode<FabricClientCommandSource> indexNode = ClientCommandManager
                 .literal("index")
                 .then(
@@ -55,6 +69,7 @@ public abstract class ListCommand<T> {
         commandNode.addChild(removeNode);
         removeNode.addChild(clearNode);
         removeNode.addChild(topNode);
+        removeNode.addChild(firstNode);
         removeNode.addChild(indexNode);
 
         LiteralCommandNode<FabricClientCommandSource> shiftNode = ClientCommandManager
@@ -109,6 +124,32 @@ public abstract class ListCommand<T> {
             list.remove(index);
 
             index--;
+            amount--;
+        }
+
+        onRemove();
+        return 1;
+    }
+
+    public int removeFirst(int amount, @Nullable String filter) {
+        List<T> list = getList();
+        if (list.isEmpty()) {
+            return -1;
+        }
+
+        int index = 0;
+        while (index < list.size() && amount > 0) {
+            if (filter != null) {
+                T value = list.get(index);
+                if (filterDenies(value, filter)) {
+                    index++;
+                    continue;
+                }
+            }
+
+            new ListRemoveAction<>(list, index).addToHistory();
+            list.remove(index);
+
             amount--;
         }
 
