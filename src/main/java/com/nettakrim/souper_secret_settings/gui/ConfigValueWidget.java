@@ -39,7 +39,7 @@ public class ConfigValueWidget extends TextWidget {
                 Object object = objects.get(i);
                 textFieldWidget.setText(String.valueOf(object));
                 textFieldWidget.setChangedListener((s) -> valueChanged(s, finalI));
-                textFieldWidget.setListeners(() -> Collections.singletonList(String.valueOf(defaultObjects.get(finalI))), null);
+                textFieldWidget.setListeners(() -> Collections.singletonList(String.valueOf(defaultObjects.get(finalI))), null, false);
                 children.add(textFieldWidget);
 
                 if (object instanceof String) {

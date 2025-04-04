@@ -1,6 +1,7 @@
 package com.nettakrim.souper_secret_settings.gui;
 
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.function.Supplier;
 public class SuggestionTextFieldWidget extends DraggableTextFieldWidget {
     protected Supplier<List<String>> validAdditions;
     protected Consumer<String> onSubmit;
+    protected boolean matchIdentifiers;
 
     protected Consumer<String> onChange;
 
@@ -31,9 +33,10 @@ public class SuggestionTextFieldWidget extends DraggableTextFieldWidget {
         onChange = changedListener;
     }
 
-    public void setListeners(Supplier<List<String>> validAdditions, Consumer<String> onSubmit) {
+    public void setListeners(Supplier<List<String>> validAdditions, Consumer<String> onSubmit, boolean matchIdentifiers) {
         this.validAdditions = validAdditions;
         this.onSubmit = onSubmit;
+        this.matchIdentifiers = matchIdentifiers;
     }
 
     protected void onChange(String s) {
@@ -59,11 +62,22 @@ public class SuggestionTextFieldWidget extends DraggableTextFieldWidget {
 
         int maxSuggestionLength = Math.max(length, 32);
         for (String suggestion : suggestions) {
-            int suggestionLength = suggestion.length();
-            if (suggestionLength >= length && s.equals(suggestion.substring(0, length))) {
+            if (suggestion.length() >= length && s.equals(suggestion.substring(0, length))) {
                 currentSuggestions.add(suggestion);
             }
+        }
 
+        if (matchIdentifiers && currentSuggestions.isEmpty() && !s.contains(":")) {
+            for (String suggestion : suggestions) {
+                Identifier identifier = Identifier.tryParse(suggestion);
+                if (identifier != null && identifier.getPath().startsWith(s)) {
+                    currentSuggestions.add(identifier.getPath());
+                }
+            }
+        }
+
+        for (String suggestion : currentSuggestions) {
+            int suggestionLength = suggestion.length();
             if (suggestionLength > maxSuggestionLength) {
                 maxSuggestionLength = suggestionLength;
             }

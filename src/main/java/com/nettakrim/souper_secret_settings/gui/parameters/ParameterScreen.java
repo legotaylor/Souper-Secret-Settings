@@ -49,4 +49,9 @@ public class ParameterScreen extends ListScreen<Calculation> {
     protected boolean canPreview() {
         return false;
     }
+
+    @Override
+    protected boolean matchIdentifiers() {
+        return false;
+    }
 }

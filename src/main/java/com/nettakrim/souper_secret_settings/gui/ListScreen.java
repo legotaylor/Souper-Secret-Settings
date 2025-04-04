@@ -58,7 +58,7 @@ public abstract class ListScreen<V> extends ScrollScreen {
         }
 
         suggestionTextFieldWidget = new SuggestionTextFieldWidget(listX, listWidth-22, 20, Text.literal("list addition"), false);
-        suggestionTextFieldWidget.setListeners(this::getAdditions, this::addAddition);
+        suggestionTextFieldWidget.setListeners(this::getAdditions, this::addAddition, matchIdentifiers());
         addDrawableChild(suggestionTextFieldWidget);
 
         suggestionScreenButton = ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.addition"), (widget) -> enterAdditionScreen()).dimensions(listX+listWidth-20, 0, 20, 20).build();
@@ -198,4 +198,6 @@ public abstract class ListScreen<V> extends ScrollScreen {
     protected Couple<Text,Text> getAdditionText(String addition) {
         return new Couple<>(Text.literal(addition), null);
     }
+
+    protected abstract boolean matchIdentifiers();
 }

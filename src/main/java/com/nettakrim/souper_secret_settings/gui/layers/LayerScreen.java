@@ -72,4 +72,9 @@ public class LayerScreen extends ListScreen<ShaderLayer> {
     protected boolean canUseRandom() {
         return false;
     }
+
+    @Override
+    protected boolean matchIdentifiers() {
+        return false;
+    }
 }

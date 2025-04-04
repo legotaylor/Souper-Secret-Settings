@@ -99,4 +99,9 @@ public class ShaderScreen extends ListScreen<ShaderData> {
         Text description = Text.translatableWithFallback(s+".description", "");
         return new Couple<>(Text.translatableWithFallback(s, addition), description.getString().isBlank() ? null : description);
     }
+
+    @Override
+    protected boolean matchIdentifiers() {
+        return true;
+    }
 }

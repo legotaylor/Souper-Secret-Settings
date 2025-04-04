@@ -17,7 +17,7 @@ public class ParameterTextWidget extends SuggestionTextFieldWidget {
         this.layer = layer;
         this.defaultValue = defaultValue;
         if (defaultValue != null) {
-            setListeners(this::getParameters, this::setText);
+            setListeners(this::getParameters, this::setText, false);
         }
     }
 
