@@ -59,6 +59,7 @@ All builtin resourcepacks should be enabled by default, but they may need to ena
 |                                    |                     | mouse           |
 |                                    |                     | noise3d         |
 |                                    |                     | normalise       |
+|                                    |                     | offset_print    |
 |                                    |                     | out_of_bounds   |
 |                                    |                     | patchwork       |
 |                                    |                     | pendulum        |

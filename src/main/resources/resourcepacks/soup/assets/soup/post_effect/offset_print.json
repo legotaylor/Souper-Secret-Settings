@@ -1,0 +1,102 @@
+{
+    "targets": {
+        "0": {},
+        "1": {}
+    },
+    "passes": [
+        {
+            "program": "soup:post/offset_print_mask",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "minecraft:main"
+                }
+            ],
+            "uniforms": [
+                { "name": "Color1", "values": [ 0.9, 0.9, 0.2 ] },
+                { "name": "Color2", "values": [ 0.2, 0.9, 0.9 ] },
+                { "name": "Color3", "values": [ 0.9, 0.2, 0.9 ] },
+                { "name": "Color4", "values": [ 0.7, 0.7, 0.7 ] }
+            ],
+            "output": "0"
+        },
+        {
+            "program": "luminance:post/gaussian",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "0",
+                    "bilinear": true
+                }
+            ],
+            "output": "1",
+            "uniforms": [
+                { "name": "BlurDir", "values": [ 1.0, 0.0 ] },
+                { "name": "Radius", "values": [ 10.0 ] }
+            ]
+        },
+        {
+            "program": "luminance:post/gaussian",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "1",
+                    "bilinear": true
+                }
+            ],
+            "output": "0",
+            "uniforms": [
+                { "name": "BlurDir", "values": [ 0.0, 1.0 ] },
+                { "name": "Radius", "values": [ 10.0 ] }
+            ]
+        },
+        {
+            "program": "soup:post/offset_print_color",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "0"
+                },
+                {
+                    "sampler_name": "Base",
+                    "target": "minecraft:main"
+                }
+            ],
+            "uniforms": [
+                { "name": "Color1", "values": [ 0.9, 0.9, 0.2 ] },
+                { "name": "Color2", "values": [ 0.2, 0.9, 0.9 ] },
+                { "name": "Color3", "values": [ 0.9, 0.2, 0.9 ] },
+                { "name": "Color4", "values": [ 0.7, 0.7, 0.7 ] },
+                { "name": "Offset1", "values": [  5,  0 ] },
+                { "name": "Offset2", "values": [ -5,  0 ] },
+                { "name": "Offset3", "values": [  0,  5 ] },
+                { "name": "Offset4", "values": [  0, -5 ] }
+            ],
+            "output": "1"
+        },
+        {
+            "program": "luminance:post/merge",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "1"
+                },
+                {
+                    "sampler_name": "Merge",
+                    "target": "minecraft:main"
+                }
+            ],
+            "output": "0"
+        },
+        {
+            "program": "minecraft:post/blit",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "0"
+                }
+            ],
+            "output": "minecraft:main"
+        }
+    ]
+}
