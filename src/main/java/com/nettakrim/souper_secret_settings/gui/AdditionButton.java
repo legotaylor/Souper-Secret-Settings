@@ -34,7 +34,7 @@ public class AdditionButton extends HoverButtonWidget {
         }
 
         float deleteColor = deleting ? 1f : 0f;
-        context.drawTexture(RenderLayer::getGuiTextured, ListWidget.ICON_TEXTURE, getX(), getY(), 0, 0, 10, 20, 20, 20, ColorHelper.fromFloats(0.5f, deleteColor, deleteColor, deleteColor));
+        context.drawTexture(RenderLayer::getGuiTextured, ListWidget.ICON_TEXTURE, getX(), getY(), 0, 0, 10, 20, 40, 20, ColorHelper.fromFloats(0.5f, deleteColor, deleteColor, deleteColor));
     }
 
     @Override
