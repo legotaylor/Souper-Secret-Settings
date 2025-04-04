@@ -1,0 +1,22 @@
+{
+    "vertex": "minecraft:post/sobel",
+    "fragment": "soup:post/blend",
+    "samplers": [
+        { "name": "InSampler" },
+        { "name": "BaseSampler" }
+    ],
+    "uniforms": [
+        { "name": "ProjMat",   "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+        { "name": "InSize",    "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
+        { "name": "OutSize",   "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
+        { "name": "Swap",      "type": "float",     "count": 3,  "values": [ 0.0, 0.0, 0.0 ] },
+        { "name": "Add",       "type": "float",     "count": 3,  "values": [ 0.0, 0.0, 0.0 ] },
+        { "name": "Sub",       "type": "float",     "count": 3,  "values": [ 0.0, 0.0, 0.0 ] },
+        { "name": "Mul",       "type": "float",     "count": 3,  "values": [ 0.0, 0.0, 0.0 ] },
+        { "name": "Div",       "type": "float",     "count": 3,  "values": [ 0.0, 0.0, 0.0 ] },
+        { "name": "Pow",       "type": "float",     "count": 3,  "values": [ 0.0, 0.0, 0.0 ] },
+        { "name": "InA",       "type": "float",     "count": 3,  "values": [ 0.0, 0.0, 0.0 ] },
+        { "name": "InB",       "type": "float",     "count": 3,  "values": [ 0.0, 0.0, 0.0 ] },
+        { "name": "Out",       "type": "float",     "count": 3,  "values": [ 1.0, 1.0, 1.0 ] }
+    ]
+}
