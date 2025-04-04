@@ -68,6 +68,10 @@ public class ShaderScreen extends ListScreen<ShaderData> {
 
     @Override
     public ShaderData tryGetAddition(String addition) {
+        if (addition.isBlank()) {
+            return null;
+        }
+
         Identifier identifier = Shaders.guessPostShader(addition);
         if (identifier != null) {
             List<ShaderData> shader = SouperSecretSettingsClient.soupRenderer.getShaderAdditions(registry, identifier, 1, layer);
