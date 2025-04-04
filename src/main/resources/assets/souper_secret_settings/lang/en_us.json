@@ -15,7 +15,9 @@
     "souper_secret_settings.layer.info.shaders": "Shaders: %s",
     "souper_secret_settings.layer.info.modifiers": "Modifiers: %s",
     "souper_secret_settings.layer.info.passes": "Render Passes: %s",
-    "souper_secret_settings.layer.copy": "Copied layer \"%s\" to clipboard (%s characters)",
+    "souper_secret_settings.layer.copy": "Copied layer %s to clipboard (%s characters)",
+    "souper_secret_settings.layer.copy_saved": "Copied layer \"%s\" to clipboard (%s characters)",
+    "souper_secret_settings.layer.copy_active": "Copied active layer \"%s\" to clipboard (%s characters)",
     "souper_secret_settings.layer.error.index": "Layer index %s is higher than the maximum of %s",
     "souper_secret_settings.layer.error.data": "Invalid layer data",
 

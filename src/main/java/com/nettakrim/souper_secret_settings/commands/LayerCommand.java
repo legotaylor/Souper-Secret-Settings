@@ -125,6 +125,7 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
                                                 .suggests(layerIndexes)
                                                 .executes(context -> copyCurrent(IntegerArgumentType.getInteger(context, "index")))
                                 )
+                                .executes(context -> copyCurrent(-1))
                 )
                 .then(
                         ClientCommandManager.literal("saved")
@@ -274,22 +275,22 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
     }
 
     private int copyFile(String name) {
-        return copyCodec(SouperSecretSettingsClient.soupData.getLayerCodec(name), name);
+        return copyCodec(SouperSecretSettingsClient.soupData.getLayerCodec(name), name, "layer.copy_saved");
     }
 
     private int copyCurrent(int index) {
         if (index < SouperSecretSettingsClient.soupRenderer.shaderLayers.size()) {
-            ShaderLayer layer = SouperSecretSettingsClient.soupRenderer.shaderLayers.get(index);
-            return copyCodec(LayerCodecs.from(layer), String.valueOf(index));
+            ShaderLayer layer = index < 0 ? SouperSecretSettingsClient.soupRenderer.activeLayer : SouperSecretSettingsClient.soupRenderer.shaderLayers.get(index);
+            return copyCodec(LayerCodecs.from(layer), index < 0 ? layer.name : String.valueOf(index), index < 0 ? "layer.copy_active" : "layer.copy");
         }
         SouperSecretSettingsClient.say("layer.error.index", 1, index, SouperSecretSettingsClient.soupRenderer.shaderLayers.size()-1);
         return 0;
     }
 
-    private int copyCodec(LayerCodecs layerCodec, String name) {
+    private int copyCodec(LayerCodecs layerCodec, String name, String key) {
         String text = LayerCodecs.CODEC.encodeStart(JsonOps.INSTANCE, layerCodec).getOrThrow().toString();
         MinecraftClient.getInstance().keyboard.setClipboard(text);
-        SouperSecretSettingsClient.say("layer.copy", 0, name, text.length());
+        SouperSecretSettingsClient.say(key, 0, name, text.length());
         return 1;
     }
 
