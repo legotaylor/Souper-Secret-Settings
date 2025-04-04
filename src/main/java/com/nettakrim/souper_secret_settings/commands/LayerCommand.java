@@ -23,7 +23,6 @@ import net.minecraft.text.Text;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 public class LayerCommand extends ListCommand<ShaderLayer> {
     String saveConfirm = null;
@@ -62,7 +61,7 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
                 .literal("name")
                 .then(
                         ClientCommandManager.argument("name", StringArgumentType.string())
-                                .suggests((context, builder) -> CompletableFuture.completedFuture(builder.suggest(SouperSecretSettingsClient.soupRenderer.activeLayer.name).build()))
+                                .suggests((context, builder) -> builder.suggest(SouperSecretSettingsClient.soupRenderer.activeLayer.name).buildFuture())
                                 .executes(context -> setName(StringArgumentType.getString(context, "name")))
                 )
                 .executes(context -> queryName())
@@ -322,7 +321,7 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
                 builder.suggest(name);
             }
 
-            return CompletableFuture.completedFuture(builder.build());
+            return builder.buildFuture();
         };
     }
 

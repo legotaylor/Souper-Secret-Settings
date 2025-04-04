@@ -33,7 +33,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 public class ShaderListCommand extends ListCommand<ShaderData> {
     protected final String name;
@@ -324,7 +323,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
                 }
             }
 
-            return CompletableFuture.completedFuture(builder.build());
+            return builder.buildFuture();
         };
     }
 
@@ -355,7 +354,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
             }
         }
 
-        return CompletableFuture.completedFuture(builder.build());
+        return builder.buildFuture();
     };
 
     protected SuggestionProvider<FabricClientCommandSource> uniformSuggestions = (context, builder) -> {
@@ -367,7 +366,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
             }
         }
 
-        return CompletableFuture.completedFuture(builder.build());
+        return builder.buildFuture();
     };
 
     protected SuggestionProvider<FabricClientCommandSource> uniformNameSuggestions = (context, builder) -> {
@@ -393,7 +392,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
             }
         }
 
-        return CompletableFuture.completedFuture(builder.build());
+        return builder.buildFuture();
     };
 
     protected SuggestionProvider<FabricClientCommandSource> uniformValueSuggestions = (context, builder) -> {
@@ -446,7 +445,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
             }
         }
 
-        return CompletableFuture.completedFuture(builder.build());
+        return builder.buildFuture();
     };
 
     @Nullable

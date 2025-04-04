@@ -20,7 +20,6 @@ import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public class ParameterCommand extends ListCommand<Calculation> {
     public ParameterCommand() {
@@ -159,7 +158,7 @@ public class ParameterCommand extends ListCommand<Calculation> {
             builder.suggest(id);
         }
 
-        return CompletableFuture.completedFuture(builder.build());
+        return builder.buildFuture();
     };
 
     static SuggestionProvider<FabricClientCommandSource> calculationIndexes = SouperSecretSettingsCommands.createIndexSuggestion(

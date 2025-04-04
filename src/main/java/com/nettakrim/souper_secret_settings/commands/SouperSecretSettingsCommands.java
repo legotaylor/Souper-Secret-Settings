@@ -12,7 +12,6 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.text.Text;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 public class SouperSecretSettingsCommands {
@@ -50,7 +49,7 @@ public class SouperSecretSettingsCommands {
                 }
             }
 
-            return CompletableFuture.completedFuture(builder.build());
+            return builder.buildFuture();
         };
     }
 
@@ -67,7 +66,7 @@ public class SouperSecretSettingsCommands {
                 }
             }
 
-            return CompletableFuture.completedFuture(builder.build());
+            return builder.buildFuture();
         };
     }
 }

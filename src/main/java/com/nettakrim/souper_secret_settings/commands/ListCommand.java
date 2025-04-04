@@ -11,7 +11,6 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public abstract class ListCommand<T> {
     public void registerList(LiteralCommandNode<FabricClientCommandSource> commandNode) {
@@ -207,7 +206,7 @@ public abstract class ListCommand<T> {
         for (T value : list) {
             builder.suggest(getID(value));
         }
-        return CompletableFuture.completedFuture(builder.build());
+        return builder.buildFuture();
     };
 
     abstract String getID(T value);
