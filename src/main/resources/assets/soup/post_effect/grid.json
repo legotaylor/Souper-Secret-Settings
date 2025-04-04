@@ -1,0 +1,88 @@
+{
+    "targets": {
+        "grid": {"persistent": true},
+        "swap": {}
+    },
+    "custom_passes": {
+        "souper_secret_settings:before_layer_render": [
+            {
+                "program": "soup:post/grid",
+                "inputs": [
+                    {
+                        "sampler_name": "In",
+                        "target": "minecraft:main"
+                    },
+                    {
+                        "sampler_name": "Grid",
+                        "target": "swap"
+                    }
+                ],
+                "uniforms": [
+                    {
+                        "name": "Grid",
+                        "values": [],
+                        "override": [ "-1", "soup_layer_size" ]
+                    },
+                    {
+                        "name": "Offset",
+                        "values": [ 1.0, 1.0 ]
+                    },
+                    {
+                        "name": "Clear",
+                        "values": [ 0.0, 0.0, 0.0, 1.0 ]
+                    }
+                ],
+                "output": "grid"
+            }
+        ],
+        "souper_secret_settings:after_shader_render": [
+            {
+                "program": "soup:post/grid",
+                "inputs": [
+                    {
+                        "sampler_name": "In",
+                        "target": "minecraft:main"
+                    },
+                    {
+                        "sampler_name": "Grid",
+                        "target": "grid"
+                    }
+                ],
+                "uniforms": [
+                    {
+                        "name": "Grid",
+                        "values": [],
+                        "override": [ "soup_shader_index", "soup_layer_size" ]
+                    },
+                    {
+                        "name": "Offset",
+                        "values": [ 1.0, 1.0 ]
+                    }
+                ],
+                "output": "swap"
+            },
+            {
+                "program": "minecraft:post/blit",
+                "inputs": [
+                    {
+                        "sampler_name": "In",
+                        "target": "swap"
+                    }
+                ],
+                "output": "grid"
+            }
+        ],
+        "souper_secret_settings:after_layer_render": [
+            {
+                "program": "minecraft:post/blit",
+                "inputs": [
+                    {
+                        "sampler_name": "In",
+                        "target": "grid"
+                    }
+                ],
+                "output": "minecraft:main"
+            }
+        ]
+    }
+}
