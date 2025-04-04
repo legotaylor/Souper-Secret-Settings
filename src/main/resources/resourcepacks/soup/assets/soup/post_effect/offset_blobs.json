@@ -5,7 +5,7 @@
     },
     "passes": [
         {
-            "program": "soup:post/offset_print_mask",
+            "program": "soup:post/print_mask",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -55,7 +55,7 @@
             ]
         },
         {
-            "program": "soup:post/offset_print_color",
+            "program": "soup:post/offset_print",
             "inputs": [
                 {
                     "sampler_name": "In",

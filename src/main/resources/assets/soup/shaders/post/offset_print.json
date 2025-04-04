@@ -1,6 +1,6 @@
 {
     "vertex": "minecraft:post/sobel",
-    "fragment": "soup:post/offset_print_color",
+    "fragment": "soup:post/offset_print",
     "samplers": [
         { "name": "InSampler" },
         { "name": "BaseSampler" }
