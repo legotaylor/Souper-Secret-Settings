@@ -14,12 +14,12 @@ uniform vec3 Color1;
 uniform vec3 Color2;
 uniform vec3 Color3;
 uniform vec3 Color4;
+uniform vec4 Base;
 uniform vec2 Offset1;
 uniform vec2 Offset2;
 uniform vec2 Offset3;
 uniform vec2 Offset4;
 uniform vec4 Threshold;
-uniform vec4 Base;
 uniform vec3 Boost;
 
 void main() {

@@ -1,10 +1,10 @@
 {
-    "post_effect": "soup:halftone",
+    "post_effect": "soup:offset_blobs",
     "enabled": true,
     "disable_game_rendertype": true,
     "custom": {
         "souper_secret_settings": {
-            "groups": [ "edible", "dither", "retro" ]
+            "groups": [ "edible", "retro", "dither" ]
         }
     }
 }

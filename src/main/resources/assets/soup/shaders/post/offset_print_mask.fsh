@@ -13,26 +13,27 @@ uniform vec3 Color1;
 uniform vec3 Color2;
 uniform vec3 Color3;
 uniform vec3 Color4;
+uniform vec3 Base;
 uniform int Combinations;
 uniform float Dithering;
 
 vec3 palette[16] = vec3[16](
-    vec3(1),
-    Color1,
-    Color2,
-    Color3,
-    Color4,
-    Color1 * Color2,
-    Color1 * Color3,
-    Color1 * Color4,
-    Color2 * Color3,
-    Color2 * Color4,
-    Color3 * Color4,
-    Color1 * Color2 * Color3,
-    Color2 * Color3 * Color4,
-    Color3 * Color4 * Color1,
-    Color4 * Color1 * Color2,
-    Color1 * Color2 * Color3 * Color4
+    Base,
+    Base * Color1,
+    Base * Color2,
+    Base * Color3,
+    Base * Color4,
+    Base * Color1 * Color2,
+    Base * Color1 * Color3,
+    Base * Color1 * Color4,
+    Base * Color2 * Color3,
+    Base * Color2 * Color4,
+    Base * Color3 * Color4,
+    Base * Color1 * Color2 * Color3,
+    Base * Color2 * Color3 * Color4,
+    Base * Color3 * Color4 * Color1,
+    Base * Color4 * Color1 * Color2,
+    Base * Color1 * Color2 * Color3 * Color4
 );
 
 vec4 reference[16] = vec4[16](

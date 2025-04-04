@@ -13,12 +13,46 @@
                 }
             ],
             "uniforms": [
-                { "name": "Color1", "values": [ 0.9, 0.9, 0.2 ] },
-                { "name": "Color2", "values": [ 0.2, 0.9, 0.9 ] },
-                { "name": "Color3", "values": [ 0.9, 0.2, 0.9 ] },
-                { "name": "Color4", "values": [ 0.7, 0.7, 0.7 ] }
+                { "name": "Color1", "values": [ 0.8, 0.8, 0.2 ] },
+                { "name": "Color2", "values": [ 0.2, 0.8, 0.8 ] },
+                { "name": "Color3", "values": [ 0.8, 0.2, 0.8 ] },
+                { "name": "Color4", "values": [ 0.4, 0.8, 0.4 ] },
+                { "name": "Base", "values": [ 0.6, 0.6, 0.6 ] },
+                { "name": "Dithering", "values": [ 9.0 ] }
             ],
             "output": "0"
+        },
+        {
+            "program": "luminance:post/gaussian",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "0",
+                    "bilinear": true
+                }
+            ],
+            "output": "1",
+            "uniforms": [
+                { "name": "BlurDir", "values": [ 1.0, 0.0 ] },
+                { "name": "Radius", "values": [ 3.333 ] },
+                { "name": "Deviation", "values": [ 1.0 ] }
+            ]
+        },
+        {
+            "program": "luminance:post/gaussian",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "1",
+                    "bilinear": true
+                }
+            ],
+            "output": "0",
+            "uniforms": [
+                { "name": "BlurDir", "values": [ 0.0, 1.0 ] },
+                { "name": "Radius", "values": [ 3.333 ] },
+                { "name": "Deviation", "values": [ 1.0 ] }
+            ]
         },
         {
             "program": "soup:post/offset_print_color",
@@ -36,11 +70,12 @@
                 { "name": "Color1", "values": [ 0.9, 0.9, 0.2 ] },
                 { "name": "Color2", "values": [ 0.2, 0.9, 0.9 ] },
                 { "name": "Color3", "values": [ 0.9, 0.2, 0.9 ] },
-                { "name": "Color4", "values": [ 0.7, 0.7, 0.7 ] },
+                { "name": "Color4", "values": [ 0.4, 1.0, 0.4 ] },
                 { "name": "Offset1", "values": [  5,  0 ] },
                 { "name": "Offset2", "values": [ -5,  0 ] },
                 { "name": "Offset3", "values": [  0,  5 ] },
-                { "name": "Offset4", "values": [  0, -5 ] }
+                { "name": "Offset4", "values": [  0, -5 ] },
+                { "name": "Threshold", "values": [ 0.4, 0.4, 0.4, 0.4 ] }
             ],
             "output": "1"
         },
