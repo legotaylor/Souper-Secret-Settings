@@ -39,6 +39,7 @@
     "souper_secret_settings.shader.error.number": "Config value \"%s\" is not a number",
     "souper_secret_settings.shader.value.current": "Current",
     "souper_secret_settings.shader.value.default": "Default",
+    "souper_secret_settings.shader.group_suggestion": "%s Shaders",
 
     "souper_secret_settings.parameter.missing": "Cannot find parameter named \"%s\"",
     "souper_secret_settings.parameter.error.index": "Parameter index %s is higher than the maximum of %s",

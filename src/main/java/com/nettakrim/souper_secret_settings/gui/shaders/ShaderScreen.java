@@ -96,7 +96,17 @@ public class ShaderScreen extends ListScreen<ShaderData> {
     @Override
     protected Couple<Text,Text> getAdditionText(String addition) {
         if (addition.startsWith("random")) {
-            return super.getAdditionText(addition);
+            if (addition.length() > 7) {
+                Map<String, List<ShaderRegistryEntry>> registryGroups = SouperSecretSettingsClient.soupRenderer.shaderGroups.get(registry);
+                if (registryGroups != null) {
+                    List<ShaderRegistryEntry> shaderRegistryEntries = registryGroups.get(addition.substring(7));
+                    if (shaderRegistryEntries != null) {
+                        return new Couple<>(Text.literal(addition), SouperSecretSettingsClient.translate("shader.group_suggestion", shaderRegistryEntries.size()));
+                    }
+                }
+            }
+
+            return new Couple<>(Text.literal(addition), SouperSecretSettingsClient.translate("shader.group_suggestion", Shaders.getRegistry(registry).size()));
         }
 
         String s = "gui.luminance.shader."+addition.replace(':','.');

@@ -10,6 +10,7 @@ import com.mclegoman.luminance.client.shaders.overrides.UniformOverride;
 import com.mclegoman.luminance.client.shaders.uniforms.config.MapConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
 import com.mclegoman.luminance.common.util.Couple;
+import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -31,6 +32,7 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -309,18 +311,39 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
 
     private static SuggestionProvider<FabricClientCommandSource> getRegistrySuggestions(Identifier registry) {
         return (context, builder) -> {
+            String current = new StringReader(builder.getRemaining()).readString();
+            Map<String, Identifier> paths = new HashMap<>();
+            boolean searchPaths = true;
+
             List<ShaderRegistryEntry> registryEntries = Shaders.getRegistry(registry);
             for (ShaderRegistryEntry shaderRegistry : registryEntries) {
-                Text text = Text.translatableWithFallback("gui.luminance.shader."+shaderRegistry.getID().toString().replace(':','.')+".description", "");
-                builder.suggest(shaderRegistry.getID().toString(), text.getString().isBlank() ? null : text);
+                Identifier identifier = shaderRegistry.getID();
+                String name = identifier.toString();
+
+                Text text = Text.translatableWithFallback("gui.luminance.shader."+name.replace(':','.')+".description", "");
+                builder.suggest(name, text.getString().isBlank() ? null : text);
+
+                if (searchPaths) {
+                    if (identifier.getPath().startsWith(current)) {
+                        paths.putIfAbsent(identifier.getPath(), identifier);
+                    }
+
+                    if (name.startsWith(current)) {
+                        searchPaths = false;
+                    }
+                }
             }
-            if (registryEntries.size() >= 2) builder.suggest("random");
+            if (registryEntries.size() >= 2) builder.suggest("random", SouperSecretSettingsClient.translate("shader.group_suggestion", registryEntries.size()));
+
+            if (searchPaths) {
+                for (Identifier identifier : paths.values()) {
+                    builder.suggest(identifier.getPath(), Text.literal(identifier.toString()));
+                }
+            }
 
             Map<String, List<ShaderRegistryEntry>> registryGroups = SouperSecretSettingsClient.soupRenderer.shaderGroups.get(registry);
             if (registryGroups != null) {
-                for (String s : registryGroups.keySet()) {
-                    builder.suggest("random_"+s);
-                }
+                registryGroups.forEach(((name, shaderRegistryEntries) -> builder.suggest("random_"+name, SouperSecretSettingsClient.translate("shader.group_suggestion", shaderRegistryEntries.size()))));
             }
 
             return builder.buildFuture();
