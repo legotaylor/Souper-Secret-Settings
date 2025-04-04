@@ -1,0 +1,88 @@
+{
+    "targets": {
+        "0": {},
+        "1": {}
+    },
+    "passes": [
+        {
+            "program": "luminance:post/gaussian",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "minecraft:main"
+                }
+            ],
+            "output": "0",
+            "uniforms": [
+                {
+                    "name": "BlurDir",
+                    "values": [ 1.0, 0.0 ]
+                },
+                {
+                    "name": "Radius",
+                    "values": [ 15.0 ]
+                }
+            ]
+        },
+        {
+            "program": "luminance:post/gaussian",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "0"
+                }
+            ],
+            "output": "1",
+            "uniforms": [
+                {
+                    "name": "BlurDir",
+                    "values": [ 0.0, 1.0 ]
+                },
+                {
+                    "name": "Radius",
+                    "values": [ 15.0 ]
+                }
+            ]
+        },
+        {
+            "program": "soup:post/halftone",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "1"
+                }
+            ],
+            "uniforms": [
+                { "name": "Cyan",    "values": [ 0.0,  175.0, -1.0, 0.9 ] },
+                { "name": "Magenta", "values": [ 15.0, 175.0, -1.0, 0.9 ] },
+                { "name": "Yellow",  "values": [ 75.0, 175.0, -1.0, 0.9 ] },
+                { "name": "Black",   "values": [ 45.0, 175.0, -3.0, 1.0 ] }
+            ],
+            "output": "0"
+        },
+        {
+            "program": "luminance:post/merge",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "0"
+                },
+                {
+                    "sampler_name": "Merge",
+                    "target": "minecraft:main"
+                }
+            ],
+            "output": "1"
+        },
+        {
+            "program": "minecraft:post/blit",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "1"
+                }
+            ],
+            "output": "minecraft:main"
+        }
+    ]
+}

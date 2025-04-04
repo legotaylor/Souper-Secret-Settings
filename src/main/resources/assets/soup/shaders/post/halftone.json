@@ -9,6 +9,10 @@
         { "name": "InSize",      "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
         { "name": "OutSize",     "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
         { "name": "Gray",        "type": "float",     "count": 3,  "values": [ 0.3, 0.59, 0.11 ] },
+        { "name": "Cyan",        "type": "float",     "count": 4,  "values": [ 0.0,  175.0,  1.5, 0.9 ] },
+        { "name": "Magenta",     "type": "float",     "count": 4,  "values": [ 15.0, 175.0,  1.5, 0.9 ] },
+        { "name": "Yellow",      "type": "float",     "count": 4,  "values": [ 75.0, 175.0,  1.5, 0.9 ] },
+        { "name": "Black",       "type": "float",     "count": 4,  "values": [ 45.0, 175.0, -2.0, 1.0 ] },
         { "name": "NoiseScale",  "type": "float",     "count": 1,  "values": [ 1000.0 ] },
         { "name": "NoiseAmount", "type": "float",     "count": 1,  "values": [ 30.0 ] }
     ]

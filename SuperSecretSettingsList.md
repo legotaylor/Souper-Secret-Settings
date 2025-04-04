@@ -42,6 +42,7 @@ All builtin resourcepacks should be enabled by default, but they may need to ena
 |                                    |                     | glitchy         |
 |                                    |                     | half_invert     |
 |                                    |                     | halftone        |
+|                                    |                     | halftone_rgb    |
 |                                    |                     | harsh_dither    |
 |                                    |                     | highpass        |
 |                                    |                     | horror          |

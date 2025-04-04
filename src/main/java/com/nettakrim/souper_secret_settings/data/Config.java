@@ -120,6 +120,7 @@ public class Config {
                 case "pixels" -> "pixelated";
                 case "blur" -> "box_blur";
                 case "sepia" -> "soup:sepia";
+                case "halftone" -> "halftone_rgb";
                 default -> id;
             };
 
