@@ -50,7 +50,7 @@ public class LayerScreen extends ListScreen<ShaderLayer> {
         if (SouperSecretSettingsClient.soupRenderer.shaderLayers.isEmpty()) {
             SouperSecretSettingsClient.soupRenderer.clearAll();
             SouperSecretSettingsClient.soupRenderer.loadDefault();
-            SouperSecretSettingsClient.soupGui.open(SoupGui.ScreenType.LAYERS);
+            SouperSecretSettingsClient.soupGui.open(SoupGui.ScreenType.LAYERS, false);
         } else {
             SouperSecretSettingsClient.soupRenderer.activeLayer = SouperSecretSettingsClient.soupRenderer.shaderLayers.getLast();
             SouperSecretSettingsClient.soupGui.updateActiveLayer();

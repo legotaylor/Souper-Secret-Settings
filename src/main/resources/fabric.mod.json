@@ -22,6 +22,9 @@
   "entrypoints": {
     "client": [
       "com.nettakrim.souper_secret_settings.SouperSecretSettingsClient"
+    ],
+    "modmenu": [
+      "com.nettakrim.souper_secret_settings.ModMenuCompat"
     ]
   },
   "mixins": [

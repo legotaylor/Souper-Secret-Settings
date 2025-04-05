@@ -18,7 +18,7 @@ public class Keybinds {
 
     public static void tick() {
         if (openGUI.wasPressed()) {
-            SouperSecretSettingsClient.soupGui.open(SouperSecretSettingsClient.soupGui.getCurrentScreenType());
+            SouperSecretSettingsClient.soupGui.open(SouperSecretSettingsClient.soupGui.getCurrentScreenType(), true);
         }
         if (toggleSoup.wasPressed()) {
             OptionCommand.toggle(false);

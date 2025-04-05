@@ -12,7 +12,9 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.command.argument.EnumArgumentType;
 import net.minecraft.text.Text;
+import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.ColorHelper;
 
 import java.util.ArrayList;
@@ -27,8 +29,10 @@ public class SoupGui {
     protected static final int listGap = 2;
     protected static final int headerHeight = 42;
 
-    private ScreenType currentScreenType;
+    private ScreenType currentScreenType = ScreenType.SHADERS;
     private Text currentHoverText;
+
+    private Screen previous = null;
 
     public SoupGui() {
         header = new ArrayList<>();
@@ -38,15 +42,15 @@ public class SoupGui {
         int smallWidth = 12;
 
         x = listGap;
-        x += addHeaderButton(ButtonWidget.builder(Text.literal(""),  (widget) -> open(ScreenType.LAYERS)).dimensions(x, listGap, (mainWidth*3+listGap*2)-(smallWidth*3+listGap*2)-listGap, 20).build());
+        x += addHeaderButton(ButtonWidget.builder(Text.literal(""),  (widget) -> open(ScreenType.LAYERS, false)).dimensions(x, listGap, (mainWidth*3+listGap*2)-(smallWidth*3+listGap*2)-listGap, 20).build());
         x += addHeaderButton(new HoverButtonWidget(x, listGap, smallWidth, 20, SouperSecretSettingsClient.translate("gui.undo"), null, (widget) -> undo()));
         x += addHeaderButton(new HoverButtonWidget(x, listGap, smallWidth, 20, SouperSecretSettingsClient.translate("gui.redo"), null, (widget) -> redo()));
              addHeaderButton(ButtonWidget.builder(SouperSecretSettingsClient.soupRenderer.getRenderTypeText(), SouperSecretSettingsClient.soupRenderer::cycleRenderType).dimensions(x, listGap, smallWidth, 20).build());
 
         x = listGap;
-        x += addHeaderButton(ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.shaders"),    (widget) -> open(ScreenType.SHADERS   )).dimensions(x, listGap*2 + 20, mainWidth, 20).build());
-        x += addHeaderButton(ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.modifiers"),  (widget) -> open(ScreenType.MODIFIERS )).dimensions(x, listGap*2 + 20, mainWidth, 20).build());
-             addHeaderButton(ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.parameters"), (widget) -> open(ScreenType.PARAMETERS)).dimensions(x, listGap*2 + 20, mainWidth, 20).build());
+        x += addHeaderButton(ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.shaders"),    (widget) -> open(ScreenType.SHADERS   , false)).dimensions(x, listGap*2 + 20, mainWidth, 20).build());
+        x += addHeaderButton(ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.modifiers"),  (widget) -> open(ScreenType.MODIFIERS , false)).dimensions(x, listGap*2 + 20, mainWidth, 20).build());
+             addHeaderButton(ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.parameters"), (widget) -> open(ScreenType.PARAMETERS, false)).dimensions(x, listGap*2 + 20, mainWidth, 20).build());
 
         currentScroll = new int[ScreenType.values().length];
     }
@@ -56,24 +60,41 @@ public class SoupGui {
         return listGap + buttonWidget.getWidth();
     }
 
-    public void open(ScreenType screenType) {
+    public void open(ScreenType screenType, boolean openNew) {
+        ClientData.minecraft.setScreen(getScreen(screenType, openNew));
+    }
+
+    public Screen getScreen(ScreenType screenType, boolean openNew) {
         currentScreenType = screenType;
         int index = screenType.ordinal();
 
+        if (openNew) {
+            previous = ClientData.minecraft.currentScreen;
+        }
         Screen screen = switch(screenType) {
             case LAYERS -> new LayerScreen(index);
             case SHADERS -> new ShaderScreen(index, SouperSecretSettingsClient.soupRenderer.activeLayer, Shaders.getMainRegistryId());
             case MODIFIERS -> new ShaderScreen(index, SouperSecretSettingsClient.soupRenderer.activeLayer, SoupRenderer.modifierRegistry);
             case PARAMETERS -> new ParameterScreen(index, SouperSecretSettingsClient.soupRenderer.activeLayer);
+            case CONFIG -> new ConfigScreen();
         };
-        ClientData.minecraft.setScreen(screen);
 
         for (int i = 0; i < ScreenType.values().length; i++) {
-            ClickableWidget clickableWidget = header.get(i > 0 ? i+3 : i);
-            clickableWidget.active = index != i;
-            clickableWidget.setFocused(false);
+            int h = i > 0 ? i+3 : i;
+            if (h < header.size()) {
+                ClickableWidget clickableWidget = header.get(h);
+                clickableWidget.active = index != i;
+                clickableWidget.setFocused(false);
+            }
         }
         updateActiveLayer();
+
+        return screen;
+    }
+
+    public void onClose() {
+        ClientData.minecraft.setScreen(previous);
+        previous = null;
     }
 
     public List<ClickableWidget> getHeader() {
@@ -82,12 +103,12 @@ public class SoupGui {
 
     protected void undo() {
         SouperSecretSettingsClient.actions.undo();
-        open(currentScreenType);
+        open(currentScreenType, false);
     }
 
     protected void redo() {
         SouperSecretSettingsClient.actions.redo();
-        open(currentScreenType);
+        open(currentScreenType, false);
     }
 
     public void setHistoryButtons(int undoCount, int redoCount) {
@@ -123,10 +144,22 @@ public class SoupGui {
         currentHoverText = null;
     }
 
-    public enum ScreenType {
+    public enum ScreenType implements StringIdentifiable {
         LAYERS,
         SHADERS,
         MODIFIERS,
-        PARAMETERS
+        PARAMETERS,
+        CONFIG;
+
+        @Override
+        public String asString() {
+            return name().toLowerCase();
+        }
+    }
+
+    public static class ScreenTypeArgumentType extends EnumArgumentType<ScreenType> {
+        public ScreenTypeArgumentType() {
+            super(StringIdentifiable.createCodec(ScreenType::values), ScreenType::values);
+        }
     }
 }

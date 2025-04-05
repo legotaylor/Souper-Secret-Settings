@@ -18,6 +18,11 @@ repositories {
 	// for more information about repositories.
 
 	maven { url 'https://maven.quiltmc.org/repository/release/' }
+
+	maven {
+		name = "Terraformers"
+		url = "https://maven.terraformersmc.com/"
+	}
 }
 
 dependencies {
@@ -39,6 +44,9 @@ dependencies {
 	modImplementation("org.quiltmc:quilt-config:${project.quilt_config}")
 	modImplementation("org.quiltmc.quilt-config.serializers:toml:${project.quilt_config}")
 	modImplementation("org.quiltmc.quilt-config.serializers:json5:${project.quilt_config}")
+
+
+	modCompileOnly "com.terraformersmc:modmenu:${project.modmenu}"
 }
 
 processResources {

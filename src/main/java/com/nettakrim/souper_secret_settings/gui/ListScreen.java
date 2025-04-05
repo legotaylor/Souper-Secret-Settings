@@ -200,4 +200,9 @@ public abstract class ListScreen<V> extends ScrollScreen {
     }
 
     protected abstract boolean matchIdentifiers();
+
+    @Override
+    public void close() {
+        SouperSecretSettingsClient.soupGui.onClose();
+    }
 }
