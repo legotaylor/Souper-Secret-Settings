@@ -78,6 +78,7 @@
     "souper_secret_settings.gui.shaders": "shaders",
     "souper_secret_settings.gui.modifiers": "modifiers",
     "souper_secret_settings.gui.parameters": "parameters",
+    "souper_secret_settings.gui.config": "⚙",
     "souper_secret_settings.gui.save": "save",
     "souper_secret_settings.gui.confirm": "confirm",
     "souper_secret_settings.gui.load": "load",

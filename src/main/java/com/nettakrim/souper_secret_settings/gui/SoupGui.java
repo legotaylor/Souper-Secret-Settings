@@ -42,10 +42,11 @@ public class SoupGui {
         int smallWidth = 12;
 
         x = listGap;
-        x += addHeaderButton(ButtonWidget.builder(Text.literal(""),  (widget) -> open(ScreenType.LAYERS, false)).dimensions(x, listGap, (mainWidth*3+listGap*2)-(smallWidth*3+listGap*2)-listGap, 20).build());
+        x += addHeaderButton(ButtonWidget.builder(Text.literal(""),  (widget) -> open(ScreenType.LAYERS, false)).dimensions(x, listGap, (mainWidth*3+listGap*2)-(smallWidth*4+listGap*3)-listGap, 20).build());
         x += addHeaderButton(new HoverButtonWidget(x, listGap, smallWidth, 20, SouperSecretSettingsClient.translate("gui.undo"), null, (widget) -> undo()));
         x += addHeaderButton(new HoverButtonWidget(x, listGap, smallWidth, 20, SouperSecretSettingsClient.translate("gui.redo"), null, (widget) -> redo()));
-             addHeaderButton(ButtonWidget.builder(SouperSecretSettingsClient.soupRenderer.getRenderTypeText(), SouperSecretSettingsClient.soupRenderer::cycleRenderType).dimensions(x, listGap, smallWidth, 20).build());
+        x += addHeaderButton(ButtonWidget.builder(SouperSecretSettingsClient.soupRenderer.getRenderTypeText(), SouperSecretSettingsClient.soupRenderer::cycleRenderType).dimensions(x, listGap, smallWidth, 20).build());
+             addHeaderButton(ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.config"), (widget) -> open(ScreenType.CONFIG, false)).dimensions(x, listGap, smallWidth, 20).build());
 
         x = listGap;
         x += addHeaderButton(ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.shaders"),    (widget) -> open(ScreenType.SHADERS   , false)).dimensions(x, listGap*2 + 20, mainWidth, 20).build());
@@ -80,12 +81,9 @@ public class SoupGui {
         };
 
         for (int i = 0; i < ScreenType.values().length; i++) {
-            int h = i > 0 ? i+3 : i;
-            if (h < header.size()) {
-                ClickableWidget clickableWidget = header.get(h);
-                clickableWidget.active = index != i;
-                clickableWidget.setFocused(false);
-            }
+            ClickableWidget clickableWidget = header.get(i == 4 ? 4 : (i > 0 ? i+4 : i));
+            clickableWidget.active = index != i;
+            clickableWidget.setFocused(false);
         }
         updateActiveLayer();
 
