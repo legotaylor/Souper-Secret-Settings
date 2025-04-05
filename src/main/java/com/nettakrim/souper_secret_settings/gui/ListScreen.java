@@ -70,6 +70,12 @@ public abstract class ListScreen<V> extends ScrollScreen {
     }
 
     @Override
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.render(context, mouseX, mouseY, delta);
+        SouperSecretSettingsClient.soupGui.drawCurrentHoverText(context, mouseX, mouseY);
+    }
+
+    @Override
     public void renderScrollables(DrawContext context, int mouseX, int mouseY, float delta) {
         for (Drawable drawable : listWidgets) {
             drawable.render(context, mouseX, mouseY, delta);

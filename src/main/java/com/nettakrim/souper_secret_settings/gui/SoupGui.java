@@ -102,20 +102,18 @@ public class SoupGui {
     protected void undo() {
         SouperSecretSettingsClient.actions.undo();
         open(currentScreenType, false);
+        ClientData.minecraft.send(() -> ((HoverButtonWidget)header.get(1)).deselect());
     }
 
     protected void redo() {
         SouperSecretSettingsClient.actions.redo();
         open(currentScreenType, false);
+        ClientData.minecraft.send(() -> ((HoverButtonWidget)header.get(2)).deselect());
     }
 
     public void setHistoryButtons(int undoCount, int redoCount) {
-        HoverButtonWidget undo = (HoverButtonWidget)header.get(1);
-        HoverButtonWidget redo = (HoverButtonWidget)header.get(2);
-        undo.active = undoCount > 0;
-        redo.active = redoCount > 0;
-        undo.setHoverText(undoCount > 0 ? SouperSecretSettingsClient.translate("gui.undo_count", undoCount) : null);
-        redo.setHoverText(redoCount > 0 ? SouperSecretSettingsClient.translate("gui.redo_count", redoCount) : null);
+        ((HoverButtonWidget)header.get(1)).setActiveText(undoCount > 0 ? SouperSecretSettingsClient.translate("gui.undo_count", undoCount) : null);
+        ((HoverButtonWidget)header.get(2)).setActiveText(redoCount > 0 ? SouperSecretSettingsClient.translate("gui.redo_count", redoCount) : null);
     }
 
     public ScreenType getCurrentScreenType() {

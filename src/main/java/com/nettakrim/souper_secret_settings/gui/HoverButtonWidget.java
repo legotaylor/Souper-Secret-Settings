@@ -29,4 +29,14 @@ public class HoverButtonWidget extends ButtonWidget {
     protected boolean passesRangeCheck(int mouseX, int mouseY) {
         return true;
     }
+
+    public void setActiveText(@Nullable Text hoverText) {
+        setHoverText(hoverText);
+        active = hoverText != null;
+    }
+
+    public void deselect() {
+        setFocused(false);
+        hovered = false;
+    }
 }
