@@ -48,7 +48,7 @@
                 },
                 {
                     "name": "Radius",
-                    "values": [ 10 ]
+                    "values": [ 10, 10 ]
                 },
                 {
                     "name": "Mix",

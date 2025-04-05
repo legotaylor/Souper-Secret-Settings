@@ -40,7 +40,7 @@
                 },
                 {
                     "name": "Radius",
-                    "values": [ 50 ]
+                    "values": [ 50, 50 ]
                 }
             ]
         },

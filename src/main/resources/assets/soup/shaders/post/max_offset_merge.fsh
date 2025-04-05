@@ -12,14 +12,14 @@ out vec4 fragColor;
 
 uniform vec2 Direction;
 uniform float Steps;
-uniform float Radius;
+uniform vec2 Radius;
 uniform vec2 PrevDirection;
 uniform vec4 Mix;
 
 void main() {
     vec3 maxCol = vec3(0.0);
 
-    float radius = Radius*Radius;
+    vec2 radius = 1.0/Radius;
 
     for (float i = 0; i < Steps; i++) {
         vec2 offset = vec2(i-Steps/2.0) * Direction;
@@ -29,10 +29,14 @@ void main() {
         vec2 offsetG = offset + PrevDirection * direction.g;
         vec2 offsetB = offset + PrevDirection * direction.b;
 
+        vec2 squishR = offsetR*radius;
+        vec2 squishG = offsetG*radius;
+        vec2 squishB = offsetB*radius;
+
         maxCol = max(maxCol, vec3(
-            dot(offsetR, offsetR) > radius ? 0 : texture(InSampler, texCoord + offsetR * oneTexel).r,
-            dot(offsetG, offsetG) > radius ? 0 : texture(InSampler, texCoord + offsetG * oneTexel).g,
-            dot(offsetB, offsetB) > radius ? 0 : texture(InSampler, texCoord + offsetB * oneTexel).b
+            dot(squishR, squishR) > 1 ? 0 : texture(InSampler, texCoord + offsetR * oneTexel).r,
+            dot(squishG, squishG) > 1 ? 0 : texture(InSampler, texCoord + offsetG * oneTexel).g,
+            dot(squishB, squishB) > 1 ? 0 : texture(InSampler, texCoord + offsetB * oneTexel).b
         ));
     }
 
