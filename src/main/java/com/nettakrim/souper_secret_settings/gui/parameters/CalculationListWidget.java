@@ -21,6 +21,11 @@ public class CalculationListWidget extends ListWidget {
     }
 
     @Override
+    protected void createChildren(int x, int width) {
+        // CalculationListWidget is just a wrapper for CalculationDisplayWidget, so it can create its child right away
+    }
+
+    @Override
     protected void setExpanded(boolean to) {
         ((CalculationDisplayWidget)children.getFirst()).setExpandedWithoutUpdate(to);
         super.setExpanded(to);

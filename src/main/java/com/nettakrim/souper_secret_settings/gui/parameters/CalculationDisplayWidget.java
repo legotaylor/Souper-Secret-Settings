@@ -25,17 +25,17 @@ public class CalculationDisplayWidget extends DisplayWidget<OverrideSource> {
         super(calculation.inputs.length, name, x, width, listScreen);
         this.calculation = calculation;
         this.layer = layer;
-        initValues();
+        active = false;
     }
 
     @Override
-    protected void initValues() {
+    protected void createChildren(int x, int width) {
         int outputCount = calculation.outputs.length;
         outputs = new ParameterTextWidget[outputCount];
 
-        int width = (getWidth()-displayWidth)/outputCount;
+        int split = (getWidth()-displayWidth)/outputCount;
         for (int i = 0; i < outputCount; i++) {
-            ParameterTextWidget parameterTextWidget = new ParameterTextWidget(getX() + width*i, width, 20, Text.literal("output"+i), layer, "");
+            ParameterTextWidget parameterTextWidget = new ParameterTextWidget(getX() + split*i, split, 20, Text.literal("output"+i), layer, "");
             listScreen.addSelectable(parameterTextWidget);
             int finalI = i;
             parameterTextWidget.setText(calculation.outputs[i]);
@@ -43,7 +43,7 @@ public class CalculationDisplayWidget extends DisplayWidget<OverrideSource> {
             outputs[i] = parameterTextWidget;
         }
 
-        super.initValues();
+        super.createChildren(x, width);
     }
 
     @Override
@@ -109,6 +109,7 @@ public class CalculationDisplayWidget extends DisplayWidget<OverrideSource> {
 
     public void setExpandedWithoutUpdate(boolean to) {
         expanded = to;
+        tryCreateChildren();
         for (ParameterTextWidget parameterTextWidget : outputs) {
             parameterTextWidget.setVisible(expanded);
         }

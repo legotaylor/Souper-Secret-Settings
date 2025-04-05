@@ -19,7 +19,8 @@ public abstract class DisplayWidget<T> extends CollapseWidget {
         this.count = count;
     }
 
-    protected void initValues() {
+    @Override
+    protected void createChildren(int x, int width) {
         List<T> values = getChildData();
         for (int i = 0; i < values.size(); i++) {
             ClickableWidget widget = createChildWidget(values.get(i), i);

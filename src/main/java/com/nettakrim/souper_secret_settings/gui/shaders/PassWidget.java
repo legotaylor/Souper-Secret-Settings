@@ -34,17 +34,14 @@ public class PassWidget extends CollapseWidget {
         this.customPass = customPass;
         this.passIndex = passIndex;
 
+        active = false;
         ShaderProgram program = postEffectPass.getProgram();
         for (String name : ((ShaderProgramInterface)program).luminance$getUniformNames()) {
-            GlUniform uniform = program.getUniform(name);
-            if (uniform != null && PassData.allowUniform(name)) {
-                UniformWidget uniformWidget = new UniformWidget(this, uniform, Text.literal(uniform.getName()), x, width, listScreen);
-                listScreen.addSelectable(uniformWidget);
-                children.add(uniformWidget);
+            if (PassData.allowUniform(name) && program.getUniform(name) != null) {
+                active = true;
+                break;
             }
         }
-
-        if (children.isEmpty()) active = false;
 
         if (customPass != null && passIndex == 0) {
             setHeight(getHeight()+firstCustomHeight);
@@ -68,6 +65,25 @@ public class PassWidget extends CollapseWidget {
         }
 
         super.renderWidget(context, mouseX, mouseY, delta);
+    }
+
+    @Override
+    protected void createChildren(int x, int width) {
+        if (!active) {
+            return;
+        }
+
+        ShaderProgram program = postEffectPass.getProgram();
+        for (String name : ((ShaderProgramInterface)program).luminance$getUniformNames()) {
+            GlUniform uniform = program.getUniform(name);
+            if (uniform != null && PassData.allowUniform(name)) {
+                UniformWidget uniformWidget = new UniformWidget(this, uniform, Text.literal(uniform.getName()), x, width, listScreen);
+                listScreen.addSelectable(uniformWidget);
+                children.add(uniformWidget);
+            }
+        }
+
+        if (children.isEmpty()) active = false;
     }
 
     @Override

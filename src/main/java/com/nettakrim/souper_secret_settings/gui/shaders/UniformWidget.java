@@ -28,7 +28,6 @@ public class UniformWidget extends DisplayWidget<Couple<UniformData<String>,Unif
         super(uniform.getCount(), name, x, width, listScreen);
         this.pass = pass;
         this.uniform = uniform;
-        initValues();
     }
 
     @Override

@@ -18,10 +18,10 @@ import net.minecraft.util.math.MathHelper;
 public class LayerWidget extends ListWidget {
     public final ShaderLayer layer;
 
-    private final ButtonWidget saveButton;
-    private final ButtonWidget loadButton;
+    private ButtonWidget saveButton;
+    private ButtonWidget loadButton;
 
-    private final SuggestionTextFieldWidget nameWidget;
+    private SuggestionTextFieldWidget nameWidget;
 
     private static final int infoHeight = 15;
 
@@ -30,24 +30,6 @@ public class LayerWidget extends ListWidget {
     public LayerWidget(ShaderLayer layer, ListScreen<?> listScreen, int x, int width) {
         super(x, width, getNameText(layer.name), listScreen);
         this.layer = layer;
-
-        saveButton = ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.save"), (buttonWidget) -> save()).dimensions(x,0,width/2,20).build();
-        loadButton = ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.load"), (buttonWidget) -> load()).dimensions(x + width/2,0,width/2,20).build();
-
-        nameWidget = new SuggestionTextFieldWidget(x, width, 20, Text.of("layer id"), false);
-        nameWidget.setListeners(() -> SouperSecretSettingsClient.soupData.getSavedLayers(true), this::setNameDisambiguate, false);
-        nameWidget.submitOnLostFocus = true;
-        nameWidget.setText(layer.name);
-        nameWidget.setChangedListener(this::setName);
-
-        children.add(nameWidget);
-        listScreen.addSelectable(nameWidget);
-
-        children.add(saveButton);
-        listScreen.addSelectable(saveButton);
-        listScreen.addSelectable(loadButton);
-
-        updateDataButtons();
     }
 
     @Override
@@ -66,6 +48,27 @@ public class LayerWidget extends ListWidget {
             drawScrollableText(context, ClientData.minecraft.textRenderer, text, this.getX(), infoPos, this.getX() + this.getWidth(), next, (this.active ? 16777215 : 10526880) | MathHelper.ceil(this.alpha * 255.0F) << 24);
             infoPos = next;
         }
+    }
+
+    @Override
+    protected void createChildren(int x, int width) {
+        saveButton = ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.save"), (buttonWidget) -> save()).dimensions(x,0,width/2,20).build();
+        loadButton = ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.load"), (buttonWidget) -> load()).dimensions(x + width/2,0,width/2,20).build();
+
+        updateDataButtons();
+
+        nameWidget = new SuggestionTextFieldWidget(x, width, 20, Text.of("layer id"), false);
+        nameWidget.setListeners(() -> SouperSecretSettingsClient.soupData.getSavedLayers(true), this::setNameDisambiguate, false);
+        nameWidget.submitOnLostFocus = true;
+        nameWidget.setText(layer.name);
+        nameWidget.setChangedListener(this::setName);
+
+        children.add(nameWidget);
+        listScreen.addSelectable(nameWidget);
+
+        children.add(saveButton);
+        listScreen.addSelectable(saveButton);
+        listScreen.addSelectable(loadButton);
     }
 
     @Override
@@ -101,13 +104,17 @@ public class LayerWidget extends ListWidget {
             collapseHeight += layer.getInfo().length * infoHeight;
             loadButton.setY(saveButton.getY());
         }
-        loadButton.visible = expanded;
+        if (loadButton != null) {
+            loadButton.visible = expanded;
+        }
     }
 
     @Override
     public void setY(int y) {
         super.setY(y);
-        loadButton.setY(saveButton.getY());
+        if (loadButton != null) {
+            loadButton.setY(saveButton.getY());
+        }
     }
 
     private void setName(String name) {
@@ -169,9 +176,7 @@ public class LayerWidget extends ListWidget {
     @Override
     protected void setExpanded(boolean to) {
         super.setExpanded(to);
-        if (!to) {
-            setConfirm(false);
-        }
+        setConfirm(false);
     }
 
     private void setConfirm(boolean to) {

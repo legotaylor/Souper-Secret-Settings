@@ -24,7 +24,10 @@ public class ShaderWidget extends ListWidget {
 
         this.layer = layer;
         this.shaderData = shaderData;
+    }
 
+    @Override
+    protected void createChildren(int x, int width) {
         for (Identifier customPasses : SouperSecretSettingsClient.soupRenderer.getRegistryPasses(((ShaderScreen)listScreen).registry)) {
             addPasses(customPasses);
         }
