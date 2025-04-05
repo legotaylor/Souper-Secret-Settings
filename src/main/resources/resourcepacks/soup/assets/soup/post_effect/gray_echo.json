@@ -1,0 +1,84 @@
+{
+    "targets": {
+        "a": {},
+        "b": {}
+    },
+    "passes": [
+        {
+            "program": "soup:post/max_offset",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "minecraft:main"
+                }
+            ],
+            "output": "a",
+            "uniforms": [
+                {
+                    "name": "Direction",
+                    "values": [ 30, 0 ]
+                },
+                {
+                    "name": "Steps",
+                    "values": [ 6 ]
+                }
+            ]
+        },
+        {
+            "program": "soup:post/max_offset_merge",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "minecraft:main"
+                },
+                {
+                    "sampler_name": "Direction",
+                    "target": "a"
+                }
+            ],
+            "output": "b",
+            "uniforms": [
+                {
+                    "name": "Direction",
+                    "values": [ 0, 0 ]
+                },
+                {
+                    "name": "Steps",
+                    "values": [ 1 ]
+                },
+                {
+                    "name": "Radius",
+                    "values": [ 10 ]
+                },
+                {
+                    "name": "Mix",
+                    "values": [ 0.5, 0.5, 0.5, 1.0 ]
+                }
+            ]
+        },
+        {
+            "program": "luminance:post/merge",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "b"
+                },
+                {
+                    "sampler_name": "Merge",
+                    "target": "minecraft:main"
+                }
+            ],
+            "output": "a"
+        },
+        {
+            "program": "minecraft:post/blit",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "a"
+                }
+            ],
+            "output": "minecraft:main"
+        }
+    ]
+}

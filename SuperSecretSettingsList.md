@@ -15,31 +15,33 @@ All builtin resourcepacks should be enabled by default, but they may need to ena
 | bits                               | crt                 | autumnal        |
 | blobs                              | depth_dither        | bevel           |
 | blobs2                             | dos                 | blobs_outline   |
-| bloom*                             | eightbit            | blobs_square    |
-| box_blur**                         | gaussian            | bloom_color     |
-| bumpy                              | gentoo              | bloom_spike     |
-| color_convolve                     | golden_blobs2       | brightness      |
-| creeper**                          | grayscale           | checkerboard    |
-| deconverge                         | health_overlay      | cinematic       |
-| desaturate                         | inverted_brightness | collapse        |
-| flip                               | inverted_colors     | color_bleed     |
-| fxaa                               | mirror              | color_blind     |
-| green                              | outlined            | color_shuffle   |
-| invert**                           | outlined2           | contrast        |
-| love*                              | pixelated           | crystallize     |
-| notch                              | rainbow             | depth_outline   |
-| ntsc                               | saturate            | dissolve        |
-| outline                            | sepia               | dither          |
-| pencil                             | silhouette          | dramatic        |
-| phosphor                           | silhouette2         | film_grain      |
-| scan_pincushion                    | sixteen_colors      | fisheye         |
-| shareware*                         | tiltshift           | fractal         |
-| sobel                              |                     | frigid          |
-| spider**                           |                     | ghost           |
-| wobble                             |                     | gel             |
+| bloom*                             | eightbit            | blobs_rounded   |
+| box_blur**                         | gaussian            | blobs_square    |
+| bumpy                              | gentoo              | bloom_color     |
+| color_convolve                     | golden_blobs2       | bloom_spike     |
+| creeper**                          | grayscale           | brightness      |
+| deconverge                         | health_overlay      | checkerboard    |
+| desaturate                         | inverted_brightness | cinematic       |
+| flip                               | inverted_colors     | collapse        |
+| fxaa                               | mirror              | color_bleed     |
+| green                              | outlined            | color_blind     |
+| invert**                           | outlined2           | color_shuffle   |
+| love*                              | pixelated           | contrast        |
+| notch                              | rainbow             | crystallize     |
+| ntsc                               | saturate            | depth_outline   |
+| outline                            | sepia               | dissolve        |
+| pencil                             | silhouette          | dither          |
+| phosphor                           | silhouette2         | dramatic        |
+| scan_pincushion                    | sixteen_colors      | film_grain      |
+| shareware*                         | tiltshift           | fisheye         |
+| sobel                              |                     | fractal         |
+| spider**                           |                     | frigid          |
+| wobble                             |                     | ghost           |
+|                                    |                     | gel             |
 |                                    |                     | ghost           |
 |                                    |                     | glass           |
 |                                    |                     | glitchy         |
+|                                    |                     | gray_echo       |
 |                                    |                     | half_invert     |
 |                                    |                     | halftone        |
 |                                    |                     | halftone_rgb    |

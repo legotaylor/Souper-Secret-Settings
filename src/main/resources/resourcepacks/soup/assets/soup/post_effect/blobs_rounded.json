@@ -1,0 +1,72 @@
+{
+    "targets": {
+        "a": {},
+        "b": {}
+    },
+    "passes": [
+        {
+            "program": "soup:post/max_offset",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "minecraft:main"
+                }
+            ],
+            "output": "a",
+            "uniforms": [
+                {
+                    "name": "Steps",
+                    "values": [ 100 ]
+                }
+            ]
+        },
+        {
+            "program": "soup:post/max_offset_merge",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "minecraft:main"
+                },
+                {
+                    "sampler_name": "Direction",
+                    "target": "a"
+                }
+            ],
+            "output": "b",
+            "uniforms": [
+                {
+                    "name": "Steps",
+                    "values": [ 80 ]
+                },
+                {
+                    "name": "Radius",
+                    "values": [ 50 ]
+                }
+            ]
+        },
+        {
+            "program": "luminance:post/merge",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "b"
+                },
+                {
+                    "sampler_name": "Merge",
+                    "target": "minecraft:main"
+                }
+            ],
+            "output": "a"
+        },
+        {
+            "program": "minecraft:post/blit",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "a"
+                }
+            ],
+            "output": "minecraft:main"
+        }
+    ]
+}
