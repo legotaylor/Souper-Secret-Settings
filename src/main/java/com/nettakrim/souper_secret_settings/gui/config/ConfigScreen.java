@@ -1,4 +1,4 @@
-package com.nettakrim.souper_secret_settings.gui;
+package com.nettakrim.souper_secret_settings.gui.config;
 
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import net.minecraft.client.gui.DrawContext;
@@ -7,7 +7,7 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
 
 public class ConfigScreen extends Screen {
-    protected ConfigScreen() {
+    public ConfigScreen() {
         super(Text.literal(""));
     }
 

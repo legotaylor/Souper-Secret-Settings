@@ -4,6 +4,7 @@ import com.mclegoman.luminance.client.data.ClientData;
 import com.mclegoman.luminance.client.shaders.Shaders;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
+import com.nettakrim.souper_secret_settings.gui.config.ConfigScreen;
 import com.nettakrim.souper_secret_settings.gui.layers.LayerScreen;
 import com.nettakrim.souper_secret_settings.gui.parameters.ParameterScreen;
 import com.nettakrim.souper_secret_settings.gui.shaders.ShaderScreen;
