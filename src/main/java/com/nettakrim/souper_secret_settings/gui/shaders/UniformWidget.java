@@ -8,7 +8,6 @@ import com.mclegoman.luminance.client.shaders.uniforms.config.MapConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
 import com.mclegoman.luminance.common.util.Couple;
 import com.nettakrim.souper_secret_settings.actions.UniformChangeAction;
-import com.nettakrim.souper_secret_settings.gui.ConfigWidget;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.DisplayWidget;
 import com.nettakrim.souper_secret_settings.shaders.PassData;

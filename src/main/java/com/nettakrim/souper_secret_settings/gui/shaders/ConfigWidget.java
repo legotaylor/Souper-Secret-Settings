@@ -1,9 +1,11 @@
-package com.nettakrim.souper_secret_settings.gui;
+package com.nettakrim.souper_secret_settings.gui.shaders;
 
 import com.mclegoman.luminance.client.shaders.overrides.OverrideConfig;
 import com.mclegoman.luminance.client.shaders.overrides.OverrideSource;
 import com.mclegoman.luminance.client.shaders.uniforms.config.MapConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
+import com.nettakrim.souper_secret_settings.gui.ListScreen;
+import com.nettakrim.souper_secret_settings.gui.ParameterTextWidget;
 import com.nettakrim.souper_secret_settings.shaders.ParameterOverrideSource;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import net.minecraft.client.gui.DrawContext;

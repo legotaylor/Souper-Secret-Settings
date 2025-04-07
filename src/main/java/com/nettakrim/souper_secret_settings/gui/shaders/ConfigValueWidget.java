@@ -1,6 +1,8 @@
-package com.nettakrim.souper_secret_settings.gui;
+package com.nettakrim.souper_secret_settings.gui.shaders;
 
 import com.mclegoman.luminance.client.data.ClientData;
+import com.nettakrim.souper_secret_settings.gui.ListScreen;
+import com.nettakrim.souper_secret_settings.gui.SuggestionTextFieldWidget;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.text.Text;
