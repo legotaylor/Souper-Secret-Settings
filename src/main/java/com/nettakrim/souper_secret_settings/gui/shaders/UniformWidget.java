@@ -90,7 +90,7 @@ public class UniformWidget extends DisplayWidget<Couple<UniformData<String>,Unif
             //allow dragging luminance_alpha_smooth to replace it with its current value
             if (expanded) {
                 ConfigWidget configWidget = ((ConfigWidget)children.get(i));
-                if (configWidget.getText().equals("luminance_alpha_smooth")) {
+                if (configWidget.getText().startsWith("luminance_alpha")) {
                     configWidget.dragValue = display.get(i);
                 }
             }
