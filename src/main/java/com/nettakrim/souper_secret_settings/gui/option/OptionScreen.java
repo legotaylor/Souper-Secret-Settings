@@ -2,6 +2,7 @@ package com.nettakrim.souper_secret_settings.gui.option;
 
 import com.mclegoman.luminance.client.data.ClientData;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
+import com.nettakrim.souper_secret_settings.actions.Actions;
 import com.nettakrim.souper_secret_settings.gui.*;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ClickableWidget;
@@ -56,10 +57,26 @@ public class OptionScreen extends ScrollScreen {
                 (x, width) -> new SuggestionTextFieldWidget(x, width, 20, blank, false))
         );
         widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, Text.literal("Duration"),
-                (x, width) -> new DraggableTextFieldWidget(x, width, 20, blank))
+                (x, width) -> {
+                    SuggestionTextFieldWidget widget = new SuggestionTextFieldWidget(x, width, 20, blank, true);
+                    widget.setText(Integer.toString(SouperSecretSettingsClient.soupData.config.randomDuration));
+                    widget.setListeners(() -> List.of("0"), null, false);
+                    widget.setChangedListener((value) -> {try {SouperSecretSettingsClient.soupData.config.randomDuration = Integer.parseInt(value);} catch (Exception ignored) {}});
+                    widget.round = true;
+                    widget.min = 0;
+                    return widget;
+                })
         );
         widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, Text.literal("Count"),
-                (x, width) -> new DraggableTextFieldWidget(x, width, 20, blank))
+                (x, width) -> {
+                    SuggestionTextFieldWidget widget = new SuggestionTextFieldWidget(x, width, 20, blank, true);
+                    widget.setText(Integer.toString(SouperSecretSettingsClient.soupData.config.randomCount));
+                    widget.setListeners(() -> List.of("1"), null, false);
+                    widget.setChangedListener((value) -> {try {SouperSecretSettingsClient.soupData.config.randomCount = Integer.parseInt(value);} catch (Exception ignored) {}});
+                    widget.round = true;
+                    widget.min = 1;
+                    return widget;
+                })
         );
 
         widgets.add(new TextWidget(SoupGui.listX, 0, widgetWidth, 8, Text.literal("Other Options"), ClientData.minecraft.textRenderer));
@@ -68,7 +85,16 @@ public class OptionScreen extends ScrollScreen {
                 () -> SouperSecretSettingsClient.translate("option.warning."+(SouperSecretSettingsClient.soupData.config.warning ? "on" : "off")))
         );
         widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, Text.literal("Undo Limit"),
-                (x, width) -> new DraggableTextFieldWidget(x, width, 20, blank))
+                (x, width) -> {
+                    SuggestionTextFieldWidget widget = new SuggestionTextFieldWidget(x, width, 20, blank, true);
+                    widget.setText(Integer.toString(SouperSecretSettingsClient.soupData.config.undoLimit));
+                    widget.setListeners(() -> List.of(Integer.toString(Actions.defaultLength)), null, false);
+                    widget.setChangedListener((value) -> {try {SouperSecretSettingsClient.soupData.config.undoLimit = Integer.parseInt(value);} catch (Exception ignored) {}});
+
+                    widget.round = true;
+                    widget.min = 16;
+                    return widget;
+                })
         );
 
         int height = -2;
