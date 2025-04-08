@@ -25,14 +25,14 @@ public class ListAdditionScreen<V> extends ScrollScreen {
 
     @Override
     protected void init() {
-        addDrawableChild(ButtonWidget.builder(Text.translatable("gui.back"), (widget) -> close()).dimensions(SoupGui.listGap, SoupGui.listGap, ListScreen.listWidth+ListScreen.scrollWidth, 20).build());
+        addDrawableChild(ButtonWidget.builder(Text.translatable("gui.back"), (widget) -> close()).dimensions(SoupGui.listGap, SoupGui.listGap, SoupGui.listWidth+SoupGui.scrollWidth, 20).build());
 
         createScrollWidget(20+SoupGui.listGap*2);
 
         additions = new ArrayList<>();
 
         for (String addition : listScreen.getAdditions()) {
-            AdditionButton additionButton = new AdditionButton(addition, listScreen.getAdditionText(addition), ListScreen.listX, ListScreen.listWidth, 20, this::add);
+            AdditionButton additionButton = new AdditionButton(addition, listScreen.getAdditionText(addition), SoupGui.listX, SoupGui.listWidth, 20, this::add);
             if (listScreen.canRemoveAddition(addition)) {
                 additionButton.addRemoveListener(this::removeAddition);
             }

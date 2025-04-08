@@ -2,6 +2,7 @@ package com.nettakrim.souper_secret_settings.gui.parameters;
 
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.ListWidget;
+import com.nettakrim.souper_secret_settings.gui.SoupGui;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import com.nettakrim.souper_secret_settings.shaders.calculations.Calculations;
 import com.nettakrim.souper_secret_settings.shaders.calculations.Calculation;
@@ -25,7 +26,7 @@ public class ParameterScreen extends ListScreen<Calculation> {
 
     @Override
     protected ListWidget createListWidget(Calculation value) {
-        return new CalculationListWidget(value, layer, this, listX, listWidth);
+        return new CalculationListWidget(value, layer, this, SoupGui.listX, SoupGui.listWidth);
     }
 
     @Override

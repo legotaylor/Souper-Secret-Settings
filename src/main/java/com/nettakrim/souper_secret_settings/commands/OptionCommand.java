@@ -244,7 +244,7 @@ public class OptionCommand {
     }
 
     public static int queryMessageFilter(int priority) {
-        SouperSecretSettingsClient.say("option.filter."+(SouperSecretSettingsClient.soupData.config.messageFilter), priority);
+        SouperSecretSettingsClient.say("option.filter."+SouperSecretSettingsClient.soupData.config.messageFilter, priority);
         return 1;
     }
 

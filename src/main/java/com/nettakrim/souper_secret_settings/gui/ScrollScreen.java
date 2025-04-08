@@ -12,7 +12,7 @@ public abstract class ScrollScreen extends Screen {
     }
 
     protected void createScrollWidget(int start) {
-        scrollWidget = new ScrollWidget(SoupGui.listGap, start, ListScreen.scrollWidth, height-start-SoupGui.listGap, Text.literal("scroll"), this::setScroll);
+        scrollWidget = new ScrollWidget(SoupGui.listGap, start, SoupGui.scrollWidth, height-start-SoupGui.listGap, Text.literal("scroll"), this::setScroll);
         addDrawableChild(scrollWidget);
     }
 
@@ -22,7 +22,7 @@ public abstract class ScrollScreen extends Screen {
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
 
-        context.enableScissor(ListScreen.listX, scrollWidget.getY(), width, height);
+        context.enableScissor(SoupGui.listX, scrollWidget.getY(), width, height);
         renderScrollables(context, mouseX, mouseY, delta);
         context.disableScissor();
     }

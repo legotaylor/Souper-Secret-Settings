@@ -24,11 +24,6 @@ public abstract class ListScreen<V> extends ScrollScreen {
     protected SuggestionTextFieldWidget suggestionTextFieldWidget;
     protected ButtonWidget suggestionScreenButton;
 
-    protected static final int listWidth = 150;
-    protected static final int listStart = SoupGui.headerHeight + SoupGui.listGap*2;
-    protected static final int scrollWidth = 6;
-    protected static final int listX = SoupGui.listGap*2+scrollWidth;
-
     protected int currentListSize;
 
     private final int scrollIndex;
@@ -47,7 +42,7 @@ public abstract class ListScreen<V> extends ScrollScreen {
             addDrawableChild(clickableWidget);
         }
 
-        createScrollWidget(listStart);
+        createScrollWidget(SoupGui.listStart);
 
         List<V> listValues = getListValues();
         listWidgets = new ArrayList<>(listValues.size());
@@ -57,16 +52,15 @@ public abstract class ListScreen<V> extends ScrollScreen {
             listWidgets.add(listWidget);
         }
 
-        suggestionTextFieldWidget = new SuggestionTextFieldWidget(listX, listWidth-22, 20, Text.literal("list addition"), false);
+        suggestionTextFieldWidget = new SuggestionTextFieldWidget(SoupGui.listX, SoupGui.listWidth-22, 20, Text.literal("list addition"), false);
         suggestionTextFieldWidget.setListeners(this::getAdditions, this::addAddition, matchIdentifiers());
         addDrawableChild(suggestionTextFieldWidget);
 
-        suggestionScreenButton = ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.addition"), (widget) -> enterAdditionScreen()).dimensions(listX+listWidth-20, 0, 20, 20).build();
+        suggestionScreenButton = ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.addition"), (widget) -> enterAdditionScreen()).dimensions(SoupGui.listX+SoupGui.listWidth-20, 0, 20, 20).build();
         addDrawableChild(suggestionScreenButton);
 
-        int scroll = SouperSecretSettingsClient.soupGui.currentScroll[scrollIndex];
         updateSpacing();
-        scrollWidget.offsetScroll(scroll);
+        scrollWidget.offsetScroll(SouperSecretSettingsClient.soupGui.currentScroll[scrollIndex]);
     }
 
     @Override
@@ -95,14 +89,14 @@ public abstract class ListScreen<V> extends ScrollScreen {
     }
 
     public void updateSpacing() {
-        currentListSize = listStart;
+        currentListSize = SoupGui.listStart;
         for (CollapseWidget collapseWidget : listWidgets) {
             collapseWidget.visible = true;
             collapseWidget.updateCollapse(currentListSize);
             currentListSize += collapseWidget.getCollapseHeight() + SoupGui.listGap;
         }
 
-        scrollWidget.setContentHeight(currentListSize-listStart + suggestionTextFieldWidget.getHeight());
+        scrollWidget.setContentHeight(currentListSize-SoupGui.listStart + suggestionTextFieldWidget.getHeight());
     }
 
     @Override

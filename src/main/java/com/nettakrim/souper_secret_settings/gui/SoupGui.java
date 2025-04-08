@@ -27,8 +27,13 @@ public class SoupGui {
 
     public final int[] currentScroll;
 
-    protected static final int listGap = 2;
-    protected static final int headerHeight = 42;
+    public static final int listGap = 2;
+    public static final int headerHeight = 42;
+    public static final int listWidth = 150;
+    public static final int listStart = headerHeight + listGap*2;
+    public static final int scrollWidth = 6;
+    public static final int listX = listGap*2+scrollWidth;
+    public static final int headerWidth = 214;
 
     private ScreenType currentScreenType = ScreenType.SHADERS;
     private Text currentHoverText;
@@ -39,7 +44,7 @@ public class SoupGui {
         header = new ArrayList<>();
 
         int x;
-        int mainWidth = 70;
+        int mainWidth = (headerWidth-listGap*2)/3;
         int smallWidth = 12;
 
         x = listGap;
@@ -67,6 +72,10 @@ public class SoupGui {
     }
 
     public Screen getScreen(ScreenType screenType, boolean openNew) {
+        if (currentScreenType == ScreenType.CONFIG) {
+            SouperSecretSettingsClient.soupData.saveConfig();
+        }
+
         currentScreenType = screenType;
         int index = screenType.ordinal();
 
@@ -78,7 +87,7 @@ public class SoupGui {
             case SHADERS -> new ShaderScreen(index, SouperSecretSettingsClient.soupRenderer.activeLayer, Shaders.getMainRegistryId());
             case MODIFIERS -> new ShaderScreen(index, SouperSecretSettingsClient.soupRenderer.activeLayer, SoupRenderer.modifierRegistry);
             case PARAMETERS -> new ParameterScreen(index, SouperSecretSettingsClient.soupRenderer.activeLayer);
-            case CONFIG -> new ConfigScreen();
+            case CONFIG -> new ConfigScreen(index);
         };
 
         for (int i = 0; i < ScreenType.values().length; i++) {

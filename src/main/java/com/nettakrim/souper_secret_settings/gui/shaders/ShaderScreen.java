@@ -6,6 +6,7 @@ import com.mclegoman.luminance.common.util.Couple;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.ListWidget;
+import com.nettakrim.souper_secret_settings.gui.SoupGui;
 import com.nettakrim.souper_secret_settings.shaders.OverrideManager;
 import com.nettakrim.souper_secret_settings.shaders.ShaderData;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
@@ -35,7 +36,7 @@ public class ShaderScreen extends ListScreen<ShaderData> {
 
     @Override
     protected ListWidget createListWidget(ShaderData value) {
-        return new ShaderWidget(layer, value, this, listX, listWidth);
+        return new ShaderWidget(layer, value, this, SoupGui.listX, SoupGui.listWidth);
     }
 
     @Override

@@ -118,7 +118,7 @@ public class SoupData {
     }
 
     public void saveConfig() {
-        SouperSecretSettingsClient.log("Saving Config");
+        saveChange = 0;
         writeToPath(Config.CODEC.encodeStart(JsonOps.INSTANCE, config).getOrThrow(), configDir.resolve("config.json"));
     }
 
@@ -138,7 +138,6 @@ public class SoupData {
     public void saveIfChanged() {
         if (saveChange > 0) {
             saveConfig();
-            saveChange = 0;
         }
     }
 

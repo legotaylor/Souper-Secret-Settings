@@ -21,7 +21,7 @@ public class LayerScreen extends ListScreen<ShaderLayer> {
 
     @Override
     protected ListWidget createListWidget(ShaderLayer value) {
-        return new LayerWidget(value, this, listX, listWidth);
+        return new LayerWidget(value, this, SoupGui.listX, SoupGui.listWidth);
     }
 
     @Override
