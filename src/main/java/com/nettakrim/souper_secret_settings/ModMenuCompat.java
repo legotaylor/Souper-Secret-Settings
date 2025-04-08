@@ -7,6 +7,6 @@ import com.terraformersmc.modmenu.api.ModMenuApi;
 public class ModMenuCompat implements ModMenuApi {
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        return parent -> SouperSecretSettingsClient.soupGui.getScreen(SoupGui.ScreenType.CONFIG, true);
+        return parent -> SouperSecretSettingsClient.soupGui.getScreen(SoupGui.ScreenType.OPTION, true);
     }
 }

@@ -1,4 +1,4 @@
-package com.nettakrim.souper_secret_settings.gui.config;
+package com.nettakrim.souper_secret_settings.gui.option;
 
 import com.mclegoman.luminance.client.data.ClientData;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
@@ -11,12 +11,12 @@ import net.minecraft.text.Text;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConfigScreen extends ScrollScreen {
+public class OptionScreen extends ScrollScreen {
     public final List<ClickableWidget> widgets = new ArrayList<>();
 
     private final int scrollIndex;
 
-    public ConfigScreen(int scrollIndex) {
+    public OptionScreen(int scrollIndex) {
         super(Text.literal(""));
         this.scrollIndex = scrollIndex;
     }
@@ -71,18 +71,18 @@ public class ConfigScreen extends ScrollScreen {
                 (x, width) -> new DraggableTextFieldWidget(x, width, 20, blank))
         );
 
-        int height = 0;
-        for (ClickableWidget clickableWidget : widgets) {
-            if (clickableWidget instanceof TextWidget) {
-                height += 3;
+        int height = -2;
+        for (ClickableWidget widget : widgets) {
+            if (widget instanceof TextWidget) {
+                height += 5;
             }
 
-            if (clickableWidget instanceof LabelledWidget labelledWidget) {
+            if (widget instanceof LabelledWidget labelledWidget) {
                 addSelectableChild(labelledWidget.widget);
             } else {
-                addSelectableChild(clickableWidget);
+                addSelectableChild(widget);
             }
-            height += clickableWidget.getHeight() + SoupGui.listGap;
+            height += widget.getHeight() + SoupGui.listGap;
         }
         scrollWidget.setContentHeight(height - SoupGui.listGap);
 
@@ -91,9 +91,13 @@ public class ConfigScreen extends ScrollScreen {
 
     @Override
     public void setScroll(int scroll) {
-        int y = (SoupGui.headerHeight - scroll) + SoupGui.listGap*2;
+        int y = (SoupGui.headerHeight - scroll) + SoupGui.listGap*2 - 2;
 
         for (ClickableWidget widget : widgets) {
+            if (widget instanceof TextWidget) {
+                y += 5;
+            }
+
             widget.setY(y);
             y += widget.getHeight() + SoupGui.listGap;
         }

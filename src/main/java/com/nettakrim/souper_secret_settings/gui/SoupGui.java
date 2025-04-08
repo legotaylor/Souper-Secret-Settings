@@ -4,7 +4,7 @@ import com.mclegoman.luminance.client.data.ClientData;
 import com.mclegoman.luminance.client.shaders.Shaders;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
-import com.nettakrim.souper_secret_settings.gui.config.ConfigScreen;
+import com.nettakrim.souper_secret_settings.gui.option.OptionScreen;
 import com.nettakrim.souper_secret_settings.gui.layers.LayerScreen;
 import com.nettakrim.souper_secret_settings.gui.parameters.ParameterScreen;
 import com.nettakrim.souper_secret_settings.gui.shaders.ShaderScreen;
@@ -52,7 +52,7 @@ public class SoupGui {
         x += addHeaderButton(new HoverButtonWidget(x, listGap, smallWidth, 20, SouperSecretSettingsClient.translate("gui.undo"), null, (widget) -> undo()));
         x += addHeaderButton(new HoverButtonWidget(x, listGap, smallWidth, 20, SouperSecretSettingsClient.translate("gui.redo"), null, (widget) -> redo()));
         x += addHeaderButton(ButtonWidget.builder(SouperSecretSettingsClient.soupRenderer.getRenderTypeText(), SouperSecretSettingsClient.soupRenderer::cycleRenderType).dimensions(x, listGap, smallWidth, 20).build());
-             addHeaderButton(ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.config"), (widget) -> open(ScreenType.CONFIG, false)).dimensions(x, listGap, smallWidth, 20).build());
+             addHeaderButton(ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.config"), (widget) -> open(ScreenType.OPTION, false)).dimensions(x, listGap, smallWidth, 20).build());
 
         x = listGap;
         x += addHeaderButton(ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.shaders"),    (widget) -> open(ScreenType.SHADERS   , false)).dimensions(x, listGap*2 + 20, mainWidth, 20).build());
@@ -72,7 +72,7 @@ public class SoupGui {
     }
 
     public Screen getScreen(ScreenType screenType, boolean openNew) {
-        if (currentScreenType == ScreenType.CONFIG) {
+        if (currentScreenType == ScreenType.OPTION) {
             SouperSecretSettingsClient.soupData.saveConfig();
         }
 
@@ -87,7 +87,7 @@ public class SoupGui {
             case SHADERS -> new ShaderScreen(index, SouperSecretSettingsClient.soupRenderer.activeLayer, Shaders.getMainRegistryId());
             case MODIFIERS -> new ShaderScreen(index, SouperSecretSettingsClient.soupRenderer.activeLayer, SoupRenderer.modifierRegistry);
             case PARAMETERS -> new ParameterScreen(index, SouperSecretSettingsClient.soupRenderer.activeLayer);
-            case CONFIG -> new ConfigScreen(index);
+            case OPTION -> new OptionScreen(index);
         };
 
         for (int i = 0; i < ScreenType.values().length; i++) {
@@ -155,7 +155,7 @@ public class SoupGui {
         SHADERS,
         MODIFIERS,
         PARAMETERS,
-        CONFIG;
+        OPTION;
 
         @Override
         public String asString() {
