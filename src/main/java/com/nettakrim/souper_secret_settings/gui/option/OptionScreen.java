@@ -49,7 +49,7 @@ public class OptionScreen extends ScrollScreen {
 
         widgets.clear();
 
-        widgets.add(new TextWidget(SoupGui.listX, 0, widgetWidth, 8, Text.literal("Options"), ClientData.minecraft.textRenderer));
+        widgets.add(new TextWidget(SoupGui.listX, 0, widgetWidth, 8, SouperSecretSettingsClient.translate("option.gui.main"), ClientData.minecraft.textRenderer));
         widgets.add(new CycleWidget(SoupGui.listX, widgetWidth,
                 (direction) -> SouperSecretSettingsClient.soupData.config.disableState = CycleWidget.cycleInt(SouperSecretSettingsClient.soupData.config.disableState + direction, 2),
                 () -> SouperSecretSettingsClient.translate("option.toggle."+SouperSecretSettingsClient.soupData.config.disableState))
@@ -59,8 +59,8 @@ public class OptionScreen extends ScrollScreen {
                 () -> SouperSecretSettingsClient.translate("option.filter."+SouperSecretSettingsClient.soupData.config.messageFilter))
         );
 
-        widgets.add(new TextWidget(SoupGui.listX, 0, widgetWidth, 8, Text.literal("Eating Items"), ClientData.minecraft.textRenderer));
-        widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, Text.literal("Clear"),
+        widgets.add(new TextWidget(SoupGui.listX, 0, widgetWidth, 8, SouperSecretSettingsClient.translate("option.gui.eating"), ClientData.minecraft.textRenderer));
+        widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, SouperSecretSettingsClient.translate("option.gui.clear"),
                 (x, width) -> {
                     SuggestionTextFieldWidget widget = new SuggestionTextFieldWidget(x, width, 20, blank, false);
                     widget.setMaxLengthMin(1024);
@@ -71,7 +71,7 @@ public class OptionScreen extends ScrollScreen {
                     return widget;
                 })
         );
-        widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, Text.literal("Random"),
+        widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, SouperSecretSettingsClient.translate("option.gui.random"),
                 (x, width) -> {
                     SuggestionTextFieldWidget widget = new SuggestionTextFieldWidget(x, width, 20, blank, false);
                     widget.setMaxLengthMin(1024);
@@ -82,7 +82,7 @@ public class OptionScreen extends ScrollScreen {
                     return widget;
                 })
         );
-        widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, Text.literal("Shader"),
+        widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, SouperSecretSettingsClient.translate("option.gui.shader"),
                 (x, width) -> {
                     SuggestionTextFieldWidget widget = new SuggestionTextFieldWidget(x, width, 20, blank, false);
                     widget.setText(SouperSecretSettingsClient.soupData.config.randomShader);
@@ -92,18 +92,7 @@ public class OptionScreen extends ScrollScreen {
                     return widget;
                 })
         );
-        widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, Text.literal("Duration"),
-                (x, width) -> {
-                    SuggestionTextFieldWidget widget = new SuggestionTextFieldWidget(x, width, 20, blank, true);
-                    widget.setText(Integer.toString(SouperSecretSettingsClient.soupData.config.randomDuration));
-                    widget.setListeners(() -> List.of("0"), null, false);
-                    widget.setChangedListener((value) -> {try {SouperSecretSettingsClient.soupData.config.randomDuration = Integer.parseInt(value);} catch (Exception ignored) {}});
-                    widget.round = true;
-                    widget.min = 0;
-                    return widget;
-                })
-        );
-        widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, Text.literal("Count"),
+        widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, SouperSecretSettingsClient.translate("option.gui.count"),
                 (x, width) -> {
                     SuggestionTextFieldWidget widget = new SuggestionTextFieldWidget(x, width, 20, blank, true);
                     widget.setText(Integer.toString(SouperSecretSettingsClient.soupData.config.randomCount));
@@ -114,13 +103,24 @@ public class OptionScreen extends ScrollScreen {
                     return widget;
                 })
         );
+        widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, SouperSecretSettingsClient.translate("option.gui.duration"),
+                (x, width) -> {
+                    SuggestionTextFieldWidget widget = new SuggestionTextFieldWidget(x, width, 20, blank, true);
+                    widget.setText(Integer.toString(SouperSecretSettingsClient.soupData.config.randomDuration));
+                    widget.setListeners(() -> List.of("0"), null, false);
+                    widget.setChangedListener((value) -> {try {SouperSecretSettingsClient.soupData.config.randomDuration = Integer.parseInt(value);} catch (Exception ignored) {}});
+                    widget.round = true;
+                    widget.min = 0;
+                    return widget;
+                })
+        );
 
-        widgets.add(new TextWidget(SoupGui.listX, 0, widgetWidth, 8, Text.literal("Other Options"), ClientData.minecraft.textRenderer));
+        widgets.add(new TextWidget(SoupGui.listX, 0, widgetWidth, 8, SouperSecretSettingsClient.translate("option.gui.misc"), ClientData.minecraft.textRenderer));
         widgets.add(new CycleWidget(SoupGui.listX, widgetWidth,
                 (direction) -> SouperSecretSettingsClient.soupData.config.warning = !SouperSecretSettingsClient.soupData.config.warning,
                 () -> SouperSecretSettingsClient.translate("option.warning."+(SouperSecretSettingsClient.soupData.config.warning ? "on" : "off")))
         );
-        widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, Text.literal("Undo Limit"),
+        widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, SouperSecretSettingsClient.translate("option.gui.undo_limit"),
                 (x, width) -> {
                     SuggestionTextFieldWidget widget = new SuggestionTextFieldWidget(x, width, 20, blank, true);
                     widget.setText(Integer.toString(SouperSecretSettingsClient.soupData.config.undoLimit));
