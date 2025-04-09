@@ -22,6 +22,8 @@ public class SuggestionTextFieldWidget extends DraggableTextFieldWidget {
 
     public boolean submitOnLostFocus = false;
 
+    public int maxLengthMin = 32;
+
     public SuggestionTextFieldWidget(int x, int width, int height, Text message, boolean resetOnEmpty) {
         super(x, width, height, message);
         super.setChangedListener(this::onChange);
@@ -60,7 +62,7 @@ public class SuggestionTextFieldWidget extends DraggableTextFieldWidget {
             previousSuggestion = null;
         }
 
-        int maxSuggestionLength = Math.max(length, 32);
+        int maxSuggestionLength = Math.max(length, maxLengthMin);
         for (String suggestion : suggestions) {
             if (suggestion.length() >= length && s.equals(suggestion.substring(0, length))) {
                 currentSuggestions.add(suggestion);
@@ -142,5 +144,10 @@ public class SuggestionTextFieldWidget extends DraggableTextFieldWidget {
         if (!focused && submitOnLostFocus) {
             onSubmit.accept(getText());
         }
+    }
+
+    public void setMaxLengthMin(int length) {
+        setMaxLength(length);
+        maxLengthMin = length;
     }
 }

@@ -1,21 +1,34 @@
 package com.nettakrim.souper_secret_settings.gui.option;
 
 import com.mclegoman.luminance.client.data.ClientData;
+import com.mclegoman.luminance.client.shaders.Shaders;
+import com.mojang.brigadier.StringReader;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.actions.Actions;
 import com.nettakrim.souper_secret_settings.gui.*;
+import com.nettakrim.souper_secret_settings.gui.shaders.ShaderScreen;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextWidget;
+import net.minecraft.command.argument.ItemStackArgument;
+import net.minecraft.command.argument.ItemStringReader;
+import net.minecraft.item.ItemStack;
+import net.minecraft.registry.BuiltinRegistries;
+import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 public class OptionScreen extends ScrollScreen {
     public final List<ClickableWidget> widgets = new ArrayList<>();
 
     private final int scrollIndex;
+
+    private final String[] previousItems = new String[2];
+    private final CompletableFuture<?>[] itemFutures = new CompletableFuture[2];
 
     public OptionScreen(int scrollIndex) {
         super(Text.literal(""));
@@ -48,13 +61,36 @@ public class OptionScreen extends ScrollScreen {
 
         widgets.add(new TextWidget(SoupGui.listX, 0, widgetWidth, 8, Text.literal("Eating Items"), ClientData.minecraft.textRenderer));
         widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, Text.literal("Clear"),
-                (x, width) -> new SuggestionTextFieldWidget(x, width, 20, blank, false))
+                (x, width) -> {
+                    SuggestionTextFieldWidget widget = new SuggestionTextFieldWidget(x, width, 20, blank, false);
+                    widget.setMaxLengthMin(1024);
+                    CompletableFuture.runAsync(() -> widget.setText(itemStackToString(SouperSecretSettingsClient.soupData.config.clearItem)));
+                    widget.setListeners(this::getItemSuggestions, null, true);
+                    widget.setChangedListener(value -> getItemStack(value, 0, itemStack -> SouperSecretSettingsClient.soupData.config.clearItem = itemStack));
+                    widget.disableDrag = true;
+                    return widget;
+                })
         );
         widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, Text.literal("Random"),
-                (x, width) -> new SuggestionTextFieldWidget(x, width, 20, blank, false))
+                (x, width) -> {
+                    SuggestionTextFieldWidget widget = new SuggestionTextFieldWidget(x, width, 20, blank, false);
+                    widget.setMaxLengthMin(1024);
+                    CompletableFuture.runAsync(() -> widget.setText(itemStackToString(SouperSecretSettingsClient.soupData.config.randomItem)));
+                    widget.setListeners(this::getItemSuggestions, null, true);
+                    widget.setChangedListener(value -> getItemStack(value, 1, itemStack -> SouperSecretSettingsClient.soupData.config.randomItem = itemStack));
+                    widget.disableDrag = true;
+                    return widget;
+                })
         );
         widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, Text.literal("Shader"),
-                (x, width) -> new SuggestionTextFieldWidget(x, width, 20, blank, false))
+                (x, width) -> {
+                    SuggestionTextFieldWidget widget = new SuggestionTextFieldWidget(x, width, 20, blank, false);
+                    widget.setText(SouperSecretSettingsClient.soupData.config.randomShader);
+                    widget.setListeners(() -> ShaderScreen.calculateAdditions(Shaders.getMainRegistryId()), null, true);
+                    widget.setChangedListener((value) -> SouperSecretSettingsClient.soupData.config.randomShader = value);
+                    widget.disableDrag = true;
+                    return widget;
+                })
         );
         widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, Text.literal("Duration"),
                 (x, width) -> {
@@ -90,7 +126,6 @@ public class OptionScreen extends ScrollScreen {
                     widget.setText(Integer.toString(SouperSecretSettingsClient.soupData.config.undoLimit));
                     widget.setListeners(() -> List.of(Integer.toString(Actions.defaultLength)), null, false);
                     widget.setChangedListener((value) -> {try {SouperSecretSettingsClient.soupData.config.undoLimit = Integer.parseInt(value);} catch (Exception ignored) {}});
-
                     widget.round = true;
                     widget.min = 16;
                     return widget;
@@ -147,5 +182,36 @@ public class OptionScreen extends ScrollScreen {
     @Override
     public void close() {
         SouperSecretSettingsClient.soupGui.onClose();
+    }
+
+    private List<String> getItemSuggestions() {
+        List<String> items = new ArrayList<>(Registries.ITEM.size());
+        Registries.ITEM.forEach((item) -> items.add(item.toString()));
+        return items;
+    }
+
+    private void getItemStack(String s, int index, Consumer<ItemStack> consumer) {
+        if (s.equals(previousItems[index])) {
+            return;
+        }
+        previousItems[index] = s;
+
+        if (itemFutures[index] != null) {
+            itemFutures[index].cancel(false);
+        }
+
+        itemFutures[index] = CompletableFuture.runAsync(() -> {
+            try {
+                StringReader stringReader = new StringReader(s);
+                ItemStringReader.ItemResult result = new ItemStringReader(BuiltinRegistries.createWrapperLookup()).consume(stringReader);
+                ItemStack itemStack = new ItemStack(result.item(), 1);
+                itemStack.applyUnvalidatedChanges(result.components());
+                consumer.accept(itemStack);
+            } catch (Exception ignored) {}
+        });
+    }
+
+    private String itemStackToString(ItemStack itemStack) {
+        return new ItemStackArgument(itemStack.getRegistryEntry(), itemStack.getComponentChanges()).asString(BuiltinRegistries.createWrapperLookup());
     }
 }
