@@ -60,17 +60,6 @@ public class OptionScreen extends ScrollScreen {
         );
 
         widgets.add(new TextWidget(SoupGui.listX, 0, widgetWidth, 8, SouperSecretSettingsClient.translate("option.gui.eating"), ClientData.minecraft.textRenderer));
-        widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, SouperSecretSettingsClient.translate("option.gui.clear"),
-                (x, width) -> {
-                    SuggestionTextFieldWidget widget = new SuggestionTextFieldWidget(x, width, 20, blank, false);
-                    widget.setMaxLengthMin(1024);
-                    CompletableFuture.runAsync(() -> widget.setText(itemStackToString(SouperSecretSettingsClient.soupData.config.clearItem)));
-                    widget.setListeners(this::getItemSuggestions, null, true);
-                    widget.setChangedListener(value -> getItemStack(value, 0, itemStack -> SouperSecretSettingsClient.soupData.config.clearItem = itemStack));
-                    widget.disableDrag = true;
-                    return widget;
-                })
-        );
         widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, SouperSecretSettingsClient.translate("option.gui.random"),
                 (x, width) -> {
                     SuggestionTextFieldWidget widget = new SuggestionTextFieldWidget(x, width, 20, blank, false);
@@ -111,6 +100,17 @@ public class OptionScreen extends ScrollScreen {
                     widget.setChangedListener((value) -> {try {SouperSecretSettingsClient.soupData.config.randomDuration = Integer.parseInt(value);} catch (Exception ignored) {}});
                     widget.round = true;
                     widget.min = 0;
+                    return widget;
+                })
+        );
+        widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, SouperSecretSettingsClient.translate("option.gui.clear"),
+                (x, width) -> {
+                    SuggestionTextFieldWidget widget = new SuggestionTextFieldWidget(x, width, 20, blank, false);
+                    widget.setMaxLengthMin(1024);
+                    CompletableFuture.runAsync(() -> widget.setText(itemStackToString(SouperSecretSettingsClient.soupData.config.clearItem)));
+                    widget.setListeners(this::getItemSuggestions, null, true);
+                    widget.setChangedListener(value -> getItemStack(value, 0, itemStack -> SouperSecretSettingsClient.soupData.config.clearItem = itemStack));
+                    widget.disableDrag = true;
                     return widget;
                 })
         );
