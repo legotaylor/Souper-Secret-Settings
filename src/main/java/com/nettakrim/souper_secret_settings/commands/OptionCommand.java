@@ -65,7 +65,7 @@ public class OptionCommand {
         LiteralCommandNode<FabricClientCommandSource> randomCountNode = ClientCommandManager
                 .literal("count")
                 .then(
-                        ClientCommandManager.argument("amount", IntegerArgumentType.integer(1))
+                        ClientCommandManager.argument("amount", IntegerArgumentType.integer(1, 256))
                                 .executes(context -> setRandomCount(IntegerArgumentType.getInteger(context, "amount")))
                 )
                 .executes(context -> queryRandomInfo(1))

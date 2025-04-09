@@ -83,7 +83,7 @@ public class OptionScreen extends ScrollScreen {
         );
         widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, SouperSecretSettingsClient.translate("option.gui.count"),
                 (x, width) -> {
-                    DraggableIntWidget widget = new DraggableIntWidget(x, width, 20, blank, 1, Integer.MAX_VALUE, 1, (value) -> SouperSecretSettingsClient.soupData.config.randomCount = value);
+                    DraggableIntWidget widget = new DraggableIntWidget(x, width, 20, blank, 1, 256, 1, (value) -> SouperSecretSettingsClient.soupData.config.randomCount = value);
                     widget.setText(Integer.toString(SouperSecretSettingsClient.soupData.config.randomCount));
                     return widget;
                 })
