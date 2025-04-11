@@ -7,15 +7,15 @@ import com.nettakrim.souper_secret_settings.shaders.Toggleable;
 import com.nettakrim.souper_secret_settings.shaders.calculations.Calculation;
 import net.minecraft.text.Text;
 
-public class CalculationListWidget extends ListWidget {
+public class ParameterWidget extends ListWidget {
     protected Calculation calculation;
 
-    public CalculationListWidget(Calculation calculation, ShaderLayer layer, ListScreen<?> listScreen, int x, int width) {
+    public ParameterWidget(Calculation calculation, ShaderLayer layer, ListScreen<?> listScreen, int x, int width) {
         super(x, width, Text.literal(calculation.getID()), listScreen);
 
-        CalculationDisplayWidget calculationDisplayWidget = new CalculationDisplayWidget(calculation, layer, Text.literal(""), x, width, listScreen);
-        children.add(calculationDisplayWidget);
-        listScreen.addSelectable(calculationDisplayWidget);
+        CalculationWidget calculationWidget = new CalculationWidget(calculation, layer, Text.literal(""), x, width, listScreen);
+        children.add(calculationWidget);
+        listScreen.addSelectable(calculationWidget);
 
         this.calculation = calculation;
     }
@@ -27,7 +27,7 @@ public class CalculationListWidget extends ListWidget {
 
     @Override
     protected void setExpanded(boolean to) {
-        ((CalculationDisplayWidget)children.getFirst()).setExpandedWithoutUpdate(to);
+        ((CalculationWidget)children.getFirst()).setExpandedWithoutUpdate(to);
         super.setExpanded(to);
     }
 

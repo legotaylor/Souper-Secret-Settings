@@ -15,13 +15,13 @@ import net.minecraft.text.Text;
 import java.util.Arrays;
 import java.util.List;
 
-public class CalculationDisplayWidget extends DisplayWidget<OverrideSource> {
+public class CalculationWidget extends DisplayWidget<OverrideSource> {
     public Calculation calculation;
     protected ShaderLayer layer;
 
     protected ParameterTextWidget[] outputs;
 
-    public CalculationDisplayWidget(Calculation calculation, ShaderLayer layer, Text name, int x, int width, ListScreen<?> listScreen) {
+    public CalculationWidget(Calculation calculation, ShaderLayer layer, Text name, int x, int width, ListScreen<?> listScreen) {
         super(calculation.inputs.length, name, x, width, listScreen);
         this.calculation = calculation;
         this.layer = layer;
