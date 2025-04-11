@@ -9,7 +9,7 @@ out vec4 fragColor;
 uniform mat2x2 Left;
 uniform mat2x2 Right;
 uniform ivec4 Bitshifts;
-uniform vec2 Start;
+uniform float Angle;
 uniform vec2 Range;
 uniform float luminance_alpha_smooth;
 
@@ -17,9 +17,9 @@ void main(){
     vec3 base = texture(InSampler, texCoord).rgb;
     
     ivec3 bits = ivec3(base*255.0);
-    vec2 r = Start;
-    vec2 g = Start;
-    vec2 b = Start;
+    vec2 r = vec2(cos(Angle*6.2831853071), sin(Angle*6.2831853071));
+    vec2 g = r;
+    vec2 b = r;
 
     for (int i = Bitshifts.x; i < Bitshifts.y; i++) {
         ivec3 layer = bits & (Bitshifts.z << i);
