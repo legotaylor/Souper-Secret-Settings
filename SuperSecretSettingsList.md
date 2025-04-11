@@ -82,6 +82,7 @@ All builtin resourcepacks should be enabled by default, but they may need to ena
 |                                    |                     | sorting         |
 |                                    |                     | split_tone      |
 |                                    |                     | stereogram      |
+|                                    |                     | stern           |
 |                                    |                     | suspicious      |
 |                                    |                     | temporal_blur   |
 |                                    |                     | texture_map     |
@@ -92,6 +93,7 @@ All builtin resourcepacks should be enabled by default, but they may need to ena
 |                                    |                     | voronoi         |
 |                                    |                     | walls           |
 |                                    |                     | washed_out      |
+|                                    |                     | watermelon      |
 |                                    |                     | windows         |
 |                                    |                     | xor             |
 |                                    |                     | zigzag          |

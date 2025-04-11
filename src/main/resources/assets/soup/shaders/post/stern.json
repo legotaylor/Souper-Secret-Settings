@@ -1,0 +1,18 @@
+{
+    "vertex": "minecraft:post/screenquad",
+    "fragment": "soup:post/stern",
+    "samplers": [
+        { "name": "InSampler" }
+    ],
+    "uniforms": [
+        { "name": "ProjMat",   "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+        { "name": "InSize",    "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
+        { "name": "OutSize",   "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
+        { "name": "Left",      "type": "matrix2x2", "count": 4,  "values": [ 1.0, 0.0,  1.0, 1.0 ] },
+        { "name": "Right",     "type": "matrix2x2", "count": 4,  "values": [ 0.0, 1.0, -1.0, 2.0 ] },
+        { "name": "Bitshifts", "type": "int",       "count": 4,  "values": [ 0, 8, 1, 0 ] },
+        { "name": "Start",     "type": "float",     "count": 2,  "values": [ 1.0, 2.0 ] },
+        { "name": "Range",     "type": "float",     "count": 2,  "values": [ -0.165, 1.5 ] },
+        { "name": "luminance_alpha_smooth",     "type": "float",     "count": 1,  "values": [ 1.0 ] }
+    ]
+}
