@@ -83,6 +83,7 @@ All builtin resourcepacks should be enabled by default, but they may need to ena
 |                                    |                     | split_tone      |
 |                                    |                     | stereogram      |
 |                                    |                     | stern           |
+|                                    |                     | stripe          |
 |                                    |                     | suspicious      |
 |                                    |                     | temporal_blur   |
 |                                    |                     | texture_map     |

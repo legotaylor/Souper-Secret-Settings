@@ -1,0 +1,88 @@
+{
+    "targets": {
+        "0": {},
+        "1": {},
+        "previous": {"persistent": true}
+    },
+    "passes": [
+        {
+            "program": "soup:post/mix",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "minecraft:main"
+                },
+                {
+                    "sampler_name": "Base",
+                    "target": "previous"
+                }
+            ],
+            "uniforms": [
+                {
+                    "name": "Amount",
+                    "values": [ 0.95, 0.95, 0.95 ]
+                }
+            ],
+            "output": "0"
+        },
+        {
+            "program": "minecraft:post/blit",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "0"
+                }
+            ],
+            "output": "previous"
+        },
+        {
+            "program": "soup:post/depth_line",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "0"
+                },
+                {
+                    "sampler_name": "Depth",
+                    "target": "minecraft:main",
+                    "use_depth_buffer": true
+                }
+            ],
+            "uniforms": [
+                {
+                    "name": "StartMatrix",
+                    "values": [ 0.1, 0.0, 0.0, 0.0 ]
+                },
+                {
+                    "name": "EndMatrix",
+                    "values": [ 0.0, 0.0, 0.0, 1.0 ]
+                }
+            ],
+            "output": "1"
+        },
+        {
+            "program": "luminance:post/merge",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "1"
+                },
+                {
+                    "sampler_name": "Merge",
+                    "target": "minecraft:main"
+                }
+            ],
+            "output": "0"
+        },
+        {
+            "program": "minecraft:post/blit",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "0"
+                }
+            ],
+            "output": "minecraft:main"
+        }
+    ]
+}

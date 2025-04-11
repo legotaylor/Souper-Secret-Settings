@@ -143,6 +143,8 @@
     "gui.luminance.shader.soup.stereogram.description": "",
     "gui.luminance.shader.soup.stern": "Stern",
     "gui.luminance.shader.soup.stern.description": "",
+    "gui.luminance.shader.soup.stripe": "Stripe",
+    "gui.luminance.shader.soup.stripe.description": "",
     "gui.luminance.shader.soup.suspicious": "Suspicious",
     "gui.luminance.shader.soup.suspicious.description": "",
     "gui.luminance.shader.soup.temporal_blur": "Temporal Blur",

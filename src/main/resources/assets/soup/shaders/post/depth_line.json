@@ -1,0 +1,20 @@
+{
+    "vertex": "minecraft:post/sobel",
+    "fragment": "soup:post/depth_line",
+    "samplers": [
+        { "name": "InSampler" },
+        { "name": "DepthSampler" }
+    ],
+    "uniforms": [
+        { "name": "ProjMat",     "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+        { "name": "InSize",      "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
+        { "name": "OutSize",     "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
+        { "name": "Pow",         "type": "float",     "count": 1,  "values": [ 64.0 ] },
+        { "name": "StartOffset", "type": "float",     "count": 2,  "values": [ 0.0, 0.0 ] },
+        { "name": "StartMatrix", "type": "matrix2x2", "count": 4,  "values": [ 0.0, 0.0, 0.0, 0.0 ] },
+        { "name": "EndOffset",   "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
+        { "name": "EndMatrix",   "type": "matrix2x2", "count": 4,  "values": [ 0.0, 0.0, 0.0, 0.0 ] },
+        { "name": "Wrapping",    "type": "float",     "count": 1,  "values": [ 0.0 ] },
+        { "name": "Mix",         "type": "float",     "count": 3,  "values": [ 1.0, 1.0, 1.0 ] }
+    ]
+}
