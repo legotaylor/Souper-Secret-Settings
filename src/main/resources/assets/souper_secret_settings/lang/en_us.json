@@ -30,6 +30,7 @@
     "souper_secret_settings.shader.info.none": "none",
     "souper_secret_settings.shader.warn_stacking": "More than %s shaders might cause a lot of lag!\n run again to confirm, or run \"/soup:option warning disable\" to disable this warning",
     "souper_secret_settings.shader.error.shader": "Shader index %s is higher than the maximum of %s",
+    "souper_secret_settings.shader.error.pass_id": "Pass type \"%s\" not found",
     "souper_secret_settings.shader.error.pass": "Pass index %s is higher than the maximum of %s",
     "souper_secret_settings.shader.error.uniform": "No uniform named \"%s\" exists",
     "souper_secret_settings.shader.error.name": "Invalid value name \"%s\"",
@@ -45,6 +46,10 @@
     "souper_secret_settings.parameter.error.index": "Parameter index %s is higher than the maximum of %s",
     "souper_secret_settings.parameter.error.input": "Input index %s is higher than the maximum of %s",
     "souper_secret_settings.parameter.error.output": "Output index %s is higher than the maximum of %s",
+
+    "souper_secret_settings.load.error.shader": "Error loading shader at index %s: ",
+    "souper_secret_settings.load.error.modifier": "Error loading modifier at index %s: ",
+    "souper_secret_settings.load.error.parameter": "Error loading parameter at index %s: ",
 
     "souper_secret_settings.option.warning.on": "Shader count warning enabled",
     "souper_secret_settings.option.warning.off": "Shader count warning disabled",
@@ -65,6 +70,7 @@
     "souper_secret_settings.option.filter.1": "Only important command feedback sent",
     "souper_secret_settings.option.filter.2": "No command feedback sent",
     "souper_secret_settings.option.undo_limit": "Up to %s actions can be undone",
+
     "souper_secret_settings.option.gui.main": "Main Options",
     "souper_secret_settings.option.gui.eating": "Eating",
     "souper_secret_settings.option.gui.misc": "Other Options",

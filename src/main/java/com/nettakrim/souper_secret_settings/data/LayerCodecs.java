@@ -18,11 +18,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>> modifiers, Optional<List<CalculationData>> calculations) implements DeletableCodec {
+public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>> modifiers, Optional<List<CalculationData>> parameters) implements DeletableCodec {
     public static final Codec<LayerCodecs> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             Shader.CODEC.listOf().optionalFieldOf("shaders").forGetter(LayerCodecs::shaders),
             Shader.CODEC.listOf().optionalFieldOf("modifiers").forGetter(LayerCodecs::modifiers),
-            CalculationData.CODEC.listOf().optionalFieldOf("calculations").forGetter(LayerCodecs::calculations)
+            CalculationData.CODEC.listOf().optionalFieldOf("parameters").forGetter(LayerCodecs::parameters)
     ).apply(instance, LayerCodecs::new));
 
     public static LayerCodecs from(ShaderLayer layer) {
@@ -39,24 +39,33 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
 
     public void apply(ShaderLayer layer) {
         if (shaders.isPresent()) {
+            loadingError = "load.error.shader";
+            loadingIndex = 0;
             for (Shader shader : shaders.get()) {
                 shader.apply(layer, Shaders.getMainRegistryId());
+                loadingIndex++;
             }
         }
         if (modifiers.isPresent()) {
+            loadingError = "load.error.modifier";
+            loadingIndex = 0;
             for (Shader shader : modifiers.get()) {
                 shader.apply(layer, SoupRenderer.modifierRegistry);
+                loadingIndex++;
             }
         }
-        if (calculations.isPresent()) {
-            for (CalculationData calculationData : calculations.get()) {
+        if (parameters.isPresent()) {
+            loadingError = "load.error.parameter";
+            loadingIndex = 0;
+            for (CalculationData calculationData : parameters.get()) {
                 calculationData.apply(layer);
+                loadingIndex++;
             }
         }
     }
 
     public boolean isEmpty() {
-        return shaders.isEmpty() && modifiers.isEmpty() && calculations.isEmpty();
+        return shaders.isEmpty() && modifiers.isEmpty() && parameters.isEmpty();
     }
 
     protected record Shader(String id, Optional<Map<String, List<Pass>>> passes, Boolean active) {
@@ -86,20 +95,29 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
         }
 
         public void apply(ShaderLayer layer, Identifier registry) {
-            List<ShaderData> shaderDatas = SouperSecretSettingsClient.soupRenderer.getShaderAdditions(registry, Identifier.of(id), 1, layer);
+            List<ShaderData> shaderDatas = SouperSecretSettingsClient.soupRenderer.getShaderAdditions(registry, Identifier.of(id), 1, layer, false);
             if (shaderDatas == null || shaderDatas.isEmpty()) {
-                SouperSecretSettingsClient.log("couldn't find shader", id, registry);
+                sayError("shader.missing", id);
                 return;
             }
             ShaderData shaderData = shaderDatas.getFirst();
-            passes.ifPresent(stringListMap -> shaderData.passDatas.forEach((identifier, passData) -> {
-                List<Pass> passList = stringListMap.get(identifier == null ? "default" : identifier.toString());
-                if (passList == null) {
+            passes.ifPresent(stringListMap -> stringListMap.forEach((name, passes) -> {
+                PassData passData = null;
+                Identifier identifier = Identifier.tryParse(name);
+                if (identifier != null) {
+                    passData = shaderData.passDatas.get(name.equals("default") ? null : identifier);
+                }
+                if (passData == null) {
+                    sayError("shader.error.pass_id", name);
                     return;
                 }
 
-                for (int i = 0; i < passList.size() && i < passData.overrides.size(); i++) {
-                    passList.get(i).apply(passData.overrides.get(i), passData.configs.get(i));
+                for (int i = 0; i < passes.size(); i++) {
+                    if (i >= passData.overrides.size()) {
+                        sayError("shader.error.pass", i, passData.overrides.size()-1);
+                        break;
+                    }
+                    passes.get(i).apply(passData.overrides.get(i), passData.configs.get(i));
                 }
             }));
             shaderData.active = active;
@@ -151,13 +169,13 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
                 return;
             }
 
-            overrides.forEach((uniform, override) -> {
-                Uniform uniformData = uniforms.get().get(uniform);
-                if (uniformData == null) {
-                    return;
+            uniforms.get().forEach((uniform, uniformData) -> {
+                UniformData<UniformOverride> override = overrides.get(uniform);
+                if (override != null) {
+                    uniformData.apply((LuminanceUniformOverride)override.value, (MapConfig)configs.get(uniform).value);
+                } else {
+                    sayError("shader.error.uniform", uniform);
                 }
-
-                uniformData.apply((LuminanceUniformOverride)override.value, (MapConfig)configs.get(uniform).value);
             });
         }
     }
@@ -173,7 +191,11 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
         }
 
         public void apply(LuminanceUniformOverride override, MapConfig config) {
-            for (int i = 0; i < override.overrideSources.size() && i < values().size(); i++) {
+            for (int i = 0; i < values().size(); i++) {
+                if (i >= override.overrideSources.size()) {
+                    sayError("shader.error.value", i, override.overrideSources.size()-1);
+                    break;
+                }
                 override.overrideSources.set(i, ParameterOverrideSource.parameterSourceFromString(values.get(i)));
             }
 
@@ -211,15 +233,23 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
         public void apply(ShaderLayer layer) {
             Calculation calculation = Calculations.createCalculation(id);
             if (calculation == null) {
-                SouperSecretSettingsClient.log("couldn't find calculation", id);
+                sayError("parameter.missing", id);
                 return;
             }
 
-            for (int i = 0; i < outputs.size() && i < calculation.outputs.length; i++) {
+            for (int i = 0; i < outputs.size(); i++) {
+                if (i >= calculation.outputs.length) {
+                    sayError("parameter.error.output", i, calculation.outputs.length-1);
+                    break;
+                }
                 calculation.outputs[i] = outputs().get(i);
             }
 
-            for (int i = 0; i < inputs.size() && i < calculation.inputs.length; i++) {
+            for (int i = 0; i < inputs.size(); i++) {
+                if (i >= calculation.inputs.length) {
+                    sayError("parameter.error.input", i, calculation.inputs.length-1);
+                    break;
+                }
                 calculation.inputs[i] = ParameterOverrideSource.parameterSourceFromString(inputs.get(i));
             }
 
@@ -227,5 +257,12 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
 
             layer.calculations.add(calculation);
         }
+    }
+
+    private static int loadingIndex;
+    private static String loadingError;
+
+    private static void sayError(String key, Object... args) {
+        SouperSecretSettingsClient.sayStyled(SouperSecretSettingsClient.translate(loadingError, loadingIndex).append(SouperSecretSettingsClient.translate(key, args)), 1);
     }
 }

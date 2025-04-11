@@ -120,7 +120,7 @@ public class SoupRenderer implements Runnables.WorldRender {
     }
 
     @Nullable
-    public List<ShaderData> getShaderAdditions(Identifier registry, Identifier id, int amount, ShaderLayer layer) {
+    public List<ShaderData> getShaderAdditions(Identifier registry, Identifier id, int amount, ShaderLayer layer, boolean log) {
         if (id.getNamespace().equals("minecraft") && id.getPath().startsWith("random")) {
             int i = id.getPath().indexOf("_");
             return getRandomShaders(layer, registry, i == -1 ? null : id.getPath().substring(i+1), amount);
@@ -128,7 +128,9 @@ public class SoupRenderer implements Runnables.WorldRender {
 
         ShaderRegistryEntry shaderRegistry = getRegistryEntry(registry, id);
         if (shaderRegistry == null) {
-            SouperSecretSettingsClient.say("shader.missing", 1, id);
+            if (log) {
+                SouperSecretSettingsClient.say("shader.missing", 1, id);
+            }
             return null;
         }
 

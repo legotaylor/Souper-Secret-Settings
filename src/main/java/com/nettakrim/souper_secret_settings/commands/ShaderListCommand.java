@@ -120,7 +120,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
     public int add(Identifier id, int amount, boolean force) {
         ShaderLayer layer = SouperSecretSettingsClient.soupRenderer.activeLayer;
 
-        List<ShaderData> shaders = SouperSecretSettingsClient.soupRenderer.getShaderAdditions(registry, id, amount, layer);
+        List<ShaderData> shaders = SouperSecretSettingsClient.soupRenderer.getShaderAdditions(registry, id, amount, layer, true);
         if (shaders == null) {
             return 0;
         }

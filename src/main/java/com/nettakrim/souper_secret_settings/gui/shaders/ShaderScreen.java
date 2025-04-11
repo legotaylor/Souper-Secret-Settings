@@ -79,7 +79,7 @@ public class ShaderScreen extends ListScreen<ShaderData> {
 
         Identifier identifier = Shaders.guessPostShader(addition);
         if (identifier != null) {
-            List<ShaderData> shader = SouperSecretSettingsClient.soupRenderer.getShaderAdditions(registry, identifier, 1, layer);
+            List<ShaderData> shader = SouperSecretSettingsClient.soupRenderer.getShaderAdditions(registry, identifier, 1, layer, true);
             if (shader != null) {
                 return shader.getFirst();
             }
