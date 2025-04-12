@@ -79,6 +79,7 @@
     "souper_secret_settings.option.gui.shader": "Shader",
     "souper_secret_settings.option.gui.count": "Count",
     "souper_secret_settings.option.gui.duration": "Duration",
+    "souper_secret_settings.option.gui.luminance": "Luminance Config",
     "souper_secret_settings.option.gui.undo_limit": "Undo Limit",
 
     "souper_secret_settings.resourcepack_soup": "Extra Soup",

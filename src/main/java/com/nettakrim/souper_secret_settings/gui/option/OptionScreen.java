@@ -1,13 +1,17 @@
 package com.nettakrim.souper_secret_settings.gui.option;
 
 import com.mclegoman.luminance.client.data.ClientData;
+import com.mclegoman.luminance.client.screen.config.ConfigScreen;
 import com.mclegoman.luminance.client.shaders.Shaders;
+import com.mclegoman.luminance.common.util.DateHelper;
 import com.mojang.brigadier.StringReader;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.actions.Actions;
 import com.nettakrim.souper_secret_settings.gui.*;
 import com.nettakrim.souper_secret_settings.gui.shaders.ShaderScreen;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.command.argument.ItemStackArgument;
@@ -108,6 +112,7 @@ public class OptionScreen extends ScrollScreen {
         );
 
         widgets.add(new TextWidget(SoupGui.listX, 0, widgetWidth, 8, SouperSecretSettingsClient.translate("option.gui.misc"), ClientData.minecraft.textRenderer));
+        widgets.add(ButtonWidget.builder(SouperSecretSettingsClient.translate("option.gui.luminance"), (buttonWidget) -> ClientData.minecraft.setScreen(new ConfigScreen(this, false, DateHelper.isPride()))).dimensions(SoupGui.listX, 0, widgetWidth, 20).build());
         widgets.add(new CycleWidget(SoupGui.listX, widgetWidth,
                 (direction) -> SouperSecretSettingsClient.soupData.config.warning = !SouperSecretSettingsClient.soupData.config.warning,
                 () -> SouperSecretSettingsClient.translate("option.warning."+(SouperSecretSettingsClient.soupData.config.warning ? "on" : "off")))
