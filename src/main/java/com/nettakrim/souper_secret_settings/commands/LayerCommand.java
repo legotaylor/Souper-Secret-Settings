@@ -1,6 +1,7 @@
 package com.nettakrim.souper_secret_settings.commands;
 
 import com.google.gson.JsonElement;
+import com.mclegoman.luminance.client.data.ClientData;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
@@ -16,7 +17,6 @@ import com.nettakrim.souper_secret_settings.data.LayerCodecs;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -138,7 +138,7 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
                         ClientCommandManager.literal("load")
                                 .then(
                                         ClientCommandManager.literal("clipboard")
-                                                .executes(context -> loadFromString(MinecraftClient.getInstance().keyboard.getClipboard()))
+                                                .executes(context -> loadFromString(ClientData.minecraft.keyboard.getClipboard()))
                                 )
                                 .then(
                                         ClientCommandManager.literal("text")
@@ -288,7 +288,7 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
 
     private int copyCodec(LayerCodecs layerCodec, String name, String key) {
         String text = LayerCodecs.CODEC.encodeStart(JsonOps.INSTANCE, layerCodec).getOrThrow().toString();
-        MinecraftClient.getInstance().keyboard.setClipboard(text);
+        ClientData.minecraft.keyboard.setClipboard(text);
         SouperSecretSettingsClient.say(key, 0, name, text.length());
         return 1;
     }
