@@ -90,9 +90,9 @@ public class SoupGui {
             case OPTION -> new OptionScreen(index);
         };
 
-        for (int i = 0; i < ScreenType.values().length; i++) {
-            ClickableWidget clickableWidget = header.get(i == 4 ? 4 : (i > 0 ? i+4 : i));
-            clickableWidget.active = index != i;
+        for (ScreenType type : ScreenType.values()) {
+            ClickableWidget clickableWidget = header.get(type.headerIndex);
+            clickableWidget.active = screenType.headerIndex != type.headerIndex;
             clickableWidget.setFocused(false);
         }
         updateActiveLayer();
@@ -151,11 +151,17 @@ public class SoupGui {
     }
 
     public enum ScreenType implements StringIdentifiable {
-        LAYERS,
-        SHADERS,
-        MODIFIERS,
-        PARAMETERS,
-        OPTION;
+        LAYERS(0),
+        SHADERS(5),
+        MODIFIERS(6),
+        PARAMETERS(7),
+        OPTION(4);
+
+        private final int headerIndex;
+
+        ScreenType(int headerIndex) {
+            this.headerIndex = headerIndex;
+        }
 
         @Override
         public String asString() {

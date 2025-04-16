@@ -110,7 +110,7 @@ public abstract class ListScreen<V> extends ScrollScreen {
         SouperSecretSettingsClient.soupGui.currentScroll[scrollIndex] = scroll;
     }
 
-    protected void addAddition(String addition) {
+    protected V addAddition(String addition) {
         V entry = tryGetAddition(addition);
         if (entry != null) {
             new ListAddAction<>(getListValues(), entry).addToHistory();
@@ -120,6 +120,7 @@ public abstract class ListScreen<V> extends ScrollScreen {
             updateSpacing();
         }
         suggestionTextFieldWidget.setText("");
+        return entry;
     }
 
     public List<String> getAdditions() {

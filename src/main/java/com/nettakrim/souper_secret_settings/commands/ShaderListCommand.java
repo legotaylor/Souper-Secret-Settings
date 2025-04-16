@@ -341,9 +341,9 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
                 }
             }
 
-            Map<String, List<ShaderRegistryEntry>> registryGroups = SouperSecretSettingsClient.soupRenderer.shaderGroups.get(registry);
+            Map<String, Group> registryGroups = SouperSecretSettingsClient.soupRenderer.shaderGroups.get(registry);
             if (registryGroups != null) {
-                registryGroups.forEach(((name, shaderRegistryEntries) -> builder.suggest("random_"+name, SouperSecretSettingsClient.translate("shader.group_suggestion", shaderRegistryEntries.size()))));
+                registryGroups.forEach(((name, shaderRegistryEntries) -> builder.suggest("random_"+name, SouperSecretSettingsClient.translate("shader.group_suggestion", shaderRegistryEntries.getComputed(registry).size()))));
             }
 
             return builder.buildFuture();

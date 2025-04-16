@@ -54,8 +54,11 @@ public class ListAdditionScreen<V> extends ScrollScreen {
             listScreen.listWidgets.removeLast();
         }
 
-        listScreen.addAddition(addition);
-        lastAddition = addition;
+        if (listScreen.addAddition(addition) == null) {
+            lastAddition = null;
+        } else {
+            lastAddition = addition;
+        }
 
         if (!listScreen.canPreview()) {
             close();
@@ -90,5 +93,11 @@ public class ListAdditionScreen<V> extends ScrollScreen {
         scrollWidget.setContentHeight(additions.size()*(20+SoupGui.listGap) - SoupGui.listGap);
 
         listScreen.removeAddition(button.addition);
+    }
+
+    @Override
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.render(context, mouseX, mouseY, delta);
+        SouperSecretSettingsClient.soupGui.drawCurrentHoverText(context, mouseX, mouseY);
     }
 }
