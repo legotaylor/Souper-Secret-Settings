@@ -7,11 +7,13 @@ import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.ListWidget;
 import com.nettakrim.souper_secret_settings.gui.SoupGui;
+import com.nettakrim.souper_secret_settings.gui.groups.GroupScreen;
 import com.nettakrim.souper_secret_settings.shaders.Group;
 import com.nettakrim.souper_secret_settings.shaders.OverrideManager;
 import com.nettakrim.souper_secret_settings.shaders.ShaderData;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -28,6 +30,12 @@ public class ShaderScreen extends ListScreen<ShaderData> {
         super(scrollIndex);
         this.layer = layer;
         this.registry = registry;
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        addDrawableChild(ButtonWidget.builder(Text.literal("???"), (widget) -> enterGroupScreen()).dimensions(SoupGui.listX+SoupGui.listWidth+SoupGui.listGap, SoupGui.headerHeight+SoupGui.listGap*2, 20, 20).build());
     }
 
     @Override
@@ -123,5 +131,10 @@ public class ShaderScreen extends ListScreen<ShaderData> {
     @Override
     protected boolean matchIdentifiers() {
         return true;
+    }
+
+    protected void enterGroupScreen() {
+        assert client != null;
+        client.setScreen(new GroupScreen(this));
     }
 }

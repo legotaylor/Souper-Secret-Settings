@@ -157,12 +157,6 @@ public class OptionScreen extends ScrollScreen {
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        super.render(context, mouseX, mouseY, delta);
-        SouperSecretSettingsClient.soupGui.drawCurrentHoverText(context, mouseX, mouseY);
-    }
-
-    @Override
     protected void renderScrollables(DrawContext context, int mouseX, int mouseY, float delta) {
         for (ClickableWidget widget : widgets) {
             widget.render(context, mouseX, mouseY, delta);

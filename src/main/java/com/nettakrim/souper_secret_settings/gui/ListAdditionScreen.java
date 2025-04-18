@@ -13,7 +13,7 @@ import java.util.List;
 public class ListAdditionScreen<V> extends ScrollScreen {
     public ListScreen<V> listScreen;
 
-    protected List<ClickableWidget> additions;
+    protected List<ClickableWidget> children;
 
     protected String lastAddition;
 
@@ -29,18 +29,18 @@ public class ListAdditionScreen<V> extends ScrollScreen {
 
         createScrollWidget(20+SoupGui.listGap*2);
 
-        additions = new ArrayList<>();
+        children = new ArrayList<>();
 
         for (String addition : listScreen.getAdditions()) {
             AdditionButton additionButton = new AdditionButton(addition, listScreen.getAdditionText(addition), SoupGui.listX, SoupGui.listWidth, 20, this::add);
             if (listScreen.canRemoveAddition(addition)) {
                 additionButton.addRemoveListener(this::removeAddition);
             }
-            additions.add(additionButton);
+            children.add(additionButton);
             addSelectableChild(additionButton);
         }
 
-        scrollWidget.setContentHeight(additions.size()*(20+SoupGui.listGap) - SoupGui.listGap);
+        scrollWidget.setContentHeight(children.size()*(20+SoupGui.listGap) - SoupGui.listGap);
     }
 
     protected void add(String addition) {
@@ -67,7 +67,7 @@ public class ListAdditionScreen<V> extends ScrollScreen {
 
     @Override
     public void renderScrollables(DrawContext context, int mouseX, int mouseY, float delta) {
-        for (Drawable drawable : additions) {
+        for (Drawable drawable : children) {
             drawable.render(context, mouseX, mouseY, delta);
         }
     }
@@ -75,7 +75,7 @@ public class ListAdditionScreen<V> extends ScrollScreen {
     @Override
     public void setScroll(int scroll) {
         int y = 20 + SoupGui.listGap*2 - scroll;
-        for (ClickableWidget widget : additions) {
+        for (ClickableWidget widget : children) {
             widget.setY(y);
             y += widget.getHeight()+SoupGui.listGap;
         }
@@ -89,8 +89,8 @@ public class ListAdditionScreen<V> extends ScrollScreen {
 
     protected void removeAddition(AdditionButton button) {
         remove(button);
-        additions.remove(button);
-        scrollWidget.setContentHeight(additions.size()*(20+SoupGui.listGap) - SoupGui.listGap);
+        children.remove(button);
+        scrollWidget.setContentHeight(children.size()*(20+SoupGui.listGap) - SoupGui.listGap);
 
         listScreen.removeAddition(button.addition);
     }

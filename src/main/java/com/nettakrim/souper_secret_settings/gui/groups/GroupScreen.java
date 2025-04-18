@@ -1,0 +1,109 @@
+package com.nettakrim.souper_secret_settings.gui.groups;
+
+import com.mclegoman.luminance.client.data.ClientData;
+import com.mclegoman.luminance.common.util.Couple;
+import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
+import com.nettakrim.souper_secret_settings.gui.AdditionButton;
+import com.nettakrim.souper_secret_settings.gui.ScrollScreen;
+import com.nettakrim.souper_secret_settings.gui.SoupGui;
+import com.nettakrim.souper_secret_settings.gui.shaders.ShaderScreen;
+import com.nettakrim.souper_secret_settings.shaders.Group;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.Drawable;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.text.Text;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+public class GroupScreen extends ScrollScreen {
+    protected final ShaderScreen shaderScreen;
+
+    protected List<ClickableWidget> children;
+
+    public GroupScreen(ShaderScreen shaderScreen) {
+        super(Text.empty());
+
+        this.shaderScreen = shaderScreen;
+    }
+
+    @Override
+    protected void init() {
+        addDrawableChild(ButtonWidget.builder(Text.translatable("gui.back"), (widget) -> close()).dimensions(SoupGui.listGap, SoupGui.listGap, SoupGui.listWidth+SoupGui.scrollWidth, 20).build());
+
+        createScrollWidget(20+SoupGui.listGap*2);
+
+        children = new ArrayList<>();
+
+        ButtonWidget create = ButtonWidget.builder(Text.literal("Create New Group"), this::createNew).dimensions(SoupGui.listX, 0, SoupGui.listWidth, 20).build();
+        addDrawableChild(create);
+        children.add(create);
+
+        getRegistryMap().forEach(this::createGroupButton);
+
+        scrollWidget.setContentHeight(children.size()*(20+SoupGui.listGap) - SoupGui.listGap);
+    }
+
+    @Override
+    public void setScroll(int scroll) {
+        int y = 20 + SoupGui.listGap*2 - scroll;
+        for (ClickableWidget widget : children) {
+            widget.setY(y);
+            y += widget.getHeight()+SoupGui.listGap;
+        }
+    }
+
+    @Override
+    protected void renderScrollables(DrawContext context, int mouseX, int mouseY, float delta) {
+        for (Drawable drawable : children) {
+            drawable.render(context, mouseX, mouseY, delta);
+        }
+    }
+
+    @Override
+    public void close() {
+        assert client != null;
+        client.setScreen(shaderScreen);
+    }
+
+    protected void createGroupButton(String name, Group group) {
+        AdditionButton groupButton = new AdditionButton(name, new Couple<>(Text.literal(name), SouperSecretSettingsClient.translate("shader.group_suggestion", group.getComputed(shaderScreen.registry).size())), SoupGui.listX, SoupGui.listWidth, 20, this::select);
+        groupButton.addRemoveListener(this::removeGroup);
+        children.add(groupButton);
+        addSelectableChild(groupButton);
+    }
+
+    protected void select(String name) {
+        ClientData.minecraft.setScreen(new GroupEditScreen(this, getRegistryMap().get(name), name));
+    }
+
+    protected void createNew(ButtonWidget button) {
+        Map<String, Group> map = getRegistryMap();
+
+        String name;
+        int i = 1;
+        do {
+            name = "group_"+i;
+        } while (map.containsKey(name));
+
+        Group group = new Group();
+        map.put(name, group);
+        createGroupButton(name, group);
+
+        select(name);
+    }
+
+    protected void removeGroup(AdditionButton button) {
+        remove(button);
+        children.remove(button);
+        scrollWidget.setContentHeight(children.size()*(20+SoupGui.listGap) - SoupGui.listGap);
+
+        getRegistryMap().remove(button.addition);
+    }
+
+    public Map<String, Group> getRegistryMap() {
+        return SouperSecretSettingsClient.soupRenderer.shaderGroups.get(shaderScreen.registry);
+    }
+}

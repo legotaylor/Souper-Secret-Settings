@@ -10,7 +10,7 @@ import net.minecraft.util.math.ColorHelper;
 import java.util.function.Consumer;
 
 public class AdditionButton extends HoverButtonWidget {
-    protected String addition;
+    public String addition;
     protected Consumer<AdditionButton> onRemove;
 
     protected boolean deleting;

@@ -52,7 +52,7 @@ public abstract class ListScreen<V> extends ScrollScreen {
             listWidgets.add(listWidget);
         }
 
-        suggestionTextFieldWidget = new SuggestionTextFieldWidget(SoupGui.listX, SoupGui.listWidth-22, 20, Text.literal("list addition"), false);
+        suggestionTextFieldWidget = new SuggestionTextFieldWidget(SoupGui.listX, SoupGui.listWidth-20-SoupGui.listGap, 20, Text.literal("list addition"), false);
         suggestionTextFieldWidget.setListeners(this::getAdditions, this::addAddition, matchIdentifiers());
         addDrawableChild(suggestionTextFieldWidget);
 
@@ -60,13 +60,9 @@ public abstract class ListScreen<V> extends ScrollScreen {
         addDrawableChild(suggestionScreenButton);
 
         updateSpacing();
-        scrollWidget.offsetScroll(SouperSecretSettingsClient.soupGui.currentScroll[scrollIndex]);
-    }
-
-    @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        super.render(context, mouseX, mouseY, delta);
-        SouperSecretSettingsClient.soupGui.drawCurrentHoverText(context, mouseX, mouseY);
+        if (scrollIndex >= 0) {
+            scrollWidget.offsetScroll(SouperSecretSettingsClient.soupGui.currentScroll[scrollIndex]);
+        }
     }
 
     @Override
@@ -107,13 +103,17 @@ public abstract class ListScreen<V> extends ScrollScreen {
 
         suggestionTextFieldWidget.setY(currentListSize - scroll);
         suggestionScreenButton.setY(suggestionTextFieldWidget.getY());
-        SouperSecretSettingsClient.soupGui.currentScroll[scrollIndex] = scroll;
+        if (scrollIndex >= 0) {
+            SouperSecretSettingsClient.soupGui.currentScroll[scrollIndex] = scroll;
+        }
     }
 
     protected V addAddition(String addition) {
         V entry = tryGetAddition(addition);
         if (entry != null) {
-            new ListAddAction<>(getListValues(), entry).addToHistory();
+            if (useHistory()) {
+                new ListAddAction<>(getListValues(), entry).addToHistory();
+            }
             ListWidget listWidget = createListWidget(entry);
             addEntry(listWidgets.size(), entry, listWidget);
             addSelectable(listWidget);
@@ -145,7 +145,9 @@ public abstract class ListScreen<V> extends ScrollScreen {
         int newIndex = MathHelper.clamp(index+direction, 0, listWidgets.size()-1);
 
         if (index != newIndex) {
-            new ListShiftAction<>(getListValues(), index, direction).addToHistory();
+            if (useHistory()) {
+                new ListShiftAction<>(getListValues(), index, direction).addToHistory();
+            }
 
             V entry = removeEntry(index, false);
             addEntry(newIndex, entry, listWidget);
@@ -156,7 +158,9 @@ public abstract class ListScreen<V> extends ScrollScreen {
 
     public void removeEntry(ListWidget listWidget) {
         int index = listWidgets.indexOf(listWidget);
-        new ListRemoveAction<>(getListValues(), index).addToHistory();
+        if (useHistory()) {
+            new ListRemoveAction<>(getListValues(), index).addToHistory();
+        }
 
         remove(listWidget);
         removeEntry(index, true);
@@ -205,5 +209,9 @@ public abstract class ListScreen<V> extends ScrollScreen {
     @Override
     public void close() {
         SouperSecretSettingsClient.soupGui.onClose();
+    }
+
+    protected boolean useHistory() {
+        return true;
     }
 }

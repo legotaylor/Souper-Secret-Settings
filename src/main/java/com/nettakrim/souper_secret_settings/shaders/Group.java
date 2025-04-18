@@ -7,7 +7,7 @@ import net.minecraft.util.Identifier;
 
 import java.util.*;
 
-public class Group implements Toggleable {
+public class Group {
     public List<String> entries;
 
     protected List<ShaderRegistryEntry> registryShaders;
@@ -46,7 +46,7 @@ public class Group implements Toggleable {
             if (id.startsWith("random_")) {
                 Group group = getGroup(registry, id);
                 if (group != null && group != this) {
-                    if (visited.contains(group) || hasRecursion(registry, next)) {
+                    if (visited.contains(group) || group.hasRecursion(registry, next)) {
                         return true;
                     }
                 }
@@ -61,6 +61,7 @@ public class Group implements Toggleable {
             needsUpdate = false;
 
             if (hasRecursion(registry, Set.of())) {
+                SouperSecretSettingsClient.log("group has recursion!");
                 computed = List.of();
                 return computed;
             }
@@ -110,15 +111,5 @@ public class Group implements Toggleable {
 
     public void requestUpdate() {
         needsUpdate = true;
-    }
-
-    @Override
-    public boolean isActive() {
-        return true;
-    }
-
-    @Override
-    public void setActive(boolean to) {
-
     }
 }

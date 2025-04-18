@@ -61,7 +61,9 @@ public abstract class ListWidget extends CollapseWidget {
     public void onRelease(double mouseX, double mouseY) {
         if (dragState == 1) {
             Toggleable toggleable = getToggleable();
-            new ToggleAction(toggleable).addToHistory();
+            if (listScreen.useHistory()) {
+                new ToggleAction(toggleable).addToHistory();
+            }
             toggleable.toggle();
         }
         if (dragState == -1 && mouseX < getX()+10 && mouseY > getY() && mouseY < getY()+getHeight()) {
