@@ -34,7 +34,7 @@ public class OptionScreen extends ScrollScreen {
     private final CompletableFuture<?>[] itemFutures = new CompletableFuture[2];
 
     public OptionScreen(int scrollIndex) {
-        super(Text.literal(""));
+        super(Text.empty());
         this.scrollIndex = scrollIndex;
     }
 
@@ -45,8 +45,6 @@ public class OptionScreen extends ScrollScreen {
         }
 
         createScrollWidget(SoupGui.listStart);
-
-        Text blank = Text.literal("");
 
         int widgetWidth = SoupGui.headerWidth - SoupGui.scrollWidth - SoupGui.listGap;
 
@@ -65,7 +63,7 @@ public class OptionScreen extends ScrollScreen {
         widgets.add(new TextWidget(SoupGui.listX, 0, widgetWidth, 8, SouperSecretSettingsClient.translate("option.gui.eating"), ClientData.minecraft.textRenderer));
         widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, SouperSecretSettingsClient.translate("option.gui.random"),
                 (x, width) -> {
-                    SuggestionTextFieldWidget widget = new SuggestionTextFieldWidget(x, width, 20, blank, false);
+                    SuggestionTextFieldWidget widget = new SuggestionTextFieldWidget(x, width, 20, Text.empty(), false);
                     widget.setMaxLengthMin(1024);
                     CompletableFuture.runAsync(() -> widget.setText(itemStackToString(SouperSecretSettingsClient.soupData.config.randomItem)));
                     widget.setListeners(this::getItemSuggestions, null, true);
@@ -76,7 +74,7 @@ public class OptionScreen extends ScrollScreen {
         );
         widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, SouperSecretSettingsClient.translate("option.gui.shader"),
                 (x, width) -> {
-                    SuggestionTextFieldWidget widget = new SuggestionTextFieldWidget(x, width, 20, blank, false);
+                    SuggestionTextFieldWidget widget = new SuggestionTextFieldWidget(x, width, 20, Text.empty(), false);
                     widget.setText(SouperSecretSettingsClient.soupData.config.randomShader);
                     widget.setListeners(() -> ShaderScreen.calculateAdditions(Shaders.getMainRegistryId()), null, true);
                     widget.setChangedListener((value) -> SouperSecretSettingsClient.soupData.config.randomShader = value);
@@ -86,21 +84,21 @@ public class OptionScreen extends ScrollScreen {
         );
         widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, SouperSecretSettingsClient.translate("option.gui.count"),
                 (x, width) -> {
-                    DraggableIntWidget widget = new DraggableIntWidget(x, width, 20, blank, 1, 256, 1, (value) -> SouperSecretSettingsClient.soupData.config.randomCount = value);
+                    DraggableIntWidget widget = new DraggableIntWidget(x, width, 20, Text.empty(), 1, 256, 1, (value) -> SouperSecretSettingsClient.soupData.config.randomCount = value);
                     widget.setText(Integer.toString(SouperSecretSettingsClient.soupData.config.randomCount));
                     return widget;
                 })
         );
         widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, SouperSecretSettingsClient.translate("option.gui.duration"),
                 (x, width) -> {
-                    DraggableIntWidget widget = new DraggableIntWidget(x, width, 20, blank, 0, Integer.MAX_VALUE, 0, (value) -> SouperSecretSettingsClient.soupData.config.randomDuration = value);
+                    DraggableIntWidget widget = new DraggableIntWidget(x, width, 20, Text.empty(), 0, Integer.MAX_VALUE, 0, (value) -> SouperSecretSettingsClient.soupData.config.randomDuration = value);
                     widget.setText(Integer.toString(SouperSecretSettingsClient.soupData.config.randomDuration));
                     return widget;
                 })
         );
         widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, SouperSecretSettingsClient.translate("option.gui.clear"),
                 (x, width) -> {
-                    SuggestionTextFieldWidget widget = new SuggestionTextFieldWidget(x, width, 20, blank, false);
+                    SuggestionTextFieldWidget widget = new SuggestionTextFieldWidget(x, width, 20, Text.empty(), false);
                     widget.setMaxLengthMin(1024);
                     CompletableFuture.runAsync(() -> widget.setText(itemStackToString(SouperSecretSettingsClient.soupData.config.clearItem)));
                     widget.setListeners(this::getItemSuggestions, null, true);
@@ -118,7 +116,7 @@ public class OptionScreen extends ScrollScreen {
         );
         widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, SouperSecretSettingsClient.translate("option.gui.undo_limit"),
                 (x, width) -> {
-                    DraggableIntWidget widget = new DraggableIntWidget(x, width, 20, blank, 16, Integer.MAX_VALUE, Actions.defaultLength, (value) -> SouperSecretSettingsClient.soupData.config.undoLimit = value);
+                    DraggableIntWidget widget = new DraggableIntWidget(x, width, 20, Text.empty(), 16, Integer.MAX_VALUE, Actions.defaultLength, (value) -> SouperSecretSettingsClient.soupData.config.undoLimit = value);
                     widget.setText(Integer.toString(SouperSecretSettingsClient.soupData.config.undoLimit));
                     return widget;
                 })

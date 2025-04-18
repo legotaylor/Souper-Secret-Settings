@@ -13,7 +13,7 @@ public class ParameterWidget extends ListWidget {
     public ParameterWidget(Calculation calculation, ShaderLayer layer, ListScreen<?> listScreen, int x, int width) {
         super(x, width, Text.literal(calculation.getID()), listScreen);
 
-        CalculationWidget calculationWidget = new CalculationWidget(calculation, layer, Text.literal(""), x, width, listScreen);
+        CalculationWidget calculationWidget = new CalculationWidget(calculation, layer, Text.empty(), x, width, listScreen);
         children.add(calculationWidget);
         listScreen.addSelectable(calculationWidget);
 

@@ -18,7 +18,7 @@ public class ListAdditionScreen<V> extends ScrollScreen {
     protected String lastAddition;
 
     protected ListAdditionScreen(ListScreen<V> listScreen) {
-        super(Text.literal(""));
+        super(Text.empty());
         this.listScreen = listScreen;
         this.lastAddition = null;
     }

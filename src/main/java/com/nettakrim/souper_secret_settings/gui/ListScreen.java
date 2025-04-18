@@ -31,7 +31,7 @@ public abstract class ListScreen<V> extends ScrollScreen {
     protected List<String> additions;
 
     protected ListScreen(int scrollIndex) {
-        super(Text.literal(""));
+        super(Text.empty());
         this.scrollIndex = scrollIndex;
         this.additions = null;
     }
