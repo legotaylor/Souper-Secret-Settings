@@ -72,7 +72,7 @@ public class GroupScreen extends ScrollScreen {
 
     protected void createGroupButton(String name, Group group) {
         Couple<Text, Text> text;
-        int recursionIndex = group.getRecursionIndex(shaderScreen.registry);
+        int recursionIndex = group.getStepAmounts(shaderScreen.registry).indexOf(null);
         if (recursionIndex >= 0) {
             text = new Couple<>(SouperSecretSettingsClient.translate("gui.group_error", name).setStyle(Style.EMPTY.withColor(0xFF1010)), SouperSecretSettingsClient.translate("gui.group_loop_index", recursionIndex));
         } else {

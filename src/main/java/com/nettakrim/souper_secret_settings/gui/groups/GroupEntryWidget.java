@@ -12,7 +12,7 @@ public class GroupEntryWidget extends ListWidget {
 
     protected String entry;
 
-    protected boolean error;
+    protected Integer delta;
 
     public GroupEntryWidget(int x, int width, GroupEditScreen groupEditScreen, String entry) {
         super(x, width, Text.literal(entry), groupEditScreen);
@@ -21,10 +21,10 @@ public class GroupEntryWidget extends ListWidget {
     }
 
     @Override
-    protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-        super.renderWidget(context, mouseX, mouseY, delta);
-        if (error && hovered) {
-            SouperSecretSettingsClient.soupGui.setHoverText(SouperSecretSettingsClient.translate("gui.group_loop"));
+    protected void renderWidget(DrawContext context, int mouseX, int mouseY, float tickDelta) {
+        super.renderWidget(context, mouseX, mouseY, tickDelta);
+        if (hovered) {
+            SouperSecretSettingsClient.soupGui.setHoverText(this.delta == null ? SouperSecretSettingsClient.translate("gui.group_loop") : SouperSecretSettingsClient.translate("gui.group_delta", this.delta >= 0 ? "+"+this.delta : this.delta));
         }
     }
 
@@ -61,20 +61,20 @@ public class GroupEntryWidget extends ListWidget {
     private void updateValue() {
         groupEditScreen.getListValues().set(groupEditScreen.getListWidgets().indexOf(this), entry);
         groupEditScreen.group.requestUpdate();
-        setError(error);
+        groupEditScreen.updateDeltas();
     }
 
     @Override
     public void onRemove() {
         super.onRemove();
         if (entry.startsWith("random_")) {
-            groupEditScreen.updateErrors();
+            groupEditScreen.updateDeltas();
         }
     }
 
-    public void setError(boolean error) {
-        this.error = error;
-        if (error) {
+    public void setDelta(Integer delta) {
+        this.delta = delta;
+        if (delta == null) {
             setMessage(SouperSecretSettingsClient.translate("gui.group_error", entry).setStyle(Style.EMPTY.withColor(0xFF1010)));
         } else {
             setMessage(Text.literal(entry));

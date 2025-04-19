@@ -20,26 +20,35 @@ public class Group {
         this.registryShaders = new ArrayList<>();
     }
 
-    public int getRecursionIndex(Identifier registry) {
-        Set<Group> next = Set.of(this);
+    public List<Integer> getStepAmounts(Identifier registry) {
+        int previous = 0;
+        List<Integer> steps = new ArrayList<>(entries.size());
+        Set<ShaderRegistryEntry> shadersSet = new HashSet<>(computed == null ? 16 : computed.size());
 
-        for (int i = 0; i < entries.size(); i++) {
-            String entry = entries.get(i);
+        for (String entry : entries) {
             String id = entry.substring(1);
             if (id.startsWith("random_")) {
                 Group group = getGroup(registry, id);
-                if (group != null && group != this && group.hasRecursion(registry, next)) {
-                    return i;
+                if (group != null && group != this && group.hasRecursion(registry, Set.of(this))) {
+                    steps.add(null);
+                    continue;
                 }
             }
+
+            computationStep(registry, shadersSet, entry);
+
+            int next = shadersSet.size();
+            steps.add(next-previous);
+            previous = next;
         }
 
-        return -1;
+        return steps;
     }
 
     protected boolean hasRecursion(Identifier registry, Set<Group> visited) {
         Set<Group> next = new HashSet<>(visited);
         next.add(this);
+
 
         for (String entry : entries) {
             String id = entry.substring(1);
@@ -67,37 +76,41 @@ public class Group {
 
             Set<ShaderRegistryEntry> shadersSet = new HashSet<>();
             for (String entry : entries) {
-                boolean remove = entry.charAt(0) == '-';
-                String id = entry.substring(1);
-                if (id.startsWith("random_")) {
-                    Group group = getGroup(registry, id);
-                    if (group != null) {
-                        List<ShaderRegistryEntry> groupRegistries;
-
-                        if (group == this) {
-                            groupRegistries = registryShaders;
-                        } else {
-                            groupRegistries = group.getComputed(registry);
-                        }
-
-                        if (remove) {
-                            groupRegistries.forEach(shadersSet::remove);
-                        } else {
-                            shadersSet.addAll(groupRegistries);
-                        }
-                    }
-                } else {
-                    ShaderRegistryEntry registryEntry = Shaders.get(registry, Shaders.guessPostShader(registry, id));
-                    if (remove) {
-                        shadersSet.remove(registryEntry);
-                    } else {
-                        shadersSet.add(registryEntry);
-                    }
-                }
+                computationStep(registry, shadersSet, entry);
             }
             computed = shadersSet.stream().toList();
         }
         return computed;
+    }
+
+    private void computationStep(Identifier registry, Set<ShaderRegistryEntry> shadersSet, String entry) {
+        boolean remove = entry.charAt(0) == '-';
+        String id = entry.substring(1);
+        if (id.startsWith("random_")) {
+            Group group = getGroup(registry, id);
+            if (group != null) {
+                List<ShaderRegistryEntry> groupRegistries;
+
+                if (group == this) {
+                    groupRegistries = registryShaders;
+                } else {
+                    groupRegistries = group.getComputed(registry);
+                }
+
+                if (remove) {
+                    groupRegistries.forEach(shadersSet::remove);
+                } else {
+                    shadersSet.addAll(groupRegistries);
+                }
+            }
+        } else {
+            ShaderRegistryEntry registryEntry = Shaders.get(registry, Shaders.guessPostShader(registry, id));
+            if (remove) {
+                shadersSet.remove(registryEntry);
+            } else {
+                shadersSet.add(registryEntry);
+            }
+        }
     }
 
     protected Group getGroup(Identifier registry, String randomID) {
