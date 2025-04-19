@@ -108,7 +108,7 @@ public class ShaderScreen extends ListScreen<ShaderData> {
     }
 
     @Override
-    protected Couple<Text,Text> getAdditionText(String addition) {
+    public Couple<Text,Text> getAdditionText(String addition) {
         if (addition.startsWith("random")) {
             if (addition.length() > 7) {
                 Map<String, Group> registryGroups = SouperSecretSettingsClient.soupRenderer.shaderGroups.get(registry);

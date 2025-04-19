@@ -1,6 +1,7 @@
 package com.nettakrim.souper_secret_settings.gui.groups;
 
 import com.mclegoman.luminance.client.data.ClientData;
+import com.mclegoman.luminance.common.util.Couple;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.ListWidget;
@@ -73,6 +74,11 @@ public class GroupEditScreen extends ListScreen<String> {
         }
 
         return "+"+addition;
+    }
+
+    @Override
+    protected Couple<Text, Text> getAdditionText(String addition) {
+        return groupScreen.shaderScreen.getAdditionText(addition);
     }
 
     @Override

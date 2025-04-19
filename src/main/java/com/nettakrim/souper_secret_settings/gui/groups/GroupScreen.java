@@ -65,6 +65,7 @@ public class GroupScreen extends ScrollScreen {
     @Override
     public void close() {
         assert client != null;
+        shaderScreen.recalculateAdditions();
         client.setScreen(shaderScreen);
     }
 
