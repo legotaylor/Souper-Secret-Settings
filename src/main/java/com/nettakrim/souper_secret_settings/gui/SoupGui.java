@@ -33,7 +33,8 @@ public class SoupGui {
     public static final int listStart = headerHeight + listGap*2;
     public static final int scrollWidth = 6;
     public static final int listX = listGap*2+scrollWidth;
-    public static final int headerWidth = 214;
+    public static final int headerWidthLarge = 214;
+    public static final int headerWidthSmall = listWidth+scrollWidth+listGap;
 
     private ScreenType currentScreenType = ScreenType.SHADERS;
     private Text currentHoverText;
@@ -44,7 +45,7 @@ public class SoupGui {
         header = new ArrayList<>();
 
         int x;
-        int mainWidth = (headerWidth-listGap*2)/3;
+        int mainWidth = (headerWidthLarge -listGap*2)/3;
         int smallWidth = 12;
 
         x = listGap;

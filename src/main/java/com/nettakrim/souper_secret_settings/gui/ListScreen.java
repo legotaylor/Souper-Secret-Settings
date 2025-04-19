@@ -38,11 +38,7 @@ public abstract class ListScreen<V> extends ScrollScreen {
 
     @Override
     protected void init() {
-        for (ClickableWidget clickableWidget : SouperSecretSettingsClient.soupGui.getHeader()) {
-            addDrawableChild(clickableWidget);
-        }
-
-        createScrollWidget(SoupGui.listStart);
+        createScrollWidget(createHeader());
 
         List<V> listValues = getListValues();
         listWidgets = new ArrayList<>(listValues.size());
@@ -70,6 +66,14 @@ public abstract class ListScreen<V> extends ScrollScreen {
         for (Drawable drawable : listWidgets) {
             drawable.render(context, mouseX, mouseY, delta);
         }
+    }
+
+    protected int createHeader() {
+        for (ClickableWidget clickableWidget : SouperSecretSettingsClient.soupGui.getHeader()) {
+            addDrawableChild(clickableWidget);
+        }
+
+        return SoupGui.listStart;
     }
 
     protected abstract List<V> getListValues();

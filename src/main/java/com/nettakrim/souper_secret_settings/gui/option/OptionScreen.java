@@ -46,7 +46,7 @@ public class OptionScreen extends ScrollScreen {
 
         createScrollWidget(SoupGui.listStart);
 
-        int widgetWidth = SoupGui.headerWidth - SoupGui.scrollWidth - SoupGui.listGap;
+        int widgetWidth = SoupGui.headerWidthLarge - SoupGui.scrollWidth - SoupGui.listGap;
 
         widgets.clear();
 

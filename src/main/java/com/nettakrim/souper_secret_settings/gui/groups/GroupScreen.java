@@ -31,24 +31,24 @@ public class GroupScreen extends ScrollScreen {
 
     @Override
     protected void init() {
-        addDrawableChild(ButtonWidget.builder(Text.translatable("gui.back"), (widget) -> close()).dimensions(SoupGui.listGap, SoupGui.listGap, SoupGui.listWidth+SoupGui.scrollWidth, 20).build());
+        addDrawableChild(ButtonWidget.builder(Text.translatable("gui.back"), (widget) -> close()).dimensions(SoupGui.listGap, SoupGui.listGap, SoupGui.headerWidthSmall, 20).build());
+        addDrawableChild(ButtonWidget.builder(Text.literal("Create New Group"), this::createNew).dimensions(SoupGui.listGap, SoupGui.listGap*2 + 20, SoupGui.headerWidthSmall, 20).build());
 
-        createScrollWidget(20+SoupGui.listGap*2);
+        createScrollWidget(SoupGui.listStart);
 
         children = new ArrayList<>();
 
-        ButtonWidget create = ButtonWidget.builder(Text.literal("Create New Group"), this::createNew).dimensions(SoupGui.listX, 0, SoupGui.listWidth, 20).build();
-        addDrawableChild(create);
-        children.add(create);
-
-        getRegistryMap().forEach(this::createGroupButton);
+        Map<String, Group> map = getRegistryMap();
+        for (String name : map.keySet().stream().sorted().toList()) {
+            createGroupButton(name, map.get(name));
+        }
 
         scrollWidget.setContentHeight(children.size()*(20+SoupGui.listGap) - SoupGui.listGap);
     }
 
     @Override
     public void setScroll(int scroll) {
-        int y = 20 + SoupGui.listGap*2 - scroll;
+        int y = SoupGui.listStart - scroll;
         for (ClickableWidget widget : children) {
             widget.setY(y);
             y += widget.getHeight()+SoupGui.listGap;
@@ -86,6 +86,7 @@ public class GroupScreen extends ScrollScreen {
         int i = 1;
         do {
             name = "group_"+i;
+            i++;
         } while (map.containsKey(name));
 
         Group group = new Group();
