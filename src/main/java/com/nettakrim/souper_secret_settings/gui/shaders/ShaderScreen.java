@@ -35,7 +35,7 @@ public class ShaderScreen extends ListScreen<ShaderData> {
     @Override
     protected void init() {
         super.init();
-        addDrawableChild(ButtonWidget.builder(Text.literal("???"), (widget) -> enterGroupScreen()).dimensions(SoupGui.listX+SoupGui.listWidth+SoupGui.listGap, SoupGui.headerHeight+SoupGui.listGap*2, 20, 20).build());
+        addDrawableChild(ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.groups"), (widget) -> enterGroupScreen()).dimensions(SoupGui.listX+SoupGui.listWidth+SoupGui.listGap, SoupGui.headerHeight+SoupGui.listGap*2, SoupGui.headerWidthLarge-SoupGui.headerWidthSmall-SoupGui.listGap, 20).build());
     }
 
     @Override

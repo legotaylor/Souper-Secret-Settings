@@ -99,6 +99,8 @@
     "souper_secret_settings.gui.confirm": "Confirm",
     "souper_secret_settings.gui.load": "Load",
     "souper_secret_settings.gui.unnamed": "<unnamed>",
+    "souper_secret_settings.gui.groups": "Groups",
+    "souper_secret_settings.gui.group_create": "Create New Group",
     "souper_secret_settings.gui.game": "\uD83D\uDCBB",
     "souper_secret_settings.gui.world": "\uD83C\uDF0E",
 

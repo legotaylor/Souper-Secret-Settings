@@ -32,7 +32,7 @@ public class GroupScreen extends ScrollScreen {
     @Override
     protected void init() {
         addDrawableChild(ButtonWidget.builder(Text.translatable("gui.back"), (widget) -> close()).dimensions(SoupGui.listGap, SoupGui.listGap, SoupGui.headerWidthSmall, 20).build());
-        addDrawableChild(ButtonWidget.builder(Text.literal("Create New Group"), this::createNew).dimensions(SoupGui.listGap, SoupGui.listGap*2 + 20, SoupGui.headerWidthSmall, 20).build());
+        addDrawableChild(ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.group_create"), this::createNew).dimensions(SoupGui.listGap, SoupGui.listGap*2 + 20, SoupGui.headerWidthSmall, 20).build());
 
         createScrollWidget(SoupGui.listStart);
 
