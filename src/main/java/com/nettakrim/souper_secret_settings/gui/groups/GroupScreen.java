@@ -12,6 +12,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
 import java.util.ArrayList;
@@ -70,7 +71,15 @@ public class GroupScreen extends ScrollScreen {
     }
 
     protected void createGroupButton(String name, Group group) {
-        AdditionButton groupButton = new AdditionButton(name, new Couple<>(Text.literal(name), SouperSecretSettingsClient.translate("shader.group_suggestion", group.getComputed(shaderScreen.registry).size())), SoupGui.listX, SoupGui.listWidth, 20, this::select);
+        Couple<Text, Text> text;
+        int recursionIndex = group.getRecursionIndex(shaderScreen.registry);
+        if (recursionIndex >= 0) {
+            text = new Couple<>(SouperSecretSettingsClient.translate("gui.group_error", name).setStyle(Style.EMPTY.withColor(0xFF1010)), SouperSecretSettingsClient.translate("gui.group_loop_index", recursionIndex));
+        } else {
+            text = new Couple<>(Text.literal(name), SouperSecretSettingsClient.translate("shader.group_suggestion", group.getComputed(shaderScreen.registry).size()));
+        }
+
+        AdditionButton groupButton = new AdditionButton(name, text, SoupGui.listX, SoupGui.listWidth, 20, this::select);
         groupButton.addRemoveListener(this::removeGroup);
         children.add(groupButton);
         addSelectableChild(groupButton);

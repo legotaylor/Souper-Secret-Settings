@@ -28,7 +28,7 @@ public class Group {
             String id = entry.substring(1);
             if (id.startsWith("random_")) {
                 Group group = getGroup(registry, id);
-                if (group != this && group.hasRecursion(registry, next)) {
+                if (group != null && group != this && group.hasRecursion(registry, next)) {
                     return i;
                 }
             }
@@ -61,7 +61,6 @@ public class Group {
             needsUpdate = false;
 
             if (hasRecursion(registry, Set.of())) {
-                SouperSecretSettingsClient.log("group has recursion!");
                 computed = List.of();
                 return computed;
             }

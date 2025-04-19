@@ -133,5 +133,18 @@ public class GroupEditScreen extends ListScreen<String> {
     public void updateSpacing() {
         super.updateSpacing();
         group.requestUpdate();
+        updateErrors();
+    }
+
+    public void updateErrors() {
+        int recursionIndex = group.getRecursionIndex(groupScreen.shaderScreen.registry);
+
+        for (ListWidget listWidget : listWidgets) {
+            ((GroupEntryWidget)listWidget).setError(false);
+        }
+
+        if (recursionIndex >= 0) {
+            ((GroupEntryWidget)listWidgets.get(recursionIndex)).setError(true);
+        }
     }
 }
