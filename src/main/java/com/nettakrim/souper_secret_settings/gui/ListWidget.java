@@ -20,6 +20,10 @@ public abstract class ListWidget extends CollapseWidget {
 
     protected int dragState;
 
+    public static int texColBlack = ColorHelper.fromFloats(0.5f, 0f, 0f, 0f);
+    public static int texColWhite = ColorHelper.fromFloats(0.5f, 1f, 1f, 1f);
+
+
     public ListWidget(int x, int width, Text message, ListScreen<?> listScreen) {
         super(x, width, message, listScreen);
     }
@@ -27,17 +31,15 @@ public abstract class ListWidget extends CollapseWidget {
     @Override
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
         float buttonColor = getToggleable().isActive() ? 1f : 0.5f;
-        float dragColor = dragState > 0 ? 1f : 0f;
-        float deleteColor = dragState < 0 ? 1f : 0f;
 
         context.drawGuiTexture(RenderLayer::getGuiTextured, TEXTURES.get(this.active, this.isSelected()), this.getX(), this.getY(), this.getWidth(), getCollapseHeight(), ColorHelper.fromFloats(this.alpha, buttonColor, buttonColor, buttonColor));
         drawScrollableText(context, ClientData.minecraft.textRenderer, this.getMessage(), this.getX()+2, this.getY(), this.getX()+this.getWidth()-2, getY()+getHeight(), (this.active ? 16777215 : 10526880) | MathHelper.ceil(this.alpha * 255.0F) << 24);
-        context.drawTexture(RenderLayer::getGuiTextured, ICON_TEXTURE, getX(), getY(), 0, 0, 10, 20, 40, 20, ColorHelper.fromFloats(0.5f, deleteColor, deleteColor, deleteColor));
-        context.drawTexture(RenderLayer::getGuiTextured, ICON_TEXTURE, getX()+getWidth()-10, getY(), 10, 0, 10, 20, 40, 20, ColorHelper.fromFloats(0.5f, dragColor, dragColor, dragColor));
+        context.drawTexture(RenderLayer::getGuiTextured, ICON_TEXTURE, getX(), getY(), 0, 0, 10, 20, 40, 20, dragState < 0 ? texColWhite : texColBlack);
+        context.drawTexture(RenderLayer::getGuiTextured, ICON_TEXTURE, getX()+getWidth()-10, getY(), 10, 0, 10, 20, 40, 20, dragState > 0 ? texColWhite : texColBlack);
 
         int editState = getEditState();
         if (editState > 0) {
-            context.drawTexture(RenderLayer::getGuiTextured, ICON_TEXTURE, getX()+getWidth()-20, getY(), 10 + 10*editState, 0, 10, 20, 40, 20, ColorHelper.fromFloats(0.5f, 0, 0, 0));
+            context.drawTexture(RenderLayer::getGuiTextured, ICON_TEXTURE, getX()+getWidth()-20, getY(), 10 + 10*editState, 0, 10, 20, 40, 20, texColBlack);
         }
 
         super.renderWidget(context, mouseX, mouseY, delta);

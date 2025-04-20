@@ -17,6 +17,8 @@ public class ListAdditionScreen<V> extends ScrollScreen {
 
     protected String lastAddition;
 
+    protected int headerHeight;
+
     protected ListAdditionScreen(ListScreen<V> listScreen) {
         super(Text.empty());
         this.listScreen = listScreen;
@@ -25,22 +27,30 @@ public class ListAdditionScreen<V> extends ScrollScreen {
 
     @Override
     protected void init() {
-        addDrawableChild(ButtonWidget.builder(Text.translatable("gui.back"), (widget) -> close()).dimensions(SoupGui.listGap, SoupGui.listGap, SoupGui.headerWidthSmall, 20).build());
-
-        createScrollWidget(20+SoupGui.listGap*2);
+        headerHeight = createHeader();
+        createScrollWidget(headerHeight);
 
         children = new ArrayList<>();
-
         for (String addition : listScreen.getAdditions()) {
-            AdditionButton additionButton = new AdditionButton(addition, listScreen.getAdditionText(addition), SoupGui.listX, SoupGui.listWidth, 20, this::add);
-            if (listScreen.canRemoveAddition(addition)) {
-                additionButton.addRemoveListener(this::removeAddition);
-            }
-            children.add(additionButton);
-            addSelectableChild(additionButton);
+            createAdditionButton(addition);
         }
 
         scrollWidget.setContentHeight(children.size()*(20+SoupGui.listGap) - SoupGui.listGap);
+    }
+
+    protected int createHeader() {
+        addDrawableChild(ButtonWidget.builder(Text.translatable("gui.back"), (widget) -> close()).dimensions(SoupGui.listGap, SoupGui.listGap, SoupGui.headerWidthSmall, 20).build());
+
+        return 20+SoupGui.listGap*2;
+    }
+
+    protected void createAdditionButton(String addition) {
+        AdditionButton additionButton = new AdditionButton(addition, listScreen.getAdditionText(addition), SoupGui.listX, SoupGui.listWidth, 20, this::add);
+        if (listScreen.canRemoveAddition(addition)) {
+            additionButton.addRemoveListener(this::removeAddition);
+        }
+        children.add(additionButton);
+        addSelectableChild(additionButton);
     }
 
     protected void add(String addition) {
@@ -74,7 +84,7 @@ public class ListAdditionScreen<V> extends ScrollScreen {
 
     @Override
     public void setScroll(int scroll) {
-        int y = 20 + SoupGui.listGap*2 - scroll;
+        int y = headerHeight - scroll;
         for (ClickableWidget widget : children) {
             widget.setY(y);
             y += widget.getHeight()+SoupGui.listGap;
@@ -93,11 +103,5 @@ public class ListAdditionScreen<V> extends ScrollScreen {
         scrollWidget.setContentHeight(children.size()*(20+SoupGui.listGap) - SoupGui.listGap);
 
         listScreen.removeAddition(button.addition);
-    }
-
-    @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        super.render(context, mouseX, mouseY, delta);
-        SouperSecretSettingsClient.soupGui.drawCurrentHoverText(context, mouseX, mouseY);
     }
 }

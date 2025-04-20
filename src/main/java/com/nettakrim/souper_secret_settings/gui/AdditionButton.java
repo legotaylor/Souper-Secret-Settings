@@ -5,36 +5,42 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.ColorHelper;
 
 import java.util.function.Consumer;
 
 public class AdditionButton extends HoverButtonWidget {
     public String addition;
     protected Consumer<AdditionButton> onRemove;
+    protected Consumer<AdditionButton> onEdit;
 
-    protected boolean deleting;
+    protected int dragState;
 
     public AdditionButton(String addition, Couple<Text,Text> message, int x, int width, int height, Consumer<String> onPress) {
         super(x, 0, width, height, message.getFirst(), message.getSecond(), (widget) -> onPress.accept(addition));
         this.addition = addition;
         this.onRemove = null;
+        this.onEdit = null;
     }
 
     public void addRemoveListener(Consumer<AdditionButton> onRemove) {
         this.onRemove = onRemove;
     }
 
+    public void addEditListener(Consumer<AdditionButton> onEdit) {
+        this.onEdit = onEdit;
+    }
+
     @Override
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
         super.renderWidget(context, mouseX, mouseY, delta);
 
-        if (onRemove == null) {
-            return;
+        if (onRemove != null) {
+            context.drawTexture(RenderLayer::getGuiTextured, ListWidget.ICON_TEXTURE, getX(), getY(), 0, 0, 10, 20, 40, 20, dragState < 0 ? ListWidget.texColWhite : ListWidget.texColBlack);
         }
 
-        float deleteColor = deleting ? 1f : 0f;
-        context.drawTexture(RenderLayer::getGuiTextured, ListWidget.ICON_TEXTURE, getX(), getY(), 0, 0, 10, 20, 40, 20, ColorHelper.fromFloats(0.5f, deleteColor, deleteColor, deleteColor));
+        if (onEdit != null) {
+            context.drawTexture(RenderLayer::getGuiTextured, ListWidget.ICON_TEXTURE, getX()+getWidth()-12, getY(), 20, 0, 10, 20, 40, 20, dragState > 0 ? ListWidget.texColWhite : ListWidget.texColBlack);
+        }
     }
 
     @Override
@@ -46,18 +52,27 @@ public class AdditionButton extends HoverButtonWidget {
 
     @Override
     public void onClick(double mouseX, double mouseY) {
-        deleting = (mouseX < getX() + 10) && (onRemove != null);
-        if (!deleting) {
-            super.onClick(mouseX, mouseY);
+        dragState = 0;
+        if (mouseX < getX()+getWidth()-14 || onEdit == null) {
+            if (mouseX > getX()+10 || onRemove == null) {
+                super.onClick(mouseX, mouseY);
+            } else {
+                dragState = -1;
+            }
+        } else {
+            dragState = 1;
         }
     }
 
     @Override
     public void onRelease(double mouseX, double mouseY) {
-        if (deleting && mouseX < getX()+10 && mouseY > getY() && mouseY < getY()+getHeight() && onRemove != null) {
+        if (dragState == 1 && onEdit != null) {
+            onEdit.accept(this);
+        }
+        if (dragState == -1 && mouseX < getX()+10 && mouseY > getY() && mouseY < getY()+getHeight() && onRemove != null) {
             onRemove.accept(this);
         }
-        deleting = false;
+        dragState = 0;
     }
 
     @Override

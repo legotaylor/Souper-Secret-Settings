@@ -1,4 +1,4 @@
-package com.nettakrim.souper_secret_settings.gui.groups;
+package com.nettakrim.souper_secret_settings.gui.shaders;
 
 import com.mclegoman.luminance.client.data.ClientData;
 import com.mclegoman.luminance.common.util.Couple;
@@ -18,14 +18,14 @@ import java.util.List;
 import java.util.Map;
 
 public class GroupEditScreen extends ListScreen<String> {
-    protected final GroupScreen groupScreen;
+    protected final ShaderAdditionScreen groupScreen;
     protected final Group group;
     protected String name;
     protected String startingName;
 
     protected SuggestionTextFieldWidget nameWidget;
 
-    protected GroupEditScreen(GroupScreen groupScreen, Group group, String name) {
+    public GroupEditScreen(ShaderAdditionScreen groupScreen, Group group, String name) {
         super(-1);
         this.groupScreen = groupScreen;
         this.group = group;

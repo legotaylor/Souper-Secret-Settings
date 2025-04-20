@@ -1,4 +1,4 @@
-package com.nettakrim.souper_secret_settings.gui.groups;
+package com.nettakrim.souper_secret_settings.gui.shaders;
 
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.gui.ListWidget;
