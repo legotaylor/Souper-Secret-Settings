@@ -2,7 +2,6 @@ package com.nettakrim.souper_secret_settings.gui.shaders;
 
 import com.mclegoman.luminance.client.data.ClientData;
 import com.mclegoman.luminance.common.util.Couple;
-import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.ListWidget;
 import com.nettakrim.souper_secret_settings.gui.SoupGui;
@@ -39,10 +38,14 @@ public class GroupEditScreen extends ListScreen<String> {
 
         nameWidget = new SuggestionTextFieldWidget(SoupGui.listGap, SoupGui.headerWidthSmall, 20, Text.literal("name"), false);
         nameWidget.setY(SoupGui.listGap*2 + 20);
-        nameWidget.setText(name);
+        nameWidget.setText(name.replace("user_", ""));
         nameWidget.setChangedListener((s) -> name = s);
         nameWidget.setListeners(() -> List.of(startingName), (s) -> resolveName(false), false);
         nameWidget.setTextPredicate(Identifier::isPathValid);
+        nameWidget.active = name.startsWith("user_");
+        if (!nameWidget.active) {
+            nameWidget.setAlpha(0.5f);
+        }
 
         addDrawableChild(nameWidget);
 
@@ -112,20 +115,22 @@ public class GroupEditScreen extends ListScreen<String> {
     }
 
     protected void resolveName(boolean move) {
-        if (startingName.equals(name)) {
+        if (startingName.equals(name) || !startingName.startsWith("user_")) {
             return;
         }
 
+        String newName = "user_"+name;
+
         Map<String, Group> map = groupScreen.getRegistryMap();
-        SouperSecretSettingsClient.log(name, map.containsKey(name));
-        if (map.containsKey(name)) {
+        if (map.containsKey(newName)) {
             nameWidget.setText(startingName);
             nameWidget.setCursorToEnd(false);
         }
 
         if (move) {
-            map.put(name, map.remove(startingName));
-            startingName = name;
+            map.put(newName, map.remove(startingName));
+            startingName = newName;
+            groupScreen.shaderScreen.recalculateAdditions();
         }
     }
 

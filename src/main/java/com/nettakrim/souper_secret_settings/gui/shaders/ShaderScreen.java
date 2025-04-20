@@ -61,10 +61,19 @@ public class ShaderScreen extends ListScreen<ShaderData> {
 
         Map<String, Group> registryGroups = SouperSecretSettingsClient.soupRenderer.shaderGroups.get(registry);
         if (registryGroups != null) {
-            List<String> random = new ArrayList<>(registryGroups.keySet().size()+1);
+            List<String> user = new ArrayList<>(registryGroups.keySet().size());
+            List<String> random = new ArrayList<>(registryGroups.keySet().size());
+
             for (String s : registryGroups.keySet()) {
-                random.add("random_"+s);
+                if (s.startsWith("user_")) {
+                    user.add("random_"+s);
+                } else {
+                    random.add("random_" + s);
+                }
             }
+
+            Collections.sort(user);
+            shaders.addAll(user);
             Collections.sort(random);
             shaders.addAll(random);
         }
