@@ -62,11 +62,11 @@ public class ShaderAdditionScreen extends ListAdditionScreen<ShaderData> {
         group.requestUpdate();
 
         String title = name.replaceFirst("_", ":");
-        int recursionIndex = group.getStepAmounts(shaderScreen.registry).indexOf(null);
+        int recursionIndex = group.getStepAmounts(shaderScreen.registry, name).indexOf(null);
         if (recursionIndex >= 0) {
             text = new Couple<>(SouperSecretSettingsClient.translate("gui.group_error", title).setStyle(Style.EMPTY.withColor(0xFF1010)), SouperSecretSettingsClient.translate("gui.group_loop_index", recursionIndex));
         } else {
-            int size = group.getComputed(shaderScreen.registry).size();
+            int size = group.getComputed(shaderScreen.registry, name).size();
             text = new Couple<>(Text.literal(title), SouperSecretSettingsClient.translate("shader.group_suggestion", size));
         }
 

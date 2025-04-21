@@ -38,6 +38,7 @@ public class SoupRenderer implements Runnables.WorldRender {
     private Shader.RenderType renderType;
 
     public final Map<Identifier, Map<String, Group>> shaderGroups;
+    public final Map<Identifier, Map<String, List<ShaderRegistryEntry>>> shaderGroupRegistries;
 
     public static final Identifier modifierRegistry = Identifier.of(SouperSecretSettingsClient.MODID, "modifiers");
 
@@ -46,6 +47,7 @@ public class SoupRenderer implements Runnables.WorldRender {
     public SoupRenderer() {
         shaderLayers = new ArrayList<>();
         shaderGroups = new HashMap<>();
+        shaderGroupRegistries = new HashMap<>();
         renderType = Shader.RenderType.WORLD;
 
         spectateHandler = new SoupSpectateHandler();
@@ -82,12 +84,14 @@ public class SoupRenderer implements Runnables.WorldRender {
         Events.OnShaderDataReset.register(Identifier.of(SouperSecretSettingsClient.MODID, "reset"), () -> {
             clearAll();
             SouperSecretSettingsClient.actions.clear();
+            shaderGroupRegistries.clear();
         });
-        Events.OnShaderDataRegistered.register(Identifier.of(SouperSecretSettingsClient.MODID, "add"), (shaderRegistryEntry, registries) -> runForGroups(shaderRegistryEntry, registries, (registry, group) -> getRegistryGroups(registry).computeIfAbsent(group, k -> new Group(List.of("+random_"+group))).registryShaders.add(shaderRegistryEntry)));
+        Events.OnShaderDataRegistered.register(Identifier.of(SouperSecretSettingsClient.MODID, "add"), (shaderRegistryEntry, registries) -> runForGroups(shaderRegistryEntry, registries, (registry, group) -> shaderGroupRegistries.computeIfAbsent(registry, (i) -> new HashMap<>()).computeIfAbsent(group, (i) -> new ArrayList<>()).add(shaderRegistryEntry)));
         Events.OnShaderDataRemoved.register(Identifier.of(SouperSecretSettingsClient.MODID, "remove"), (shaderRegistryEntry, registries) -> runForGroups(shaderRegistryEntry, registries, (registry, group) -> {
-            Group groupObj = getRegistryGroups(registry).get(group);
-            if (groupObj != null) {
-                groupObj.registryShaders.remove(shaderRegistryEntry);
+            Map<String, List<ShaderRegistryEntry>> map = shaderGroupRegistries.get(registry);
+            if (map != null) {
+                List<ShaderRegistryEntry> list = map.get(group);
+                list.remove(shaderRegistryEntry);
             }
         }));
         Events.AfterClientResourceReload.register(Identifier.of(SouperSecretSettingsClient.MODID, "reload"), this::loadDefault);
@@ -171,7 +175,7 @@ public class SoupRenderer implements Runnables.WorldRender {
             if (group == null) {
                 registryEntries = null;
             } else {
-                registryEntries = group.getComputed(registry);
+                registryEntries = group.getComputed(registry, groupName);
             }
         }
 

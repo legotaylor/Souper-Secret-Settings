@@ -110,9 +110,10 @@ public class ShaderScreen extends ListScreen<ShaderData> {
     public Couple<Text,Text> getAdditionText(String addition) {
         if (addition.startsWith("random")) {
             if (addition.length() > 7) {
-                Group group = SouperSecretSettingsClient.soupRenderer.getRegistryGroups(registry).get(addition.substring(7));
+                String name = addition.substring(7);
+                Group group = SouperSecretSettingsClient.soupRenderer.getRegistryGroups(registry).get(name);
                 if (group != null) {
-                    return new Couple<>(Text.literal(addition), SouperSecretSettingsClient.translate("shader.group_suggestion", group.getComputed(registry).size()));
+                    return new Couple<>(Text.literal(addition), SouperSecretSettingsClient.translate("shader.group_suggestion", group.getComputed(registry, name).size()));
                 }
             }
 

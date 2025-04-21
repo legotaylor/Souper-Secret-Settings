@@ -157,7 +157,7 @@ public class GroupEditScreen extends ListScreen<String> {
     }
 
     public void updateDeltas() {
-        List<Integer> deltas = group.getStepAmounts(groupScreen.shaderScreen.registry);
+        List<Integer> deltas = group.getStepAmounts(groupScreen.shaderScreen.registry, name);
 
         for (int i = 0; i < deltas.size(); i++) {
             ((GroupEntryWidget)listWidgets.get(i)).setDelta(deltas.get(i));
@@ -166,8 +166,15 @@ public class GroupEditScreen extends ListScreen<String> {
 
     public void reset() {
         group.entries.clear();
-        if (group.isResource) {
-            group.entries.addAll(SouperSecretSettingsClient.soupData.resourceGroups.get(groupScreen.shaderScreen.registry).get(startingName).entries);
+
+        Group resourceGroup = null;
+        Map<String, Group> resourceGroups = SouperSecretSettingsClient.soupData.resourceGroups.get(groupScreen.shaderScreen.registry);
+        if (resourceGroups != null) {
+            resourceGroup = resourceGroups.get(startingName);
+        }
+
+        if (resourceGroup != null) {
+            group.entries.addAll(resourceGroup.entries);
         } else {
             group.entries.add("+random_"+startingName);
         }

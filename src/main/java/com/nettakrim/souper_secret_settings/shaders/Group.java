@@ -13,31 +13,26 @@ import java.util.*;
 
 public class Group {
     public final List<String> entries;
-    public final List<ShaderRegistryEntry> registryShaders;
 
     private List<ShaderRegistryEntry> computed = null;
     private boolean needsUpdate = true;
 
     public boolean changed;
 
-    public boolean isResource;
-
     @Nullable
     public File file = null;
 
     public Group() {
         this.entries = new ArrayList<>();
-        this.registryShaders = new ArrayList<>();
     }
 
     public Group(List<String> entries) {
         this.entries = new ArrayList<>(entries);
-        this.registryShaders = new ArrayList<>();
     }
 
     public static final Codec<Group> CODEC = RecordCodecBuilder.create((instance) -> instance.group(Codec.STRING.listOf().fieldOf("entries").forGetter((group -> group.entries))).apply(instance, Group::new));
 
-    public List<Integer> getStepAmounts(Identifier registry) {
+    public List<Integer> getStepAmounts(Identifier registry, String name) {
         int previous = 0;
         List<Integer> steps = new ArrayList<>(entries.size());
         Set<ShaderRegistryEntry> shadersSet = new HashSet<>(computed == null ? 16 : computed.size());
@@ -52,7 +47,7 @@ public class Group {
                 }
             }
 
-            computationStep(registry, shadersSet, entry);
+            computationStep(registry, name, shadersSet, entry);
 
             int next = shadersSet.size();
             steps.add(next-previous);
@@ -82,7 +77,7 @@ public class Group {
         return false;
     }
 
-    public List<ShaderRegistryEntry> getComputed(Identifier registry) {
+    public List<ShaderRegistryEntry> getComputed(Identifier registry, String name) {
         if (needsUpdate) {
             needsUpdate = false;
 
@@ -93,14 +88,14 @@ public class Group {
 
             Set<ShaderRegistryEntry> shadersSet = new HashSet<>();
             for (String entry : entries) {
-                computationStep(registry, shadersSet, entry);
+                computationStep(registry, name, shadersSet, entry);
             }
             computed = shadersSet.stream().toList();
         }
         return computed;
     }
 
-    private void computationStep(Identifier registry, Set<ShaderRegistryEntry> shadersSet, String entry) {
+    private void computationStep(Identifier registry, String name, Set<ShaderRegistryEntry> shadersSet, String entry) {
         boolean remove = entry.charAt(0) == '-';
         String id = entry.substring(1);
         if (id.startsWith("random_")) {
@@ -109,9 +104,12 @@ public class Group {
                 List<ShaderRegistryEntry> groupRegistries;
 
                 if (group == this) {
-                    groupRegistries = registryShaders;
+                    groupRegistries = SouperSecretSettingsClient.soupRenderer.shaderGroupRegistries.get(registry).get(name);
+                    if (groupRegistries == null) {
+                        return;
+                    }
                 } else {
-                    groupRegistries = group.getComputed(registry);
+                    groupRegistries = group.getComputed(registry, name);
                 }
 
                 if (remove) {
