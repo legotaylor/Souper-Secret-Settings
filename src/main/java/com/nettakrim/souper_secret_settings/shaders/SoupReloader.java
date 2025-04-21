@@ -2,7 +2,6 @@ package com.nettakrim.souper_secret_settings.shaders;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import com.mclegoman.luminance.client.shaders.Shaders;
 import com.mclegoman.luminance.client.util.JsonResourceReloader;
 import com.mojang.serialization.JsonOps;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
@@ -23,7 +22,6 @@ public class SoupReloader extends JsonResourceReloader {
     @Override
     protected void apply(Map<Identifier, JsonElement> prepared, ResourceManager manager, Profiler profiler) {
         SouperSecretSettingsClient.soupData.resourceLayers.clear();
-        SouperSecretSettingsClient.soupRenderer.shaderGroups.clear();
 
         prepared.forEach((identifier, jsonElement) -> {
             try {
@@ -38,10 +36,12 @@ public class SoupReloader extends JsonResourceReloader {
                     String name = full.substring(i + 1);
 
                     Map<String, Group> registryMap = SouperSecretSettingsClient.soupRenderer.getRegistryGroups(registry);
-                    if (!registryMap.containsKey(name)) {
-                        SouperSecretSettingsClient.log("adding "+name+" to "+registry+" ? "+ Shaders.getMainRegistryId());
-                        Optional<Group> group = Group.CODEC.parse(JsonOps.INSTANCE, jsonElement).result();
-                        group.ifPresent(value -> registryMap.put(name, value));
+                    Optional<Group> group = Group.CODEC.parse(JsonOps.INSTANCE, jsonElement).result();
+
+                    if (group.isPresent()) {
+                        if (!registryMap.containsKey(name) || registryMap.get(name).file == null) {
+                            registryMap.put(name, group.get());
+                        }
                     }
                 }
             }

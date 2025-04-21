@@ -174,6 +174,7 @@ public class SoupData {
                     if (group.isPresent()) {
                         String name = file.getName();
                         registryMap.put(name.substring(0, name.length() - 5), group.get());
+                        group.get().file = file;
                     }
                 }
             }
