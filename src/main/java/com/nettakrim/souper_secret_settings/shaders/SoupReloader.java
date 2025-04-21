@@ -10,6 +10,7 @@ import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.profiler.Profiler;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -22,6 +23,7 @@ public class SoupReloader extends JsonResourceReloader {
     @Override
     protected void apply(Map<Identifier, JsonElement> prepared, ResourceManager manager, Profiler profiler) {
         SouperSecretSettingsClient.soupData.resourceLayers.clear();
+        SouperSecretSettingsClient.soupData.resourceGroups.clear();
 
         prepared.forEach((identifier, jsonElement) -> {
             try {
@@ -35,12 +37,14 @@ public class SoupReloader extends JsonResourceReloader {
                     Identifier registry = Identifier.tryParse(full.substring(0, i).replaceFirst("_", ":"));
                     String name = full.substring(i + 1);
 
-                    Map<String, Group> registryMap = SouperSecretSettingsClient.soupRenderer.getRegistryGroups(registry);
+                    Map<String, Group> registryMap = SouperSecretSettingsClient.soupData.resourceGroups.computeIfAbsent(registry, (ignored) -> new HashMap<>());
                     Optional<Group> group = Group.CODEC.parse(JsonOps.INSTANCE, jsonElement).result();
 
+                    String key = identifier.getNamespace()+"_"+name;
                     if (group.isPresent()) {
-                        if (!registryMap.containsKey(name) || registryMap.get(name).file == null) {
-                            registryMap.put(name, group.get());
+                        if (!registryMap.containsKey(key) || registryMap.get(key).file == null) {
+                            registryMap.put(key, group.get());
+                            group.get().isResource = true;
                         }
                     }
                 }

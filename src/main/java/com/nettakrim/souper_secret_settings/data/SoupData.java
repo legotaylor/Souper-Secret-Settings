@@ -38,6 +38,7 @@ public class SoupData {
     private int saveChange;
 
     public Map<Identifier, LayerCodecs> resourceLayers;
+    public Map<Identifier, Map<String,Group>> resourceGroups = new HashMap<>(0);
 
     public SoupData() {
         configDir = FabricLoader.getInstance().getConfigDir().resolve(SouperSecretSettingsClient.MODID);
@@ -144,11 +145,20 @@ public class SoupData {
 
     public void saveGroups() {
         SouperSecretSettingsClient.soupRenderer.shaderGroups.forEach(((registry, groups) -> groups.forEach((name, group) -> {
-            if (group.file != null && !name.startsWith("user_") && group.entries.size() == 1 && group.entries.getFirst().equals("+random_"+name)) {
-                if (group.file.delete()) {
-                    group.file = null;
+            if (group.file != null && !name.startsWith("user_")) {
+                boolean delete;
+                if (group.isResource) {
+                    delete = group.entries.equals(SouperSecretSettingsClient.soupData.resourceGroups.get(registry).get(name).entries);
                 } else {
-                    SouperSecretSettingsClient.log("Failed to delete file "+group.file);
+                    delete = group.entries.size() == 1 && group.entries.getFirst().equals("+random_"+name);
+                }
+
+                if (delete) {
+                    if (group.file.delete()) {
+                        group.file = null;
+                    } else {
+                        SouperSecretSettingsClient.log("Failed to delete file " + group.file);
+                    }
                 }
                 return;
             }
@@ -179,6 +189,15 @@ public class SoupData {
                 }
             }
         }
+    }
+
+    public void applyResourceGroups() {
+        SouperSecretSettingsClient.soupRenderer.shaderGroups.forEach((registry, registryMap) -> registryMap.values().removeIf((group -> group.isResource)));
+        resourceGroups.forEach(((registry, registryMap) -> registryMap.forEach((name, group) -> {
+            if (!getGroupLocation(registry, name).toFile().exists()) {
+                SouperSecretSettingsClient.soupRenderer.getRegistryGroups(registry).putIfAbsent(name, group);
+            }
+        })));
     }
 
     public Path getGroupLocation(Identifier registry, String name) {

@@ -59,24 +59,22 @@ public class ShaderScreen extends ListScreen<ShaderData> {
             shaders.addFirst("random");
         }
 
-        Map<String, Group> registryGroups = SouperSecretSettingsClient.soupRenderer.shaderGroups.get(registry);
-        if (registryGroups != null) {
-            List<String> user = new ArrayList<>(registryGroups.keySet().size());
-            List<String> random = new ArrayList<>(registryGroups.keySet().size());
+        Map<String, Group> registryGroups = SouperSecretSettingsClient.soupRenderer.getRegistryGroups(registry);
+        List<String> user = new ArrayList<>(registryGroups.keySet().size());
+        List<String> random = new ArrayList<>(registryGroups.keySet().size());
 
-            for (String s : registryGroups.keySet()) {
-                if (s.startsWith("user_")) {
-                    user.add("random_"+s);
-                } else {
-                    random.add("random_" + s);
-                }
+        for (String s : registryGroups.keySet()) {
+            if (s.startsWith("user_")) {
+                user.add("random_"+s);
+            } else {
+                random.add("random_" + s);
             }
-
-            Collections.sort(user);
-            shaders.addAll(user);
-            Collections.sort(random);
-            shaders.addAll(random);
         }
+
+        Collections.sort(user);
+        shaders.addAll(user);
+        Collections.sort(random);
+        shaders.addAll(random);
 
         return shaders;
     }
@@ -112,12 +110,9 @@ public class ShaderScreen extends ListScreen<ShaderData> {
     public Couple<Text,Text> getAdditionText(String addition) {
         if (addition.startsWith("random")) {
             if (addition.length() > 7) {
-                Map<String, Group> registryGroups = SouperSecretSettingsClient.soupRenderer.shaderGroups.get(registry);
-                if (registryGroups != null) {
-                    Group group = registryGroups.get(addition.substring(7));
-                    if (group != null) {
-                        return new Couple<>(Text.literal(addition), SouperSecretSettingsClient.translate("shader.group_suggestion", group.getComputed(registry).size()));
-                    }
+                Group group = SouperSecretSettingsClient.soupRenderer.getRegistryGroups(registry).get(addition.substring(7));
+                if (group != null) {
+                    return new Couple<>(Text.literal(addition), SouperSecretSettingsClient.translate("shader.group_suggestion", group.getComputed(registry).size()));
                 }
             }
 

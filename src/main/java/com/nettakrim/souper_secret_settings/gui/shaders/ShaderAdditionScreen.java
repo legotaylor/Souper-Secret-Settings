@@ -61,7 +61,7 @@ public class ShaderAdditionScreen extends ListAdditionScreen<ShaderData> {
         Couple<Text, Text> text;
         group.requestUpdate();
 
-        String title = name.replace("user_", "user:");
+        String title = name.replaceFirst("_", ":");
         int recursionIndex = group.getStepAmounts(shaderScreen.registry).indexOf(null);
         if (recursionIndex >= 0) {
             text = new Couple<>(SouperSecretSettingsClient.translate("gui.group_error", title).setStyle(Style.EMPTY.withColor(0xFF1010)), SouperSecretSettingsClient.translate("gui.group_loop_index", recursionIndex));

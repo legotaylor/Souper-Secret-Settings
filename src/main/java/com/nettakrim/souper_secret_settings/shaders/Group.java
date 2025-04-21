@@ -20,6 +20,8 @@ public class Group {
 
     public boolean changed;
 
+    public boolean isResource;
+
     @Nullable
     public File file = null;
 
@@ -130,9 +132,6 @@ public class Group {
 
     protected Group getGroup(Identifier registry, String randomID) {
         Map<String, Group> registryGroups = SouperSecretSettingsClient.soupRenderer.getRegistryGroups(registry);
-        if (registryGroups == null) {
-            return null;
-        }
         return registryGroups.get(randomID.substring(7));
     }
 

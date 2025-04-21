@@ -18,6 +18,7 @@ import net.minecraft.client.render.FrameGraphBuilder;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.Random;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -223,6 +224,7 @@ public class SoupRenderer implements Runnables.WorldRender {
     public void loadDefault() {
         activeLayer = new ShaderLayer("default");
         shaderLayers.add(activeLayer);
+        SouperSecretSettingsClient.soupData.applyResourceGroups();
     }
 
     public List<String> getValidUniforms() {
@@ -300,6 +302,7 @@ public class SoupRenderer implements Runnables.WorldRender {
         }
     }
 
+    @NotNull
     public Map<String, Group> getRegistryGroups(Identifier registry) {
         if (!shaderGroups.containsKey(registry)) {
             Map<String, Group> map = new HashMap<>();
