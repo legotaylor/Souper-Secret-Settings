@@ -108,6 +108,7 @@
     "souper_secret_settings.gui.group_loop": "This entry causes or contains a loop",
     "souper_secret_settings.gui.group_loop_index": "Contains loop at index %s",
     "souper_secret_settings.gui.group_delta": "%s Shaders",
+    "souper_secret_settings.gui.group_reset": "Reset",
 
     "gui.souper_secret_settings.keybindings.category.souper_secret_settings": "Souper Secret Settings",
     "gui.souper_secret_settings.keybindings.keybinding.open_gui": "Open Gui",

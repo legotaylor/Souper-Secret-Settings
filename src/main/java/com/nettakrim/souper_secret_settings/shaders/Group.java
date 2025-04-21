@@ -13,7 +13,7 @@ import java.util.*;
 
 public class Group {
     public final List<String> entries;
-    protected final List<ShaderRegistryEntry> registryShaders;
+    public final List<ShaderRegistryEntry> registryShaders;
 
     private List<ShaderRegistryEntry> computed = null;
     private boolean needsUpdate = true;

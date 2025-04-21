@@ -145,7 +145,7 @@ public class SoupData {
 
     public void saveGroups() {
         SouperSecretSettingsClient.soupRenderer.shaderGroups.forEach(((registry, groups) -> groups.forEach((name, group) -> {
-            if (group.file != null && !name.startsWith("user_")) {
+            if (!name.startsWith("user_")) {
                 boolean delete;
                 if (group.isResource) {
                     delete = group.entries.equals(SouperSecretSettingsClient.soupData.resourceGroups.get(registry).get(name).entries);
@@ -154,13 +154,15 @@ public class SoupData {
                 }
 
                 if (delete) {
-                    if (group.file.delete()) {
-                        group.file = null;
-                    } else {
-                        SouperSecretSettingsClient.log("Failed to delete file " + group.file);
+                    if (group.file != null) {
+                        if (group.file.delete()) {
+                            group.file = null;
+                        } else {
+                            SouperSecretSettingsClient.log("Failed to delete file " + group.file);
+                        }
                     }
+                    return;
                 }
-                return;
             }
 
             if (!group.changed) {
@@ -192,10 +194,35 @@ public class SoupData {
     }
 
     public void applyResourceGroups() {
-        SouperSecretSettingsClient.soupRenderer.shaderGroups.forEach((registry, registryMap) -> registryMap.values().removeIf((group -> group.isResource)));
+        Map<Identifier, Map<String, Group>> removed = new HashMap<>();
+
+        SouperSecretSettingsClient.soupRenderer.shaderGroups.forEach((registry, registryMap) -> {
+            registryMap.forEach((name, group) -> {
+                if (group.isResource) {
+                    removed.computeIfAbsent(registry, r -> new HashMap<>()).put(name, group);
+                }
+            });
+            registryMap.values().removeIf(group -> group.isResource && group.file == null);
+        });
+
+
         resourceGroups.forEach(((registry, registryMap) -> registryMap.forEach((name, group) -> {
             if (!getGroupLocation(registry, name).toFile().exists()) {
-                SouperSecretSettingsClient.soupRenderer.getRegistryGroups(registry).putIfAbsent(name, group);
+                Group newGroup = new Group(group.entries);
+                Group registrySource = SouperSecretSettingsClient.soupRenderer.getRegistryGroups(registry).put(name, newGroup);
+
+                if (registrySource == null) {
+                    Map<String, Group> removedMap = removed.get(registry);
+                    if (removedMap != null) {
+                        registrySource = removedMap.get(name);
+                    }
+                }
+
+                if (registrySource != null) {
+                    newGroup.registryShaders.addAll(registrySource.registryShaders);
+                }
+
+                newGroup.isResource = true;
             }
         })));
     }

@@ -44,7 +44,6 @@ public class SoupReloader extends JsonResourceReloader {
                     if (group.isPresent()) {
                         if (!registryMap.containsKey(key) || registryMap.get(key).file == null) {
                             registryMap.put(key, group.get());
-                            group.get().isResource = true;
                         }
                     }
                 }

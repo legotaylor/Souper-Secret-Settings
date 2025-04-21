@@ -46,11 +46,13 @@ public class GroupEditScreen extends ListScreen<String> {
         nameWidget.setListeners(() -> List.of(startingName), (s) -> resolveName(false), false);
         nameWidget.setTextPredicate(Identifier::isPathValid);
         nameWidget.active = name.startsWith("user_");
+        addDrawableChild(nameWidget);
+
         if (!nameWidget.active) {
             nameWidget.setEditable(false);
+            nameWidget.setWidth((nameWidget.getWidth()-SoupGui.listGap)/2);
+            addDrawableChild(ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.group_reset"), (widget) -> reset()).dimensions(SoupGui.listGap+nameWidget.getWidth()+SoupGui.listGap, nameWidget.getY(), nameWidget.getWidth(), 20).build());
         }
-
-        addDrawableChild(nameWidget);
 
         return SoupGui.listStart;
     }
@@ -160,5 +162,16 @@ public class GroupEditScreen extends ListScreen<String> {
         for (int i = 0; i < deltas.size(); i++) {
             ((GroupEntryWidget)listWidgets.get(i)).setDelta(deltas.get(i));
         }
+    }
+
+    public void reset() {
+        group.entries.clear();
+        if (group.isResource) {
+            group.entries.addAll(SouperSecretSettingsClient.soupData.resourceGroups.get(groupScreen.shaderScreen.registry).get(startingName).entries);
+        } else {
+            group.entries.add("+random_"+startingName);
+        }
+        group.changed = true;
+        clearAndInit();
     }
 }
