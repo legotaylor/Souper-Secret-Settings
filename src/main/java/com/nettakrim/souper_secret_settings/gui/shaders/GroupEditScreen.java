@@ -47,7 +47,7 @@ public class GroupEditScreen extends ListScreen<String> {
         nameWidget.setTextPredicate(Identifier::isPathValid);
         nameWidget.active = name.startsWith("user_");
         if (!nameWidget.active) {
-            nameWidget.setAlpha(0.5f);
+            nameWidget.setEditable(false);
         }
 
         addDrawableChild(nameWidget);
