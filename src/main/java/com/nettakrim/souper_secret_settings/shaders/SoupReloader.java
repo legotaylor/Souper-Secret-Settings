@@ -2,6 +2,7 @@ package com.nettakrim.souper_secret_settings.shaders;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.mclegoman.luminance.client.shaders.Shaders;
 import com.mclegoman.luminance.client.util.JsonResourceReloader;
 import com.mojang.serialization.JsonOps;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
@@ -22,13 +23,29 @@ public class SoupReloader extends JsonResourceReloader {
     @Override
     protected void apply(Map<Identifier, JsonElement> prepared, ResourceManager manager, Profiler profiler) {
         SouperSecretSettingsClient.soupData.resourceLayers.clear();
+        SouperSecretSettingsClient.soupRenderer.shaderGroups.clear();
+
         prepared.forEach((identifier, jsonElement) -> {
-            if (identifier.getPath().startsWith("layers/")) {
-                try {
+            try {
+                if (identifier.getPath().startsWith("layers/")) {
                     Optional<LayerCodecs> layerCodecs = LayerCodecs.CODEC.parse(JsonOps.INSTANCE, jsonElement).result();
                     layerCodecs.ifPresent(codecs -> SouperSecretSettingsClient.soupData.resourceLayers.put(Identifier.of(identifier.getNamespace(), identifier.getPath().substring(7)), codecs));
-                } catch (Exception ignored) {}
+                }
+                else if (identifier.getPath().startsWith("groups/")) {
+                    String full = identifier.getPath().substring(7);
+                    int i = full.indexOf("/");
+                    Identifier registry = Identifier.tryParse(full.substring(0, i).replaceFirst("_", ":"));
+                    String name = full.substring(i + 1);
+
+                    Map<String, Group> registryMap = SouperSecretSettingsClient.soupRenderer.getRegistryGroups(registry);
+                    if (!registryMap.containsKey(name)) {
+                        SouperSecretSettingsClient.log("adding "+name+" to "+registry+" ? "+ Shaders.getMainRegistryId());
+                        Optional<Group> group = Group.CODEC.parse(JsonOps.INSTANCE, jsonElement).result();
+                        group.ifPresent(value -> registryMap.put(name, value));
+                    }
+                }
             }
+            catch (Exception ignored) {}
         });
     }
 }

@@ -79,7 +79,6 @@ public class SoupRenderer implements Runnables.WorldRender {
         });
 
         Events.OnShaderDataReset.register(Identifier.of(SouperSecretSettingsClient.MODID, "reset"), () -> {
-            shaderGroups.clear();
             clearAll();
             SouperSecretSettingsClient.actions.clear();
         });
@@ -162,12 +161,17 @@ public class SoupRenderer implements Runnables.WorldRender {
         return shaders;
     }
 
-    private ShaderRegistryEntry getRandomShader(Identifier registry, String group, ShaderRegistryEntry previous) {
+    private ShaderRegistryEntry getRandomShader(Identifier registry, String groupName, ShaderRegistryEntry previous) {
         List<ShaderRegistryEntry> registryEntries;
-        if (group == null) {
+        if (groupName == null) {
             registryEntries = Shaders.getRegistry(registry);
         } else {
-            registryEntries = getRegistryGroups(registry).get(group).getComputed(registry);
+            Group group = getRegistryGroups(registry).get(groupName);
+            if (group == null) {
+                registryEntries = null;
+            } else {
+                registryEntries = group.getComputed(registry);
+            }
         }
 
         if (registryEntries == null) {
