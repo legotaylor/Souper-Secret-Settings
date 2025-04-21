@@ -1,6 +1,7 @@
 package com.nettakrim.souper_secret_settings.gui.shaders;
 
 import com.mclegoman.luminance.client.data.ClientData;
+import com.mclegoman.luminance.client.shaders.Shaders;
 import com.mclegoman.luminance.common.util.Couple;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
@@ -78,10 +79,19 @@ public class GroupEditScreen extends ListScreen<String> {
     public @Nullable String tryGetAddition(String addition) {
         char c = addition.charAt(0);
         if ((c == '+' || c == '-') && !getAdditions().contains(addition)) {
-            return addition;
+            addition = addition.substring(1);
+        } else {
+            c = '+';
         }
 
-        return "+"+addition;
+        if (!addition.startsWith("random_")) {
+            Identifier guessed = Shaders.guessPostShader(groupScreen.shaderScreen.registry, addition);
+            if (guessed != null) {
+                addition = guessed.toString();
+            }
+        }
+
+        return c+addition;
     }
 
     @Override
@@ -168,7 +178,7 @@ public class GroupEditScreen extends ListScreen<String> {
         group.entries.clear();
 
         Group resourceGroup = null;
-        Map<String, Group> resourceGroups = SouperSecretSettingsClient.soupData.resourceGroups.get(groupScreen.shaderScreen.registry);
+        Map<String, Group> resourceGroups = SouperSecretSettingsClient.soupData.resourceGroups.get(groupScreen.shaderScreen.registry.toString().replace(':','_'));
         if (resourceGroups != null) {
             resourceGroup = resourceGroups.get(startingName);
         }

@@ -34,13 +34,11 @@ public class SoupReloader extends JsonResourceReloader {
                 else if (identifier.getPath().startsWith("groups/")) {
                     String full = identifier.getPath().substring(7);
                     int i = full.indexOf("/");
-                    Identifier registry = Identifier.tryParse(full.substring(0, i).replaceFirst("_", ":"));
-                    String name = full.substring(i + 1);
 
-                    Map<String, Group> registryMap = SouperSecretSettingsClient.soupData.resourceGroups.computeIfAbsent(registry, (ignored) -> new HashMap<>());
+                    Map<String, Group> registryMap = SouperSecretSettingsClient.soupData.resourceGroups.computeIfAbsent(full.substring(0, i), (ignored) -> new HashMap<>());
                     Optional<Group> group = Group.CODEC.parse(JsonOps.INSTANCE, jsonElement).result();
 
-                    String key = identifier.getNamespace()+"_"+name;
+                    String key = identifier.getNamespace()+"_"+ full.substring(i + 1);
                     if (group.isPresent()) {
                         if (!registryMap.containsKey(key) || registryMap.get(key).file == null) {
                             registryMap.put(key, group.get());

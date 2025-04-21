@@ -85,6 +85,7 @@ public class SoupRenderer implements Runnables.WorldRender {
             clearAll();
             SouperSecretSettingsClient.actions.clear();
             shaderGroupRegistries.clear();
+            SouperSecretSettingsClient.soupRenderer.shaderGroups.clear();
         });
         Events.OnShaderDataRegistered.register(Identifier.of(SouperSecretSettingsClient.MODID, "add"), (shaderRegistryEntry, registries) -> runForGroups(shaderRegistryEntry, registries, (registry, group) -> shaderGroupRegistries.computeIfAbsent(registry, (i) -> new HashMap<>()).computeIfAbsent(group, (i) -> new ArrayList<>()).add(shaderRegistryEntry)));
         Events.OnShaderDataRemoved.register(Identifier.of(SouperSecretSettingsClient.MODID, "remove"), (shaderRegistryEntry, registries) -> runForGroups(shaderRegistryEntry, registries, (registry, group) -> {
@@ -228,7 +229,6 @@ public class SoupRenderer implements Runnables.WorldRender {
     public void loadDefault() {
         activeLayer = new ShaderLayer("default");
         shaderLayers.add(activeLayer);
-        SouperSecretSettingsClient.soupData.applyResourceGroups();
     }
 
     public List<String> getValidUniforms() {
@@ -311,6 +311,7 @@ public class SoupRenderer implements Runnables.WorldRender {
         if (!shaderGroups.containsKey(registry)) {
             Map<String, Group> map = new HashMap<>();
             SouperSecretSettingsClient.soupData.loadGroups(map, registry);
+            shaderGroupRegistries.get(registry).forEach((name, group) -> map.putIfAbsent(name, new Group(List.of("+random_"+name))));
             shaderGroups.put(registry, map);
             return map;
         }

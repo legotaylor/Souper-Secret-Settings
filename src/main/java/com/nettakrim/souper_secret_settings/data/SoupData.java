@@ -38,7 +38,7 @@ public class SoupData {
     private int saveChange;
 
     public Map<Identifier, LayerCodecs> resourceLayers;
-    public Map<Identifier, Map<String,Group>> resourceGroups = new HashMap<>(0);
+    public Map<String, Map<String,Group>> resourceGroups = new HashMap<>(0);
 
     public SoupData() {
         configDir = FabricLoader.getInstance().getConfigDir().resolve(SouperSecretSettingsClient.MODID);
@@ -149,7 +149,7 @@ public class SoupData {
                 boolean delete;
 
                 Group resourceGroup = null;
-                Map<String, Group> resourceGroups = SouperSecretSettingsClient.soupData.resourceGroups.get(registry);
+                Map<String, Group> resourceGroups = SouperSecretSettingsClient.soupData.resourceGroups.get(registry.toString().replace(':','_'));
                 if (resourceGroups != null) {
                     resourceGroup = resourceGroups.get(name);
                 }
@@ -185,7 +185,8 @@ public class SoupData {
     }
 
     public void loadGroups(Map<String, Group> registryMap, Identifier registry) {
-        File[] files = configDir.resolve("groups").resolve(registry.toString().replace(":","_")).toFile().listFiles();
+        String registryName = registry.toString().replace(':','_');
+        File[] files = configDir.resolve("groups").resolve(registryName).toFile().listFiles();
         if (files != null) {
             for (File file : files) {
                 if (file.isFile()) {
@@ -198,16 +199,12 @@ public class SoupData {
                 }
             }
         }
-    }
 
-    public void applyResourceGroups() {
-        SouperSecretSettingsClient.soupRenderer.shaderGroups.clear();
-        resourceGroups.forEach(((registry, registryMap) -> registryMap.forEach((name, group) -> SouperSecretSettingsClient.soupRenderer.getRegistryGroups(registry).putIfAbsent(name, new Group(group.entries)))));
-        SouperSecretSettingsClient.soupRenderer.shaderGroupRegistries.forEach(((registry, registryMap) -> registryMap.forEach((name, group) -> SouperSecretSettingsClient.soupRenderer.getRegistryGroups(registry).putIfAbsent(name, new Group(List.of("+random_"+name))))));
+        resourceGroups.get(registryName).forEach((name, group) -> registryMap.putIfAbsent(name, new Group(group.entries)));
     }
 
     public Path getGroupLocation(Identifier registry, String name) {
-        return configDir.resolve("groups").resolve(registry.toString().replace(":","_")).resolve(name+".json");
+        return configDir.resolve("groups").resolve(registry.toString().replace(':','_')).resolve(name+".json");
     }
 
     public <T> Optional<T> loadFromPath(Codec<T> codec, Path path) {
