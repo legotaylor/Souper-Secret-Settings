@@ -50,7 +50,7 @@ public class ShaderAdditionScreen extends ListAdditionScreen<ShaderData> {
 
         if (isGroups) {
             String name = addition.substring(7);
-            createGroupButton(name, getRegistryMap().get(name));
+            createGroupButton(name, getRegistryGroups().get(name));
             return;
         }
 
@@ -97,12 +97,12 @@ public class ShaderAdditionScreen extends ListAdditionScreen<ShaderData> {
 
     protected void selectGroup(AdditionButton additionButton) {
         String name = additionButton.addition.substring(7);
-        ClientData.minecraft.setScreen(new GroupEditScreen(this, getRegistryMap().get(name), name));
+        ClientData.minecraft.setScreen(new GroupEditScreen(this, getRegistryGroups().get(name), name));
         changedGroups = true;
     }
 
     protected void createGroup() {
-        Map<String, Group> map = getRegistryMap();
+        Map<String, Group> map = getRegistryGroups();
 
         String name;
         int i = 1;
@@ -115,23 +115,34 @@ public class ShaderAdditionScreen extends ListAdditionScreen<ShaderData> {
         map.put(name, group);
 
         selectGroup(createGroupButton(name, group));
+        changedGroups = true;
         shaderScreen.recalculateAdditions();
     }
 
     protected void removeGroup(AdditionButton button) {
         removeAddition(button);
-        getRegistryMap().remove(button.addition.substring(7));
         changedGroups = true;
+
+        Group group = getRegistryGroups().remove(button.addition.substring(7));
+        if (group.file != null) {
+            if (group.file.delete()) {
+                group.file = null;
+            } else {
+                SouperSecretSettingsClient.log("Failed to delete file " + group.file);
+            }
+        }
+
     }
 
-    public Map<String, Group> getRegistryMap() {
-        return SouperSecretSettingsClient.soupRenderer.shaderGroups.get(shaderScreen.registry);
+    public Map<String, Group> getRegistryGroups() {
+        return SouperSecretSettingsClient.soupRenderer.getRegistryGroups(shaderScreen.registry);
     }
 
     @Override
     public void close() {
         if (changedGroups) {
             shaderScreen.recalculateAdditions();
+            SouperSecretSettingsClient.soupData.saveGroups();
         }
         super.close();
     }

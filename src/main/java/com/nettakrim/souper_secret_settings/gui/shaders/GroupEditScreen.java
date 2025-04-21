@@ -2,6 +2,7 @@ package com.nettakrim.souper_secret_settings.gui.shaders;
 
 import com.mclegoman.luminance.client.data.ClientData;
 import com.mclegoman.luminance.common.util.Couple;
+import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.ListWidget;
 import com.nettakrim.souper_secret_settings.gui.SoupGui;
@@ -10,8 +11,10 @@ import com.nettakrim.souper_secret_settings.shaders.Group;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -91,7 +94,7 @@ public class GroupEditScreen extends ListScreen<String> {
 
     @Override
     protected boolean matchIdentifiers() {
-        return false;
+        return true;
     }
 
     @Override
@@ -111,6 +114,7 @@ public class GroupEditScreen extends ListScreen<String> {
     @Override
     public void close() {
         resolveName(true);
+        group.changed = true;
         ClientData.minecraft.setScreen(groupScreen);
     }
 
@@ -121,7 +125,7 @@ public class GroupEditScreen extends ListScreen<String> {
 
         String newName = "user_"+name;
 
-        Map<String, Group> map = groupScreen.getRegistryMap();
+        Map<String, Group> map = groupScreen.getRegistryGroups();
         if (map.containsKey(newName)) {
             nameWidget.setText(startingName);
             nameWidget.setCursorToEnd(false);
@@ -131,6 +135,15 @@ public class GroupEditScreen extends ListScreen<String> {
             map.put(newName, map.remove(startingName));
             startingName = newName;
             groupScreen.shaderScreen.recalculateAdditions();
+            if (group.file != null) {
+                File newFile = SouperSecretSettingsClient.soupData.getGroupLocation(groupScreen.shaderScreen.registry, newName).toFile();
+                try {
+                    FileUtils.moveFile(group.file, newFile);
+                    group.file = newFile;
+                } catch (Exception e) {
+                    SouperSecretSettingsClient.log("Failed to move file " + group.file);
+                }
+            }
         }
     }
 

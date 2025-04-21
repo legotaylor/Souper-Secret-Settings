@@ -9,6 +9,7 @@ import com.google.gson.stream.JsonWriter;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
+import com.nettakrim.souper_secret_settings.shaders.Group;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.data.DataProvider;
@@ -139,6 +140,48 @@ public class SoupData {
         if (saveChange > 0) {
             saveConfig();
         }
+    }
+
+    public void saveGroups() {
+        SouperSecretSettingsClient.soupRenderer.shaderGroups.forEach(((registry, groups) -> groups.forEach((name, group) -> {
+            if (group.file != null && !name.startsWith("user_") && group.entries.size() == 1 && group.entries.getFirst().equals("+random_"+name)) {
+                if (group.file.delete()) {
+                    group.file = null;
+                } else {
+                    SouperSecretSettingsClient.log("Failed to delete file "+group.file);
+                }
+                return;
+            }
+
+            if (!group.changed) {
+                return;
+            }
+
+            if (group.file == null) {
+                group.file = SouperSecretSettingsClient.soupData.getGroupLocation(registry, name).toFile();
+            }
+
+            saveToPath(Group.CODEC, group.file.toPath(), group);
+        })));
+    }
+
+    public void loadGroups(Map<String, Group> registryMap, Identifier registry) {
+        File[] files = configDir.resolve("groups").resolve(registry.toString().replace(":","_")).toFile().listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isFile()) {
+                    Optional<Group> group = loadFromPath(Group.CODEC, file.toPath());
+                    if (group.isPresent()) {
+                        String name = file.getName();
+                        registryMap.put(name.substring(0, name.length() - 5), group.get());
+                    }
+                }
+            }
+        }
+    }
+
+    public Path getGroupLocation(Identifier registry, String name) {
+        return configDir.resolve("groups").resolve(registry.toString().replace(":","_")).resolve(name+".json");
     }
 
     public <T> Optional<T> loadFromPath(Codec<T> codec, Path path) {
