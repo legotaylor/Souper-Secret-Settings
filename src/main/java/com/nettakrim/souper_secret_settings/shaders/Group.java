@@ -121,6 +121,14 @@ public class Group {
             return;
         }
 
+        if (id.equals("all")) {
+            shadersSet.clear();
+            if (!remove) {
+                shadersSet.addAll(Shaders.getRegistry(registry));
+            }
+            return;
+        }
+
         Shaders.guessPostShader(registry, id).ifPresent(registryEntry -> {
             if (remove) {
                 shadersSet.remove(registryEntry);

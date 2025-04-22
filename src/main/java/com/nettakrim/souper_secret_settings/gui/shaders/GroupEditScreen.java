@@ -74,6 +74,7 @@ public class GroupEditScreen extends ListScreen<String> {
     public List<String> calculateAdditions() {
         List<String> additions = new ArrayList<>(groupScreen.shaderScreen.getAdditions());
         additions.remove("random");
+        additions.add("all");
         return additions;
     }
 
