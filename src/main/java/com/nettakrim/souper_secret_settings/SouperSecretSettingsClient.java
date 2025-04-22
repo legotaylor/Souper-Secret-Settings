@@ -44,7 +44,6 @@ public class SouperSecretSettingsClient implements ClientModInitializer {
 		actions = new Actions();
 
 		ResourceManagerHelper.registerBuiltinResourcePack(Identifier.of("soup"), FabricLoader.getInstance().getModContainer(MODID).orElseThrow(), translate("resourcepack_soup"), ResourcePackActivationType.DEFAULT_ENABLED);
-		soupData.config.transferOldData();
 		Keybinds.tick();
 
 		SoupUniforms.register();
@@ -64,6 +63,12 @@ public class SouperSecretSettingsClient implements ClientModInitializer {
 		ClientLifecycleEvents.CLIENT_STOPPING.register((client) -> soupData.saveIfChanged());
 
 		Events.ClientResourceReloaders.register(Identifier.of(MODID, "shaders"), new SoupReloader());
+
+		Identifier transfer = Identifier.of(SouperSecretSettingsClient.MODID, "transfer");
+		Events.AfterClientResourceReload.register(transfer, () -> ClientData.minecraft.send(() -> {
+            soupData.config.transferOldData();
+            Events.AfterClientResourceReload.remove(transfer);
+        }));
 	}
 
 	public static void say(String key, int priority, Object... args) {
