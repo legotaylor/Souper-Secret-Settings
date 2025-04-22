@@ -1,5 +1,6 @@
 package com.nettakrim.souper_secret_settings.data;
 
+import com.mclegoman.luminance.client.shaders.ShaderRegistryEntry;
 import com.mclegoman.luminance.client.shaders.Shaders;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -8,7 +9,6 @@ import com.nettakrim.souper_secret_settings.actions.Actions;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.util.Identifier;
 
 import java.io.File;
 import java.io.IOException;
@@ -124,9 +124,9 @@ public class Config {
                 default -> id;
             };
 
-            Identifier guessed = Shaders.guessPostShader(id);
-            if (guessed != null) {
-                id = guessed.toString();
+            Optional<ShaderRegistryEntry> registryEntry = Shaders.guessPostShader(Shaders.getMainRegistryId(), id);
+            if (registryEntry.isPresent()) {
+                id = registryEntry.get().getID().toString();
             }
 
             LayerCodecs.Shader shader = new LayerCodecs.Shader(id, Optional.empty(), true);

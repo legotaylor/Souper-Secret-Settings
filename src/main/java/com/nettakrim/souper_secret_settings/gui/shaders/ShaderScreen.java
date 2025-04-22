@@ -15,10 +15,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ShaderScreen extends ListScreen<ShaderData> {
     public final ShaderLayer layer;
@@ -85,7 +82,7 @@ public class ShaderScreen extends ListScreen<ShaderData> {
             return null;
         }
 
-        Identifier identifier = Shaders.guessPostShader(addition);
+        Identifier identifier = Shaders.guessPostShader(registry, addition).map(ShaderRegistryEntry::getID).orElse(Identifier.tryParse(addition));
         if (identifier != null) {
             List<ShaderData> shader = SouperSecretSettingsClient.soupRenderer.getShaderAdditions(registry, identifier, 1, layer, true);
             if (shader != null) {

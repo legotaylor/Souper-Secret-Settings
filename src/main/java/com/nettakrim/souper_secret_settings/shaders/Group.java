@@ -118,14 +118,16 @@ public class Group {
                     shadersSet.addAll(groupRegistries);
                 }
             }
-        } else {
-            ShaderRegistryEntry registryEntry = Shaders.get(registry, Shaders.guessPostShader(registry, id));
+            return;
+        }
+
+        Shaders.guessPostShader(registry, id).ifPresent(registryEntry -> {
             if (remove) {
                 shadersSet.remove(registryEntry);
             } else {
                 shadersSet.add(registryEntry);
             }
-        }
+        });
     }
 
     protected Group getGroup(Identifier registry, String randomID) {

@@ -205,17 +205,19 @@ public class SoupRenderer implements Runnables.WorldRender {
     }
 
     public static ShaderRegistryEntry getRegistryEntry(Identifier registry, Identifier identifier) {
-        for (ShaderRegistryEntry shaderRegistry : Shaders.getRegistry(registry)) {
+        List<ShaderRegistryEntry> registryEntries = Shaders.getRegistry(registry);
+
+        for (ShaderRegistryEntry shaderRegistry : registryEntries) {
             if (shaderRegistry.getID().equals(identifier)) {
                 return shaderRegistry;
             }
         }
 
         if (identifier.getNamespace().equals("minecraft")) {
-            Identifier guessed = Shaders.guessPostShader(registry, identifier.getPath());
-            assert guessed != null;
-            if (!guessed.getNamespace().equals("minecraft")) {
-                return getRegistryEntry(registry, guessed);
+            for (ShaderRegistryEntry shaderRegistry : registryEntries) {
+                if (shaderRegistry.getID().getPath().equals(identifier.getPath())) {
+                    return shaderRegistry;
+                }
             }
         }
 

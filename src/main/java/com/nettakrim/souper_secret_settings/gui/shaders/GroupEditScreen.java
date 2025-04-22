@@ -1,6 +1,7 @@
 package com.nettakrim.souper_secret_settings.gui.shaders;
 
 import com.mclegoman.luminance.client.data.ClientData;
+import com.mclegoman.luminance.client.shaders.ShaderRegistryEntry;
 import com.mclegoman.luminance.client.shaders.Shaders;
 import com.mclegoman.luminance.common.util.Couple;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
@@ -19,6 +20,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class GroupEditScreen extends ListScreen<String> {
     protected final ShaderAdditionScreen groupScreen;
@@ -85,9 +87,9 @@ public class GroupEditScreen extends ListScreen<String> {
         }
 
         if (!addition.startsWith("random_")) {
-            Identifier guessed = Shaders.guessPostShader(groupScreen.shaderScreen.registry, addition);
-            if (guessed != null) {
-                addition = guessed.toString();
+            Optional<ShaderRegistryEntry> registryEntry = Shaders.guessPostShader(groupScreen.shaderScreen.registry, addition);
+            if (registryEntry.isPresent()) {
+                addition = registryEntry.get().getID().toString();
             }
         }
 
