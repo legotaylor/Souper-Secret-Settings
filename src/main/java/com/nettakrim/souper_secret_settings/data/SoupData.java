@@ -200,7 +200,10 @@ public class SoupData {
             }
         }
 
-        resourceGroups.get(registryName).forEach((name, group) -> registryMap.putIfAbsent(name, new Group(group.entries)));
+        Map<String, Group> groups = resourceGroups.get(registryName);
+        if (groups != null) {
+            groups.forEach((name, group) -> registryMap.putIfAbsent(name, new Group(group.entries)));
+        }
     }
 
     public Path getGroupLocation(Identifier registry, String name) {
