@@ -277,32 +277,41 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
     }
 
     public int info() {
-        List<ShaderData> shaders = getList();
+        List<ShaderData> shaders = getList().stream().filter(shaderData -> shaderData.active).toList();
 
         if (shaders.isEmpty()) {
-            SouperSecretSettingsClient.say("query.none", 1);
+            SouperSecretSettingsClient.say("shader.info.none", 1);
         } else {
             MutableText text = Text.empty();
-            String connector = "";
-            Identifier lastId = shaders.getFirst().shader.getShaderId();
+
+            int count = 1;
             String key = SouperSecretSettingsClient.MODID+".shader.info";
-            int count = 0;
-            for (int i = 0; i < shaders.size(); i++) {
-                ShaderData shaderData = shaders.get(i);
-                Identifier currentID = shaderData.shader.getShaderId();
-                if (!currentID.equals(lastId) || i == shaders.size()-1) {
+            ShaderData shaderData = shaders.getFirst();
+            ShaderData next = shaderData;
+
+            int i = 0;
+            boolean search;
+            do {
+                search = i != shaders.size()-1;
+                if (search) next = shaders.get(i+1);
+
+                if (!search || !shaderData.shader.getShaderId().equals(next.shader.getShaderId())) {
                     String s = shaderData.getTranslatedName().getString();
                     if (count == 1) {
-                        text.append(Text.translatable(key+connector, s));
+                        text.append(Text.translatable(key, s));
                     } else {
-                        text.append(Text.translatable(key+".multiple"+connector, s, count));
+                        text.append(Text.translatable(key+".multiple", s, count));
                     }
-                    connector = ".join";
+                    if (i == count-1) {
+                        key = SouperSecretSettingsClient.MODID+".shader.info.join";
+                    }
+                    shaderData = next;
                     count = 0;
                 }
                 count++;
-                lastId = currentID;
-            }
+                i++;
+            } while (search);
+
             SouperSecretSettingsClient.sayStyled(text, 1);
         }
 
