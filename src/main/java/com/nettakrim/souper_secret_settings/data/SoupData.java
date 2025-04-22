@@ -36,6 +36,7 @@ public class SoupData {
     public final Config config;
 
     private int saveChange;
+    private boolean groupsChanged;
 
     public Map<Identifier, LayerCodecs> resourceLayers;
     public Map<String, Map<String,Group>> resourceGroups = new HashMap<>(0);
@@ -122,6 +123,11 @@ public class SoupData {
     public void saveConfig() {
         saveChange = 0;
         writeToPath(Config.CODEC.encodeStart(JsonOps.INSTANCE, config).getOrThrow(), configDir.resolve("config.json"));
+
+        if (groupsChanged) {
+            SouperSecretSettingsClient.soupData.saveGroups();
+            groupsChanged = false;
+        }
     }
 
     public void tick() {
@@ -133,8 +139,9 @@ public class SoupData {
         }
     }
 
-    public void changeConfig() {
+    public void changeConfig(boolean groupsChanged) {
         saveChange = 1200;
+        this.groupsChanged |= groupsChanged;
     }
 
     public void saveIfChanged() {

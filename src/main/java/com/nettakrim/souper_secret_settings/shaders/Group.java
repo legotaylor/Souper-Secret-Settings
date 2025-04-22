@@ -109,7 +109,7 @@ public class Group {
                         return;
                     }
                 } else {
-                    groupRegistries = group.getComputed(registry, name);
+                    groupRegistries = group.getComputed(registry, id.substring(7));
                 }
 
                 if (remove) {
@@ -139,11 +139,31 @@ public class Group {
     }
 
     protected Group getGroup(Identifier registry, String randomID) {
-        Map<String, Group> registryGroups = SouperSecretSettingsClient.soupRenderer.getRegistryGroups(registry);
+        Map<String, Group> registryGroups = SouperSecretSettingsClient.soupRenderer.getShaderGroups(registry);
         return registryGroups.get(randomID.substring(7));
     }
 
     public void requestUpdate() {
         needsUpdate = true;
+    }
+
+    public static String getNextName(Map<String, Group> map) {
+        String name;
+        int i = 1;
+        do {
+            name = "user_group_"+i;
+            i++;
+        } while (map.containsKey(name));
+        return name;
+    }
+
+    public void deleteFile() {
+        if (file != null) {
+            if (file.delete()) {
+                file = null;
+            } else {
+                SouperSecretSettingsClient.log("Failed to delete file " + file);
+            }
+        }
     }
 }

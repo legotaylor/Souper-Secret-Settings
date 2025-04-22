@@ -155,7 +155,7 @@ public class OptionCommand {
     public static int setRandomItem(ItemStackArgument itemStack) throws CommandSyntaxException {
         SouperSecretSettingsClient.soupData.config.randomItem = itemStack.createStack(1, false);
         sayItem("option.random.set", SouperSecretSettingsClient.soupData.config.randomItem, 0);
-        SouperSecretSettingsClient.soupData.changeConfig();
+        SouperSecretSettingsClient.soupData.changeConfig(false);
         return 1;
     }
 
@@ -167,7 +167,7 @@ public class OptionCommand {
     public static int setClearItem(ItemStackArgument itemStack) throws CommandSyntaxException {
         SouperSecretSettingsClient.soupData.config.clearItem = itemStack.createStack(1, false);
         sayItem("option.clear.set", SouperSecretSettingsClient.soupData.config.clearItem, 0);
-        SouperSecretSettingsClient.soupData.changeConfig();
+        SouperSecretSettingsClient.soupData.changeConfig(false);
         return 1;
     }
 
@@ -178,19 +178,19 @@ public class OptionCommand {
 
     public static int setRandomShader(String shader) {
         SouperSecretSettingsClient.soupData.config.randomShader = shader;
-        SouperSecretSettingsClient.soupData.changeConfig();
+        SouperSecretSettingsClient.soupData.changeConfig(false);
         return queryRandomInfo(0);
     }
 
     public static int setRandomCount(int amount) {
         SouperSecretSettingsClient.soupData.config.randomCount = amount;
-        SouperSecretSettingsClient.soupData.changeConfig();
+        SouperSecretSettingsClient.soupData.changeConfig(false);
         return queryRandomInfo(0);
     }
 
     public static int setRandomDuration(int amount) {
         SouperSecretSettingsClient.soupData.config.randomDuration = amount;
-        SouperSecretSettingsClient.soupData.changeConfig();
+        SouperSecretSettingsClient.soupData.changeConfig(false);
         return queryRandomInfo(0);
     }
 
@@ -222,13 +222,13 @@ public class OptionCommand {
     public static int toggle(boolean stay) {
         SouperSecretSettingsClient.soupData.config.disableState = stay ? 2 : SouperSecretSettingsClient.soupData.config.disableState > 0 ? 0 : 1;
         SouperSecretSettingsClient.say("option.toggle."+SouperSecretSettingsClient.soupData.config.disableState, 0);
-        SouperSecretSettingsClient.soupData.changeConfig();
+        SouperSecretSettingsClient.soupData.changeConfig(false);
         return 1;
     }
 
     public static int warning(boolean state) {
         SouperSecretSettingsClient.soupData.config.warning = state;
-        SouperSecretSettingsClient.soupData.changeConfig();
+        SouperSecretSettingsClient.soupData.changeConfig(false);
         return warningQuery(0);
     }
 
@@ -239,7 +239,7 @@ public class OptionCommand {
 
     public static int setMessageFilter(int to) {
         SouperSecretSettingsClient.soupData.config.messageFilter = to;
-        SouperSecretSettingsClient.soupData.changeConfig();
+        SouperSecretSettingsClient.soupData.changeConfig(false);
         return queryMessageFilter(2);
     }
 
@@ -250,7 +250,7 @@ public class OptionCommand {
 
     public static int setUndoLimit(int to) {
         SouperSecretSettingsClient.soupData.config.undoLimit = to;
-        SouperSecretSettingsClient.soupData.changeConfig();
+        SouperSecretSettingsClient.soupData.changeConfig(false);
         return queryUndoLimit(0);
     }
 

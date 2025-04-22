@@ -49,7 +49,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
         this.registry = registry;
         this.warnLimit = warnLimit;
 
-        this.registrySuggestions = getRegistrySuggestions(registry);
+        this.registrySuggestions = getRegistrySuggestions(registry, false);
     }
 
     public void register(RootCommandNode<FabricClientCommandSource> root) {
@@ -113,6 +113,58 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
                 .executes((context) -> info())
                 .build();
         commandNode.addChild(infoNode);
+
+        LiteralCommandNode<FabricClientCommandSource> groupNode = ClientCommandManager
+                .literal("group")
+                .then(
+                        ClientCommandManager.literal("create")
+                                .executes((context -> createGroup(Group.getNextName(SouperSecretSettingsClient.soupRenderer.getShaderGroups(registry)))))
+                                .then(
+                                        ClientCommandManager.argument("name", StringArgumentType.string())
+                                                .executes(context -> createGroup(StringArgumentType.getString(context, "name")))
+                                )
+                )
+                .then(
+                        ClientCommandManager.literal("modify")
+                                .then(
+                                        ClientCommandManager.argument("name", StringArgumentType.string())
+                                                .suggests(groupSuggestions)
+                                                .then(
+                                                        ClientCommandManager.literal("add")
+                                                                .then(
+                                                                        ClientCommandManager.argument("value", StringArgumentType.string())
+                                                                                .suggests(getRegistrySuggestions(registry, true))
+                                                                                .executes(context -> addGroupEntry(StringArgumentType.getString(context, "name"), StringArgumentType.getString(context, "value")))
+                                                                )
+                                                )
+                                                .then(
+                                                        ClientCommandManager.literal("remove")
+                                                                .then(
+                                                                        ClientCommandManager.argument("index", IntegerArgumentType.integer(0))
+                                                                                .suggests(groupIndexes)
+                                                                                .executes(context -> removeGroupEntry(StringArgumentType.getString(context, "name"), IntegerArgumentType.getInteger(context, "index")))
+                                                                )
+                                                )
+                                                .then(
+                                                        ClientCommandManager.literal("toggle")
+                                                                .then(
+                                                                        ClientCommandManager.argument("index", IntegerArgumentType.integer(0))
+                                                                                .suggests(groupIndexes)
+                                                                                .executes(context -> toggleGroupEntry(StringArgumentType.getString(context, "name"), IntegerArgumentType.getInteger(context, "index")))
+                                                                )
+                                                )
+                                )
+                )
+                .then(
+                        ClientCommandManager.literal("remove")
+                                .then(
+                                        ClientCommandManager.argument("name", StringArgumentType.string())
+                                                .suggests(userGroupSuggestions)
+                                                .executes((context -> removeGroup(StringArgumentType.getString(context, "name"))))
+                                )
+                )
+                .build();
+        commandNode.addChild(groupNode);
 
         registerList(commandNode);
     }
@@ -318,7 +370,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
         return 1;
     }
 
-    private static SuggestionProvider<FabricClientCommandSource> getRegistrySuggestions(Identifier registry) {
+    private static SuggestionProvider<FabricClientCommandSource> getRegistrySuggestions(Identifier registry, boolean fromGroups) {
         return (context, builder) -> {
             String current = new StringReader(builder.getRemaining()).readString();
             Map<String, Identifier> paths = new HashMap<>();
@@ -342,7 +394,12 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
                     }
                 }
             }
-            if (registryEntries.size() >= 2) builder.suggest("random", SouperSecretSettingsClient.translate("shader.group_suggestion", registryEntries.size()));
+
+            if (fromGroups) {
+                builder.suggest("all", SouperSecretSettingsClient.translate("shader.group_suggestion", registryEntries.size()));
+            } else if (registryEntries.size() >= 2) {
+                builder.suggest("random", SouperSecretSettingsClient.translate("shader.group_suggestion", registryEntries.size()));
+            }
 
             if (searchPaths) {
                 for (Identifier identifier : paths.values()) {
@@ -350,7 +407,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
                 }
             }
 
-            SouperSecretSettingsClient.soupRenderer.getRegistryGroups(registry).forEach(((name, shaderRegistryEntries) -> builder.suggest("random_" + name, SouperSecretSettingsClient.translate("shader.group_suggestion", shaderRegistryEntries.getComputed(registry, name).size()))));
+            SouperSecretSettingsClient.soupRenderer.getShaderGroups(registry).forEach(((name, shaderRegistryEntries) -> builder.suggest("random_" + name, SouperSecretSettingsClient.translate("shader.group_suggestion", shaderRegistryEntries.getComputed(registry, name).size()))));
 
             return builder.buildFuture();
         };
@@ -514,6 +571,24 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
         return null;
     }
 
+    protected final SuggestionProvider<FabricClientCommandSource> groupSuggestions = (context, builder) -> {
+        Map<String, Group> groups = SouperSecretSettingsClient.soupRenderer.getShaderGroups(getRegistry());
+        groups.keySet().forEach(builder::suggest);
+        return builder.buildFuture();
+    };
+
+    protected final SuggestionProvider<FabricClientCommandSource> userGroupSuggestions = (context, builder) -> {
+        Map<String, Group> groups = SouperSecretSettingsClient.soupRenderer.getShaderGroups(getRegistry());
+        groups.keySet().forEach(name -> {
+            if (name.startsWith("user_")) {
+                builder.suggest(name);
+            }
+        });
+        return builder.buildFuture();
+    };
+
+    protected final SuggestionProvider<FabricClientCommandSource> groupIndexes = SouperSecretSettingsCommands.createIndexSuggestion(context -> SouperSecretSettingsClient.soupRenderer.getShaderGroups(getRegistry()).getOrDefault(StringArgumentType.getString(context, "name"), new Group()).entries, Text::literal);
+
     @Override
     List<ShaderData> getList() {
         return SouperSecretSettingsClient.soupRenderer.activeLayer.getList(registry);
@@ -531,5 +606,113 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
 
     public Identifier getRegistry() {
         return registry;
+    }
+
+    public int createGroup(String name) {
+        if (!name.startsWith("user_")) {
+            name = "user_"+name;
+        }
+
+        Map<String, Group> map = SouperSecretSettingsClient.soupRenderer.getShaderGroups(registry);
+
+        if (map.containsKey(name)) {
+            SouperSecretSettingsClient.say("group.error.exists", 1, name);
+            return 0;
+        }
+
+        if (name.isBlank()) {
+            SouperSecretSettingsClient.say("group.error.value", 1, name);
+            return 0;
+        }
+
+        Group group = new Group();
+        map.put(name, group);
+        SouperSecretSettingsClient.say("group.create", 0, name);
+        group.changed = true;
+        groupsChanged();
+        return 1;
+    }
+
+    public int addGroupEntry(String name, String entry) {
+        Group group = SouperSecretSettingsClient.soupRenderer.getShaderGroups(registry).get(name);
+        if (group == null) {
+            SouperSecretSettingsClient.say("group.missing", 1, name);
+            return 0;
+        }
+
+        if (entry.isBlank()) {
+            SouperSecretSettingsClient.say("group.error.value", 1, name);
+            return 0;
+        }
+
+        int c = entry.charAt(0);
+        if (c != '+' && c != '-') {
+            entry = '+'+entry;
+        }
+
+        group.entries.addLast(entry);
+        SouperSecretSettingsClient.say("group.add", 0, entry);
+        group.changed = true;
+        groupsChanged();
+        return 1;
+    }
+
+    public int removeGroupEntry(String name, int index) {
+        Group group = SouperSecretSettingsClient.soupRenderer.getShaderGroups(registry).get(name);
+        if (group == null) {
+            SouperSecretSettingsClient.say("group.missing", 1, name);
+            return 0;
+        }
+        if (index >= group.entries.size()) {
+            SouperSecretSettingsClient.say("group.error.index", 1, index, group.entries.size()-1);
+            return 0;
+        }
+        String entry = group.entries.remove(index);
+        SouperSecretSettingsClient.say("group.remove_entry", 0, index, entry);
+        group.changed = true;
+        groupsChanged();
+        return 1;
+    }
+
+    public int toggleGroupEntry(String name, int index) {
+        Group group = SouperSecretSettingsClient.soupRenderer.getShaderGroups(registry).get(name);
+        if (group == null) {
+            SouperSecretSettingsClient.say("group.missing", 1, name);
+            return 0;
+        }
+        if (index >= group.entries.size()) {
+            SouperSecretSettingsClient.say("group.error.index", 1, index, group.entries.size()-1);
+            return 0;
+        }
+        String entry = group.entries.get(index);
+        entry = (entry.charAt(0) == '-' ? "+" : "-")+entry.substring(1);
+        group.entries.set(index, entry);
+        SouperSecretSettingsClient.say("group.toggle", 0, index, entry);
+        group.changed = true;
+        groupsChanged();
+        return 1;
+    }
+
+    public int removeGroup(String name) {
+        Map<String, Group> map = SouperSecretSettingsClient.soupRenderer.getShaderGroups(registry);
+        if (!name.startsWith("user_") && !name.isBlank()) {
+            name = "user_"+name;
+        }
+
+        if (!(map.containsKey(name))) {
+            SouperSecretSettingsClient.say("group.missing", 1, name);
+            return 0;
+        }
+        SouperSecretSettingsClient.say("group.remove", 0, name);
+        map.remove(name).deleteFile();
+        groupsChanged();
+        return 1;
+    }
+
+    private void groupsChanged() {
+        for (Group group : SouperSecretSettingsClient.soupRenderer.getShaderGroups(registry).values()) {
+            group.requestUpdate();
+        }
+        SouperSecretSettingsClient.soupData.changeConfig(true);
     }
 }

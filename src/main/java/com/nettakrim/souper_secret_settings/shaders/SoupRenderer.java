@@ -172,7 +172,7 @@ public class SoupRenderer implements Runnables.WorldRender {
         if (groupName == null) {
             registryEntries = Shaders.getRegistry(registry);
         } else {
-            Group group = getRegistryGroups(registry).get(groupName);
+            Group group = getShaderGroups(registry).get(groupName);
             if (group == null) {
                 registryEntries = null;
             } else {
@@ -309,7 +309,7 @@ public class SoupRenderer implements Runnables.WorldRender {
     }
 
     @NotNull
-    public Map<String, Group> getRegistryGroups(Identifier registry) {
+    public Map<String, Group> getShaderGroups(Identifier registry) {
         if (!shaderGroups.containsKey(registry)) {
             Map<String, Group> map = new HashMap<>();
             SouperSecretSettingsClient.soupData.loadGroups(map, registry);

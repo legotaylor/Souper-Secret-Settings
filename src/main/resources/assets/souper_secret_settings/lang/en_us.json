@@ -51,6 +51,17 @@
     "souper_secret_settings.load.error.modifier": "Error loading modifier at index %s: ",
     "souper_secret_settings.load.error.parameter": "Error loading parameter at index %s: ",
 
+    "souper_secret_settings.group.missing": "Cannot find group named \"%s\"",
+    "souper_secret_settings.group.create": "Created new group \"%s\"",
+    "souper_secret_settings.group.remove": "Removed group \"%s\"",
+    "souper_secret_settings.group.add": "Added entry \"%s\"",
+    "souper_secret_settings.group.remove_entry": "Removed entry %s (was \"%s\")",
+    "souper_secret_settings.group.toggle": "Toggled entry %s to \"%s\"",
+    "souper_secret_settings.group.error.exists": "Group named \"%s\" already exists",
+    "souper_secret_settings.group.error.index": "Group entry index %s is higher than the maximum of %s",
+    "souper_secret_settings.group.error.value": "Invalid value \"%s\"",
+
+
     "souper_secret_settings.option.warning.on": "Shader count warning enabled",
     "souper_secret_settings.option.warning.off": "Shader count warning disabled",
     "souper_secret_settings.option.random.set": "Set random item to %s",

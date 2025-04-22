@@ -56,7 +56,7 @@ public class ShaderScreen extends ListScreen<ShaderData> {
             shaders.addFirst("random");
         }
 
-        Map<String, Group> registryGroups = SouperSecretSettingsClient.soupRenderer.getRegistryGroups(registry);
+        Map<String, Group> registryGroups = SouperSecretSettingsClient.soupRenderer.getShaderGroups(registry);
         List<String> user = new ArrayList<>(registryGroups.keySet().size());
         List<String> random = new ArrayList<>(registryGroups.keySet().size());
 
@@ -108,7 +108,7 @@ public class ShaderScreen extends ListScreen<ShaderData> {
         if (addition.startsWith("random")) {
             if (addition.length() > 7) {
                 String name = addition.substring(7);
-                Group group = SouperSecretSettingsClient.soupRenderer.getRegistryGroups(registry).get(name);
+                Group group = SouperSecretSettingsClient.soupRenderer.getShaderGroups(registry).get(name);
                 if (group != null) {
                     return new Couple<>(Text.literal(addition), SouperSecretSettingsClient.translate("shader.group_suggestion", group.getComputed(registry, name).size()));
                 }

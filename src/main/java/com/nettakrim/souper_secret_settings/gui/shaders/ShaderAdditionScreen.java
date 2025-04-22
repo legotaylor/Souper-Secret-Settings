@@ -103,13 +103,7 @@ public class ShaderAdditionScreen extends ListAdditionScreen<ShaderData> {
 
     protected void createGroup() {
         Map<String, Group> map = getRegistryGroups();
-
-        String name;
-        int i = 1;
-        do {
-            name = "user_group_"+i;
-            i++;
-        } while (map.containsKey(name));
+        String name = Group.getNextName(map);
 
         Group group = new Group();
         map.put(name, group);
@@ -123,19 +117,11 @@ public class ShaderAdditionScreen extends ListAdditionScreen<ShaderData> {
         removeAddition(button);
         changedGroups = true;
 
-        Group group = getRegistryGroups().remove(button.addition.substring(7));
-        if (group.file != null) {
-            if (group.file.delete()) {
-                group.file = null;
-            } else {
-                SouperSecretSettingsClient.log("Failed to delete file " + group.file);
-            }
-        }
-
+        getRegistryGroups().remove(button.addition.substring(7)).deleteFile();
     }
 
     public Map<String, Group> getRegistryGroups() {
-        return SouperSecretSettingsClient.soupRenderer.getRegistryGroups(shaderScreen.registry);
+        return SouperSecretSettingsClient.soupRenderer.getShaderGroups(shaderScreen.registry);
     }
 
     @Override
