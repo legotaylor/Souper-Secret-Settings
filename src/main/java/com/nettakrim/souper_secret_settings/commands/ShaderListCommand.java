@@ -134,7 +134,11 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
                                                                 .then(
                                                                         ClientCommandManager.argument("value", StringArgumentType.string())
                                                                                 .suggests(getRegistrySuggestions(registry, true))
-                                                                                .executes(context -> addGroupEntry(StringArgumentType.getString(context, "name"), StringArgumentType.getString(context, "value")))
+                                                                                .executes(context -> addGroupEntry(StringArgumentType.getString(context, "name"), StringArgumentType.getString(context, "value"), -1))
+                                                                                .then(
+                                                                                        ClientCommandManager.argument("index", IntegerArgumentType.integer(0))
+                                                                                                .executes(context -> addGroupEntry(StringArgumentType.getString(context, "name"), StringArgumentType.getString(context, "value"), IntegerArgumentType.getInteger(context, "index")))
+                                                                                )
                                                                 )
                                                 )
                                                 .then(
@@ -633,7 +637,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
         return 1;
     }
 
-    public int addGroupEntry(String name, String entry) {
+    public int addGroupEntry(String name, String entry, int index) {
         Group group = SouperSecretSettingsClient.soupRenderer.getShaderGroups(registry).get(name);
         if (group == null) {
             SouperSecretSettingsClient.say("group.missing", 1, name);
@@ -650,7 +654,12 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
             entry = '+'+entry;
         }
 
-        group.entries.addLast(entry);
+        if (index < 0 || index > group.entries.size()) {
+            group.entries.addLast(entry);
+        } else {
+            group.entries.add(index, entry);
+        }
+
         SouperSecretSettingsClient.say("group.add", 0, entry);
         group.changed = true;
         groupsChanged();
