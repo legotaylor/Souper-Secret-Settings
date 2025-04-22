@@ -117,6 +117,7 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
 
         LiteralCommandNode<FabricClientCommandSource> copyNode = ClientCommandManager
                 .literal("copy")
+                .executes(context -> copyCurrent(-1))
                 .then(
                         ClientCommandManager.literal("current")
                                 .then(
@@ -136,6 +137,7 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
                 )
                 .then(
                         ClientCommandManager.literal("load")
+                                .executes(context -> loadFromString(ClientData.minecraft.keyboard.getClipboard()))
                                 .then(
                                         ClientCommandManager.literal("clipboard")
                                                 .executes(context -> loadFromString(ClientData.minecraft.keyboard.getClipboard()))
