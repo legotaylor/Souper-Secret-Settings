@@ -99,6 +99,9 @@ public class GroupEditScreen extends ListScreen<String> {
 
     @Override
     protected Couple<Text, Text> getAdditionText(String addition) {
+        if (addition.equals("all")) {
+            return new Couple<>(Text.literal(addition), SouperSecretSettingsClient.translate("shader.group_suggestion", Shaders.getRegistry(groupScreen.shaderScreen.registry).size()));
+        }
         return groupScreen.shaderScreen.getAdditionText(addition);
     }
 
