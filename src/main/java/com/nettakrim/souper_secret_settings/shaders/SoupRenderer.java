@@ -9,7 +9,6 @@ import com.mclegoman.luminance.client.shaders.ShaderRegistryEntry;
 import com.mclegoman.luminance.client.shaders.Shaders;
 import com.mclegoman.luminance.client.shaders.uniforms.Uniform;
 import com.mclegoman.luminance.client.util.Accessors;
-import com.mclegoman.luminance.client.util.CompatHelper;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.commands.SouperSecretSettingsCommands;
 import net.minecraft.client.gl.PostEffectProcessor;
@@ -52,20 +51,8 @@ public class SoupRenderer implements Runnables.WorldRender {
 
         spectateHandler = new SoupSpectateHandler();
         Events.SpectatorHandlers.register(Identifier.of(SouperSecretSettingsClient.MODID, "spectate_handler"), spectateHandler);
-
-        Events.AfterWeatherRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "rendering"), ((builder, width, height, framebufferSet) -> {
-            if (!CompatHelper.isIrisShadersEnabled() && SouperSecretSettingsClient.soupData.config.disableState == 0) {
-                if (spectateHandler.shaderLayer != null) {
-                    spectateHandler.shaderLayer.render(builder, width, height, framebufferSet);
-                    ShaderLayer.renderCleanup(builder);
-                }
-                if (renderType == Shader.RenderType.WORLD) {
-                    this.run(builder, width, height, framebufferSet);
-                }
-            }
-        }));
         Events.AfterHandRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "rendering"), (framebuffer, objectAllocator) -> {
-            if (CompatHelper.isIrisShadersEnabled() && SouperSecretSettingsClient.soupData.config.disableState == 0) {
+            if (SouperSecretSettingsClient.soupData.config.disableState == 0) {
                 if (spectateHandler.shaderLayer != null) {
                     Runnables.WorldRender.fromGameRender(spectateHandler.shaderLayer::render, framebuffer, objectAllocator);
                     ShaderLayer.renderCleanup(null);
