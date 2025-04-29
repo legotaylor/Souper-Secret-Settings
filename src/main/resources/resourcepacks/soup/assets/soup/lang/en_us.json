@@ -33,6 +33,8 @@
     "gui.luminance.shader.soup.color_shuffle.description": "",
     "gui.luminance.shader.soup.contrast": "Contrast",
     "gui.luminance.shader.soup.contrast.description": "",
+    "gui.luminance.shader.soup.crunch": "Crunch",
+    "gui.luminance.shader.soup.crunch.description": "",
     "gui.luminance.shader.soup.crystallize": "Crystallize",
     "gui.luminance.shader.soup.crystallize.description": "",
     "gui.luminance.shader.soup.depth_outline": "Depth Outline",
