@@ -586,7 +586,13 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
 
     protected final SuggestionProvider<FabricClientCommandSource> groupSuggestions = (context, builder) -> {
         Map<String, Group> groups = SouperSecretSettingsClient.soupRenderer.getShaderGroups(getRegistry());
-        groups.keySet().forEach(builder::suggest);
+        groups.keySet().forEach(name -> {
+            if (name.contains("/")) {
+                builder.suggest("\""+name+"\"");
+            } else {
+                builder.suggest(name);
+            }
+        });
         return builder.buildFuture();
     };
 
@@ -594,7 +600,11 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
         Map<String, Group> groups = SouperSecretSettingsClient.soupRenderer.getShaderGroups(getRegistry());
         groups.keySet().forEach(name -> {
             if (name.startsWith("user_")) {
-                builder.suggest(name);
+                if (name.contains("/")) {
+                    builder.suggest("\""+name+"\"");
+                } else {
+                    builder.suggest(name);
+                }
             }
         });
         return builder.buildFuture();

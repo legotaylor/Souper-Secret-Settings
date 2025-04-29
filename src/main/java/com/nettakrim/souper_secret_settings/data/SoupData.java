@@ -28,6 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Stream;
 
 public class SoupData {
     protected final Path configDir;
@@ -192,19 +193,18 @@ public class SoupData {
 
     public void loadGroups(Map<String, Group> registryMap, Identifier registry) {
         String registryName = registry.toString().replace(':','_');
-        File[] files = configDir.resolve("groups").resolve(registryName).toFile().listFiles();
-        if (files != null) {
-            for (File file : files) {
-                if (file.isFile()) {
-                    Optional<Group> group = loadFromPath(Group.CODEC, file.toPath());
-                    if (group.isPresent()) {
-                        String name = file.getName();
-                        registryMap.put(name.substring(0, name.length() - 5), group.get());
-                        group.get().file = file;
-                    }
+        Path dir = configDir.resolve("groups").resolve(registryName);
+        try (Stream<Path> files = Files.find(dir, Integer.MAX_VALUE, (filePath, fileAttr) -> fileAttr.isRegularFile())) {
+            files.forEach(path -> {
+                File file = path.toFile();
+                Optional<Group> group = loadFromPath(Group.CODEC, file.toPath());
+                if (group.isPresent()) {
+                    String name = path.subpath(dir.getNameCount(), path.getNameCount()).toString();
+                    registryMap.put(name.substring(0, name.length() - 5), group.get());
+                    group.get().file = file;
                 }
-            }
-        }
+            });
+        } catch (IOException ignored) {}
 
         Map<String, Group> groups = resourceGroups.get(registryName);
         if (groups != null) {
