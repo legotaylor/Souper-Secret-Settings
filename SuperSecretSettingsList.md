@@ -10,31 +10,31 @@ All builtin resourcepacks should be enabled by default, but they may need to ena
 | Vanilla /<br>Super Secret Settings | Luminance           | Extra Soup      |
 |------------------------------------|---------------------|-----------------|
 | **[minecraft:]**                   | **[luminance:]**    | **[soup:]**     |
-| antialias                          | bloom_dither        | anaglyph        |
-| art                                | blue_blobs2         | ascii           |
-| bits                               | crt                 | autumnal        |
-| blobs                              | depth_dither        | bevel           |
-| blobs2                             | dos                 | blobs_outline   |
-| bloom*                             | eightbit            | blobs_rounded   |
-| box_blur**                         | gaussian            | blobs_square    |
-| bumpy                              | gentoo              | bloom_color     |
-| color_convolve                     | golden_blobs2       | bloom_spike     |
-| creeper**                          | grayscale           | brightness      |
-| deconverge                         | health_overlay      | checkerboard    |
-| desaturate                         | inverted_brightness | cinematic       |
-| flip                               | inverted_colors     | collapse        |
-| fxaa                               | mirror              | color_bleed     |
-| green                              | outlined            | color_blind     |
-| invert**                           | outlined2           | color_shuffle   |
-| love*                              | pixelated           | contrast        |
-| notch                              | rainbow             | crystallize     |
-| ntsc                               | saturate            | depth_outline   |
-| outline                            | sepia               | dissolve        |
-| pencil                             | silhouette          | dither          |
-| phosphor                           | silhouette2         | dramatic        |
-| scan_pincushion                    | sixteen_colors      | film_grain      |
-| shareware*                         | tiltshift           | fisheye         |
-| sobel                              |                     | fractal         |
+| antialias                          | aa                  | anaglyph        |
+| art                                | bloom_dither        | ascii           |
+| bits                               | blue_blobs2         | autumnal        |
+| blobs                              | crt                 | bevel           |
+| blobs2                             | depth_dither        | blobs_outline   |
+| bloom*                             | dos                 | blobs_rounded   |
+| box_blur**                         | eightbit            | blobs_square    |
+| bumpy                              | gaussian            | bloom_color     |
+| color_convolve                     | gentoo              | bloom_spike     |
+| creeper**                          | golden_blobs2       | brightness      |
+| deconverge                         | grayscale           | checkerboard    |
+| desaturate                         | health_overlay      | cinematic       |
+| flip                               | inverted_brightness | collapse        |
+| fxaa                               | inverted_colors     | color_bleed     |
+| green                              | mirror              | color_blind     |
+| invert**                           | outlined            | color_shuffle   |
+| love*                              | outlined2           | contrast        |
+| notch                              | pixelated           | crystallize     |
+| ntsc                               | rainbow             | depth_outline   |
+| outline                            | saturate            | dissolve        |
+| pencil                             | sepia               | dither          |
+| phosphor                           | silhouette          | dramatic        |
+| scan_pincushion                    | silhouette2         | film_grain      |
+| shareware*                         | sixteen_colors      | fisheye         |
+| sobel                              | tiltshift           | fractal         |
 | spider**                           |                     | frigid          |
 | wobble                             |                     | ghost           |
 |                                    |                     | gel             |
