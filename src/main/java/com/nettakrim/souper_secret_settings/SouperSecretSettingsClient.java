@@ -103,7 +103,7 @@ public class SouperSecretSettingsClient implements ClientModInitializer {
 		if (stacksMatch(stack, soupData.config.randomItem)) {
 			SouperSecretSettingsClient.soupRenderer.randomTimer = 0;
 			SouperSecretSettingsCommands.shaderCommand.removeAll(null);
-			SouperSecretSettingsCommands.shaderCommand.add(Identifier.of(SouperSecretSettingsClient.soupData.config.randomShader), SouperSecretSettingsClient.soupData.config.randomCount, true);
+			SouperSecretSettingsCommands.shaderCommand.add(Identifier.of(SouperSecretSettingsClient.soupData.config.randomShader), SouperSecretSettingsClient.soupData.config.randomCount, -1, true);
 			SouperSecretSettingsClient.soupRenderer.randomTimer = SouperSecretSettingsClient.soupData.config.randomDuration;
 			RandomSound.play();
 		} else if (stacksMatch(stack, soupData.config.clearItem)) {

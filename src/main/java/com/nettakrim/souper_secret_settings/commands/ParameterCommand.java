@@ -35,7 +35,11 @@ public class ParameterCommand extends ListCommand<Calculation> {
                 .then(
                         ClientCommandManager.argument("id", StringArgumentType.string())
                                 .suggests(calculationIDs)
-                                .executes(context -> add(StringArgumentType.getString(context, "id")))
+                                .executes(context -> add(StringArgumentType.getString(context, "id"), -1))
+                                .then(
+                                        ClientCommandManager.argument("position", IntegerArgumentType.integer(-1))
+                                                .executes(context -> add(StringArgumentType.getString(context, "id"), IntegerArgumentType.getInteger(context, "position")))
+                                )
                 )
                 .build();
         commandNode.addChild(addNode);
@@ -80,15 +84,19 @@ public class ParameterCommand extends ListCommand<Calculation> {
         registerList(commandNode);
     }
 
-    int add(String id) {
+    int add(String id, int position) {
         Calculation calculation = Calculations.createCalculation(id);
         if (calculation == null) {
             SouperSecretSettingsClient.say("parameter.missing", 1, id);
             return 0;
         }
 
-        new ListAddAction<>(SouperSecretSettingsClient.soupRenderer.activeLayer.calculations, calculation).addToHistory();
-        SouperSecretSettingsClient.soupRenderer.activeLayer.calculations.add(calculation);
+        if (position < 0 || position > SouperSecretSettingsClient.soupRenderer.activeLayer.calculations.size()) {
+            position = SouperSecretSettingsClient.soupRenderer.activeLayer.calculations.size();
+        }
+
+        new ListAddAction<>(SouperSecretSettingsClient.soupRenderer.activeLayer.calculations, calculation, position).addToHistory();
+        SouperSecretSettingsClient.soupRenderer.activeLayer.calculations.add(position, calculation);
         return 1;
     }
 

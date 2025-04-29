@@ -61,13 +61,17 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
                 .then(
                         ClientCommandManager.argument("shader", IdentifierArgumentType.identifier())
                                 .suggests(registrySuggestions)
-                                .executes((context -> add(context.getArgument("shader", Identifier.class), 1, false)))
+                                .executes((context -> add(context.getArgument("shader", Identifier.class), 1, -1, false)))
                                 .then(
                                         ClientCommandManager.argument("amount", IntegerArgumentType.integer(1))
-                                                .executes((context -> add(context.getArgument("shader", Identifier.class), IntegerArgumentType.getInteger(context, "amount"), false)))
+                                                .executes((context -> add(context.getArgument("shader", Identifier.class), IntegerArgumentType.getInteger(context, "amount"), -1, false)))
                                                 .then(
-                                                        ClientCommandManager.literal("force")
-                                                                .executes((context -> add(context.getArgument("shader", Identifier.class), IntegerArgumentType.getInteger(context, "amount"), true)))
+                                                        ClientCommandManager.argument("position", IntegerArgumentType.integer(-1))
+                                                                .executes((context -> add(context.getArgument("shader", Identifier.class), IntegerArgumentType.getInteger(context, "amount"), IntegerArgumentType.getInteger(context, "position"), false)))
+                                                                .then(
+                                                                        ClientCommandManager.literal("force")
+                                                                                .executes((context -> add(context.getArgument("shader", Identifier.class), IntegerArgumentType.getInteger(context, "amount"), IntegerArgumentType.getInteger(context, "position"), true)))
+                                                                )
                                                 )
                                 )
                 )
@@ -136,8 +140,8 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
                                                                                 .suggests(getRegistrySuggestions(registry, true))
                                                                                 .executes(context -> addGroupEntry(StringArgumentType.getString(context, "name"), context.getArgument("value", Identifier.class), -1))
                                                                                 .then(
-                                                                                        ClientCommandManager.argument("index", IntegerArgumentType.integer(0))
-                                                                                                .executes(context -> addGroupEntry(StringArgumentType.getString(context, "name"), context.getArgument("value", Identifier.class), IntegerArgumentType.getInteger(context, "index")))
+                                                                                        ClientCommandManager.argument("position", IntegerArgumentType.integer(-1))
+                                                                                                .executes(context -> addGroupEntry(StringArgumentType.getString(context, "name"), context.getArgument("value", Identifier.class), IntegerArgumentType.getInteger(context, "position")))
                                                                                 )
                                                                 )
                                                 )
@@ -173,10 +177,10 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
         registerList(commandNode);
     }
 
-    public int add(Identifier id, int amount, boolean force) {
+    public int add(Identifier id, int amount, int position, boolean force) {
         ShaderLayer layer = SouperSecretSettingsClient.soupRenderer.activeLayer;
 
-        List<ShaderData> shaders = SouperSecretSettingsClient.soupRenderer.getShaderAdditions(registry, id, amount, layer, true);
+        List<ShaderData> shaders = SouperSecretSettingsClient.soupRenderer.getShaderAdditions(layer, registry, id, amount, position, true);
         if (shaders == null) {
             return 0;
         }
@@ -192,10 +196,15 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
             warned = false;
         }
 
-        for (ShaderData shaderData : shaders) {
-            new ListAddAction<>(list, shaderData).addToHistory();
+        if (position < 0 || position > list.size()) {
+            position = list.size();
         }
-        list.addAll(shaders);
+
+        for (ShaderData shaderData : shaders) {
+            new ListAddAction<>(list, shaderData, position).addToHistory();
+            list.add(position, shaderData);
+            position++;
+        }
         return 1;
     }
 
@@ -637,7 +646,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
         return 1;
     }
 
-    public int addGroupEntry(String name, Identifier id, int index) {
+    public int addGroupEntry(String name, Identifier id, int position) {
         String entry;
         if (id.getPath().equals("all") || id.getPath().startsWith("random_")) {
             entry = id.getPath();
@@ -661,10 +670,10 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
             entry = '+'+entry;
         }
 
-        if (index < 0 || index > group.entries.size()) {
+        if (position < 0 || position > group.entries.size()) {
             group.entries.addLast(entry);
         } else {
-            group.entries.add(index, entry);
+            group.entries.add(position, entry);
         }
 
         SouperSecretSettingsClient.say("group.add", 0, entry);

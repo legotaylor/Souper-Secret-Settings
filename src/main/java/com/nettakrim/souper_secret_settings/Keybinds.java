@@ -33,7 +33,7 @@ public class Keybinds {
             SouperSecretSettingsCommands.layerCommand.removeAll(null);
         }
         if (random.wasPressed()) {
-            SouperSecretSettingsCommands.shaderCommand.add(Identifier.of("random_edible"), 1, true);
+            SouperSecretSettingsCommands.shaderCommand.add(Identifier.of("random_edible"), 1, -1, true);
         }
         if (sound.wasPressed()) {
             RandomSound.play();

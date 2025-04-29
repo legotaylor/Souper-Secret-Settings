@@ -95,7 +95,7 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
         }
 
         public void apply(ShaderLayer layer, Identifier registry) {
-            List<ShaderData> shaderDatas = SouperSecretSettingsClient.soupRenderer.getShaderAdditions(registry, Identifier.of(id), 1, layer, false);
+            List<ShaderData> shaderDatas = SouperSecretSettingsClient.soupRenderer.getShaderAdditions(layer, registry, Identifier.of(id), 1, -1, false);
             if (shaderDatas == null || shaderDatas.isEmpty()) {
                 sayError("shader.missing", id);
                 return;

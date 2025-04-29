@@ -109,10 +109,10 @@ public class SoupRenderer implements Runnables.WorldRender {
     }
 
     @Nullable
-    public List<ShaderData> getShaderAdditions(Identifier registry, Identifier id, int amount, ShaderLayer layer, boolean log) {
+    public List<ShaderData> getShaderAdditions(ShaderLayer layer, Identifier registry, Identifier id, int amount, int position, boolean log) {
         if (id.getNamespace().equals("minecraft") && id.getPath().startsWith("random")) {
             int i = id.getPath().indexOf("_");
-            return getRandomShaders(layer, registry, i == -1 ? null : id.getPath().substring(i+1), amount);
+            return getRandomShaders(layer, registry, i == -1 ? null : id.getPath().substring(i+1), amount, position);
         }
 
         ShaderRegistryEntry shaderRegistry = getRegistryEntry(registry, id);
@@ -136,9 +136,20 @@ public class SoupRenderer implements Runnables.WorldRender {
     }
 
     @Nullable
-    private List<ShaderData> getRandomShaders(ShaderLayer layer, Identifier registry, String group, int amount) {
+    private List<ShaderData> getRandomShaders(ShaderLayer layer, Identifier registry, String group, int amount, int position) {
         List<ShaderData> shaders = new ArrayList<>();
-        ShaderRegistryEntry shaderRegistry = (layer == null || layer.shaders.isEmpty()) ? null : layer.shaders.getLast().shader.getShaderData();
+        ShaderRegistryEntry shaderRegistry = null;
+
+        if (layer != null && !layer.shaders.isEmpty()) {
+            if (position == 0) {
+                shaderRegistry = layer.shaders.getFirst().shader.getShaderData();
+            } else {
+                if (position < 0 || position > layer.shaders.size()) {
+                    position = layer.shaders.size();
+                }
+                shaderRegistry = layer.shaders.get(position - 1).shader.getShaderData();
+            }
+        }
 
         int i = 0;
         while (i < amount) {

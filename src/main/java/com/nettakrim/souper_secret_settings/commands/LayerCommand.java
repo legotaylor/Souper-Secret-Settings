@@ -41,7 +41,11 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
                 .then(
                         ClientCommandManager.argument("name", StringArgumentType.string())
                                 .suggests(files)
-                                .executes(context -> add(StringArgumentType.getString(context, "name")))
+                                .executes(context -> add(StringArgumentType.getString(context, "name"), -1))
+                                .then(
+                                        ClientCommandManager.argument("position", IntegerArgumentType.integer(-1))
+                                                .executes(context -> add(StringArgumentType.getString(context, "name"), IntegerArgumentType.getInteger(context, "position")))
+                                )
                 )
                 .build();
         commandNode.addChild(addNode);
@@ -156,10 +160,14 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
         registerList(commandNode);
     }
 
-    private int add(String name) {
+    private int add(String name, int position) {
+        if (position < 0 || position > SouperSecretSettingsClient.soupRenderer.shaderLayers.size()) {
+            position = SouperSecretSettingsClient.soupRenderer.shaderLayers.size();
+        }
+
         ShaderLayer layer = new ShaderLayer(name);
-        new ListAddAction<>(SouperSecretSettingsClient.soupRenderer.shaderLayers, layer).addToHistory();
-        SouperSecretSettingsClient.soupRenderer.shaderLayers.add(layer);
+        new ListAddAction<>(SouperSecretSettingsClient.soupRenderer.shaderLayers, layer, position).addToHistory();
+        SouperSecretSettingsClient.soupRenderer.shaderLayers.add(position, layer);
 
         SouperSecretSettingsClient.soupRenderer.activeLayer = layer;
         return 1;

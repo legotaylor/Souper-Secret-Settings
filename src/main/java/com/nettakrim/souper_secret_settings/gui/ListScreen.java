@@ -115,11 +115,13 @@ public abstract class ListScreen<V> extends ScrollScreen {
     protected V addAddition(String addition) {
         V entry = tryGetAddition(addition);
         if (entry != null) {
+            List<V> list = getListValues();
+            int position = list.size();
             if (useHistory()) {
-                new ListAddAction<>(getListValues(), entry).addToHistory();
+                new ListAddAction<>(list, entry, position).addToHistory();
             }
             ListWidget listWidget = createListWidget(entry);
-            addEntry(listWidgets.size(), entry, listWidget);
+            addEntry(position, entry, listWidget);
             addSelectable(listWidget);
             updateSpacing();
         }
