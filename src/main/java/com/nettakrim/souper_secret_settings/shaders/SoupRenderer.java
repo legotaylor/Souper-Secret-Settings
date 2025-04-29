@@ -51,7 +51,7 @@ public class SoupRenderer implements Runnables.WorldRender {
 
         spectateHandler = new SoupSpectateHandler();
         Events.SpectatorHandlers.register(Identifier.of(SouperSecretSettingsClient.MODID, "spectate_handler"), spectateHandler);
-        Events.AfterHandRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "rendering"), (framebuffer, objectAllocator) -> {
+        Events.AfterVanillaPostEffectRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "rendering"), (framebuffer, objectAllocator) -> {
             if (SouperSecretSettingsClient.soupData.config.disableState == 0) {
                 if (spectateHandler.shaderLayer != null) {
                     Runnables.WorldRender.fromGameRender(spectateHandler.shaderLayer::render, framebuffer, objectAllocator);
@@ -62,8 +62,8 @@ public class SoupRenderer implements Runnables.WorldRender {
                 }
             }
         });
-        Events.AfterGameRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "rendering"), (framebuffer, objectAllocator) -> {
-            if (renderType == Shader.RenderType.GAME && SouperSecretSettingsClient.soupData.config.disableState == 0) {
+        Events.AfterUiRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "rendering"), (framebuffer, objectAllocator) -> {
+            if (renderType == Shader.RenderType.UI && SouperSecretSettingsClient.soupData.config.disableState == 0) {
                 Runnables.WorldRender.fromGameRender(this, framebuffer, objectAllocator);
             }
         });
@@ -234,7 +234,7 @@ public class SoupRenderer implements Runnables.WorldRender {
     }
 
     public void cycleRenderType(ButtonWidget buttonWidget) {
-        setRenderType(renderType == Shader.RenderType.GAME ? Shader.RenderType.WORLD : Shader.RenderType.GAME);
+        setRenderType(renderType == Shader.RenderType.UI ? Shader.RenderType.WORLD : Shader.RenderType.UI);
         buttonWidget.setMessage(getRenderTypeText());
     }
 
@@ -247,7 +247,7 @@ public class SoupRenderer implements Runnables.WorldRender {
     }
 
     public Text getRenderTypeText() {
-        return SouperSecretSettingsClient.translate(renderType == Shader.RenderType.GAME ? "gui.game" : "gui.world");
+        return SouperSecretSettingsClient.translate(renderType == Shader.RenderType.UI ? "gui.ui" : "gui.world");
     }
 
     private void runForGroups(ShaderRegistryEntry shaderRegistryEntry, List<Identifier> registries, BiConsumer<Identifier, String> consumer) {

@@ -72,7 +72,7 @@
     "souper_secret_settings.option.random_info_duration": "Eating the random item will apply shader \"%s\" %s times for %s seconds",
     "souper_secret_settings.option.random.prompt": "Clear timer disabled as a change was made",
     "souper_secret_settings.option.render_type.world": "Shaders render in World",
-    "souper_secret_settings.option.render_type.game": "Shaders render in UI",
+    "souper_secret_settings.option.render_type.ui": "Shaders render in UI",
     "souper_secret_settings.option.toggle.0": "Soup enabled",
     "souper_secret_settings.option.toggle.1": "Soup disabled",
     "souper_secret_settings.option.toggle.2": "Soup will stay disabled",
@@ -110,7 +110,7 @@
     "souper_secret_settings.gui.confirm": "Confirm",
     "souper_secret_settings.gui.load": "Load",
     "souper_secret_settings.gui.unnamed": "<unnamed>",
-    "souper_secret_settings.gui.game": "\uD83D\uDCBB",
+    "souper_secret_settings.gui.ui": "\uD83D\uDCBB",
     "souper_secret_settings.gui.world": "\uD83C\uDF0E",
 
     "souper_secret_settings.gui.groups": "Groups",

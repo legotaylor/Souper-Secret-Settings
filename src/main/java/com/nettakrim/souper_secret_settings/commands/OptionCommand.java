@@ -89,7 +89,7 @@ public class OptionCommand {
                         ClientCommandManager.literal("world").executes(context -> setRenderType(Shader.RenderType.WORLD))
                 )
                 .then(
-                        ClientCommandManager.literal("ui").executes(context -> setRenderType(Shader.RenderType.GAME))
+                        ClientCommandManager.literal("ui").executes(context -> setRenderType(Shader.RenderType.UI))
                 )
                 .executes(context -> queryRenderType(1))
                 .build();
