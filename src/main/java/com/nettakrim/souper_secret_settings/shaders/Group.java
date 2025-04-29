@@ -151,7 +151,7 @@ public class Group {
         String name;
         int i = 1;
         do {
-            name = "user_group_"+i;
+            name = "user/group_"+i;
             i++;
         } while (map.containsKey(name));
         return name;

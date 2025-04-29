@@ -44,11 +44,11 @@ public class GroupEditScreen extends ListScreen<String> {
 
         nameWidget = new SuggestionTextFieldWidget(SoupGui.listGap, SoupGui.headerWidthSmall, 20, Text.literal("name"), false);
         nameWidget.setY(SoupGui.listGap*2 + 20);
-        nameWidget.setText(name.replace("user_", ""));
+        nameWidget.setText(name.replace("user/", ""));
         nameWidget.setChangedListener((s) -> name = s);
         nameWidget.setListeners(() -> List.of(startingName), (s) -> resolveName(false), false);
         nameWidget.setTextPredicate(Identifier::isPathValid);
-        nameWidget.active = name.startsWith("user_");
+        nameWidget.active = name.startsWith("user/");
         addDrawableChild(nameWidget);
 
         if (!nameWidget.active) {
@@ -137,11 +137,11 @@ public class GroupEditScreen extends ListScreen<String> {
     }
 
     protected void resolveName(boolean move) {
-        if (startingName.equals(name) || !startingName.startsWith("user_")) {
+        if (startingName.equals(name) || !startingName.startsWith("user/")) {
             return;
         }
 
-        String newName = "user_"+name;
+        String newName = "user/"+name;
 
         Map<String, Group> map = groupScreen.getRegistryGroups();
         if (map.containsKey(newName)) {

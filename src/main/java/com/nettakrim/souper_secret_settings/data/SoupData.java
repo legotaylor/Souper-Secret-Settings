@@ -123,12 +123,10 @@ public class SoupData {
 
     public void saveConfig() {
         if ((changeMask & 1) > 0) {
-            SouperSecretSettingsClient.log("changed config");
             writeToPath(Config.CODEC.encodeStart(JsonOps.INSTANCE, config).getOrThrow(), configDir.resolve("config.json"));
         }
 
         if ((changeMask & 2) > 0) {
-            SouperSecretSettingsClient.log("changed groups");
             SouperSecretSettingsClient.soupData.saveGroups();
         }
 
@@ -152,9 +150,8 @@ public class SoupData {
 
     private void saveGroups() {
         SouperSecretSettingsClient.soupRenderer.shaderGroups.forEach(((registry, groups) -> groups.forEach((name, group) -> {
-            if (!name.startsWith("user_")) {
+            if (!name.startsWith("user/")) {
                 boolean delete;
-
                 Group resourceGroup = null;
                 Map<String, Group> resourceGroups = SouperSecretSettingsClient.soupData.resourceGroups.get(registry.toString().replace(':','_'));
                 if (resourceGroups != null) {
@@ -199,7 +196,7 @@ public class SoupData {
                 File file = path.toFile();
                 Optional<Group> group = loadFromPath(Group.CODEC, file.toPath());
                 if (group.isPresent()) {
-                    String name = path.subpath(dir.getNameCount(), path.getNameCount()).toString();
+                    String name = path.subpath(dir.getNameCount(), path.getNameCount()).toString().replace('\\', '/');
                     registryMap.put(name.substring(0, name.length() - 5), group.get());
                     group.get().file = file;
                 }

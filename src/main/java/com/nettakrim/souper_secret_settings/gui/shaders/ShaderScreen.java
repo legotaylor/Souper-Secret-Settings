@@ -61,10 +61,10 @@ public class ShaderScreen extends ListScreen<ShaderData> {
         List<String> random = new ArrayList<>(registryGroups.keySet().size());
 
         for (String s : registryGroups.keySet()) {
-            if (s.startsWith("user_")) {
+            if (s.startsWith("user/")) {
                 user.add("random_"+s);
             } else {
-                random.add("random_" + s);
+                random.add("random_"+s);
             }
         }
 

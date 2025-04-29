@@ -61,7 +61,7 @@ public class ShaderAdditionScreen extends ListAdditionScreen<ShaderData> {
         Couple<Text, Text> text;
         group.requestUpdate();
 
-        String title = name.startsWith("user_") ? "user:"+name.substring(5) : name;
+        String title = name.replaceFirst("/", ":");
 
         int recursionIndex = group.getStepAmounts(shaderScreen.registry, name).indexOf(null);
         if (recursionIndex >= 0) {
@@ -73,7 +73,7 @@ public class ShaderAdditionScreen extends ListAdditionScreen<ShaderData> {
 
         AdditionButton groupButton = new AdditionButton("random_"+name, text, SoupGui.listX, SoupGui.listWidth, 20, this::add);
 
-        if (name.startsWith("user_")) {
+        if (name.startsWith("user/")) {
             groupButton.addRemoveListener(this::removeGroup);
         }
         groupButton.addEditListener(this::selectGroup);

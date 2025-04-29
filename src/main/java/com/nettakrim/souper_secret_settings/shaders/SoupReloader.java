@@ -38,7 +38,7 @@ public class SoupReloader extends JsonResourceReloader {
                     Map<String, Group> registryMap = SouperSecretSettingsClient.soupData.resourceGroups.computeIfAbsent(full.substring(0, i), (ignored) -> new HashMap<>());
                     Optional<Group> group = Group.CODEC.parse(JsonOps.INSTANCE, jsonElement).result();
 
-                    String key = identifier.getNamespace()+"_"+ full.substring(i + 1);
+                    String key = identifier.getNamespace() + "/" + full.substring(i + 1);
                     if (group.isPresent()) {
                         if (!registryMap.containsKey(key) || registryMap.get(key).file == null) {
                             registryMap.put(key, group.get());

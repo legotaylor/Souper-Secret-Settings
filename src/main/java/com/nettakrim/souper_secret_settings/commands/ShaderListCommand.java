@@ -131,17 +131,17 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
                 .then(
                         ClientCommandManager.literal("modify")
                                 .then(
-                                        ClientCommandManager.argument("name", StringArgumentType.string())
+                                        ClientCommandManager.argument("name", IdentifierArgumentType.identifier())
                                                 .suggests(groupSuggestions)
                                                 .then(
                                                         ClientCommandManager.literal("add")
                                                                 .then(
                                                                         ClientCommandManager.argument("value", IdentifierArgumentType.identifier())
                                                                                 .suggests(getRegistrySuggestions(registry, true))
-                                                                                .executes(context -> addGroupEntry(StringArgumentType.getString(context, "name"), context.getArgument("value", Identifier.class), -1))
+                                                                                .executes(context -> addGroupEntry(context.getArgument("name", Identifier.class).getPath(), context.getArgument("value", Identifier.class), -1))
                                                                                 .then(
                                                                                         ClientCommandManager.argument("position", IntegerArgumentType.integer(-1))
-                                                                                                .executes(context -> addGroupEntry(StringArgumentType.getString(context, "name"), context.getArgument("value", Identifier.class), IntegerArgumentType.getInteger(context, "position")))
+                                                                                                .executes(context -> addGroupEntry(context.getArgument("name", Identifier.class).getPath(), context.getArgument("value", Identifier.class), IntegerArgumentType.getInteger(context, "position")))
                                                                                 )
                                                                 )
                                                 )
@@ -150,7 +150,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
                                                                 .then(
                                                                         ClientCommandManager.argument("index", IntegerArgumentType.integer(0))
                                                                                 .suggests(groupIndexes)
-                                                                                .executes(context -> removeGroupEntry(StringArgumentType.getString(context, "name"), IntegerArgumentType.getInteger(context, "index")))
+                                                                                .executes(context -> removeGroupEntry(context.getArgument("name", Identifier.class).getPath(), IntegerArgumentType.getInteger(context, "index")))
                                                                 )
                                                 )
                                                 .then(
@@ -158,7 +158,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
                                                                 .then(
                                                                         ClientCommandManager.argument("index", IntegerArgumentType.integer(0))
                                                                                 .suggests(groupIndexes)
-                                                                                .executes(context -> toggleGroupEntry(StringArgumentType.getString(context, "name"), IntegerArgumentType.getInteger(context, "index")))
+                                                                                .executes(context -> toggleGroupEntry(context.getArgument("name", Identifier.class).getPath(), IntegerArgumentType.getInteger(context, "index")))
                                                                 )
                                                 )
                                 )
@@ -586,31 +586,21 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
 
     protected final SuggestionProvider<FabricClientCommandSource> groupSuggestions = (context, builder) -> {
         Map<String, Group> groups = SouperSecretSettingsClient.soupRenderer.getShaderGroups(getRegistry());
-        groups.keySet().forEach(name -> {
-            if (name.contains("/")) {
-                builder.suggest("\""+name+"\"");
-            } else {
-                builder.suggest(name);
-            }
-        });
+        groups.keySet().forEach(builder::suggest);
         return builder.buildFuture();
     };
 
     protected final SuggestionProvider<FabricClientCommandSource> userGroupSuggestions = (context, builder) -> {
         Map<String, Group> groups = SouperSecretSettingsClient.soupRenderer.getShaderGroups(getRegistry());
         groups.keySet().forEach(name -> {
-            if (name.startsWith("user_")) {
-                if (name.contains("/")) {
-                    builder.suggest("\""+name+"\"");
-                } else {
-                    builder.suggest(name);
-                }
+            if (name.startsWith("user/")) {
+                builder.suggest(name);
             }
         });
         return builder.buildFuture();
     };
 
-    protected final SuggestionProvider<FabricClientCommandSource> groupIndexes = SouperSecretSettingsCommands.createIndexSuggestion(context -> SouperSecretSettingsClient.soupRenderer.getShaderGroups(getRegistry()).getOrDefault(StringArgumentType.getString(context, "name"), new Group()).entries, Text::literal);
+    protected final SuggestionProvider<FabricClientCommandSource> groupIndexes = SouperSecretSettingsCommands.createIndexSuggestion(context -> SouperSecretSettingsClient.soupRenderer.getShaderGroups(getRegistry()).getOrDefault(context.getArgument("name", Identifier.class).getPath(), new Group()).entries, Text::literal);
 
     @Override
     List<ShaderData> getList() {
@@ -632,8 +622,8 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
     }
 
     public int createGroup(String name) {
-        if (!name.startsWith("user_")) {
-            name = "user_"+name;
+        if (!name.startsWith("user/")) {
+            name = "user/"+name;
         }
 
         Map<String, Group> map = SouperSecretSettingsClient.soupRenderer.getShaderGroups(registry);
@@ -730,8 +720,8 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
 
     public int removeGroup(String name) {
         Map<String, Group> map = SouperSecretSettingsClient.soupRenderer.getShaderGroups(registry);
-        if (!name.startsWith("user_") && !name.isBlank()) {
-            name = "user_"+name;
+        if (!name.startsWith("user/") && !name.isBlank()) {
+            name = "user/"+name;
         }
 
         if (!(map.containsKey(name))) {
