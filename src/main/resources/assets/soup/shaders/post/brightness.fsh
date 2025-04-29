@@ -6,13 +6,14 @@ in vec2 texCoord;
 
 out vec4 fragColor;
 
+uniform float Amount;
+uniform vec3 Power;
 uniform float luminance_alpha_smooth;
-uniform vec3 Gray;
 
 void main(){
-    vec4 col = texture(InSampler, texCoord);
+    vec3 col = texture(InSampler, texCoord).rgb;
     
-    col = mix(col, 1.0 - (1.0-col)*(1.0-col), luminance_alpha_smooth);
+    vec3 value = mix(col, 1.0 - pow(1.0 - col, Power), Amount);
 
-    fragColor = vec4(col.rgb, 1.0);
+    fragColor = vec4(mix(col, clamp(value, 0.0, 1.0), luminance_alpha_smooth), 1.0);
 }
