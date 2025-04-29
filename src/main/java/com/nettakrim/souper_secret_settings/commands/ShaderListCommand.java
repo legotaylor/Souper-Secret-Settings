@@ -722,6 +722,6 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
         for (Group group : SouperSecretSettingsClient.soupRenderer.getShaderGroups(registry).values()) {
             group.requestUpdate();
         }
-        SouperSecretSettingsClient.soupData.changeConfig(true);
+        SouperSecretSettingsClient.soupData.changeData(true);
     }
 }

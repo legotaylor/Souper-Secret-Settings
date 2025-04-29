@@ -129,7 +129,8 @@ public class ShaderAdditionScreen extends ListAdditionScreen<ShaderData> {
     public void close() {
         if (changedGroups) {
             shaderScreen.recalculateAdditions();
-            SouperSecretSettingsClient.soupData.saveGroups();
+            SouperSecretSettingsClient.soupData.changeData(true);
+            SouperSecretSettingsClient.soupData.saveConfig();
         }
         super.close();
     }

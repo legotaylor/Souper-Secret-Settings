@@ -60,7 +60,7 @@ public class SouperSecretSettingsClient implements ClientModInitializer {
 			soupRenderer.tick();
 		});
 
-		ClientLifecycleEvents.CLIENT_STOPPING.register((client) -> soupData.saveIfChanged());
+		ClientLifecycleEvents.CLIENT_STOPPING.register((client) -> soupData.saveConfig());
 
 		Events.ClientResourceReloaders.register(Identifier.of(MODID, "shaders"), new SoupReloader());
 

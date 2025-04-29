@@ -73,8 +73,8 @@ public class SoupGui {
     }
 
     public Screen getScreen(ScreenType screenType, boolean openNew) {
-        if (currentScreenType == ScreenType.OPTION) {
-            SouperSecretSettingsClient.soupData.saveConfig();
+        if (ClientData.minecraft.currentScreen != null) {
+            saveIfChangedOption();
         }
 
         currentScreenType = screenType;
@@ -102,8 +102,17 @@ public class SoupGui {
     }
 
     public void onClose() {
+        saveIfChangedOption();
+
         ClientData.minecraft.setScreen(previous);
         previous = null;
+    }
+
+    private void saveIfChangedOption() {
+        if (currentScreenType == ScreenType.OPTION) {
+            SouperSecretSettingsClient.soupData.changeData(false);
+            SouperSecretSettingsClient.soupData.saveConfig();
+        }
     }
 
     public List<ClickableWidget> getHeader() {

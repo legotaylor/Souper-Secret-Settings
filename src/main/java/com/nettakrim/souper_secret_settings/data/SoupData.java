@@ -35,8 +35,8 @@ public class SoupData {
 
     public final Config config;
 
-    private int saveChange;
-    private boolean groupsChanged;
+    private int saveTimer;
+    private int changeMask;
 
     public Map<Identifier, LayerCodecs> resourceLayers;
     public Map<String, Map<String,Group>> resourceGroups = new HashMap<>(0);
@@ -121,36 +121,35 @@ public class SoupData {
     }
 
     public void saveConfig() {
-        saveChange = 0;
-        writeToPath(Config.CODEC.encodeStart(JsonOps.INSTANCE, config).getOrThrow(), configDir.resolve("config.json"));
-
-        if (groupsChanged) {
-            SouperSecretSettingsClient.soupData.saveGroups();
-            groupsChanged = false;
+        if ((changeMask & 1) > 0) {
+            SouperSecretSettingsClient.log("changed config");
+            writeToPath(Config.CODEC.encodeStart(JsonOps.INSTANCE, config).getOrThrow(), configDir.resolve("config.json"));
         }
+
+        if ((changeMask & 2) > 0) {
+            SouperSecretSettingsClient.log("changed groups");
+            SouperSecretSettingsClient.soupData.saveGroups();
+        }
+
+        changeMask = 0;
+        saveTimer = 0;
     }
 
     public void tick() {
-        if (saveChange > 0) {
-            saveChange--;
-            if (saveChange == 0) {
+        if (saveTimer > 0) {
+            saveTimer--;
+            if (saveTimer == 0) {
                 saveConfig();
             }
         }
     }
 
-    public void changeConfig(boolean groupsChanged) {
-        saveChange = 1200;
-        this.groupsChanged |= groupsChanged;
+    public void changeData(boolean isGroupsChanged) {
+        saveTimer = 1200;
+        this.changeMask |= isGroupsChanged ? 2 : 1;
     }
 
-    public void saveIfChanged() {
-        if (saveChange > 0) {
-            saveConfig();
-        }
-    }
-
-    public void saveGroups() {
+    private void saveGroups() {
         SouperSecretSettingsClient.soupRenderer.shaderGroups.forEach(((registry, groups) -> groups.forEach((name, group) -> {
             if (!name.startsWith("user_")) {
                 boolean delete;
