@@ -1,0 +1,56 @@
+{
+    "targets": {
+        "merge": {},
+        "swap": {}
+    },
+    "passes": [
+        {
+            "program": "luminance:post/aa",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "minecraft:main"
+                }
+            ],
+            "uniforms": [
+                {
+                    "name": "ColorDiff",
+                    "values": [ -2.0, 1.0, 0.9 ]
+                },
+                {
+                    "name": "SampleDistance",
+                    "values": [ 8.0, 8.0, 16.0, 16.0 ]
+                },
+                {
+                    "name": "Weights",
+                    "values": [ 1.0, 0.5, 2.5, 2.5 ]
+                }
+            ],
+            "output": "merge"
+        },
+        {
+            "program": "luminance:post/merge",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "merge"
+                },
+                {
+                    "sampler_name": "Merge",
+                    "target": "minecraft:main"
+                }
+            ],
+            "output": "swap"
+        },
+        {
+            "program": "minecraft:post/blit",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "swap"
+                }
+            ],
+            "output": "minecraft:main"
+        }
+    ]
+}

@@ -27,16 +27,17 @@ All builtin resourcepacks should be enabled by default, but they may need to ena
 | green                              | mirror              | color_blind     |
 | invert**                           | outlined            | color_shuffle   |
 | love*                              | outlined2           | contrast        |
-| notch                              | pixelated           | crystallize     |
-| ntsc                               | rainbow             | depth_outline   |
-| outline                            | saturate            | dissolve        |
-| pencil                             | sepia               | dither          |
-| phosphor                           | silhouette          | dramatic        |
-| scan_pincushion                    | silhouette2         | film_grain      |
-| shareware*                         | sixteen_colors      | fisheye         |
-| sobel                              | tiltshift           | fractal         |
-| spider**                           |                     | frigid          |
-| wobble                             |                     | ghost           |
+| notch                              | pixelated           | crunch          |
+| ntsc                               | rainbow             | crystallize     |
+| outline                            | saturate            | depth_outline   |
+| pencil                             | sepia               | dissolve        |
+| phosphor                           | silhouette          | dither          |
+| scan_pincushion                    | silhouette2         | dramatic        |
+| shareware*                         | sixteen_colors      | film_grain      |
+| sobel                              | tiltshift           | fisheye         |
+| spider**                           |                     | fractal         |
+| wobble                             |                     | frigid          |
+|                                    |                     | ghost           |
 |                                    |                     | gel             |
 |                                    |                     | ghost           |
 |                                    |                     | glass           |
