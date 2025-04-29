@@ -132,12 +132,12 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
                                                 .then(
                                                         ClientCommandManager.literal("add")
                                                                 .then(
-                                                                        ClientCommandManager.argument("value", StringArgumentType.string())
+                                                                        ClientCommandManager.argument("value", IdentifierArgumentType.identifier())
                                                                                 .suggests(getRegistrySuggestions(registry, true))
-                                                                                .executes(context -> addGroupEntry(StringArgumentType.getString(context, "name"), StringArgumentType.getString(context, "value"), -1))
+                                                                                .executes(context -> addGroupEntry(StringArgumentType.getString(context, "name"), context.getArgument("value", Identifier.class), -1))
                                                                                 .then(
                                                                                         ClientCommandManager.argument("index", IntegerArgumentType.integer(0))
-                                                                                                .executes(context -> addGroupEntry(StringArgumentType.getString(context, "name"), StringArgumentType.getString(context, "value"), IntegerArgumentType.getInteger(context, "index")))
+                                                                                                .executes(context -> addGroupEntry(StringArgumentType.getString(context, "name"), context.getArgument("value", Identifier.class), IntegerArgumentType.getInteger(context, "index")))
                                                                                 )
                                                                 )
                                                 )
@@ -637,7 +637,14 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
         return 1;
     }
 
-    public int addGroupEntry(String name, String entry, int index) {
+    public int addGroupEntry(String name, Identifier id, int index) {
+        String entry;
+        if (id.getPath().equals("all") || id.getPath().startsWith("random_")) {
+            entry = id.getPath();
+        } else {
+            entry = id.toString();
+        }
+
         Group group = SouperSecretSettingsClient.soupRenderer.getShaderGroups(registry).get(name);
         if (group == null) {
             SouperSecretSettingsClient.say("group.missing", 1, name);
