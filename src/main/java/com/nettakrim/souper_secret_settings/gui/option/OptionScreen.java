@@ -1,8 +1,10 @@
 package com.nettakrim.souper_secret_settings.gui.option;
 
 import com.mclegoman.luminance.client.data.ClientData;
+import com.mclegoman.luminance.client.keybindings.Keybindings;
 import com.mclegoman.luminance.client.screen.config.ConfigScreen;
 import com.mclegoman.luminance.client.shaders.Shaders;
+import com.mclegoman.luminance.client.shaders.Uniforms;
 import com.mclegoman.luminance.common.util.DateHelper;
 import com.mojang.brigadier.StringReader;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
@@ -12,6 +14,7 @@ import com.nettakrim.souper_secret_settings.gui.shaders.ShaderScreen;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.command.argument.ItemStackArgument;
 import net.minecraft.command.argument.ItemStringReader;
@@ -55,6 +58,8 @@ public class OptionScreen extends ScrollScreen {
                 (direction) -> SouperSecretSettingsClient.soupData.config.disableState = CycleWidget.cycleInt(SouperSecretSettingsClient.soupData.config.disableState + direction, 2),
                 () -> SouperSecretSettingsClient.translate("option.gui.toggle."+SouperSecretSettingsClient.soupData.config.disableState))
         );
+        SliderWidget sliderWidget = new SoupAlphaSlider(SoupGui.listX, 0, widgetWidth, 20, Uniforms.getRawAlpha() / 100.0F, () -> Uniforms.updatingAlpha = true);
+        widgets.add(sliderWidget);
         widgets.add(new CycleWidget(SoupGui.listX, widgetWidth,
                 (direction) -> SouperSecretSettingsClient.soupData.config.messageFilter = CycleWidget.cycleInt(SouperSecretSettingsClient.soupData.config.messageFilter - direction, 2),
                 () -> SouperSecretSettingsClient.translate("option.gui.filter."+SouperSecretSettingsClient.soupData.config.messageFilter))
@@ -201,5 +206,19 @@ public class OptionScreen extends ScrollScreen {
 
     private String itemStackToString(ItemStack itemStack) {
         return new ItemStackArgument(itemStack.getRegistryEntry(), itemStack.getComponentChanges()).asString(BuiltinRegistries.createWrapperLookup());
+    }
+
+    private static class SoupAlphaSlider extends ConfigScreen.AlphaSlider {
+        public SoupAlphaSlider(int x, int y, int width, int height, double value, Runnable onChange) {
+            super(x, y, width, height, value, onChange);
+        }
+
+        @Override
+        public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
+            super.renderWidget(context, mouseX, mouseY, delta);
+            if (hovered) {
+                SouperSecretSettingsClient.soupGui.setHoverText(SouperSecretSettingsClient.translate("option.gui.alpha", Keybindings.adjustAlpha.getBoundKeyLocalizedText()));
+            }
+        }
     }
 }

@@ -105,6 +105,7 @@
     "souper_secret_settings.option.gui.toggle.0": "Rendering: Enabled",
     "souper_secret_settings.option.gui.toggle.1": "Rendering: Disabled",
     "souper_secret_settings.option.gui.toggle.2": "Rendering: Disabled (Locked)",
+    "souper_secret_settings.option.gui.alpha": "Bound to %s + Scroll Wheel",
     "souper_secret_settings.option.gui.filter.0": "Command Feedback: All",
     "souper_secret_settings.option.gui.filter.1": "Command Feedback: Important",
     "souper_secret_settings.option.gui.filter.2": "Command Feedback: None",
