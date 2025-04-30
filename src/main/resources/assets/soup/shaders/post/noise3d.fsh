@@ -18,8 +18,8 @@ uniform vec3 Scroll;
 uniform float luminance_fov;
 uniform float luminance_pitch;
 uniform float luminance_yaw;
-uniform vec3 luminance_eye_fract;
-uniform vec3 luminance_eye;
+uniform vec3 luminance_cam_fract;
+uniform vec3 luminance_cam;
 uniform float luminance_alpha_smooth;
 
 float near = 0.1;
@@ -102,7 +102,7 @@ void main(){
     float dist = GetDepth(texCoord);
     vec3 pos = GetWorldOffset(texCoord, dist) + Offset - fract(Scroll)/Scale;
 
-    vec3 offset = luminance_eye_fract/Loop + fract(floor(luminance_eye)/Loop);
+    vec3 offset = luminance_cam_fract/Loop + fract(floor(luminance_cam)/Loop);
     offset.y = -offset.y;
     pos = (fract(pos/Loop - offset)*Loop)*Scale;
 

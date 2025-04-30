@@ -11,8 +11,8 @@ out vec4 fragColor;
 uniform float luminance_fov;
 uniform float luminance_pitch;
 uniform float luminance_yaw;
-uniform vec3 luminance_eye_fract;
-uniform vec3 luminance_eye;
+uniform vec3 luminance_cam_fract;
+uniform vec3 luminance_cam;
 uniform float TextureScale;
 uniform vec3 Offset;
 uniform float Aspect;
@@ -70,7 +70,7 @@ void main(){
     vec3 flip = offsetLeft - offsetRight + offsetUp - offsetDown;
     flip.y = pos.y;
 
-    vec3 offset = luminance_eye_fract/TextureScale + fract(floor(luminance_eye)/TextureScale);
+    vec3 offset = luminance_cam_fract/TextureScale + fract(floor(luminance_cam)/TextureScale);
     offset.y = -offset.y;
     pos = fract(pos/TextureScale - offset);
 

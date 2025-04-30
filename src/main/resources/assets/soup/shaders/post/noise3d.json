@@ -19,8 +19,8 @@
         { "name": "luminance_fov",       "type": "float",     "count": 1,  "values": [ 90.0 ] },
         { "name": "luminance_pitch",     "type": "float",     "count": 1,  "values": [ 0.0 ]},
         { "name": "luminance_yaw",       "type": "float",     "count": 1,  "values": [ 0.0 ]},
-        { "name": "luminance_eye_fract", "type": "float",     "count": 3,  "values": [ 0.0, 0.0, 0.0 ]},
-        { "name": "luminance_eye",       "type": "float",     "count": 3,  "values": [ 0.0, 0.0, 0.0 ]},
+        { "name": "luminance_cam_fract", "type": "float",     "count": 3,  "values": [ 0.0, 0.0, 0.0 ]},
+        { "name": "luminance_cam",       "type": "float",     "count": 3,  "values": [ 0.0, 0.0, 0.0 ]},
         { "name": "luminance_alpha_smooth", "type": "float",  "count": 1,  "values": [ 1.0 ] }
     ]
 }
