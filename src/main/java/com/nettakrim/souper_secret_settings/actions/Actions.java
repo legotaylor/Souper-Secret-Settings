@@ -36,30 +36,33 @@ public class Actions {
         return true;
     }
 
-    public void undo() {
+    public boolean undo() {
         if (history.isEmpty()) {
             onChange();
-            return;
+            return false;
         }
 
         Action action = history.removeLast();
         if (action.undo()) {
             undone.add(action);
             onChange();
+            return true;
         } else {
-            undo();
+            return undo();
         }
     }
 
-    public void redo() {
+    public boolean redo() {
         if (undone.isEmpty()) {
-            return;
+            return false;
         }
 
         Action action = undone.pop();
         action.redo();
         history.addLast(action);
         onChange();
+
+        return true;
     }
 
     public void clear() {
