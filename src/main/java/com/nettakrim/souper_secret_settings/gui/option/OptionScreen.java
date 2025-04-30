@@ -12,6 +12,7 @@ import com.nettakrim.souper_secret_settings.actions.Actions;
 import com.nettakrim.souper_secret_settings.gui.*;
 import com.nettakrim.souper_secret_settings.gui.shaders.ShaderScreen;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.option.KeybindsScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.SliderWidget;
@@ -60,10 +61,6 @@ public class OptionScreen extends ScrollScreen {
         );
         SliderWidget sliderWidget = new SoupAlphaSlider(SoupGui.listX, 0, widgetWidth, 20, Uniforms.getRawAlpha() / 100.0F, () -> Uniforms.updatingAlpha = true);
         widgets.add(sliderWidget);
-        widgets.add(new CycleWidget(SoupGui.listX, widgetWidth,
-                (direction) -> SouperSecretSettingsClient.soupData.config.messageFilter = CycleWidget.cycleInt(SouperSecretSettingsClient.soupData.config.messageFilter - direction, 2),
-                () -> SouperSecretSettingsClient.translate("option.gui.filter."+SouperSecretSettingsClient.soupData.config.messageFilter))
-        );
 
         widgets.add(new TextWidget(SoupGui.listX, 0, widgetWidth, 8, SouperSecretSettingsClient.translate("option.gui.eating"), ClientData.minecraft.textRenderer));
         widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, SouperSecretSettingsClient.translate("option.gui.random"),
@@ -119,6 +116,11 @@ public class OptionScreen extends ScrollScreen {
 
         widgets.add(new TextWidget(SoupGui.listX, 0, widgetWidth, 8, SouperSecretSettingsClient.translate("option.gui.misc"), ClientData.minecraft.textRenderer));
         widgets.add(ButtonWidget.builder(SouperSecretSettingsClient.translate("option.gui.luminance"), (buttonWidget) -> ClientData.minecraft.setScreen(new ConfigScreen(this, false, DateHelper.isPride()))).dimensions(SoupGui.listX, 0, widgetWidth, 20).build());
+        widgets.add(ButtonWidget.builder(SouperSecretSettingsClient.translate("option.gui.keybinds"), (buttonWidget) -> ClientData.minecraft.setScreen(new KeybindsScreen(this, ClientData.minecraft.options))).dimensions(SoupGui.listX, 0, widgetWidth, 20).build());
+        widgets.add(new CycleWidget(SoupGui.listX, widgetWidth,
+                (direction) -> SouperSecretSettingsClient.soupData.config.messageFilter = CycleWidget.cycleInt(SouperSecretSettingsClient.soupData.config.messageFilter - direction, 2),
+                () -> SouperSecretSettingsClient.translate("option.gui.filter."+SouperSecretSettingsClient.soupData.config.messageFilter))
+        );
         widgets.add(new CycleWidget(SoupGui.listX, widgetWidth,
                 (direction) -> SouperSecretSettingsClient.soupData.config.warning = !SouperSecretSettingsClient.soupData.config.warning,
                 () -> SouperSecretSettingsClient.translate("option.gui.warning."+(SouperSecretSettingsClient.soupData.config.warning ? "on" : "off")))
