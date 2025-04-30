@@ -1,42 +1,26 @@
 # Souper Secret Settings
 Re-adds the old super secret settings through the power of soup!
 
-Simply drink a beetroot soup to activate a random souper secret setting, then drink milk or relog to clear it
+Simply drink a beetroot soup to activate a random souper secret setting, then drink milk or reload resources (F3+T) to clear it
 
-You can use multiple souper secret settings at once using `/soup:stack`, and optifine/iris shaderpacks are compatible, so you can get some pretty cool looking combinations - personally i found that using [Epoch](https://modrinth.com/shader/epoch) as a base can look really cool.
+You can stack multiple shaders at once using the GUI, which is bound to `u` by default, and always accessible with `/soup:gui`
 
-Souper secret settings also expands on vanillas super secret settings by adding some custom ones, have fun eating soup!
+### *This mod requires [Luminance](https://modrinth.com/mod/luminance) and [Fabric API](https://modrinth.com/mod/fabric-api)!*
 
 ![A collection of cool sights](https://cdn.modrinth.com/data/bzJkPbG1/images/e5320e13d8ab192c266c79dda2af46ec8414d77e.png)
 
-## Commands
-In the likely case you do not have access to beetroot soup, you can use a range of commands, all starting with `/soup:` to control the souper secret settings.
+Optifine/Iris [shaderpacks](https://modrinth.com/shaders) are compatible, so you can get some pretty cool looking combinations - personally i found that using [Epoch](https://modrinth.com/shader/epoch) or [Vector](https://modrinth.com/shader/vector) as a base can look really cool
 
-`/soup:set <name> (amount)` - Set to specific shader \<name>, with a suggested list of all the shaders, optionally specify an (amount) to stack at once
+Souper secret settings also expands on vanillas old super secret settings by adding *many* [(list)](SuperSecretSettingsList.md) new ones, have fun eating soup!
 
-`/soup:random (amount)` - Randomise shader, same as drinking soup, optionally specify an (amount) to stack at once
+New shaders can be added through resourcepacks [(guide)]((https://github.com/mclegoman/luminance/blob/development-1.21/ResourcepackGuide/ResourcepackGuide.md)) - however, you can also edit the parameters of existing shaders (and save your effects!), in the GUI:
 
-`/soup:clear` - Clear shaders, same as drinking milk
+![An Image showing the GUI](https://cdn.modrinth.com/data/bzJkPbG1/images/8882e28a7ea640e5b6426e91c9f60300c69c1915.jpeg)
 
-`/soup:query` - Get the names of the currently active shaders
+You can send people your saved effects (called layers) with `/soup:layer copy (current|saved)` and `/soup:layer copy load clipboard`
 
-`/soup:stack add <name> (amount)` - Stacks the specified shader \<name> (amount) times
+There are commands (which all start with `/soup:`, so they're easy to find) for everything the GUI can do - this is useful with [Client Execution](https://modrinth.com/plugin/client-execution), or any mod that allows you to set keybinds for commands
 
-`/soup:stack random (amount)` - Adds a random (amount) shaders to the stack
+## Older versions
 
-`/soup:stack remove <name>` - Remove all occurrences of a specific shader in the stack
-
-`/soup:stack undo (amount)` - Remove the top (amount) shaders in the stack
-
-`/soup:toggle (stay)` - Toggle the shaders on and off to allow yourself to see clearly again without clearing the stack, by default it will automatically un-toggle if the stack gets changed
-
-`/soup:recipe remove|save <name>` - Manage presets for stacks of soup, so you can easily use them again later
-
-`/soup:recipe load <name>` - Load preset, if you want the preset to stack use `/soup:recipe stack <name>`
-
-`/soup:recipe share <name>` - Share a specified recipe through chat, if \<name> is left blank it will share the current stack - if the stack is too large it will instead copy to the clipboard so that others can load it with `/soup:recipe load clipboard`
-
-## Custom Shaders
-The list of available shaders, including the custom ones added by Souper Secret Settings, can be seen [Here](SuperSecretSettingsList.md)
-
-Custom shaders can be added through resourcepacks, look [Here](ResourcepackGuide/ResourcepackGuide.md) for a guide on how to make a compatible resourcepack - any resourcepacks made for [Perspective](https://modrinth.com/mod/mclegoman-perspective) should also work
+Older versions (1.21.1 and below) of the mod dont require Luminance, but are still compatible with it, if youre using one of those, check out [the old description](https://github.com/Nettakrim/Souper-Secret-Settings/blob/old/README.md). These versions may also require you to manually enable a resourcepack for the custom shaders to show up.
