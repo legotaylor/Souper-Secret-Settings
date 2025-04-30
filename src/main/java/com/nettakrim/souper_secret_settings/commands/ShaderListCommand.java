@@ -648,7 +648,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
 
     public int addGroupEntry(String name, Identifier id, int position) {
         String entry;
-        if (id.getPath().equals("all") || id.getPath().startsWith("random_")) {
+        if (id.getNamespace().equals("minecraft") && (id.getPath().equals("all") || id.getPath().startsWith("random_"))) {
             entry = id.getPath();
         } else {
             entry = id.toString();

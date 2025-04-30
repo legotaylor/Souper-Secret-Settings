@@ -83,6 +83,20 @@ public class OptionCommand {
                 .build();
         eatingNode.addChild(randomDurationNode);
 
+        LiteralCommandNode<FabricClientCommandSource> randomSoundNode = ClientCommandManager
+                .literal("sound")
+                .then(
+                        ClientCommandManager.literal("enable")
+                                .executes(context -> setRandomSound(true))
+                )
+                .then(
+                        ClientCommandManager.literal("disable")
+                                .executes(context -> setRandomSound(false))
+                )
+                .executes(context -> queryRandomSound(1))
+                .build();
+        eatingNode.addChild(randomSoundNode);
+
         LiteralCommandNode<FabricClientCommandSource> renderTypeNode = ClientCommandManager
                 .literal("render_type")
                 .then(
@@ -109,13 +123,13 @@ public class OptionCommand {
                 .literal("warning")
                 .then(
                         ClientCommandManager.literal("enable")
-                                .executes(context -> warning(true))
+                                .executes(context -> setWarning(true))
                 )
                 .then(
                         ClientCommandManager.literal("disable")
-                                .executes(context -> warning(false))
+                                .executes(context -> setWarning(false))
                 )
-                .executes(context -> warningQuery(1))
+                .executes(context -> queryWarning(1))
                 .build();
         commandNode.addChild(warningNode);
 
@@ -194,10 +208,21 @@ public class OptionCommand {
         return queryRandomInfo(0);
     }
 
+    public static int setRandomSound(boolean state) {
+        SouperSecretSettingsClient.soupData.config.randomSound = state;
+        SouperSecretSettingsClient.soupData.changeData(false);
+        return queryRandomSound(0);
+    }
+
+    public static int queryRandomSound(int priority) {
+        SouperSecretSettingsClient.say("option.sound."+(SouperSecretSettingsClient.soupData.config.randomSound ? "on" : "off") + (priority > 0 ? ".query" : ".set"), priority);
+        return 1;
+    }
+
 
     public static int queryRandomInfo(int priority) {
         int time = SouperSecretSettingsClient.soupData.config.randomDuration;
-        SouperSecretSettingsClient.say("option.random_info" + (SouperSecretSettingsClient.soupData.config.randomDuration == 0 ? "" : "_duration"), priority, SouperSecretSettingsClient.soupData.config.randomShader, SouperSecretSettingsClient.soupData.config.randomCount, (time/20) + (time%20 == 0 ? "" : String.valueOf((time%20)/20f).substring(1)));
+        SouperSecretSettingsClient.say("option.random_info" + (SouperSecretSettingsClient.soupData.config.randomDuration == 0 ? "" : "_duration") + (priority > 0 ? ".query" : ".set"), priority, SouperSecretSettingsClient.soupData.config.randomShader, SouperSecretSettingsClient.soupData.config.randomCount, (time/20) + (time%20 == 0 ? "" : String.valueOf((time%20)/20f).substring(1)));
         return 1;
     }
 
@@ -215,7 +240,7 @@ public class OptionCommand {
     }
 
     public static int queryRenderType(int priority) {
-        SouperSecretSettingsClient.say("option.render_type."+SouperSecretSettingsClient.soupRenderer.getRenderType().toString().toLowerCase(), priority);
+        SouperSecretSettingsClient.say("option.render_type."+SouperSecretSettingsClient.soupRenderer.getRenderType().toString().toLowerCase() + (priority > 0 ? ".query" : ".set"), priority);
         return 1;
     }
 
@@ -226,14 +251,14 @@ public class OptionCommand {
         return 1;
     }
 
-    public static int warning(boolean state) {
+    public static int setWarning(boolean state) {
         SouperSecretSettingsClient.soupData.config.warning = state;
         SouperSecretSettingsClient.soupData.changeData(false);
-        return warningQuery(0);
+        return queryWarning(0);
     }
 
-    public static int warningQuery(int priority) {
-        SouperSecretSettingsClient.say("option.warning."+(SouperSecretSettingsClient.soupData.config.warning ? "on" : "off"), priority);
+    public static int queryWarning(int priority) {
+        SouperSecretSettingsClient.say("option.warning."+(SouperSecretSettingsClient.soupData.config.warning ? "on" : "off") + (priority > 0 ? ".query" : ".set"), priority);
         return 1;
     }
 
@@ -244,7 +269,7 @@ public class OptionCommand {
     }
 
     public static int queryMessageFilter(int priority) {
-        SouperSecretSettingsClient.say("option.filter."+SouperSecretSettingsClient.soupData.config.messageFilter, priority);
+        SouperSecretSettingsClient.say("option.filter."+SouperSecretSettingsClient.soupData.config.messageFilter + (priority > 0 ? ".query" : ".set"), priority);
         return 1;
     }
 
@@ -255,7 +280,7 @@ public class OptionCommand {
     }
 
     public static int queryUndoLimit(int priority) {
-        SouperSecretSettingsClient.say("option.undo_limit", priority, SouperSecretSettingsClient.soupData.config.undoLimit);
+        SouperSecretSettingsClient.say("option.undo_limit" + (priority > 0 ? ".query" : ".set"), priority, SouperSecretSettingsClient.soupData.config.undoLimit);
         return 1;
     }
 

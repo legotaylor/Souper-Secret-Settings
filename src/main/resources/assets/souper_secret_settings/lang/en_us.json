@@ -1,6 +1,8 @@
 {
     "souper_secret_settings.say": "[Soup] ",
 
+
+
     "souper_secret_settings.layer.missing": "Cannot find layer named \"%s\"",
     "souper_secret_settings.layer.delete": "Removed saved layer \"%s\"",
     "souper_secret_settings.layer.delete.prompt": "Run again to confirm deleting layer \"%s\"",
@@ -62,36 +64,65 @@
     "souper_secret_settings.group.error.value": "Invalid value \"%s\"",
 
 
-    "souper_secret_settings.option.warning.on": "Shader count warning enabled",
-    "souper_secret_settings.option.warning.off": "Shader count warning disabled",
+
+    "souper_secret_settings.option.render_type.world.set": "Shaders now render in World",
+    "souper_secret_settings.option.render_type.world.query": "Shaders render in World",
+    "souper_secret_settings.option.render_type.ui.set": "Shaders now render in UI",
+    "souper_secret_settings.option.render_type.ui.query": "Shaders render in UI",
+    "souper_secret_settings.option.toggle.0": "Soup rendering enabled",
+    "souper_secret_settings.option.toggle.1": "Soup rendering disabled",
+    "souper_secret_settings.option.toggle.2": "Soup rendering will stay disabled",
+    "souper_secret_settings.option.filter.0.set": "All command feedback will be sent",
+    "souper_secret_settings.option.filter.0.query": "All command feedback sent",
+    "souper_secret_settings.option.filter.1.set": "Only important command feedback will be sent",
+    "souper_secret_settings.option.filter.1.query": "Only important command feedback sent",
+    "souper_secret_settings.option.filter.2.set": "No command feedback will be sent",
+    "souper_secret_settings.option.filter.2.query": "No command feedback sent",
+
     "souper_secret_settings.option.random.set": "Set random item to %s",
     "souper_secret_settings.option.random.query": "Random item is %s",
     "souper_secret_settings.option.clear.set": "Set clear item to %s",
     "souper_secret_settings.option.clear.query": "Clear item is %s",
-    "souper_secret_settings.option.random_info": "Eating the random item will apply shader \"%s\" %s times",
-    "souper_secret_settings.option.random_info_duration": "Eating the random item will apply shader \"%s\" %s times for %s seconds",
+    "souper_secret_settings.option.random_info.set": "Eating the random item will apply shader \"%s\" %s times",
+    "souper_secret_settings.option.random_info.query": "Eating the random item applies shader \"%s\" %s times",
+    "souper_secret_settings.option.random_info_duration.set": "Eating the random item will apply shader \"%s\" %s times for %s seconds",
+    "souper_secret_settings.option.random_info_duration.query": "Eating the random item applies shader \"%s\" %s times for %s seconds",
+    "souper_secret_settings.option.sound.on.set": "Random sound enabled",
+    "souper_secret_settings.option.sound.on.query": "Random sound is enabled",
+    "souper_secret_settings.option.sound.off.set": "Random sound disabled",
+    "souper_secret_settings.option.sound.off.query": "Random sound is disabled",
     "souper_secret_settings.option.random.prompt": "Clear timer disabled as a change was made",
-    "souper_secret_settings.option.render_type.world": "Shaders render in World",
-    "souper_secret_settings.option.render_type.ui": "Shaders render in UI",
-    "souper_secret_settings.option.toggle.0": "Soup enabled",
-    "souper_secret_settings.option.toggle.1": "Soup disabled",
-    "souper_secret_settings.option.toggle.2": "Soup will stay disabled",
-    "souper_secret_settings.option.toggle.prompt": "Soup enabled automatically, use \"/soup:option toggle stay\" if you want it to stay off",
-    "souper_secret_settings.option.filter.0": "All command feedback sent",
-    "souper_secret_settings.option.filter.1": "Only important command feedback sent",
-    "souper_secret_settings.option.filter.2": "No command feedback sent",
-    "souper_secret_settings.option.undo_limit": "Up to %s actions can be undone",
+
+    "souper_secret_settings.option.warning.on.set": "Shader count warning enabled",
+    "souper_secret_settings.option.warning.on.query": "Shader count warning is enabled",
+    "souper_secret_settings.option.warning.off.set": "Shader count warning disabled",
+    "souper_secret_settings.option.warning.off.query": "Shader count warning is disabled",
+    "souper_secret_settings.option.toggle.prompt": "Soup enabled automatically, run \"/soup:option toggle stay\" if you want it to stay off",
+    "souper_secret_settings.option.undo_limit.set": "Up to %s actions can now be undone",
+    "souper_secret_settings.option.undo_limit.query": "Up to %s actions can be undone",
 
     "souper_secret_settings.option.gui.main": "Main Options",
+    "souper_secret_settings.option.gui.toggle.0": "Rendering: Enabled",
+    "souper_secret_settings.option.gui.toggle.1": "Rendering: Disabled",
+    "souper_secret_settings.option.gui.toggle.2": "Rendering: Disabled (Locked)",
+    "souper_secret_settings.option.gui.filter.0": "Command Feedback: All",
+    "souper_secret_settings.option.gui.filter.1": "Command Feedback: Important",
+    "souper_secret_settings.option.gui.filter.2": "Command Feedback: None",
     "souper_secret_settings.option.gui.eating": "Eating",
-    "souper_secret_settings.option.gui.misc": "Other Options",
     "souper_secret_settings.option.gui.clear": "Clear",
     "souper_secret_settings.option.gui.random": "Random",
     "souper_secret_settings.option.gui.shader": "Shader",
     "souper_secret_settings.option.gui.count": "Count",
     "souper_secret_settings.option.gui.duration": "Duration",
+    "souper_secret_settings.option.gui.sound.on": "Random Sound: Enabled",
+    "souper_secret_settings.option.gui.sound.off": "Random Sound: Disabled",
+    "souper_secret_settings.option.gui.misc": "Other Options",
     "souper_secret_settings.option.gui.luminance": "Luminance Config",
+    "souper_secret_settings.option.gui.warning.on": "Shader Count Warning: Enabled",
+    "souper_secret_settings.option.gui.warning.off": "Shader Count Warning: Disabled",
     "souper_secret_settings.option.gui.undo_limit": "Undo Limit",
+
+
 
     "souper_secret_settings.resourcepack_soup": "Extra Soup",
 
@@ -120,6 +151,8 @@
     "souper_secret_settings.gui.group_loop_index": "Contains loop at index %s",
     "souper_secret_settings.gui.group_delta": "%s Shaders",
     "souper_secret_settings.gui.group_reset": "Reset",
+
+
 
     "gui.souper_secret_settings.keybindings.category.souper_secret_settings": "Souper Secret Settings",
     "gui.souper_secret_settings.keybindings.keybinding.open_gui": "Open Gui",
