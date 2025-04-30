@@ -20,13 +20,11 @@ uniform float luminance_pitch;
 uniform float luminance_yaw;
 uniform vec3 luminance_cam_fract;
 uniform vec3 luminance_cam;
+uniform vec2 luminance_clipping;
 uniform float luminance_alpha_smooth;
 
-float near = 0.1;
-float far = 1000.0;
 float LinearizeDepth(float depth) {
-    float z = depth * 2.0 - 1.0;
-    return (near * far) / (far + near - z * (far - near));
+    return (luminance_clipping.x*luminance_clipping.y) / (depth * (luminance_clipping.x - luminance_clipping.y) + luminance_clipping.y);
 }
 
 float aspect = oneTexel.y/oneTexel.x;

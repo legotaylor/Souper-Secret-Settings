@@ -20,20 +20,19 @@ uniform float SubThreshold;
 uniform float SubSteps;
 
 uniform float Wrapping;
+uniform vec2 luminance_clipping;
 
 vec2 wrapCoord(vec2 coord) {
     return mix(coord, fract(coord), Wrapping);
 }
 
-float near = 0.1;
-float far = 1000.0;
 float LinearizeDepth(float depth) {
     // treat the hand as at the far plane, so it doesnt cause issues
     if (depth == 0.0) {
-        return far;
+        return luminance_clipping.y;
     }
-    float z = depth * 2.0 - 1.0;
-    return (near * far) / (far + near - z * (far - near));
+
+    return (luminance_clipping.x*luminance_clipping.y) / (depth * (luminance_clipping.x - luminance_clipping.y) + luminance_clipping.y);
 }
 
 vec2 GetRayPos(mat4 projection, mat4 coord, float xSlope, float ySlope, float d) {
@@ -111,7 +110,7 @@ void main(){
     float ySlope = yTan * (texCoord.y*2.0 - 1.0);
 
     //https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/gluPerspective.xml
-    mat4 projection = mat4(yCotan/aspect, 0, 0, 0, 0, yCotan, 0, 0, 0, 0, (far+near)/(near-far), (2*far*near)/(near-far), 0, 0, -1, 0);
+    mat4 projection = mat4(yCotan/aspect, 0, 0, 0, 0, yCotan, 0, 0, 0, 0, (luminance_clipping.y+luminance_clipping.x)/(luminance_clipping.x-luminance_clipping.y), (2*luminance_clipping.y*luminance_clipping.x)/(luminance_clipping.x-luminance_clipping.y), 0, 0, -1, 0);
 
     mat4 coord = GetRotationMatrix(Rotation) * mat4(1, 0, 0, 0,  0, 1, 0, 0,  0, 0, 1, 0,  Offset.x, Offset.y, Offset.z, 1) * GetRotationMatrix(Camera);
 

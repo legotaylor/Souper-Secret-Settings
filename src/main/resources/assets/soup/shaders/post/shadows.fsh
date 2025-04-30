@@ -21,13 +21,11 @@ uniform float luminance_viewDistance;
 uniform vec2 ShadowFade;
 uniform float luminance_sunAngle;
 uniform float SunFade;
+uniform vec2 luminance_clipping;
 uniform float luminance_alpha_smooth;
 
-float near = 0.1;
-float far = 1000.0;
 float LinearizeDepth(float depth) {
-    float z = depth * 2.0 - 1.0;
-    return (near * far) / (far + near - z * (far - near));
+    return (luminance_clipping.x*luminance_clipping.y) / (depth * (luminance_clipping.x - luminance_clipping.y) + luminance_clipping.y);
 }
 
 float aspect = oneTexel.y/oneTexel.x;
@@ -77,7 +75,7 @@ vec3 OffsetRaycast(mat4 projection, vec3 direction, vec3 startPos, float steps, 
 void main(){
     //https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/gluPerspective.xml
     float yCotan = 1.0/yTan;
-    mat4 projection = mat4(yCotan/aspect, 0, 0, 0, 0, yCotan, 0, 0, 0, 0, (far+near)/(near-far), (2*far*near)/(near-far), 0, 0, -1, 0);
+    mat4 projection = mat4(yCotan/aspect, 0, 0, 0, 0, yCotan, 0, 0, 0, 0, (luminance_clipping.y+luminance_clipping.x)/(luminance_clipping.x-luminance_clipping.y), (2*luminance_clipping.y*luminance_clipping.x)/(luminance_clipping.x-luminance_clipping.y), 0, 0, -1, 0);
     vec3 pos = GetWorldOffset(texCoord);
 
     vec3 upVector = UpVector;

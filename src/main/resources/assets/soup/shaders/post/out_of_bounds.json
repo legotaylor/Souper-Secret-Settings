@@ -11,6 +11,7 @@
         { "name": "InSize",    "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
         { "name": "OutSize",   "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
         { "name": "Threshold", "type": "float",     "count": 1,  "values": [ 100.0 ] },
-        { "name": "Offset",    "type": "float",     "count": 2,  "values": [ 0.0, 0.0 ] }
+        { "name": "Offset",    "type": "float",     "count": 2,  "values": [ 0.0, 0.0 ] },
+        { "name": "luminance_clipping",  "type": "float",     "count": 2,  "values": [ 0.05, 750 ]}
     ]
 }

@@ -14,6 +14,7 @@
         { "name": "luminance_yaw",       "type": "float",     "count": 1,  "values": [ 0.0 ]},
         { "name": "luminance_cam_fract", "type": "float",     "count": 3,  "values": [ 0.0, 0.0, 0.0 ]},
         { "name": "luminance_cam",       "type": "float",     "count": 3,  "values": [ 0.0, 0.0, 0.0 ]},
+        { "name": "luminance_clipping",  "type": "float",     "count": 2,  "values": [ 0.05, 750 ]},
         { "name": "TextureScale",        "type": "float",     "count": 1,  "values": [ 1.0 ]},
         { "name": "Offset",              "type": "float",     "count": 3,  "values": [ 0.0, 0.0, 0.0 ]},
         { "name": "Aspect",              "type": "float",     "count": 1,  "values": [ 1.0 ]},

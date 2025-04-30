@@ -16,13 +16,11 @@ uniform vec4 FloorUV;
 uniform vec4 WallUV;
 uniform vec4 CeilUV;
 
+uniform vec2 luminance_clipping;
 uniform float luminance_alpha_smooth;
 
-float near = 0.1;
-float far = 1000.0;
 float LinearizeDepth(float depth) {
-    float z = depth * 2.0 - 1.0;
-    return (near * far) / (far + near - z * (far - near));
+    return (luminance_clipping.x*luminance_clipping.y) / (depth * (luminance_clipping.x - luminance_clipping.y) + luminance_clipping.y);
 }
 
 void main(){

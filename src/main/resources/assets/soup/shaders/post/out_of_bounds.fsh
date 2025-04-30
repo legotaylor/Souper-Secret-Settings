@@ -11,18 +11,16 @@ out vec4 fragColor;
 
 uniform float Threshold;
 uniform vec2 Offset;
+uniform vec2 luminance_clipping;
 
-float near = 0.1;
-float far = 1000.0;
 float LinearizeDepth(float depth) {
-    float z = depth * 2.0 - 1.0;
-    return (near * far) / (far + near - z * (far - near));
+    return (luminance_clipping.x*luminance_clipping.y) / (depth * (luminance_clipping.x - luminance_clipping.y) + luminance_clipping.y);
 }
 
 void main(){
     vec4 col = texture(InSampler, texCoord);
-    float depth = LinearizeDepth(texture(InDepthSampler, texCoord).r);
-    if (depth > Threshold) {
+    float depth = texture(InDepthSampler, texCoord).r;
+    if (depth == 1.0 || LinearizeDepth(depth) > Threshold) {
         col = texture(PrevOutSampler, texCoord + Offset*oneTexel);
     }
     fragColor = vec4(col.rgb, 1.0);

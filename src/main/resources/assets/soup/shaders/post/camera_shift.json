@@ -18,6 +18,7 @@
         { "name": "Steps",         "type": "float",     "count": 1,  "values": [ 128.0 ] },
         { "name": "SubThreshold",  "type": "float",     "count": 1,  "values": [ 10.0 ] },
         { "name": "SubSteps",      "type": "float",     "count": 1,  "values": [ 10.0 ] },
-        { "name": "Wrapping",      "type": "float",     "count": 1,  "values": [ 0.0 ] }
+        { "name": "Wrapping",      "type": "float",     "count": 1,  "values": [ 0.0 ] },
+        { "name": "luminance_clipping",  "type": "float",     "count": 2,  "values": [ 0.05, 750 ]}
     ]
 }
