@@ -1,6 +1,4 @@
 {
-    "post_effect": "soup:temporal_blur",
-    "enabled": true,
     "disable_game_rendertype": true,
     "custom": {
         "souper_secret_settings": {

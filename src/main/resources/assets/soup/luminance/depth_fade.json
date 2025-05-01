@@ -1,9 +1,7 @@
 {
-  "post_effect": "soup:depth_fade",
-  "enabled": true,
-  "disable_game_rendertype": true,
-  "registries": [
-    "souper_secret_settings:modifiers"
-  ],
-  "custom": {}
+    "disable_game_rendertype": true,
+    "registries": [
+        "souper_secret_settings:modifiers"
+    ],
+    "custom": {}
 }
