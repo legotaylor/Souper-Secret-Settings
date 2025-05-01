@@ -23,4 +23,4 @@ There are commands (which all start with `/soup:`, so they're easy to find) for 
 
 ## Older versions
 
-Older versions (1.21.1 and below) of the mod don't require Luminance, but will get some extra shaders if you do use it. If you are using one of those versions, check out [the old description](https://github.com/Nettakrim/Souper-Secret-Settings/blob/old/README.md). These versions may also require you to manually enable a resourcepack for the custom shaders to show up.
+Older versions (1.21.1 and below) of the mod don't require Luminance, but will get some extra shaders if you do use it. If you are using one of those versions, check out [the old description](https://github.com/Nettakrim/Souper-Secret-Settings/blob/old/README.md). These versions may also require you to manually enable a resourcepack for the custom shaders to show up
