@@ -1,6 +1,7 @@
 package com.nettakrim.souper_secret_settings;
 
 import com.mclegoman.luminance.client.keybindings.KeybindingHelper;
+import com.mclegoman.luminance.client.shaders.Shader;
 import com.nettakrim.souper_secret_settings.commands.OptionCommand;
 import com.nettakrim.souper_secret_settings.commands.SouperSecretSettingsCommands;
 import net.minecraft.client.option.KeyBinding;
@@ -9,7 +10,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class Keybinds {
     public static final KeyBinding openGUI = KeybindingHelper.getKeybinding(SouperSecretSettingsClient.MODID, SouperSecretSettingsClient.MODID, "open_gui", GLFW.GLFW_KEY_U);
-    public static final KeyBinding toggleSoup = KeybindingHelper.getKeybinding(SouperSecretSettingsClient.MODID, SouperSecretSettingsClient.MODID, "toggle_soup", GLFW.GLFW_KEY_UNKNOWN);
+    public static final KeyBinding toggleSoup = KeybindingHelper.getKeybinding(SouperSecretSettingsClient.MODID, SouperSecretSettingsClient.MODID, "cycle_mode", GLFW.GLFW_KEY_UNKNOWN);
     public static final KeyBinding clear = KeybindingHelper.getKeybinding(SouperSecretSettingsClient.MODID, SouperSecretSettingsClient.MODID, "clear", GLFW.GLFW_KEY_UNKNOWN);
     public static final KeyBinding undo = KeybindingHelper.getKeybinding(SouperSecretSettingsClient.MODID, SouperSecretSettingsClient.MODID, "undo", GLFW.GLFW_KEY_UNKNOWN);
     public static final KeyBinding redo = KeybindingHelper.getKeybinding(SouperSecretSettingsClient.MODID, SouperSecretSettingsClient.MODID, "redo", GLFW.GLFW_KEY_UNKNOWN);
@@ -21,7 +22,14 @@ public class Keybinds {
             SouperSecretSettingsClient.soupGui.open(SouperSecretSettingsClient.soupGui.getCurrentScreenType(), true);
         }
         if (toggleSoup.wasPressed()) {
-            OptionCommand.toggle(false);
+            if (SouperSecretSettingsClient.soupData.config.disableState > 0) {
+                SouperSecretSettingsClient.soupData.config.disableState = 0;
+                OptionCommand.setRenderType(Shader.RenderType.WORLD);
+            } else if (SouperSecretSettingsClient.soupRenderer.getRenderType().equals(Shader.RenderType.WORLD)) {
+                OptionCommand.setRenderType(Shader.RenderType.UI);
+            } else {
+                OptionCommand.toggle(false);
+            }
         }
         if (undo.wasPressed()) {
             SouperSecretSettingsClient.actions.undo();
