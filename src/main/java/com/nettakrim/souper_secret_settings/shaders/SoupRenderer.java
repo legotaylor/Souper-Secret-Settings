@@ -317,4 +317,10 @@ public class SoupRenderer implements Runnables.WorldRender {
         }
         return shaderGroups.get(registry);
     }
+
+    public void fixActiveLayer() {
+        if (!shaderLayers.isEmpty() && !shaderLayers.contains(activeLayer)) {
+            activeLayer = shaderLayers.getLast();
+        }
+    }
 }

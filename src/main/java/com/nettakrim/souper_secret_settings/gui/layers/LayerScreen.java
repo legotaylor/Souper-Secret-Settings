@@ -37,26 +37,22 @@ public class LayerScreen extends ListScreen<ShaderLayer> {
         }
         ShaderLayer shaderLayer = new ShaderLayer(addition);
         SouperSecretSettingsClient.soupRenderer.activeLayer = shaderLayer;
-        SouperSecretSettingsClient.soupGui.updateActiveLayer();
+        SouperSecretSettingsClient.soupGui.setActiveLayerMessage();
         return shaderLayer;
     }
 
     @Override
     public void removeEntry(ListWidget listWidget) {
         super.removeEntry(listWidget);
-        if (SouperSecretSettingsClient.soupRenderer.activeLayer != ((LayerWidget)listWidget).layer) {
-            return;
-        }
 
         if (SouperSecretSettingsClient.soupRenderer.shaderLayers.isEmpty()) {
             SouperSecretSettingsClient.soupRenderer.clearAll();
             SouperSecretSettingsClient.soupRenderer.loadDefault();
             new LayerClearAction().addToHistory();
-            SouperSecretSettingsClient.soupGui.open(SoupGui.ScreenType.LAYERS, false);
-        } else {
+        } else if (SouperSecretSettingsClient.soupRenderer.activeLayer == ((LayerWidget)listWidget).layer) {
             SouperSecretSettingsClient.soupRenderer.activeLayer = SouperSecretSettingsClient.soupRenderer.shaderLayers.getLast();
-            SouperSecretSettingsClient.soupGui.updateActiveLayer();
         }
+        SouperSecretSettingsClient.soupGui.updateActiveLayerMessageOrScreen();
     }
 
     @Override

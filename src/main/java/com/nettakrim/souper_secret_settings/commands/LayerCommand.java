@@ -176,9 +176,10 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
             SouperSecretSettingsClient.soupRenderer.clearAll();
             SouperSecretSettingsClient.soupRenderer.loadDefault();
             new LayerClearAction().addToHistory();
-        } else {
+        } else if (!SouperSecretSettingsClient.soupRenderer.shaderLayers.contains(SouperSecretSettingsClient.soupRenderer.activeLayer)) {
             SouperSecretSettingsClient.soupRenderer.activeLayer = SouperSecretSettingsClient.soupRenderer.shaderLayers.getLast();
         }
+        SouperSecretSettingsClient.soupGui.updateActiveLayerMessageOrScreen();
     }
 
     private int setActive(int index) {

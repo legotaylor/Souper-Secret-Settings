@@ -46,6 +46,7 @@ public class Actions {
         if (action.undo()) {
             undone.add(action);
             onChange();
+            tryFixActiveLayer(action);
             return true;
         } else {
             return undo();
@@ -61,6 +62,7 @@ public class Actions {
         action.redo();
         history.addLast(action);
         onChange();
+        tryFixActiveLayer(action);
 
         return true;
     }
@@ -82,6 +84,12 @@ public class Actions {
         if (SouperSecretSettingsClient.soupRenderer.randomTimer > 0) {
             SouperSecretSettingsClient.soupRenderer.randomTimer = 0;
             SouperSecretSettingsClient.say("option.random.prompt", 1);
+        }
+    }
+
+    protected void tryFixActiveLayer(Action action) {
+        if ((action instanceof ListAddAction<?> listAddAction && listAddAction.list() == SouperSecretSettingsClient.soupRenderer.shaderLayers) || (action instanceof ListRemoveAction<?> listRemoveAction && listRemoveAction.list == SouperSecretSettingsClient.soupRenderer.shaderLayers)) {
+            SouperSecretSettingsClient.soupRenderer.fixActiveLayer();
         }
     }
 }

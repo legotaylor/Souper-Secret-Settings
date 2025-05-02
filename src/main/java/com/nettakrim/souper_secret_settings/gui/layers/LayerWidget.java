@@ -86,7 +86,7 @@ public class LayerWidget extends ListWidget {
         int distance = getX()+getWidth() - (int)mouseX;
         if (distance < 20 && distance > 10) {
             SouperSecretSettingsClient.soupRenderer.activeLayer = layer;
-            SouperSecretSettingsClient.soupGui.updateActiveLayer();
+            SouperSecretSettingsClient.soupGui.updateActiveLayerMessageOrScreen();
             return;
         }
         super.onClick(mouseX, mouseY);
@@ -125,7 +125,7 @@ public class LayerWidget extends ListWidget {
         setMessage(getNameText(name));
 
         updateDataButtons();
-        SouperSecretSettingsClient.soupGui.updateActiveLayer();
+        SouperSecretSettingsClient.soupGui.updateActiveLayerMessageOrScreen();
     }
 
     private void setNameDisambiguate(String name) {

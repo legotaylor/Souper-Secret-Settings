@@ -96,7 +96,7 @@ public class SoupGui {
             clickableWidget.active = screenType.headerIndex != type.headerIndex;
             clickableWidget.setFocused(false);
         }
-        updateActiveLayer();
+        setActiveLayerMessage();
 
         return screen;
     }
@@ -140,7 +140,15 @@ public class SoupGui {
         return Objects.requireNonNullElse(currentScreenType, ScreenType.SHADERS);
     }
 
-    public void updateActiveLayer() {
+    public void updateActiveLayerMessageOrScreen() {
+        if (currentScreenType == ScreenType.LAYERS && ClientData.minecraft.currentScreen instanceof LayerScreen) {
+            open(ScreenType.LAYERS, false);
+        } else {
+            setActiveLayerMessage();
+        }
+    }
+
+    public void setActiveLayerMessage() {
         header.getFirst().setMessage(SouperSecretSettingsClient.soupRenderer.activeLayer.name.isBlank() ? SouperSecretSettingsClient.translate("gui.layers.unnamed") : SouperSecretSettingsClient.translate("gui.layers", SouperSecretSettingsClient.soupRenderer.activeLayer.name));
     }
 
