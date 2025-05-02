@@ -1,6 +1,7 @@
 package com.nettakrim.souper_secret_settings.gui.layers;
 
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
+import com.nettakrim.souper_secret_settings.actions.LayerClearAction;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.ListWidget;
 import com.nettakrim.souper_secret_settings.gui.SoupGui;
@@ -50,6 +51,7 @@ public class LayerScreen extends ListScreen<ShaderLayer> {
         if (SouperSecretSettingsClient.soupRenderer.shaderLayers.isEmpty()) {
             SouperSecretSettingsClient.soupRenderer.clearAll();
             SouperSecretSettingsClient.soupRenderer.loadDefault();
+            new LayerClearAction().addToHistory();
             SouperSecretSettingsClient.soupGui.open(SoupGui.ScreenType.LAYERS, false);
         } else {
             SouperSecretSettingsClient.soupRenderer.activeLayer = SouperSecretSettingsClient.soupRenderer.shaderLayers.getLast();

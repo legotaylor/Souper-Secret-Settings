@@ -71,7 +71,7 @@ public class Actions {
         onChange();
     }
 
-    private void onChange() {
+    protected void onChange() {
         SouperSecretSettingsClient.soupGui.setHistoryButtons(history.size(), undone.size());
 
         if (SouperSecretSettingsClient.soupData.config.disableState == 1) {

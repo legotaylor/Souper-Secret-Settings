@@ -9,10 +9,7 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.mojang.serialization.JsonOps;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
-import com.nettakrim.souper_secret_settings.actions.LayerRenameAction;
-import com.nettakrim.souper_secret_settings.actions.ListAddAction;
-import com.nettakrim.souper_secret_settings.actions.ShaderLoadAction;
-import com.nettakrim.souper_secret_settings.actions.ToggleAction;
+import com.nettakrim.souper_secret_settings.actions.*;
 import com.nettakrim.souper_secret_settings.data.LayerCodecs;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
@@ -178,6 +175,7 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
         if (SouperSecretSettingsClient.soupRenderer.shaderLayers.isEmpty()) {
             SouperSecretSettingsClient.soupRenderer.clearAll();
             SouperSecretSettingsClient.soupRenderer.loadDefault();
+            new LayerClearAction().addToHistory();
         } else {
             SouperSecretSettingsClient.soupRenderer.activeLayer = SouperSecretSettingsClient.soupRenderer.shaderLayers.getLast();
         }
