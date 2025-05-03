@@ -12,6 +12,7 @@ uniform vec2 Offset;
 uniform vec3 Angle;
 uniform float Seed;
 uniform float UVMix;
+uniform int NthClosest;
 uniform float luminance_alpha_smooth;
 
 //https://www.shadertoy.com/view/3sGSWV
@@ -31,21 +32,32 @@ vec2 offset(vec2 cell) {
 vec2 voronoiNoise(vec2 value){
     vec2 center = floor(value);
 
-    float smallestDistance = 10.0;
-    vec2 closestCell;
+    vec3 values[9];
 
     for(int x = -1; x <= 1; x++) {
+        int i = (x+1)*3 + 1;
         for (int y = -1; y <= 1; y++) {
             vec2 cellPosition = center + vec2(x,y);
-            float dist = length(offset(cellPosition) - value);
-            if (dist < smallestDistance) {
-                smallestDistance = dist;
-                closestCell = cellPosition;
-            }
+            values[y+i] = vec3(cellPosition, length(offset(cellPosition) - value));
         }
     }
 
-    return closestCell;
+    float maxFloat = 3.402823466e+38;
+    float closestDistance = maxFloat;
+    int closestIndex = 4;
+
+    for (int i = 0; i < min(NthClosest, 9); i++) {
+        for (int j = 0; j < 9; j++) {
+            if (values[j].z < closestDistance) {
+                closestIndex = j;
+                closestDistance = values[j].z;
+            }
+        }
+        values[closestIndex].z = maxFloat;
+        closestDistance = maxFloat;
+    }
+
+    return values[closestIndex].xy;
 }
 
 void main(){
