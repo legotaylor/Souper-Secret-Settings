@@ -21,6 +21,8 @@ uniform float luminance_yaw;
 uniform vec3 luminance_cam_fract;
 uniform vec3 luminance_cam;
 uniform vec2 luminance_clipping;
+uniform vec3 ScreenScale;
+uniform float luminance_renderType;
 uniform float luminance_alpha_smooth;
 
 float LinearizeDepth(float depth) {
@@ -107,7 +109,9 @@ void main(){
     vec3 color = texture(InSampler, texCoord).rgb;
     vec3 base = color;
 
-    vec3 n = noise(pos);
+    vec3 screen = vec3(texCoord.xy*ScreenScale.xy, ScreenScale.z)-fract(Scroll);
+    screen.x *= aspect;
+    vec3 n = noise(mix(pos, screen, luminance_renderType));
 
     color = mix(color, step(n, pow(color, vec3(Mode.y))), Mode.x);
     color = mix(color, color*mix(n, 1-n, Mode.w), Mode.z);
