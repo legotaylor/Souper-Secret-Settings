@@ -7,6 +7,11 @@ in vec2 oneTexel;
 
 uniform float LumaRamp;
 uniform float LumaLevel;
+uniform vec3 ColorAdd;
+uniform vec3 ColorMul;
+uniform vec3 Gray;
+uniform vec3 Mix;
+uniform float Outline;
 
 out vec4 fragColor;
 
@@ -29,8 +34,8 @@ void main(){
     vec4 l2Diff = abs(center - left2);
     vec4 r2Diff = abs(center - right2);
     vec4 sum = uDiff + dDiff + lDiff + rDiff + u2Diff + d2Diff + l2Diff + r2Diff;
-    vec4 gray = vec4(0.3, 0.59, 0.11, 0.0);
-    float sumLuma = 1.0 - dot(clamp(sum, 0.0, 1.0), gray);
+    vec4 gray = vec4(Gray, 0.0);
+    float sumLuma = 1.0 - dot(clamp(sum, 0.0, 1.0), gray)*Outline;
 
     // Get luminance of center pixel and adjust
     float centerLuma = dot(center + (center - pow(center, vec4(LumaRamp))), gray);
@@ -44,5 +49,9 @@ void main(){
     // Blend with outline
     centerLuma = centerLuma * sumLuma;
 
-    fragColor = vec4(centerLuma+max(0.4-centerLuma, 0.0), centerLuma+max(0.2-centerLuma, 0.0), centerLuma*0.75, 1.0);
+    vec3 col = vec3(centerLuma);
+    col += max(ColorAdd-col, 0);
+    col *= ColorMul;
+
+    fragColor = vec4(mix(center.rgb * sumLuma, col, Mix), 1.0);
 }
