@@ -39,7 +39,7 @@
       "1.21.3"
     ],
     "java": ">=21",
-    "luminance": "*"
+    "luminance": ">=1.0.1-release.1"
   },
   "suggests": {
   }
