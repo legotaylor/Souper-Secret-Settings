@@ -1,5 +1,4 @@
 {
-    "disable_ui_rendertype": true,
     "registries": [
         "souper_secret_settings:modifiers"
     ],
