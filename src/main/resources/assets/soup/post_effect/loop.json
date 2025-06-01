@@ -1,0 +1,69 @@
+{
+    "targets": {
+        "0": {},
+        "previous": {"persistent": true}
+    },
+    "custom_passes": {
+        "souper_secret_settings:before_layer_render": [
+            {
+                "program": "soup:post/out_of_bounds",
+                "inputs": [
+                    {
+                        "sampler_name": "In",
+                        "target": "minecraft:main"
+                    },
+                    {
+                        "sampler_name": "InDepth",
+                        "target": "minecraft:main",
+                        "use_depth_buffer": true
+                    },
+                    {
+                        "sampler_name": "PrevOut",
+                        "target": "previous"
+                    }
+                ],
+                "uniforms": [
+                    {
+                        "name": "Threshold",
+                        "values": [ -100 ]
+                    },
+                    {
+                        "name": "Pixels",
+                        "values": [ 0, 1 ]
+                    },
+                    {
+                        "name": "Requirements",
+                        "values": [ -1 ]
+                    },
+                    {
+                        "name": "Offset",
+                        "values": [ 0, -10 ]
+                    }
+                ],
+                "output": "0"
+            },
+            {
+                "program": "minecraft:post/blit",
+                "inputs": [
+                    {
+                        "sampler_name": "In",
+                        "target": "0"
+                    }
+                ],
+                "output": "minecraft:main"
+            }
+        ],
+        "souper_secret_settings:after_layer_render": [
+            {
+                "program": "minecraft:post/blit",
+                "inputs": [
+                    {
+                        "sampler_name": "In",
+                        "target": "minecraft:main"
+                    }
+                ],
+                "output": "previous"
+            }
+        ]
+    }
+}

@@ -19,6 +19,8 @@
     "gui.luminance.shader.soup.grid.description": "",
     "gui.luminance.shader.soup.half": "Half",
     "gui.luminance.shader.soup.half.description": "",
+    "gui.luminance.shader.soup.loop": "Loop",
+    "gui.luminance.shader.soup.loop.description": "",
     "gui.luminance.shader.soup.mix": "Mix",
     "gui.luminance.shader.soup.mix.description": "",
     "gui.luminance.shader.soup.multiply": "Multiply",

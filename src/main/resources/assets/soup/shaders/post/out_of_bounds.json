@@ -7,11 +7,15 @@
         { "name": "PrevOutSampler" }
     ],
     "uniforms": [
-        { "name": "ProjMat",   "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
-        { "name": "InSize",    "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
-        { "name": "OutSize",   "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
-        { "name": "Threshold", "type": "float",     "count": 1,  "values": [ 100.0 ] },
-        { "name": "Offset",    "type": "float",     "count": 2,  "values": [ 0.0, 0.0 ] },
+        { "name": "ProjMat",      "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+        { "name": "InSize",       "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
+        { "name": "OutSize",      "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
+        { "name": "Threshold",    "type": "float",     "count": 1,  "values": [ 100.0 ] },
+        { "name": "Color",        "type": "float",     "count": 3,  "values": [ 0.0, 0.0, 0.0 ] },
+        { "name": "Pixels",       "type": "float",     "count": 2,  "values": [ 0.0, 0.0 ] },
+        { "name": "Requirements", "type": "float",     "count": 1,  "values": [ 1.0 ] },
+        { "name": "Offset",       "type": "float",     "count": 2,  "values": [ 0.0, 0.0 ] },
+        { "name": "Amount",       "type": "float",     "count": 3,  "values": [ 1.0, 1.0, 1.0 ] },
         { "name": "luminance_clipping",  "type": "float",     "count": 2,  "values": [ 0.05, 750 ]}
     ]
 }
