@@ -13,8 +13,12 @@ uniform float Angle;
 uniform vec2 X;
 uniform vec2 Y;
 uniform vec2 Offset;
+uniform float Squish;
+
+vec2 scale = vec2(mix(1.0, OutSize.x/OutSize.y, Squish), 1.0);
 
 vec2 rotate(vec2 v, float angle) {
+    v *= scale;
     float radians = angle / 57.2957795131;
     float s = sin(radians);
     float c = cos(radians);
@@ -28,5 +32,7 @@ void main(){
     texCoord = Position.xy / OutSize;
 
     vec2 centered = texCoord-vec2(0.5);
-    texCoord = (mat3x2(X, Y, Offset)*vec3(rotate(centered, Angle), 1.0))+vec2(0.5);
+    vec2 v = mat3x2(X, Y, Offset) * vec3(rotate(centered, Angle), 1.0);
+    v /= scale;
+    texCoord = v + vec2(0.5);
 }
