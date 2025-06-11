@@ -1,6 +1,8 @@
 {
     "gui.luminance.shader.soup.compare": "Compare",
     "gui.luminance.shader.soup.compare.description": "",
+    "gui.luminance.shader.soup.cross": "Cross",
+    "gui.luminance.shader.soup.cross.description": "",
     "gui.luminance.shader.soup.cycle_additive": "Cycle Additive",
     "gui.luminance.shader.soup.cycle_additive.description": "",
     "gui.luminance.shader.soup.cycle_exclusive": "Cycle Exclusive",
