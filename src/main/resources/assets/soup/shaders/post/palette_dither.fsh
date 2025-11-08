@@ -47,22 +47,18 @@ vec4 getBarycentric(vec3 a, vec3 b, vec3 c, vec3 d, vec3 p) {
 }
 
 // interpretation of a palette dither method described by https://bsky.app/profile/krisp.bsky.social
-// its less cool though as the medium of soup doesnt really allow for precomputing lookup tables, so everything needs to be calculated per fragment
-
-// it also only approximates the tetrahedralisation of the points when the color isnt within the 4 specified
+// its less cool though as the medium of soup doesnt really allow for precomputing lookup tables
+// and tetrahedralisation is hard on the gpu, so instead i just fallback to unit cube when the colors are out of bounds
 void main() {
-    vec3 col = texture(InSampler, texCoord).rgb;
+    vec3 base = texture(InSampler, texCoord).rgb;
+    vec3 col = base*base;
 
     vec4 barycentric = getBarycentric(Color1, Color2, Color3, Color4, col);
 
     int count = 0;
-    int indices[4] = int[](0,1,2,3);
     for (int i = 0; i < 4; i++) {
         if (barycentric[i] < 0) {
-            indices[count] = i;
             count++;
-        } else {
-            indices[3-count] = i;
         }
     }
 
@@ -70,34 +66,34 @@ void main() {
         Color1, Color2, Color3, Color4
     );
 
+    // https://cs.stackexchange.com/questions/89910/how-to-decompose-a-unit-cube-into-tetrahedra
     if (count > 0) {
-        vec3 project = col - vec3(colors[indices[count == 1 ? 0 : 3]]);
-        colors[indices[0]] = step(0.5, project / max(max(abs(project.x), abs(project.y)), abs(project.z)));
+        colors[0] = vec3(0);
+        colors[3] = vec3(1);
 
-        if (count == 2) {
-            vec3 projectB = col - vec3(colors[indices[2]]);
-            colors[indices[1]] = step(0.5, projectB / max(max(abs(projectB.x), abs(projectB.y)), abs(projectB.z)));
-        } else if (count == 3) {
-            vec3 ref = vec3(colors[indices[0]]);
-
-            vec3 comp =  vec3(1-ref.x, ref.y, ref.z);
-            float minDistance = squareDist(col, comp);
-            float secondDistance = 10000;
-            colors[indices[1]] = comp;
-
-            for (int i = 2; i < 8; i++) {
-                vec3 comp = vec3(((i&1) > 0) ? 1-ref.x : ref.x, ((i&2) > 0) ? 1-ref.y : ref.y, ((i&4) > 0) ? 1-ref.z : ref.z);
-                float d = squareDist(col, comp);
-                if (d < minDistance) {
-                    secondDistance = minDistance;
-                    colors[indices[2]] = colors[indices[1]];
-                    minDistance = d;
-                    colors[indices[1]] = comp;
-                } else if (d < secondDistance) {
-                    secondDistance = d;
-                    colors[indices[2]] = comp;
-                }
-            }
+        if (col.x <= col.z && col.z <= col.y) {
+            colors[1] = vec3(0, 1, 0);
+            colors[2] = vec3(0, 1, 1);
+        }
+        else if (col.x <= col.y && col.y <= col.z) {
+            colors[1] = vec3(0, 1, 1);
+            colors[2] = vec3(0, 0, 1);
+        }
+        else if (col.y <= col.x && col.x <= col.z) {
+            colors[1] = vec3(0, 0, 1);
+            colors[2] = vec3(1, 0, 1);
+        }
+        else if (col.y <= col.z && col.z <= col.x) {
+            colors[1] = vec3(1, 0, 1);
+            colors[2] = vec3(1, 0, 0);
+        }
+        else if (col.z <= col.y && col.y <= col.x) {
+            colors[1] = vec3(1, 0, 0);
+            colors[2] = vec3(1, 1, 0);
+        }
+        else {
+            colors[1] = vec3(1, 1, 0);
+            colors[2] = vec3(0, 1, 0);
         }
 
         barycentric = getBarycentric(colors[0], colors[1], colors[2], colors[3], col);
@@ -107,7 +103,8 @@ void main() {
     vec4 weights = barycentric / (barycentric.x + barycentric.y + barycentric.z + barycentric.w);
 
     vec2 t = texCoord + vec2(1.234 * Seed, 5.678);
-    float random = hash(vec3(t * t, Seed * t.y));
+    float r = hash(vec3(t * t, Seed * t.y));
+    float random = hash(vec3(texCoord + vec2(r), fract(t.x - r)));
 
     vec3 result;
     if (random < weights.x) {
@@ -123,5 +120,5 @@ void main() {
         result = colors[3];
     }
 
-    fragColor = vec4(mix(col, result, luminance_alpha_smooth), 1.0);
+    fragColor = vec4(mix(base, sqrt(result), luminance_alpha_smooth), 1.0);
 }
