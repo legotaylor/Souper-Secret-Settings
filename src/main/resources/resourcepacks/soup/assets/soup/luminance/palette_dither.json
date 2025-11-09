@@ -2,7 +2,7 @@
     "disable_ui_rendertype": true,
     "custom": {
         "souper_secret_settings": {
-            "groups": [ "edible", "dither", "retro" ]
+            "groups": [ "dither", "retro" ]
         }
     }
 }

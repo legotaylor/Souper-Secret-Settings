@@ -7,6 +7,7 @@ in vec2 oneTexel;
 
 out vec4 fragColor;
 
+uniform int Amount;
 uniform vec3 Color1;
 uniform vec3 Color2;
 uniform vec3 Color3;
@@ -53,13 +54,13 @@ vec4 getBarycentric(vec3 a, vec3 b, vec3 c, vec3 d, vec3 p) {
 }
 
 int orders[70] = int[](
-    3984, 3936, 3425, 3418, 3848, 3281, 3344, 3857, 3993, 2840,
-    3280, 3793, 3985, 3352, 3865, 3354, 3864, 3353, 3427, 4009,
-    3416, 2256, 3929, 3408, 3921, 2768, 3424, 3937, 3426, 3976,
-    4002, 3784, 3856, 4008, 3345, 3928, 2833, 3417, 2824, 2832,
-    4012, 3938, 2760, 4011, 3400, 3912, 2842, 3992, 2257, 2248,
-    3930, 4003, 2696, 4010, 3866, 3939, 3272, 2841, 3920, 3409,
-    2769, 3720, 3208, 1672, 3336, 3994, 4001, 2184, 4000, 3792
+    1672, 2256, 2257, 2248, 2184, 2840, 2768, 2833, 2824, 2832,
+    2760, 2842, 2696, 2841, 2769, 3425, 3418, 3281, 3344, 3280,
+    3352, 3354, 3353, 3427, 3416, 3408, 3424, 3426, 3345, 3417,
+    3400, 3272, 3409, 3208, 3336, 3984, 3936, 3848, 3857, 3993,
+    3793, 3985, 3865, 3864, 4009, 3929, 3921, 3937, 3976, 4002,
+    3784, 3856, 4008, 3928, 4012, 3938, 4011, 3912, 3992, 3930,
+    4003, 4010, 3866, 3939, 3920, 3720, 3994, 4001, 4000, 3792
 );
 
 vec3 p = vec3(Power);
@@ -71,7 +72,7 @@ vec3 colors[8] = vec3[](
 
 // interpretation of a palette dither method described by https://bsky.app/profile/krisp.bsky.social
 // its less cool though as the medium of soup doesnt really allow for precomputing lookup tables
-// and tetrahedralisation is hard on the gpu, so instead i just brute force all of them
+// and tetrahedralisation is hard on the gpu, so instead i just brute force all of them, which is about 2x as bad as soup:mouse
 void main() {
     vec3 base = texture(InSampler, texCoord).rgb;
     vec3 col = pow(base, p);
@@ -87,7 +88,7 @@ void main() {
     vec3 C;
     vec3 D;
 
-    for (int i = 0; i < 70; i++) {
+    for (int i = 0; i < min(Amount, 70); i++) {
         int order = orders[i];
         vec3 a = vec3(colors[order & 7]);
         vec3 b = vec3(colors[(order >> 3) & 7]);
@@ -109,7 +110,7 @@ void main() {
 
         if ((barycentric.x < 0 || barycentric.y < 0 || barycentric.z < 0 || barycentric.w < 0) && (barycentric.x > 0 || barycentric.y > 0 || barycentric.z > 0 || barycentric.w > 0)) {
             // i think if the handedness is incorrect and the point is on the tetrahedron, then all the values are negative
-            // if this is let through though, itll just fix itself, since itll be multiplied by its sum
+            // if this is let through though, itll just fix itself, since itll be divided by its sum
             continue;
         }
 
@@ -158,6 +159,7 @@ void main() {
                 C = vec3(0, 1, 0);
             }
         } else {
+            // or nearest pallete value
             int order = orders[fallbackOrder];
             A = vec3(colors[order & 7]);
             B = vec3(colors[(order >> 3) & 7]);
