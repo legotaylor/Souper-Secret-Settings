@@ -45,6 +45,8 @@
     "gui.luminance.shader.soup.dither.description": "",
     "gui.luminance.shader.soup.dramatic": "Dramatic",
     "gui.luminance.shader.soup.dramatic.description": "",
+    "gui.luminance.shader.soup.emboss": "Emboss",
+    "gui.luminance.shader.soup.emboss.description": "",
     "gui.luminance.shader.soup.film_grain": "Film Grain",
     "gui.luminance.shader.soup.film_grain.description": "",
     "gui.luminance.shader.soup.fisheye": "Fisheye",

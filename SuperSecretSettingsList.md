@@ -33,10 +33,11 @@ All builtin resourcepacks should be enabled by default, but they may need to ena
 | pencil                             | sepia               | dissolve        |
 | phosphor                           | silhouette          | dither          |
 | scan_pincushion                    | silhouette2         | dramatic        |
-| shareware*                         | sixteen_colors      | film_grain      |
-| sobel                              | tiltshift           | fisheye         |
-| spider**                           |                     | fractal         |
-| wobble                             |                     | frigid          |
+| shareware*                         | sixteen_colors      | emboss          |
+| sobel                              | tiltshift           | film_grain      |
+| spider**                           |                     | fisheye         |
+| wobble                             |                     | fractal         |
+|                                    |                     | frigid          |
 |                                    |                     | ghost           |
 |                                    |                     | gel             |
 |                                    |                     | ghost           |

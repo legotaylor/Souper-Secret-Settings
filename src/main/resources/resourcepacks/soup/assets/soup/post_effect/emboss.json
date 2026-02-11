@@ -19,7 +19,15 @@
                 },
                 {
                     "name": "Outside",
-                    "values": [ -0.004 ]
+                    "values": [ -0.001 ]
+                },
+                {
+                    "name": "Steps",
+                    "values": [ 4 ]
+                },
+                {
+                    "name": "Shadow",
+                    "values": [ 1.0 ]
                 }
             ]
         },
