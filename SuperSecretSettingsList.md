@@ -67,6 +67,7 @@ All builtin resourcepacks should be enabled by default, but they may need to ena
 |                                    |                     | offset_blobs    |
 |                                    |                     | offset_print    |
 |                                    |                     | out_of_bounds   |
+|                                    |                     | palette_dither  |
 |                                    |                     | patchwork       |
 |                                    |                     | pendulum        |
 |                                    |                     | plants          |

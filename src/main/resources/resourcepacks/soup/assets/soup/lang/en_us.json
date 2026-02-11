@@ -111,6 +111,8 @@
     "gui.luminance.shader.soup.offset_print.description": "",
     "gui.luminance.shader.soup.out_of_bounds": "Out of Bounds",
     "gui.luminance.shader.soup.out_of_bounds.description": "",
+    "gui.luminance.shader.soup.palette_dither": "Palette Dither",
+    "gui.luminance.shader.soup.palette_dither.description": "",
     "gui.luminance.shader.soup.patchwork": "Patchwork",
     "gui.luminance.shader.soup.patchwork.description": "",
     "gui.luminance.shader.soup.pendulum": "Pendulum",
