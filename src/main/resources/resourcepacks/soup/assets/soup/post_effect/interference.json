@@ -6,17 +6,22 @@
     },
     "passes": [
         {
-            "program": "minecraft:post/ntsc_encode",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/ntsc_encode",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "minecraft:main"
                 }
             ],
-            "output": "0"
+            "output": "0",
+            "uniforms": {
+                "NtscEncodeConfig": []
+            }
         },
         {
-            "program": "minecraft:post/ntsc_decode",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/ntsc_decode",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -27,20 +32,34 @@
                     "target": "minecraft:main"
                 }
             ],
-            "output": "1"
+            "output": "1",
+            "uniforms": {
+                "NtscDecodeConfig": []
+            }
         },
         {
-            "program": "minecraft:post/bumpy",
+            "vertex_shader": "minecraft:post/bumpy",
+            "fragment_shader": "minecraft:post/bumpy",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "1"
                 }
             ],
-            "output": "0"
+            "output": "0",
+            "uniforms": {
+                "BumpyConfig": [
+                    {
+                        "name": "Strength",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/color_convolve",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/color_convolve",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -48,15 +67,73 @@
                 }
             ],
             "output": "1",
-            "uniforms": [
-                {
-                    "name": "Saturation",
-                    "values": [ 0.2 ]
-                }
-            ]
+            "uniforms": {
+                "ColorConfig": [
+                    {
+                        "name": "Gray",
+                        "type": "vec3",
+                        "value": [
+                            0.3,
+                            0.59,
+                            0.11
+                        ]
+                    },
+                    {
+                        "name": "RedMatrix",
+                        "type": "vec3",
+                        "value": [
+                            1.0,
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "GreenMatrix",
+                        "type": "vec3",
+                        "value": [
+                            0.0,
+                            1.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "BlueMatrix",
+                        "type": "vec3",
+                        "value": [
+                            0.0,
+                            0.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "Offset",
+                        "type": "vec3",
+                        "value": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "ColorScale",
+                        "type": "vec3",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "Saturation",
+                        "type": "float",
+                        "value": 0.2
+                    }
+                ]
+            }
         },
         {
-            "program": "luminance:post/merge",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "luminance:post/merge",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -67,17 +144,41 @@
                     "target": "minecraft:main"
                 }
             ],
-            "output": "0"
+            "output": "0",
+            "uniforms": {
+                "MergeConfig": [
+                    {
+                        "name": "luminance_alpha_smooth",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/blit",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "0"
                 }
             ],
-            "output": "minecraft:main"
+            "output": "minecraft:main",
+            "uniforms": {
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         }
     ]
 }

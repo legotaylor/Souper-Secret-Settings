@@ -6,7 +6,8 @@
     },
     "passes": [
         {
-            "program": "soup:post/outline_sepia",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/outline_sepia",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -14,15 +15,65 @@
                 }
             ],
             "output": "0",
-            "uniforms": [
-                {
-                    "name": "LumaLevel",
-                    "values": [ 8 ]
-                }
-            ]
+            "uniforms": {
+                "OutlineSepiaConfig": [
+                    {
+                        "name": "LumaRamp",
+                        "type": "float",
+                        "value": 16.0
+                    },
+                    {
+                        "name": "LumaLevel",
+                        "type": "float",
+                        "value": 8
+                    },
+                    {
+                        "name": "ColorAdd",
+                        "type": "vec3",
+                        "value": [
+                            0.4,
+                            0.2,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "ColorMul",
+                        "type": "vec3",
+                        "value": [
+                            1.0,
+                            1.0,
+                            0.75
+                        ]
+                    },
+                    {
+                        "name": "Gray",
+                        "type": "vec3",
+                        "value": [
+                            0.3,
+                            0.59,
+                            0.11
+                        ]
+                    },
+                    {
+                        "name": "Mix",
+                        "type": "vec3",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "Outline",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/notch",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/notch",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -36,10 +87,29 @@
                     "bilinear": false
                 }
             ],
-            "output": "1"
+            "output": "1",
+            "uniforms": {
+                "NotchConfig": [
+                    {
+                        "name": "Mix",
+                        "type": "vec3",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "Scale",
+                        "type": "float",
+                        "value": 2.0
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/color_convolve",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/color_convolve",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -47,27 +117,73 @@
                 }
             ],
             "output": "0",
-            "uniforms": [
-                {
-                    "name": "RedMatrix",
-                    "values": [ 1.0, 0.0, 0.0 ]
-                },
-                {
-                    "name": "GreenMatrix",
-                    "values": [ 0.0, 0.8, 0.0 ]
-                },
-                {
-                    "name": "BlueMatrix",
-                    "values": [ 0.0, 0.0, 0.5 ]
-                },
-                {
-                    "name": "Saturation",
-                    "values": [ 0.5 ]
-                }
-            ]
+            "uniforms": {
+                "ColorConfig": [
+                    {
+                        "name": "Gray",
+                        "type": "vec3",
+                        "value": [
+                            0.3,
+                            0.59,
+                            0.11
+                        ]
+                    },
+                    {
+                        "name": "RedMatrix",
+                        "type": "vec3",
+                        "value": [
+                            1.0,
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "GreenMatrix",
+                        "type": "vec3",
+                        "value": [
+                            0.0,
+                            0.8,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "BlueMatrix",
+                        "type": "vec3",
+                        "value": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ]
+                    },
+                    {
+                        "name": "Offset",
+                        "type": "vec3",
+                        "value": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "ColorScale",
+                        "type": "vec3",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "Saturation",
+                        "type": "float",
+                        "value": 0.5
+                    }
+                ]
+            }
         },
         {
-            "program": "luminance:post/merge",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "luminance:post/merge",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -78,17 +194,41 @@
                     "target": "minecraft:main"
                 }
             ],
-            "output": "1"
+            "output": "1",
+            "uniforms": {
+                "MergeConfig": [
+                    {
+                        "name": "luminance_alpha_smooth",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/blit",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "1"
                 }
             ],
-            "output": "minecraft:main"
+            "output": "minecraft:main",
+            "uniforms": {
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         }
     ]
 }

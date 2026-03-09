@@ -2,11 +2,14 @@
     "targets": {
         "0": {},
         "1": {},
-        "previous": {"persistent": true}
+        "previous": {
+            "persistent": true
+        }
     },
     "passes": [
         {
-            "program": "soup:post/mix",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/mix",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -17,26 +20,80 @@
                     "target": "previous"
                 }
             ],
-            "uniforms": [
-                {
-                    "name": "Amount",
-                    "values": [ 0.95, 0.95, 0.95 ]
-                }
-            ],
+            "uniforms": {
+                "MixConfig": [
+                    {
+                        "name": "Amount",
+                        "type": "vec3",
+                        "value": [
+                            0.95,
+                            0.95,
+                            0.95
+                        ]
+                    },
+                    {
+                        "name": "UseNoise",
+                        "type": "float",
+                        "value": 0.0
+                    },
+                    {
+                        "name": "Scale",
+                        "type": "vec2",
+                        "value": [
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "Offset",
+                        "type": "vec2",
+                        "value": [
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "Pixelate",
+                        "type": "float",
+                        "value": 0.0
+                    },
+                    {
+                        "name": "Seed",
+                        "type": "float",
+                        "value": 0.0
+                    }
+                ]
+            },
             "output": "0"
         },
         {
-            "program": "minecraft:post/blit",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "0"
                 }
             ],
-            "output": "previous"
+            "output": "previous",
+            "uniforms": {
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         },
         {
-            "program": "soup:post/depth_line",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/depth_line",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -48,20 +105,70 @@
                     "use_depth_buffer": true
                 }
             ],
-            "uniforms": [
-                {
-                    "name": "StartMatrix",
-                    "values": [ 0.1, 0.0, 0.0, 0.0 ]
-                },
-                {
-                    "name": "EndMatrix",
-                    "values": [ 0.0, 0.0, 0.0, 1.0 ]
-                }
-            ],
+            "uniforms": {
+                "DepthLineConfig": [
+                    {
+                        "name": "Pow",
+                        "type": "float",
+                        "value": 64.0
+                    },
+                    {
+                        "name": "StartOffset",
+                        "type": "vec2",
+                        "value": [
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "StartMatrix",
+                        "type": "vec4",
+                        "value": [
+                            0.1,
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "EndOffset",
+                        "type": "vec2",
+                        "value": [
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "EndMatrix",
+                        "type": "vec4",
+                        "value": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "Wrapping",
+                        "type": "float",
+                        "value": 0.0
+                    },
+                    {
+                        "name": "Mix",
+                        "type": "vec3",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            },
             "output": "1"
         },
         {
-            "program": "luminance:post/merge",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "luminance:post/merge",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -72,17 +179,41 @@
                     "target": "minecraft:main"
                 }
             ],
-            "output": "0"
+            "output": "0",
+            "uniforms": {
+                "MergeConfig": [
+                    {
+                        "name": "luminance_alpha_smooth",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/blit",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "0"
                 }
             ],
-            "output": "minecraft:main"
+            "output": "minecraft:main",
+            "uniforms": {
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         }
     ]
 }

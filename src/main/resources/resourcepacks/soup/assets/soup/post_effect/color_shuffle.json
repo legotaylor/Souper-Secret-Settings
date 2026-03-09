@@ -4,7 +4,8 @@
     },
     "passes": [
         {
-            "program": "soup:post/color_lookup",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/color_lookup",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -19,22 +20,50 @@
                 }
             ],
             "output": "0",
-            "uniforms": [
-                {
-                    "name": "GridSize",
-                    "values": [ 8 ]
-                }
-            ]
+            "uniforms": {
+                "ColorLookupConfig": [
+                    {
+                        "name": "GridSize",
+                        "type": "float",
+                        "value": 8
+                    },
+                    {
+                        "name": "Iterations",
+                        "type": "float",
+                        "value": 1
+                    },
+                    {
+                        "name": "luminance_alpha_smooth",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/blit",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "0"
                 }
             ],
-            "output": "minecraft:main"
+            "output": "minecraft:main",
+            "uniforms": {
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         }
     ]
 }

@@ -4,34 +4,193 @@
     },
     "passes": [
         {
-            "program": "soup:post/ascii",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/ascii",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "minecraft:main"
                 }
             ],
-            "uniforms": [
-                {
-                    "name": "Scale",
-                    "values": [ 1.0, 1.0, 0.0 ]
-                },
-                {
-                    "name": "Levels",
-                    "values": [ 8.0, 3.0 ]
-                }
-            ],
+            "uniforms": {
+                "AsciiConfig": [
+                    {
+                        "name": "Scale",
+                        "type": "vec3",
+                        "value": [
+                            1.0,
+                            1.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "Grid",
+                        "type": "ivec2",
+                        "value": [
+                            8,
+                            8
+                        ]
+                    },
+                    {
+                        "name": "Levels",
+                        "type": "vec2",
+                        "value": [
+                            8.0,
+                            3.0
+                        ]
+                    },
+                    {
+                        "name": "Thresholds",
+                        "type": "vec4",
+                        "value": [
+                            0.2,
+                            0.4,
+                            0.6,
+                            0.8
+                        ]
+                    },
+                    {
+                        "name": "BitShift",
+                        "type": "ivec3",
+                        "value": [
+                            1,
+                            1,
+                            0
+                        ]
+                    },
+                    {
+                        "name": "Char1A",
+                        "type": "ivec4",
+                        "value": [
+                            136,
+                            0,
+                            34,
+                            0
+                        ]
+                    },
+                    {
+                        "name": "Char1B",
+                        "type": "ivec4",
+                        "value": [
+                            136,
+                            0,
+                            34,
+                            0
+                        ]
+                    },
+                    {
+                        "name": "Char2A",
+                        "type": "ivec4",
+                        "value": [
+                            170,
+                            0,
+                            170,
+                            0
+                        ]
+                    },
+                    {
+                        "name": "Char2B",
+                        "type": "ivec4",
+                        "value": [
+                            170,
+                            0,
+                            170,
+                            0
+                        ]
+                    },
+                    {
+                        "name": "Char3A",
+                        "type": "ivec4",
+                        "value": [
+                            170,
+                            85,
+                            170,
+                            85
+                        ]
+                    },
+                    {
+                        "name": "Char3B",
+                        "type": "ivec4",
+                        "value": [
+                            170,
+                            85,
+                            170,
+                            85
+                        ]
+                    },
+                    {
+                        "name": "Char4A",
+                        "type": "ivec4",
+                        "value": [
+                            255,
+                            85,
+                            255,
+                            85
+                        ]
+                    },
+                    {
+                        "name": "Char4B",
+                        "type": "ivec4",
+                        "value": [
+                            255,
+                            85,
+                            255,
+                            85
+                        ]
+                    },
+                    {
+                        "name": "Char5A",
+                        "type": "ivec4",
+                        "value": [
+                            255,
+                            221,
+                            255,
+                            119
+                        ]
+                    },
+                    {
+                        "name": "Char5B",
+                        "type": "ivec4",
+                        "value": [
+                            255,
+                            221,
+                            255,
+                            119
+                        ]
+                    },
+                    {
+                        "name": "luminance_alpha_smooth",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            },
             "output": "0"
         },
         {
-            "program": "minecraft:post/blit",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "0"
                 }
             ],
-            "output": "minecraft:main"
+            "output": "minecraft:main",
+            "uniforms": {
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         }
     ]
 }

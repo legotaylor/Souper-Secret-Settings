@@ -4,7 +4,8 @@
     },
     "passes": [
         {
-            "program": "soup:post/hyperspace",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/hyperspace",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -12,34 +13,68 @@
                 }
             ],
             "output": "0",
-            "uniforms": [
-                {
-                    "name": "Inside",
-                    "values": [ -0.004 ]
-                },
-                {
-                    "name": "Outside",
-                    "values": [ -0.001 ]
-                },
-                {
-                    "name": "Steps",
-                    "values": [ 4 ]
-                },
-                {
-                    "name": "Shadow",
-                    "values": [ 1.0 ]
-                }
-            ]
+            "uniforms": {
+                "HyperspaceConfig": [
+                    {
+                        "name": "Center",
+                        "type": "vec2",
+                        "value": [
+                            0.5,
+                            0.5
+                        ]
+                    },
+                    {
+                        "name": "Inside",
+                        "type": "float",
+                        "value": -0.004
+                    },
+                    {
+                        "name": "Outside",
+                        "type": "float",
+                        "value": -0.001
+                    },
+                    {
+                        "name": "Steps",
+                        "type": "float",
+                        "value": 4
+                    },
+                    {
+                        "name": "Shadow",
+                        "type": "float",
+                        "value": 1.0
+                    },
+                    {
+                        "name": "luminance_alpha_smooth",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/blit",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "0"
                 }
             ],
-            "output": "minecraft:main"
+            "output": "minecraft:main",
+            "uniforms": {
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         }
     ]
 }

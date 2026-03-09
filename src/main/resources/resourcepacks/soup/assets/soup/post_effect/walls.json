@@ -4,7 +4,8 @@
     },
     "passes": [
         {
-            "program": "soup:post/walls",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/walls",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -16,17 +17,102 @@
                     "use_depth_buffer": true
                 }
             ],
-            "output": "0"
+            "output": "0",
+            "uniforms": {
+                "WallsConfig": [
+                    {
+                        "name": "Scale",
+                        "type": "float",
+                        "value": 1.5
+                    },
+                    {
+                        "name": "DepthMix",
+                        "type": "vec2",
+                        "value": [
+                            0.0,
+                            0.5
+                        ]
+                    },
+                    {
+                        "name": "TextureScale",
+                        "type": "vec4",
+                        "value": [
+                            0.6666,
+                            3.0,
+                            0.6666,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "FloorUV",
+                        "type": "vec4",
+                        "value": [
+                            0.0,
+                            0.3333,
+                            1.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "WallUV",
+                        "type": "vec4",
+                        "value": [
+                            0.0,
+                            0.3333,
+                            1.0,
+                            0.6666
+                        ]
+                    },
+                    {
+                        "name": "CeilUV",
+                        "type": "vec4",
+                        "value": [
+                            0.0,
+                            1.0,
+                            1.0,
+                            0.6666
+                        ]
+                    },
+                    {
+                        "name": "luminance_clipping",
+                        "type": "vec2",
+                        "value": [
+                            0.05,
+                            750
+                        ]
+                    },
+                    {
+                        "name": "luminance_alpha_smooth",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/blit",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "0"
                 }
             ],
-            "output": "minecraft:main"
+            "output": "minecraft:main",
+            "uniforms": {
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         }
     ]
 }

@@ -4,24 +4,102 @@
     },
     "passes": [
         {
-            "program": "soup:post/motion_blur",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/motion_blur",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "minecraft:main"
                 }
             ],
-            "output": "0"
+            "output": "0",
+            "uniforms": {
+                "MotionBlurConfig": [
+                    {
+                        "name": "Steps",
+                        "type": "float",
+                        "value": 10.0
+                    },
+                    {
+                        "name": "BaseMix",
+                        "type": "float",
+                        "value": 1.0
+                    },
+                    {
+                        "name": "RotationScale",
+                        "type": "vec2",
+                        "value": [
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "Wrapping",
+                        "type": "float",
+                        "value": 0.0
+                    },
+                    {
+                        "name": "Offset",
+                        "type": "vec4",
+                        "value": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "luminance_fov",
+                        "type": "float",
+                        "value": 0.0
+                    },
+                    {
+                        "name": "luminance_pitch",
+                        "type": "float",
+                        "value": 0.0
+                    },
+                    {
+                        "name": "luminance_pitch_delta",
+                        "type": "float",
+                        "value": 0.0
+                    },
+                    {
+                        "name": "luminance_yaw_delta",
+                        "type": "float",
+                        "value": 0.0
+                    },
+                    {
+                        "name": "luminance_alpha_smooth",
+                        "type": "float",
+                        "value": 0.0
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/blit",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "0"
                 }
             ],
-            "output": "minecraft:main"
+            "output": "minecraft:main",
+            "uniforms": {
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         }
     ]
 }

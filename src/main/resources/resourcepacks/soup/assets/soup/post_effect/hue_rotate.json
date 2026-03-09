@@ -4,7 +4,8 @@
     },
     "passes": [
         {
-            "program": "soup:post/hsv",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/hsv",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -12,22 +13,64 @@
                 }
             ],
             "output": "0",
-            "uniforms": [
-                {
-                    "name": "Hue",
-                    "values": [ 0.11, 1.0 ]
-                }
-            ]
+            "uniforms": {
+                "HsvConfig": [
+                    {
+                        "name": "Hue",
+                        "type": "vec2",
+                        "value": [
+                            0.11,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "Saturation",
+                        "type": "vec2",
+                        "value": [
+                            0.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "Value",
+                        "type": "vec2",
+                        "value": [
+                            0.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "luminance_alpha_smooth",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/blit",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "0"
                 }
             ],
-            "output": "minecraft:main"
+            "output": "minecraft:main",
+            "uniforms": {
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         }
     ]
 }

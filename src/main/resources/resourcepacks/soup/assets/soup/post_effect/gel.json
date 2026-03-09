@@ -2,11 +2,14 @@
     "targets": {
         "0": {},
         "1": {},
-        "previous": {"persistent": true}
+        "previous": {
+            "persistent": true
+        }
     },
     "passes": [
         {
-            "program": "soup:post/life",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/life",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -17,31 +20,180 @@
                     "target": "previous"
                 }
             ],
-            "uniforms": [
-                { "name" : "RedKernelMask",   "values": [  1.0, -0.25, -0.25 ]},
-                { "name" : "RedTurnOn",       "values": [  5.0,  32.0,  1.0 ]},
-                { "name" : "RedTurnOff",      "values": [ -32.0, 4.0,   1.0 ]},
-                { "name" : "GreenKernelMask", "values": [ -0.25, 1.0, -0.25 ]},
-                { "name" : "GreenTurnOn",     "values": [  5.0,  32.0,  1.0 ]},
-                { "name" : "GreenTurnOff",    "values": [ -32.0, 4.0,   1.0 ]},
-                { "name" : "BlueKernelMask",  "values": [ -0.25, -0.25, 1.0 ]},
-                { "name" : "BlueTurnOn",      "values": [  5.0,  32.0,  1.0 ]},
-                { "name" : "BlueTurnOff",     "values": [ -32.0, 4.0,   1.0 ]}
-            ],
+            "uniforms": {
+                "LifeConfig": [
+                    {
+                        "name": "OnKernelOrtho",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "OnKernelDiag",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "OffKernelOrtho",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "OffKernelDiag",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "KernelDistance",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            0.0,
+                            1.414,
+                            0.125
+                        ]
+                    },
+                    {
+                        "name": "RedKernelMask",
+                        "type": "vec3",
+                        "value": [
+                            1.0,
+                            -0.25,
+                            -0.25
+                        ]
+                    },
+                    {
+                        "name": "RedTurnOn",
+                        "type": "vec3",
+                        "value": [
+                            5.0,
+                            32.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "RedTurnOff",
+                        "type": "vec3",
+                        "value": [
+                            -32.0,
+                            4.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "GreenKernelMask",
+                        "type": "vec3",
+                        "value": [
+                            -0.25,
+                            1.0,
+                            -0.25
+                        ]
+                    },
+                    {
+                        "name": "GreenTurnOn",
+                        "type": "vec3",
+                        "value": [
+                            5.0,
+                            32.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "GreenTurnOff",
+                        "type": "vec3",
+                        "value": [
+                            -32.0,
+                            4.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "BlueKernelMask",
+                        "type": "vec3",
+                        "value": [
+                            -0.25,
+                            -0.25,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "BlueTurnOn",
+                        "type": "vec3",
+                        "value": [
+                            5.0,
+                            32.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "BlueTurnOff",
+                        "type": "vec3",
+                        "value": [
+                            -32.0,
+                            4.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "IsOnThreshold",
+                        "type": "vec3",
+                        "value": [
+                            0.5,
+                            0.5,
+                            0.5
+                        ]
+                    }
+                ]
+            },
             "output": "0"
         },
         {
-            "program": "minecraft:post/blit",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "0"
                 }
             ],
-            "output": "previous"
+            "output": "previous",
+            "uniforms": {
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         },
         {
-            "program": "luminance:post/merge",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "luminance:post/merge",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -52,17 +204,41 @@
                     "target": "minecraft:main"
                 }
             ],
-            "output": "1"
+            "output": "1",
+            "uniforms": {
+                "MergeConfig": [
+                    {
+                        "name": "luminance_alpha_smooth",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/blit",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "1"
                 }
             ],
-            "output": "minecraft:main"
+            "output": "minecraft:main",
+            "uniforms": {
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         }
     ]
 }

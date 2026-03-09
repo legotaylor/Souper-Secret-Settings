@@ -5,7 +5,8 @@
     },
     "passes": [
         {
-            "program": "soup:post/blobs_square",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/blobs_square",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -13,15 +14,32 @@
                 }
             ],
             "output": "a",
-            "uniforms": [
-                {
-                    "name": "Direction",
-                    "values": [ 1, 0 ]
-                }
-            ]
+            "uniforms": {
+                "BlobsSquareConfig": [
+                    {
+                        "name": "Direction",
+                        "type": "vec2",
+                        "value": [
+                            1,
+                            0
+                        ]
+                    },
+                    {
+                        "name": "Steps",
+                        "type": "float",
+                        "value": 5.0
+                    },
+                    {
+                        "name": "Mode",
+                        "type": "float",
+                        "value": 0.0
+                    }
+                ]
+            }
         },
         {
-            "program": "soup:post/blobs_square",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/blobs_square",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -29,15 +47,32 @@
                 }
             ],
             "output": "b",
-            "uniforms": [
-                {
-                    "name": "Direction",
-                    "values": [ 0, 1 ]
-                }
-            ]
+            "uniforms": {
+                "BlobsSquareConfig": [
+                    {
+                        "name": "Direction",
+                        "type": "vec2",
+                        "value": [
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "name": "Steps",
+                        "type": "float",
+                        "value": 5.0
+                    },
+                    {
+                        "name": "Mode",
+                        "type": "float",
+                        "value": 0.0
+                    }
+                ]
+            }
         },
         {
-            "program": "luminance:post/merge",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "luminance:post/merge",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -48,17 +83,41 @@
                     "target": "minecraft:main"
                 }
             ],
-            "output": "a"
+            "output": "a",
+            "uniforms": {
+                "MergeConfig": [
+                    {
+                        "name": "luminance_alpha_smooth",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/blit",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "a"
                 }
             ],
-            "output": "minecraft:main"
+            "output": "minecraft:main",
+            "uniforms": {
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         }
     ]
 }

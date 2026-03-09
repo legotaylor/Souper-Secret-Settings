@@ -2,11 +2,14 @@
     "targets": {
         "0": {},
         "1": {},
-        "prev": {"persistent": true}
+        "prev": {
+            "persistent": true
+        }
     },
     "passes": [
         {
-            "program": "minecraft:post/spider",
+            "vertex_shader": "minecraft:post/rotscale",
+            "fragment_shader": "minecraft:post/spiderclip",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -18,41 +21,80 @@
                 }
             ],
             "output": "0",
-            "uniforms": [
-                {
-                    "name": "InScale",
-                    "values": [ 1, 1 ]
-                },
-                {
-                    "name": "InOffset",
-                    "values": [ 0, 0 ]
-                },
-                {
-                    "name": "InRotation",
-                    "values": [ 0 ]
-                },
-                {
-                    "name": "Scissor",
-                    "values": [ 0, 0, 1, 1 ]
-                },
-                {
-                    "name": "Vignette",
-                    "values": [ 0.1, 0.1, 0.9, 0.9 ]
-                }
-            ]
+            "uniforms": {
+                "SpiderConfig": [
+                    {
+                        "name": "InScale",
+                        "type": "vec2",
+                        "value": [
+                            1,
+                            1
+                        ]
+                    },
+                    {
+                        "name": "InOffset",
+                        "type": "vec2",
+                        "value": [
+                            0,
+                            0
+                        ]
+                    },
+                    {
+                        "name": "InRotation",
+                        "type": "float",
+                        "value": 0
+                    },
+                    {
+                        "name": "Scissor",
+                        "type": "vec4",
+                        "value": [
+                            0,
+                            0,
+                            1,
+                            1
+                        ]
+                    },
+                    {
+                        "name": "Vignette",
+                        "type": "vec4",
+                        "value": [
+                            0.1,
+                            0.1,
+                            0.9,
+                            0.9
+                        ]
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/blit",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "0"
                 }
             ],
-            "output": "prev"
+            "output": "prev",
+            "uniforms": {
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         },
         {
-            "program": "luminance:post/merge",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "luminance:post/merge",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -63,17 +105,41 @@
                     "target": "minecraft:main"
                 }
             ],
-            "output": "1"
+            "output": "1",
+            "uniforms": {
+                "MergeConfig": [
+                    {
+                        "name": "luminance_alpha_smooth",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/blit",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "1"
                 }
             ],
-            "output": "minecraft:main"
+            "output": "minecraft:main",
+            "uniforms": {
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         }
     ]
 }

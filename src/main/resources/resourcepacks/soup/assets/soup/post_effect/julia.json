@@ -4,7 +4,8 @@
     },
     "passes": [
         {
-            "program": "soup:post/mandelbrot",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/mandelbrot",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -12,23 +13,122 @@
                 }
             ],
             "output": "0",
-            "uniforms": [
-                { "name": "Zoom", "values": [ 0.25, 0.0, 0.0 ] },
-                { "name": "ZR",   "values": [ 0.0, 1.0, 0.0 ] },
-                { "name": "ZI",   "values": [ 1.0, 0.0, 0.0 ] },
-                { "name": "CR",   "values": [ 0.0, 0.0, 0.346 ] },
-                { "name": "CI",   "values": [ 0.0, 0.0, 0.365 ] }
-            ]
+            "uniforms": {
+                "MandelbrotConfig": [
+                    {
+                        "name": "Zoom",
+                        "type": "vec3",
+                        "value": [
+                            0.25,
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "Iterations",
+                        "type": "float",
+                        "value": 100.0
+                    },
+                    {
+                        "name": "Coloring",
+                        "type": "vec3",
+                        "value": [
+                            1.0,
+                            0.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "ZR",
+                        "type": "vec3",
+                        "value": [
+                            0.0,
+                            1.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "ZI",
+                        "type": "vec3",
+                        "value": [
+                            1.0,
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "XR",
+                        "type": "vec3",
+                        "value": [
+                            0.0,
+                            0.0,
+                            2.0
+                        ]
+                    },
+                    {
+                        "name": "XI",
+                        "type": "vec3",
+                        "value": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "CR",
+                        "type": "vec3",
+                        "value": [
+                            0.0,
+                            0.0,
+                            0.346
+                        ]
+                    },
+                    {
+                        "name": "CI",
+                        "type": "vec3",
+                        "value": [
+                            0.0,
+                            0.0,
+                            0.365
+                        ]
+                    },
+                    {
+                        "name": "Radius",
+                        "type": "float",
+                        "value": 4.0
+                    },
+                    {
+                        "name": "luminance_alpha_smooth",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/blit",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "0"
                 }
             ],
-            "output": "minecraft:main"
+            "output": "minecraft:main",
+            "uniforms": {
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         }
     ]
 }

@@ -1,35 +1,70 @@
 {
     "targets": {
-        "base": {"persistent": true},
-        "running": {"persistent": true},
+        "base": {
+            "persistent": true
+        },
+        "running": {
+            "persistent": true
+        },
         "temp": {}
     },
     "custom_passes": {
         "souper_secret_settings:before_layer_render": [
             {
-                "program": "minecraft:post/blit",
+                "vertex_shader": "minecraft:core/screenquad",
+                "fragment_shader": "minecraft:post/blit",
                 "inputs": [
                     {
                         "sampler_name": "In",
                         "target": "minecraft:main"
                     }
                 ],
-                "output": "running"
+                "output": "running",
+                "uniforms": {
+                    "BlitConfig": [
+                        {
+                            "name": "ColorModulate",
+                            "type": "vec4",
+                            "value": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                }
             },
             {
-                "program": "minecraft:post/blit",
+                "vertex_shader": "minecraft:core/screenquad",
+                "fragment_shader": "minecraft:post/blit",
                 "inputs": [
                     {
                         "sampler_name": "In",
                         "target": "minecraft:main"
                     }
                 ],
-                "output": "base"
+                "output": "base",
+                "uniforms": {
+                    "BlitConfig": [
+                        {
+                            "name": "ColorModulate",
+                            "type": "vec4",
+                            "value": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                }
             }
         ],
         "souper_secret_settings:before_shader_render": [
             {
-                "program": "soup:post/cycle_exclusive",
+                "vertex_shader": "minecraft:core/screenquad",
+                "fragment_shader": "soup:post/cycle_exclusive",
                 "inputs": [
                     {
                         "sampler_name": "In",
@@ -40,32 +75,72 @@
                         "target": "base"
                     }
                 ],
-                "output": "temp"
+                "output": "temp",
+                "uniforms": {
+                    "CycleExclusiveConfig": [
+                        {
+                            "name": "soup_shader_index",
+                            "type": "int",
+                            "value": 0
+                        }
+                    ]
+                }
             },
             {
-                "program": "minecraft:post/blit",
+                "vertex_shader": "minecraft:core/screenquad",
+                "fragment_shader": "minecraft:post/blit",
                 "inputs": [
                     {
                         "sampler_name": "In",
                         "target": "temp"
                     }
                 ],
-                "output": "base"
+                "output": "base",
+                "uniforms": {
+                    "BlitConfig": [
+                        {
+                            "name": "ColorModulate",
+                            "type": "vec4",
+                            "value": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                }
             },
             {
-                "program": "minecraft:post/blit",
+                "vertex_shader": "minecraft:core/screenquad",
+                "fragment_shader": "minecraft:post/blit",
                 "inputs": [
                     {
                         "sampler_name": "In",
                         "target": "base"
                     }
                 ],
-                "output": "minecraft:main"
+                "output": "minecraft:main",
+                "uniforms": {
+                    "BlitConfig": [
+                        {
+                            "name": "ColorModulate",
+                            "type": "vec4",
+                            "value": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                }
             }
         ],
         "souper_secret_settings:after_shader_render": [
             {
-                "program": "soup:post/cycle_exclusive_combine",
+                "vertex_shader": "minecraft:core/screenquad",
+                "fragment_shader": "soup:post/cycle_exclusive_combine",
                 "inputs": [
                     {
                         "sampler_name": "In",
@@ -76,29 +151,68 @@
                         "target": "running"
                     }
                 ],
-                "output": "temp"
+                "output": "temp",
+                "uniforms": {
+                    "CycleExclusiveCombineConfig": [
+                        {
+                            "name": "soup_shader_index",
+                            "type": "int",
+                            "value": 0
+                        }
+                    ]
+                }
             },
             {
-                "program": "minecraft:post/blit",
+                "vertex_shader": "minecraft:core/screenquad",
+                "fragment_shader": "minecraft:post/blit",
                 "inputs": [
                     {
                         "sampler_name": "In",
                         "target": "temp"
                     }
                 ],
-                "output": "running"
+                "output": "running",
+                "uniforms": {
+                    "BlitConfig": [
+                        {
+                            "name": "ColorModulate",
+                            "type": "vec4",
+                            "value": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                }
             }
         ],
         "souper_secret_settings:after_layer_render": [
             {
-                "program": "minecraft:post/blit",
+                "vertex_shader": "minecraft:core/screenquad",
+                "fragment_shader": "minecraft:post/blit",
                 "inputs": [
                     {
                         "sampler_name": "In",
                         "target": "running"
                     }
                 ],
-                "output": "minecraft:main"
+                "output": "minecraft:main",
+                "uniforms": {
+                    "BlitConfig": [
+                        {
+                            "name": "ColorModulate",
+                            "type": "vec4",
+                            "value": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                }
             }
         ]
     }

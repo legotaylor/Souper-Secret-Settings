@@ -1,44 +1,114 @@
 {
     "targets": {
         "0": {},
-        "base": {"persistent": true}
+        "base": {
+            "persistent": true
+        }
     },
     "custom_passes": {
         "souper_secret_settings:before_layer_render": [
             {
-                "program": "minecraft:post/blit",
+                "vertex_shader": "minecraft:core/screenquad",
+                "fragment_shader": "minecraft:post/blit",
                 "inputs": [
                     {
                         "sampler_name": "In",
                         "target": "minecraft:main"
                     }
                 ],
-                "output": "base"
+                "output": "base",
+                "uniforms": {
+                    "BlitConfig": [
+                        {
+                            "name": "ColorModulate",
+                            "type": "vec4",
+                            "value": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                }
             },
             {
-                "program": "soup:post/projection",
+                "vertex_shader": "minecraft:core/screenquad",
+                "fragment_shader": "soup:post/projection",
                 "inputs": [
                     {
                         "sampler_name": "In",
                         "target": "minecraft:main"
                     }
                 ],
-                "output": "0"
+                "output": "0",
+                "uniforms": {
+                    "ProjectionConfig": [
+                        {
+                            "name": "Corner00",
+                            "type": "vec2",
+                            "value": [
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "name": "Corner01",
+                            "type": "vec2",
+                            "value": [
+                                0.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "Corner10",
+                            "type": "vec2",
+                            "value": [
+                                1.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "name": "Corner11",
+                            "type": "vec2",
+                            "value": [
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                }
             },
             {
-                "program": "minecraft:post/blit",
+                "vertex_shader": "minecraft:core/screenquad",
+                "fragment_shader": "minecraft:post/blit",
                 "inputs": [
                     {
                         "sampler_name": "In",
                         "target": "0"
                     }
                 ],
-                "output": "minecraft:main"
+                "output": "minecraft:main",
+                "uniforms": {
+                    "BlitConfig": [
+                        {
+                            "name": "ColorModulate",
+                            "type": "vec4",
+                            "value": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                }
             }
         ],
         "souper_secret_settings:after_layer_render": [
             {
-                "program": "soup:post/projection_merge",
+                "vertex_shader": "minecraft:core/screenquad",
+                "fragment_shader": "soup:post/projection_merge",
                 "inputs": [
                     {
                         "sampler_name": "In",
@@ -50,30 +120,72 @@
                     }
                 ],
                 "output": "0",
-                "uniforms": [
-                    {
-                        "name": "Corner00",
-                        "values": [ 0.5, 0.0 ]
-                    },
-                    {
-                        "name": "Corner01",
-                        "values": [ 0.5, 1.0 ]
-                    },
-                    {
-                        "name": "Crop",
-                        "values": [ 1.0 ]
-                    }
-                ]
+                "uniforms": {
+                    "ProjectionMergeConfig": [
+                        {
+                            "name": "Corner00",
+                            "type": "vec2",
+                            "value": [
+                                0.5,
+                                0.0
+                            ]
+                        },
+                        {
+                            "name": "Corner01",
+                            "type": "vec2",
+                            "value": [
+                                0.5,
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "Corner10",
+                            "type": "vec2",
+                            "value": [
+                                1.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "name": "Corner11",
+                            "type": "vec2",
+                            "value": [
+                                1.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "Crop",
+                            "type": "float",
+                            "value": 1.0
+                        }
+                    ]
+                }
             },
             {
-                "program": "minecraft:post/blit",
+                "vertex_shader": "minecraft:core/screenquad",
+                "fragment_shader": "minecraft:post/blit",
                 "inputs": [
                     {
                         "sampler_name": "In",
                         "target": "0"
                     }
                 ],
-                "output": "minecraft:main"
+                "output": "minecraft:main",
+                "uniforms": {
+                    "BlitConfig": [
+                        {
+                            "name": "ColorModulate",
+                            "type": "vec4",
+                            "value": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                }
             }
         ]
     }

@@ -5,7 +5,8 @@
     },
     "passes": [
         {
-            "program": "soup:post/sort_rank",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/sort_rank",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -17,10 +18,70 @@
                     "use_depth_buffer": true
                 }
             ],
-            "output": "0"
+            "output": "0",
+            "uniforms": {
+                "SortRankConfig": [
+                    {
+                        "name": "RGBInfluence",
+                        "type": "vec3",
+                        "value": [
+                            0.3,
+                            0.59,
+                            0.11
+                        ]
+                    },
+                    {
+                        "name": "RGBLoop",
+                        "type": "vec3",
+                        "value": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "HSVInfluence",
+                        "type": "vec3",
+                        "value": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "HSVLoop",
+                        "type": "vec3",
+                        "value": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "Depth",
+                        "type": "vec3",
+                        "value": [
+                            0.0,
+                            0.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "Flip",
+                        "type": "float",
+                        "value": 0.0
+                    },
+                    {
+                        "name": "SortThreshold",
+                        "type": "float",
+                        "value": 0.0
+                    }
+                ]
+            }
         },
         {
-            "program": "soup:post/sort_order",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/sort_order",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -31,10 +92,56 @@
                     "target": "0"
                 }
             ],
-            "output": "1"
+            "output": "1",
+            "uniforms": {
+                "SortOrderConfig": [
+                    {
+                        "name": "SegmentSize",
+                        "type": "int",
+                        "value": 24
+                    },
+                    {
+                        "name": "MaxLength",
+                        "type": "int",
+                        "value": 256
+                    },
+                    {
+                        "name": "Scroll",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            8.0,
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "Direction",
+                        "type": "vec2",
+                        "value": [
+                            0.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "LossRate",
+                        "type": "vec2",
+                        "value": [
+                            0.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "ShowRank",
+                        "type": "int",
+                        "value": 0.0
+                    }
+                ]
+            }
         },
         {
-            "program": "luminance:post/merge",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "luminance:post/merge",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -45,17 +152,41 @@
                     "target": "minecraft:main"
                 }
             ],
-            "output": "0"
+            "output": "0",
+            "uniforms": {
+                "MergeConfig": [
+                    {
+                        "name": "luminance_alpha_smooth",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/blit",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "0"
                 }
             ],
-            "output": "minecraft:main"
+            "output": "minecraft:main",
+            "uniforms": {
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         }
     ]
 }

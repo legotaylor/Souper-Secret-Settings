@@ -1,24 +1,42 @@
 {
     "targets": {
         "0": {},
-        "base": {"persistent": true}
+        "base": {
+            "persistent": true
+        }
     },
     "custom_passes": {
         "souper_secret_settings:before_layer_render": [
             {
-                "program": "minecraft:post/blit",
+                "vertex_shader": "minecraft:core/screenquad",
+                "fragment_shader": "minecraft:post/blit",
                 "inputs": [
                     {
                         "sampler_name": "In",
                         "target": "minecraft:main"
                     }
                 ],
-                "output": "base"
+                "output": "base",
+                "uniforms": {
+                    "BlitConfig": [
+                        {
+                            "name": "ColorModulate",
+                            "type": "vec4",
+                            "value": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                }
             }
         ],
         "souper_secret_settings:after_layer_render": [
             {
-                "program": "soup:post/compare",
+                "vertex_shader": "minecraft:core/screenquad",
+                "fragment_shader": "soup:post/compare",
                 "inputs": [
                     {
                         "sampler_name": "In",
@@ -29,17 +47,55 @@
                         "target": "minecraft:main"
                     }
                 ],
-                "output": "0"
+                "output": "0",
+                "uniforms": {
+                    "CompareConfig": [
+                        {
+                            "name": "BackgroundColor",
+                            "type": "vec3",
+                            "value": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "name": "NearOpacity",
+                            "type": "float",
+                            "value": 0.85
+                        },
+                        {
+                            "name": "FarOpacity",
+                            "type": "float",
+                            "value": 0.75
+                        }
+                    ]
+                }
             },
             {
-                "program": "minecraft:post/blit",
+                "vertex_shader": "minecraft:core/screenquad",
+                "fragment_shader": "minecraft:post/blit",
                 "inputs": [
                     {
                         "sampler_name": "In",
                         "target": "0"
                     }
                 ],
-                "output": "minecraft:main"
+                "output": "minecraft:main",
+                "uniforms": {
+                    "BlitConfig": [
+                        {
+                            "name": "ColorModulate",
+                            "type": "vec4",
+                            "value": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                }
             }
         ]
     }

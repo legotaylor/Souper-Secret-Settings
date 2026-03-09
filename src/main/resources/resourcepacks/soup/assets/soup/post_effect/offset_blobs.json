@@ -5,25 +5,78 @@
     },
     "passes": [
         {
-            "program": "soup:post/print_mask",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/print_mask",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "minecraft:main"
                 }
             ],
-            "uniforms": [
-                { "name": "Color1", "values": [ 0.9, 0.8, 0.2 ] },
-                { "name": "Color2", "values": [ 0.2, 0.8, 0.8 ] },
-                { "name": "Color3", "values": [ 0.8, 0.2, 0.8 ] },
-                { "name": "Color4", "values": [ 0.4, 0.8, 0.4 ] },
-                { "name": "Base", "values": [ 0.6, 0.6, 0.6 ] },
-                { "name": "Dithering", "values": [ 9.0 ] }
-            ],
+            "uniforms": {
+                "PrintMaskConfig": [
+                    {
+                        "name": "Color1",
+                        "type": "vec3",
+                        "value": [
+                            0.9,
+                            0.8,
+                            0.2
+                        ]
+                    },
+                    {
+                        "name": "Color2",
+                        "type": "vec3",
+                        "value": [
+                            0.2,
+                            0.8,
+                            0.8
+                        ]
+                    },
+                    {
+                        "name": "Color3",
+                        "type": "vec3",
+                        "value": [
+                            0.8,
+                            0.2,
+                            0.8
+                        ]
+                    },
+                    {
+                        "name": "Color4",
+                        "type": "vec3",
+                        "value": [
+                            0.4,
+                            0.8,
+                            0.4
+                        ]
+                    },
+                    {
+                        "name": "Base",
+                        "type": "vec3",
+                        "value": [
+                            0.6,
+                            0.6,
+                            0.6
+                        ]
+                    },
+                    {
+                        "name": "Combinations",
+                        "type": "int",
+                        "value": 16
+                    },
+                    {
+                        "name": "Dithering",
+                        "type": "float",
+                        "value": 9.0
+                    }
+                ]
+            },
             "output": "0"
         },
         {
-            "program": "luminance:post/gaussian",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "luminance:post/gaussian",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -32,14 +85,47 @@
                 }
             ],
             "output": "1",
-            "uniforms": [
-                { "name": "BlurDir", "values": [ 1.0, 0.0 ] },
-                { "name": "Radius", "values": [ 3.333 ] },
-                { "name": "Deviation", "values": [ 1.0 ] }
-            ]
+            "uniforms": {
+                "GaussianConfig": [
+                    {
+                        "name": "BlurDir",
+                        "type": "vec2",
+                        "value": [
+                            1.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "Radius",
+                        "type": "float",
+                        "value": 3.333
+                    },
+                    {
+                        "name": "RadiusMultiplier",
+                        "type": "float",
+                        "value": 1.0
+                    },
+                    {
+                        "name": "Deviation",
+                        "type": "float",
+                        "value": 1.0
+                    },
+                    {
+                        "name": "Wrapping",
+                        "type": "float",
+                        "value": 0.0
+                    },
+                    {
+                        "name": "Min",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "luminance:post/gaussian",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "luminance:post/gaussian",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -48,14 +134,47 @@
                 }
             ],
             "output": "0",
-            "uniforms": [
-                { "name": "BlurDir", "values": [ 0.0, 1.0 ] },
-                { "name": "Radius", "values": [ 3.333 ] },
-                { "name": "Deviation", "values": [ 1.0 ] }
-            ]
+            "uniforms": {
+                "GaussianConfig": [
+                    {
+                        "name": "BlurDir",
+                        "type": "vec2",
+                        "value": [
+                            0.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "Radius",
+                        "type": "float",
+                        "value": 3.333
+                    },
+                    {
+                        "name": "RadiusMultiplier",
+                        "type": "float",
+                        "value": 1.0
+                    },
+                    {
+                        "name": "Deviation",
+                        "type": "float",
+                        "value": 1.0
+                    },
+                    {
+                        "name": "Wrapping",
+                        "type": "float",
+                        "value": 0.0
+                    },
+                    {
+                        "name": "Min",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "soup:post/offset_print",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/offset_print",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -66,21 +185,112 @@
                     "target": "minecraft:main"
                 }
             ],
-            "uniforms": [
-                { "name": "Color1", "values": [ 1.0, 0.8, 0.2 ] },
-                { "name": "Color2", "values": [ 0.2, 0.9, 0.9 ] },
-                { "name": "Color3", "values": [ 0.8, 0.2, 1.0 ] },
-                { "name": "Color4", "values": [ 0.4, 1.0, 0.4 ] },
-                { "name": "Offset1", "values": [  5,  0 ] },
-                { "name": "Offset2", "values": [ -5,  0 ] },
-                { "name": "Offset3", "values": [  0,  5 ] },
-                { "name": "Offset4", "values": [  0, -5 ] },
-                { "name": "Threshold", "values": [ 0.4, 0.4, 0.4, 0.4 ] }
-            ],
+            "uniforms": {
+                "OffsetPrintConfig": [
+                    {
+                        "name": "Color1",
+                        "type": "vec3",
+                        "value": [
+                            1.0,
+                            0.8,
+                            0.2
+                        ]
+                    },
+                    {
+                        "name": "Color2",
+                        "type": "vec3",
+                        "value": [
+                            0.2,
+                            0.9,
+                            0.9
+                        ]
+                    },
+                    {
+                        "name": "Color3",
+                        "type": "vec3",
+                        "value": [
+                            0.8,
+                            0.2,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "Color4",
+                        "type": "vec3",
+                        "value": [
+                            0.4,
+                            1.0,
+                            0.4
+                        ]
+                    },
+                    {
+                        "name": "Base",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "Offset1",
+                        "type": "vec2",
+                        "value": [
+                            5,
+                            0
+                        ]
+                    },
+                    {
+                        "name": "Offset2",
+                        "type": "vec2",
+                        "value": [
+                            -5,
+                            0
+                        ]
+                    },
+                    {
+                        "name": "Offset3",
+                        "type": "vec2",
+                        "value": [
+                            0,
+                            5
+                        ]
+                    },
+                    {
+                        "name": "Offset4",
+                        "type": "vec2",
+                        "value": [
+                            0,
+                            -5
+                        ]
+                    },
+                    {
+                        "name": "Threshold",
+                        "type": "vec4",
+                        "value": [
+                            0.4,
+                            0.4,
+                            0.4,
+                            0.4
+                        ]
+                    },
+                    {
+                        "name": "Boost",
+                        "type": "vec3",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            },
             "output": "1"
         },
         {
-            "program": "luminance:post/merge",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "luminance:post/merge",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -91,17 +301,41 @@
                     "target": "minecraft:main"
                 }
             ],
-            "output": "0"
+            "output": "0",
+            "uniforms": {
+                "MergeConfig": [
+                    {
+                        "name": "luminance_alpha_smooth",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/blit",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "0"
                 }
             ],
-            "output": "minecraft:main"
+            "output": "minecraft:main",
+            "uniforms": {
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         }
     ]
 }

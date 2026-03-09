@@ -5,7 +5,8 @@
     },
     "passes": [
         {
-            "program": "soup:post/max_offset",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/max_offset",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -13,19 +14,27 @@
                 }
             ],
             "output": "a",
-            "uniforms": [
-                {
-                    "name": "Direction",
-                    "values": [ 30, 0 ]
-                },
-                {
-                    "name": "Steps",
-                    "values": [ 6 ]
-                }
-            ]
+            "uniforms": {
+                "MaxOffsetConfig": [
+                    {
+                        "name": "Direction",
+                        "type": "vec2",
+                        "value": [
+                            30,
+                            0
+                        ]
+                    },
+                    {
+                        "name": "Steps",
+                        "type": "float",
+                        "value": 6
+                    }
+                ]
+            }
         },
         {
-            "program": "soup:post/max_offset_merge",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/max_offset_merge",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -37,27 +46,53 @@
                 }
             ],
             "output": "b",
-            "uniforms": [
-                {
-                    "name": "Direction",
-                    "values": [ 0, 0 ]
-                },
-                {
-                    "name": "Steps",
-                    "values": [ 1 ]
-                },
-                {
-                    "name": "Radius",
-                    "values": [ 10, 10 ]
-                },
-                {
-                    "name": "Mix",
-                    "values": [ 0.5, 0.5, 0.5, 1.0 ]
-                }
-            ]
+            "uniforms": {
+                "MaxOffsetMergeConfig": [
+                    {
+                        "name": "Direction",
+                        "type": "vec2",
+                        "value": [
+                            0,
+                            0
+                        ]
+                    },
+                    {
+                        "name": "Steps",
+                        "type": "float",
+                        "value": 1
+                    },
+                    {
+                        "name": "Radius",
+                        "type": "vec2",
+                        "value": [
+                            10,
+                            10
+                        ]
+                    },
+                    {
+                        "name": "PrevDirection",
+                        "type": "vec2",
+                        "value": [
+                            1.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "Mix",
+                        "type": "vec4",
+                        "value": [
+                            0.5,
+                            0.5,
+                            0.5,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         },
         {
-            "program": "luminance:post/merge",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "luminance:post/merge",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -68,17 +103,41 @@
                     "target": "minecraft:main"
                 }
             ],
-            "output": "a"
+            "output": "a",
+            "uniforms": {
+                "MergeConfig": [
+                    {
+                        "name": "luminance_alpha_smooth",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/blit",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "a"
                 }
             ],
-            "output": "minecraft:main"
+            "output": "minecraft:main",
+            "uniforms": {
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         }
     ]
 }

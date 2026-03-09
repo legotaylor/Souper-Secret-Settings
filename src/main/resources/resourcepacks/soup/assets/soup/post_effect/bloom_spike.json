@@ -7,7 +7,8 @@
     },
     "passes": [
         {
-            "program": "soup:post/color_brightness_threshold",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/color_brightness_threshold",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -15,15 +16,33 @@
                 }
             ],
             "output": "bloom_clip",
-            "uniforms": [
-                {
-                    "name": "ThresholdBrightness",
-                    "values": [ 0.75 ]
-                }
-            ]
+            "uniforms": {
+                "ColorBrightnessThresholdConfig": [
+                    {
+                        "name": "ThresholdBrightness",
+                        "type": "float",
+                        "value": 0.75
+                    },
+                    {
+                        "name": "ThresholdSlope",
+                        "type": "float",
+                        "value": 5.0
+                    },
+                    {
+                        "name": "Luminance",
+                        "type": "vec3",
+                        "value": [
+                            0.2126,
+                            0.7152,
+                            0.0722
+                        ]
+                    }
+                ]
+            }
         },
         {
-            "program": "soup:post/one_way_blur",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/one_way_blur",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -32,19 +51,32 @@
             ],
             "output": "blur0",
             "bilinear": true,
-            "uniforms": [
-                {
-                    "name": "BlurDir",
-                    "values": [ 1.0, 1.0 ]
-                },
-                {
-                    "name": "Radius",
-                    "values": [ 100.0 ]
-                }
-            ]
+            "uniforms": {
+                "OneWayBlurConfig": [
+                    {
+                        "name": "BlurDir",
+                        "type": "vec2",
+                        "value": [
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "Radius",
+                        "type": "float",
+                        "value": 100.0
+                    },
+                    {
+                        "name": "Curve",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "soup:post/one_way_blur",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/one_way_blur",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -53,19 +85,32 @@
             ],
             "output": "blur1",
             "bilinear": true,
-            "uniforms": [
-                {
-                    "name": "BlurDir",
-                    "values": [ -1.0, 0.25 ]
-                },
-                {
-                    "name": "Radius",
-                    "values": [ 100.0 ]
-                }
-            ]
+            "uniforms": {
+                "OneWayBlurConfig": [
+                    {
+                        "name": "BlurDir",
+                        "type": "vec2",
+                        "value": [
+                            -1.0,
+                            0.25
+                        ]
+                    },
+                    {
+                        "name": "Radius",
+                        "type": "float",
+                        "value": 100.0
+                    },
+                    {
+                        "name": "Curve",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "soup:post/one_way_blur",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/one_way_blur",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -74,19 +119,32 @@
             ],
             "output": "blur2",
             "bilinear": true,
-            "uniforms": [
-                {
-                    "name": "BlurDir",
-                    "values": [ 0.25, -1.0 ]
-                },
-                {
-                    "name": "Radius",
-                    "values": [ 100.0 ]
-                }
-            ]
+            "uniforms": {
+                "OneWayBlurConfig": [
+                    {
+                        "name": "BlurDir",
+                        "type": "vec2",
+                        "value": [
+                            0.25,
+                            -1.0
+                        ]
+                    },
+                    {
+                        "name": "Radius",
+                        "type": "float",
+                        "value": 100.0
+                    },
+                    {
+                        "name": "Curve",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "soup:post/add",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/add",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -97,10 +155,20 @@
                     "target": "blur1"
                 }
             ],
-            "output": "bloom_clip"
+            "output": "bloom_clip",
+            "uniforms": {
+                "AddConfig": [
+                    {
+                        "name": "Mix",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "soup:post/add",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/add",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -111,10 +179,20 @@
                     "target": "blur2"
                 }
             ],
-            "output": "blur0"
+            "output": "blur0",
+            "uniforms": {
+                "AddConfig": [
+                    {
+                        "name": "Mix",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "soup:post/add",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/add",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -125,10 +203,20 @@
                     "target": "blur0"
                 }
             ],
-            "output": "bloom_clip"
+            "output": "bloom_clip",
+            "uniforms": {
+                "AddConfig": [
+                    {
+                        "name": "Mix",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "luminance:post/merge",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "luminance:post/merge",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -139,17 +227,41 @@
                     "target": "minecraft:main"
                 }
             ],
-            "output": "blur0"
+            "output": "blur0",
+            "uniforms": {
+                "MergeConfig": [
+                    {
+                        "name": "luminance_alpha_smooth",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/blit",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "blur0"
                 }
             ],
-            "output": "minecraft:main"
+            "output": "minecraft:main",
+            "uniforms": {
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         }
     ]
 }

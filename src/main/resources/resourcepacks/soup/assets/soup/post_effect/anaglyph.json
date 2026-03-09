@@ -6,7 +6,8 @@
     },
     "passes": [
         {
-            "program": "soup:post/camera_shift",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/camera_shift",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -19,15 +20,84 @@
                 }
             ],
             "output": "left",
-            "uniforms": [
-                {
-                    "name": "Offset",
-                    "values": [ -0.05, 0, 0 ]
-                }
-            ]
+            "uniforms": {
+                "CameraShiftConfig": [
+                    {
+                        "name": "Offset",
+                        "type": "vec3",
+                        "value": [
+                            -0.05,
+                            0,
+                            0
+                        ]
+                    },
+                    {
+                        "name": "Rotation",
+                        "type": "vec3",
+                        "value": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "Camera",
+                        "type": "vec3",
+                        "value": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "luminance_fov",
+                        "type": "float",
+                        "value": 90.0
+                    },
+                    {
+                        "name": "ZStep",
+                        "type": "float",
+                        "value": 0.001
+                    },
+                    {
+                        "name": "ZGrowth",
+                        "type": "float",
+                        "value": 1.07
+                    },
+                    {
+                        "name": "Steps",
+                        "type": "float",
+                        "value": 128.0
+                    },
+                    {
+                        "name": "SubThreshold",
+                        "type": "float",
+                        "value": 10.0
+                    },
+                    {
+                        "name": "SubSteps",
+                        "type": "float",
+                        "value": 10.0
+                    },
+                    {
+                        "name": "Wrapping",
+                        "type": "float",
+                        "value": 0.0
+                    },
+                    {
+                        "name": "luminance_clipping",
+                        "type": "vec2",
+                        "value": [
+                            0.05,
+                            750
+                        ]
+                    }
+                ]
+            }
         },
         {
-            "program": "soup:post/camera_shift",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/camera_shift",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -40,15 +110,84 @@
                 }
             ],
             "output": "right",
-            "uniforms": [
-                {
-                    "name": "Offset",
-                    "values": [ 0.05, 0, 0 ]
-                }
-            ]
+            "uniforms": {
+                "CameraShiftConfig": [
+                    {
+                        "name": "Offset",
+                        "type": "vec3",
+                        "value": [
+                            0.05,
+                            0,
+                            0
+                        ]
+                    },
+                    {
+                        "name": "Rotation",
+                        "type": "vec3",
+                        "value": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "Camera",
+                        "type": "vec3",
+                        "value": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "luminance_fov",
+                        "type": "float",
+                        "value": 90.0
+                    },
+                    {
+                        "name": "ZStep",
+                        "type": "float",
+                        "value": 0.001
+                    },
+                    {
+                        "name": "ZGrowth",
+                        "type": "float",
+                        "value": 1.07
+                    },
+                    {
+                        "name": "Steps",
+                        "type": "float",
+                        "value": 128.0
+                    },
+                    {
+                        "name": "SubThreshold",
+                        "type": "float",
+                        "value": 10.0
+                    },
+                    {
+                        "name": "SubSteps",
+                        "type": "float",
+                        "value": 10.0
+                    },
+                    {
+                        "name": "Wrapping",
+                        "type": "float",
+                        "value": 0.0
+                    },
+                    {
+                        "name": "luminance_clipping",
+                        "type": "vec2",
+                        "value": [
+                            0.05,
+                            750
+                        ]
+                    }
+                ]
+            }
         },
         {
-            "program": "soup:post/channel_combine",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/channel_combine",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -60,19 +199,32 @@
                 }
             ],
             "output": "combined",
-            "uniforms": [
-                {
-                    "name": "Color1",
-                    "values": [ 1, 0, 0 ]
-                },
-                {
-                    "name": "Color2",
-                    "values": [ 0, 1, 1 ]
-                }
-            ]
+            "uniforms": {
+                "ChannelCombineConfig": [
+                    {
+                        "name": "Color1",
+                        "type": "vec3",
+                        "value": [
+                            1,
+                            0,
+                            0
+                        ]
+                    },
+                    {
+                        "name": "Color2",
+                        "type": "vec3",
+                        "value": [
+                            0,
+                            1,
+                            1
+                        ]
+                    }
+                ]
+            }
         },
         {
-            "program": "luminance:post/merge",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "luminance:post/merge",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -83,17 +235,41 @@
                     "target": "minecraft:main"
                 }
             ],
-            "output": "left"
+            "output": "left",
+            "uniforms": {
+                "MergeConfig": [
+                    {
+                        "name": "luminance_alpha_smooth",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/blit",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "left"
                 }
             ],
-            "output": "minecraft:main"
+            "output": "minecraft:main",
+            "uniforms": {
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         }
     ]
 }

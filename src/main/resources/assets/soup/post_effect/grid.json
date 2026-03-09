@@ -1,12 +1,15 @@
 {
     "targets": {
-        "grid": {"persistent": true},
+        "grid": {
+            "persistent": true
+        },
         "swap": {}
     },
     "custom_passes": {
         "souper_secret_settings:before_layer_render": [
             {
-                "program": "soup:post/grid",
+                "vertex_shader": "minecraft:core/screenquad",
+                "fragment_shader": "soup:post/grid",
                 "inputs": [
                     {
                         "sampler_name": "In",
@@ -17,27 +20,43 @@
                         "target": "swap"
                     }
                 ],
-                "uniforms": [
-                    {
-                        "name": "Grid",
-                        "values": [],
-                        "override": [ "-1", "soup_layer_size" ]
-                    },
-                    {
-                        "name": "Offset",
-                        "values": [ 1.0, 1.0 ]
-                    },
-                    {
-                        "name": "Clear",
-                        "values": [ 0.0, 0.0, 0.0, 1.0 ]
-                    }
-                ],
+                "uniforms": {
+                    "GridConfig": [
+                        {
+                            "name": "Grid",
+                            "type": "ivec2",
+                            "value": [
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "name": "Offset",
+                            "type": "ivec2",
+                            "value": [
+                                1.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "Clear",
+                            "type": "vec4",
+                            "value": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                },
                 "output": "grid"
             }
         ],
         "souper_secret_settings:after_shader_render": [
             {
-                "program": "soup:post/grid",
+                "vertex_shader": "minecraft:core/screenquad",
+                "fragment_shader": "soup:post/grid",
                 "inputs": [
                     {
                         "sampler_name": "In",
@@ -48,40 +67,89 @@
                         "target": "grid"
                     }
                 ],
-                "uniforms": [
-                    {
-                        "name": "Grid",
-                        "values": [],
-                        "override": [ "soup_shader_index", "soup_layer_size" ]
-                    },
-                    {
-                        "name": "Offset",
-                        "values": [ 1.0, 1.0 ]
-                    }
-                ],
+                "uniforms": {
+                    "GridConfig": [
+                        {
+                            "name": "Grid",
+                            "type": "ivec2",
+                            "value": [
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "name": "Offset",
+                            "type": "ivec2",
+                            "value": [
+                                1.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "Clear",
+                            "type": "vec4",
+                            "value": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
                 "output": "swap"
             },
             {
-                "program": "minecraft:post/blit",
+                "vertex_shader": "minecraft:core/screenquad",
+                "fragment_shader": "minecraft:post/blit",
                 "inputs": [
                     {
                         "sampler_name": "In",
                         "target": "swap"
                     }
                 ],
-                "output": "grid"
+                "output": "grid",
+                "uniforms": {
+                    "BlitConfig": [
+                        {
+                            "name": "ColorModulate",
+                            "type": "vec4",
+                            "value": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                }
             }
         ],
         "souper_secret_settings:after_layer_render": [
             {
-                "program": "minecraft:post/blit",
+                "vertex_shader": "minecraft:core/screenquad",
+                "fragment_shader": "minecraft:post/blit",
                 "inputs": [
                     {
                         "sampler_name": "In",
                         "target": "grid"
                     }
                 ],
-                "output": "minecraft:main"
+                "output": "minecraft:main",
+                "uniforms": {
+                    "BlitConfig": [
+                        {
+                            "name": "ColorModulate",
+                            "type": "vec4",
+                            "value": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                }
             }
         ]
     }

@@ -4,24 +4,92 @@
     },
     "passes": [
         {
-            "program": "soup:post/stern",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/stern",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "minecraft:main"
                 }
             ],
-            "output": "0"
+            "output": "0",
+            "uniforms": {
+                "SternConfig": [
+                    {
+                        "name": "Left",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            0.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "Right",
+                        "type": "vec4",
+                        "value": [
+                            0.0,
+                            1.0,
+                            -1.0,
+                            2.0
+                        ]
+                    },
+                    {
+                        "name": "Bitshifts",
+                        "type": "ivec4",
+                        "value": [
+                            0,
+                            8,
+                            1,
+                            0
+                        ]
+                    },
+                    {
+                        "name": "Angle",
+                        "type": "float",
+                        "value": 0.0737918088252
+                    },
+                    {
+                        "name": "Range",
+                        "type": "vec2",
+                        "value": [
+                            -0.165,
+                            1.5
+                        ]
+                    },
+                    {
+                        "name": "luminance_alpha_smooth",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/blit",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "0"
                 }
             ],
-            "output": "minecraft:main"
+            "output": "minecraft:main",
+            "uniforms": {
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         }
     ]
 }

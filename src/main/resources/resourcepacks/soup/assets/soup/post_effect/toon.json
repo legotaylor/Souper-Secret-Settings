@@ -6,7 +6,8 @@
     },
     "passes": [
         {
-            "program": "luminance:post/gaussian",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "luminance:post/gaussian",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -14,19 +15,47 @@
                 }
             ],
             "output": "0",
-            "uniforms": [
-                {
-                    "name": "BlurDir",
-                    "values": [ 1.0, 0.0 ]
-                },
-                {
-                    "name": "Radius",
-                    "values": [ 9.0 ]
-                }
-            ]
+            "uniforms": {
+                "GaussianConfig": [
+                    {
+                        "name": "BlurDir",
+                        "type": "vec2",
+                        "value": [
+                            1.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "Radius",
+                        "type": "float",
+                        "value": 9.0
+                    },
+                    {
+                        "name": "RadiusMultiplier",
+                        "type": "float",
+                        "value": 1.0
+                    },
+                    {
+                        "name": "Deviation",
+                        "type": "float",
+                        "value": 0.333
+                    },
+                    {
+                        "name": "Wrapping",
+                        "type": "float",
+                        "value": 0.0
+                    },
+                    {
+                        "name": "Min",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "luminance:post/gaussian",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "luminance:post/gaussian",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -34,19 +63,47 @@
                 }
             ],
             "output": "a",
-            "uniforms": [
-                {
-                    "name": "BlurDir",
-                    "values": [ 0.0, 1.0 ]
-                },
-                {
-                    "name": "Radius",
-                    "values": [ 9.0 ]
-                }
-            ]
+            "uniforms": {
+                "GaussianConfig": [
+                    {
+                        "name": "BlurDir",
+                        "type": "vec2",
+                        "value": [
+                            0.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "Radius",
+                        "type": "float",
+                        "value": 9.0
+                    },
+                    {
+                        "name": "RadiusMultiplier",
+                        "type": "float",
+                        "value": 1.0
+                    },
+                    {
+                        "name": "Deviation",
+                        "type": "float",
+                        "value": 0.333
+                    },
+                    {
+                        "name": "Wrapping",
+                        "type": "float",
+                        "value": 0.0
+                    },
+                    {
+                        "name": "Min",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "luminance:post/gaussian",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "luminance:post/gaussian",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -54,19 +111,47 @@
                 }
             ],
             "output": "0",
-            "uniforms": [
-                {
-                    "name": "BlurDir",
-                    "values": [ 1.0, 0.0 ]
-                },
-                {
-                    "name": "Radius",
-                    "values": [ 15.0 ]
-                }
-            ]
+            "uniforms": {
+                "GaussianConfig": [
+                    {
+                        "name": "BlurDir",
+                        "type": "vec2",
+                        "value": [
+                            1.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "Radius",
+                        "type": "float",
+                        "value": 15.0
+                    },
+                    {
+                        "name": "RadiusMultiplier",
+                        "type": "float",
+                        "value": 1.0
+                    },
+                    {
+                        "name": "Deviation",
+                        "type": "float",
+                        "value": 0.333
+                    },
+                    {
+                        "name": "Wrapping",
+                        "type": "float",
+                        "value": 0.0
+                    },
+                    {
+                        "name": "Min",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "luminance:post/gaussian",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "luminance:post/gaussian",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -74,19 +159,47 @@
                 }
             ],
             "output": "b",
-            "uniforms": [
-                {
-                    "name": "BlurDir",
-                    "values": [ 0.0, 1.0 ]
-                },
-                {
-                    "name": "Radius",
-                    "values": [ 15.0 ]
-                }
-            ]
+            "uniforms": {
+                "GaussianConfig": [
+                    {
+                        "name": "BlurDir",
+                        "type": "vec2",
+                        "value": [
+                            0.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "Radius",
+                        "type": "float",
+                        "value": 15.0
+                    },
+                    {
+                        "name": "RadiusMultiplier",
+                        "type": "float",
+                        "value": 1.0
+                    },
+                    {
+                        "name": "Deviation",
+                        "type": "float",
+                        "value": 0.333
+                    },
+                    {
+                        "name": "Wrapping",
+                        "type": "float",
+                        "value": 0.0
+                    },
+                    {
+                        "name": "Min",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "soup:post/toon",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/toon",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -101,10 +214,40 @@
                     "target": "b"
                 }
             ],
-            "output": "0"
+            "output": "0",
+            "uniforms": {
+                "ToonConfig": [
+                    {
+                        "name": "OutlineStep",
+                        "type": "float",
+                        "value": 0.02
+                    },
+                    {
+                        "name": "ColorSteps",
+                        "type": "float",
+                        "value": 10.0
+                    },
+                    {
+                        "name": "ColorBoost",
+                        "type": "float",
+                        "value": 1.25
+                    },
+                    {
+                        "name": "Darkening",
+                        "type": "float",
+                        "value": 0.25
+                    },
+                    {
+                        "name": "Convolution",
+                        "type": "float",
+                        "value": 0.25
+                    }
+                ]
+            }
         },
         {
-            "program": "luminance:post/merge",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "luminance:post/merge",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -115,17 +258,41 @@
                     "target": "minecraft:main"
                 }
             ],
-            "output": "a"
+            "output": "a",
+            "uniforms": {
+                "MergeConfig": [
+                    {
+                        "name": "luminance_alpha_smooth",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/blit",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "a"
                 }
             ],
-            "output": "minecraft:main"
+            "output": "minecraft:main",
+            "uniforms": {
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         }
     ]
 }

@@ -4,24 +4,74 @@
     },
     "passes": [
         {
-            "program": "soup:post/glass",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/glass",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "minecraft:main"
                 }
             ],
-            "output": "0"
+            "output": "0",
+            "uniforms": {
+                "GlassConfig": [
+                    {
+                        "name": "OffsetScale",
+                        "type": "float",
+                        "value": 100.0
+                    },
+                    {
+                        "name": "CloudScale",
+                        "type": "float",
+                        "value": 0.5
+                    },
+                    {
+                        "name": "CloudDistance",
+                        "type": "float",
+                        "value": 0.3
+                    },
+                    {
+                        "name": "CloudAmount",
+                        "type": "float",
+                        "value": 0.5
+                    },
+                    {
+                        "name": "Wrapping",
+                        "type": "float",
+                        "value": 0.0
+                    },
+                    {
+                        "name": "luminance_alpha_smooth",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/blit",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "0"
                 }
             ],
-            "output": "minecraft:main"
+            "output": "minecraft:main",
+            "uniforms": {
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         }
     ]
 }

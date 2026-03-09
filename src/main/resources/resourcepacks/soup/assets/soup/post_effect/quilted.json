@@ -4,24 +4,101 @@
     },
     "passes": [
         {
-            "program": "soup:post/quilted",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/quilted",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "minecraft:main"
                 }
             ],
-            "output": "0"
+            "output": "0",
+            "uniforms": {
+                "QuiltedConfig": [
+                    {
+                        "name": "Pixels",
+                        "type": "ivec2",
+                        "value": [
+                            20.0,
+                            20.0
+                        ]
+                    },
+                    {
+                        "name": "Blur",
+                        "type": "vec2",
+                        "value": [
+                            20.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "Highlight",
+                        "type": "vec3",
+                        "value": [
+                            0.1,
+                            0.5,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "Exponent",
+                        "type": "vec3",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "Center",
+                        "type": "vec2",
+                        "value": [
+                            -0.5,
+                            -0.5
+                        ]
+                    },
+                    {
+                        "name": "Base",
+                        "type": "vec4",
+                        "value": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "luminance_alpha_smooth",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/blit",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "0"
                 }
             ],
-            "output": "minecraft:main"
+            "output": "minecraft:main",
+            "uniforms": {
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         }
     ]
 }

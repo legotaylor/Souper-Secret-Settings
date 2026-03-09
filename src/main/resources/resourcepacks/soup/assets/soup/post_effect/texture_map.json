@@ -5,7 +5,8 @@
     },
     "passes": [
         {
-            "program": "soup:post/texture_map",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/texture_map",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -17,10 +18,102 @@
                     "use_depth_buffer": true
                 }
             ],
-            "output": "0"
+            "output": "0",
+            "uniforms": {
+                "TextureMapConfig": [
+                    {
+                        "name": "luminance_fov",
+                        "type": "float",
+                        "value": 90.0
+                    },
+                    {
+                        "name": "luminance_pitch",
+                        "type": "float",
+                        "value": 0.0
+                    },
+                    {
+                        "name": "luminance_yaw",
+                        "type": "float",
+                        "value": 0.0
+                    },
+                    {
+                        "name": "luminance_cam_fract",
+                        "type": "vec3",
+                        "value": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "luminance_cam",
+                        "type": "vec3",
+                        "value": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "luminance_clipping",
+                        "type": "vec2",
+                        "value": [
+                            0.05,
+                            750
+                        ]
+                    },
+                    {
+                        "name": "TextureScale",
+                        "type": "float",
+                        "value": 1.0
+                    },
+                    {
+                        "name": "Offset",
+                        "type": "vec3",
+                        "value": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "Aspect",
+                        "type": "float",
+                        "value": 1.0
+                    },
+                    {
+                        "name": "Coloring",
+                        "type": "vec3",
+                        "value": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "UVMix",
+                        "type": "vec2",
+                        "value": [
+                            1.0,
+                            512.0
+                        ]
+                    },
+                    {
+                        "name": "UVDistances",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         },
         {
-            "program": "luminance:post/merge",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "luminance:post/merge",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -31,17 +124,41 @@
                     "target": "minecraft:main"
                 }
             ],
-            "output": "1"
+            "output": "1",
+            "uniforms": {
+                "MergeConfig": [
+                    {
+                        "name": "luminance_alpha_smooth",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/blit",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "1"
                 }
             ],
-            "output": "minecraft:main"
+            "output": "minecraft:main",
+            "uniforms": {
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         }
     ]
 }

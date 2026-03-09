@@ -4,36 +4,90 @@
     },
     "passes": [
         {
-            "program": "soup:post/s2xe",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/s2xe",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "minecraft:main"
                 }
             ],
-            "uniforms": [
-                {
-                    "name": "luminance_pitch",
-                    "values": [],
-                    "config": [
-                        {
-                            "name": "0_range",
-                            "values": [ 0, 0.25 ]
-                        }
-                    ]
-                }
-            ],
+            "uniforms": {
+                "S2xeConfig": [
+                    {
+                        "name": "Pos",
+                        "type": "vec3",
+                        "value": [
+                            0.0,
+                            3.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "Rotation",
+                        "type": "vec3",
+                        "value": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "Curvature",
+                        "type": "vec2",
+                        "value": [
+                            -0.5,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "Wrapping",
+                        "type": "float",
+                        "value": 1.0
+                    },
+                    {
+                        "name": "luminance_fov",
+                        "type": "float",
+                        "value": 1.0
+                    },
+                    {
+                        "name": "luminance_pitch",
+                        "type": "float",
+                        "value": 1.0
+                    },
+                    {
+                        "name": "luminance_alpha_smooth",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            },
             "output": "0"
         },
         {
-            "program": "minecraft:post/blit",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "0"
                 }
             ],
-            "output": "minecraft:main"
+            "output": "minecraft:main",
+            "uniforms": {
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         }
     ]
 }

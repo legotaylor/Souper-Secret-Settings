@@ -5,17 +5,47 @@
     },
     "passes": [
         {
-            "program": "minecraft:post/sobel",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/sobel",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "minecraft:main"
                 }
             ],
-            "output": "0"
+            "output": "0",
+            "uniforms": {
+                "SobelConfig": [
+                    {
+                        "name": "Distance",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "Mix",
+                        "type": "vec3",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "MixAmount",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/wobble",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/wobble",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -23,19 +53,35 @@
                 }
             ],
             "output": "1",
-            "uniforms": [
-                {
-                    "name": "WobbleAmount",
-                    "values": [ 0.0005, 0.0005 ]
-                },
-                {
-                    "name": "Frequency",
-                    "values": [ 11, 17 ]
-                }
-            ]
+            "uniforms": {
+                "WobbleConfig": [
+                    {
+                        "name": "Frequency",
+                        "type": "vec2",
+                        "value": [
+                            11,
+                            17
+                        ]
+                    },
+                    {
+                        "name": "WobbleAmount",
+                        "type": "vec2",
+                        "value": [
+                            0.0005,
+                            0.0005
+                        ]
+                    },
+                    {
+                        "name": "luminance_time",
+                        "type": "float",
+                        "value": 0.0
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/bits",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/bits",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -43,15 +89,29 @@
                 }
             ],
             "output": "0",
-            "uniforms": [
-                {
-                    "name": "MosaicSize",
-                    "values": [16.0]
-                }
-            ]
+            "uniforms": {
+                "BitsConfig": [
+                    {
+                        "name": "Resolution",
+                        "type": "float",
+                        "value": 4.0
+                    },
+                    {
+                        "name": "Saturation",
+                        "type": "float",
+                        "value": 1.5
+                    },
+                    {
+                        "name": "MosaicSize",
+                        "type": "float",
+                        "value": 16.0
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/outline_combine",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/outline_combine",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -62,10 +122,33 @@
                     "target": "0"
                 }
             ],
-            "output": "1"
+            "output": "1",
+            "uniforms": {
+                "OutlineCombineConfig": [
+                    {
+                        "name": "Base",
+                        "type": "vec3",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "Amount",
+                        "type": "vec3",
+                        "value": [
+                            0.75,
+                            0.75,
+                            0.75
+                        ]
+                    }
+                ]
+            }
         },
         {
-            "program": "luminance:post/merge",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "luminance:post/merge",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -76,17 +159,41 @@
                     "target": "minecraft:main"
                 }
             ],
-            "output": "0"
+            "output": "0",
+            "uniforms": {
+                "MergeConfig": [
+                    {
+                        "name": "luminance_alpha_smooth",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/blit",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "0"
                 }
             ],
-            "output": "minecraft:main"
+            "output": "minecraft:main",
+            "uniforms": {
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         }
     ]
 }

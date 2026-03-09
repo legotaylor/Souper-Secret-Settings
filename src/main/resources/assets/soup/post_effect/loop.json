@@ -1,12 +1,15 @@
 {
     "targets": {
         "0": {},
-        "previous": {"persistent": true}
+        "previous": {
+            "persistent": true
+        }
     },
     "custom_passes": {
         "souper_secret_settings:before_layer_render": [
             {
-                "program": "soup:post/out_of_bounds",
+                "vertex_shader": "minecraft:core/screenquad",
+                "fragment_shader": "soup:post/out_of_bounds",
                 "inputs": [
                     {
                         "sampler_name": "In",
@@ -22,47 +25,115 @@
                         "target": "previous"
                     }
                 ],
-                "uniforms": [
-                    {
-                        "name": "Threshold",
-                        "values": [ -100 ]
-                    },
-                    {
-                        "name": "Pixels",
-                        "values": [ 0, 1 ]
-                    },
-                    {
-                        "name": "Requirements",
-                        "values": [ -1 ]
-                    },
-                    {
-                        "name": "Offset",
-                        "values": [ 0, -10 ]
-                    }
-                ],
+                "uniforms": {
+                    "OutOfBoundsConfig": [
+                        {
+                            "name": "Threshold",
+                            "type": "float",
+                            "value": -100
+                        },
+                        {
+                            "name": "Color",
+                            "type": "vec3",
+                            "value": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "name": "Pixels",
+                            "type": "vec2",
+                            "value": [
+                                0,
+                                1
+                            ]
+                        },
+                        {
+                            "name": "Requirements",
+                            "type": "float",
+                            "value": -1
+                        },
+                        {
+                            "name": "Offset",
+                            "type": "vec2",
+                            "value": [
+                                0,
+                                -10
+                            ]
+                        },
+                        {
+                            "name": "Amount",
+                            "type": "vec3",
+                            "value": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "name": "luminance_clipping",
+                            "type": "vec2",
+                            "value": [
+                                0.05,
+                                750
+                            ]
+                        }
+                    ]
+                },
                 "output": "0"
             },
             {
-                "program": "minecraft:post/blit",
+                "vertex_shader": "minecraft:core/screenquad",
+                "fragment_shader": "minecraft:post/blit",
                 "inputs": [
                     {
                         "sampler_name": "In",
                         "target": "0"
                     }
                 ],
-                "output": "minecraft:main"
+                "output": "minecraft:main",
+                "uniforms": {
+                    "BlitConfig": [
+                        {
+                            "name": "ColorModulate",
+                            "type": "vec4",
+                            "value": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                }
             }
         ],
         "souper_secret_settings:after_layer_render": [
             {
-                "program": "minecraft:post/blit",
+                "vertex_shader": "minecraft:core/screenquad",
+                "fragment_shader": "minecraft:post/blit",
                 "inputs": [
                     {
                         "sampler_name": "In",
                         "target": "minecraft:main"
                     }
                 ],
-                "output": "previous"
+                "output": "previous",
+                "uniforms": {
+                    "BlitConfig": [
+                        {
+                            "name": "ColorModulate",
+                            "type": "vec4",
+                            "value": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                }
             }
         ]
     }

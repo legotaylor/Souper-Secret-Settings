@@ -5,23 +5,78 @@
     },
     "passes": [
         {
-            "program": "soup:post/print_mask",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/print_mask",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "minecraft:main"
                 }
             ],
-            "uniforms": [
-                { "name": "Color1", "values": [ 0.9, 0.9, 0.2 ] },
-                { "name": "Color2", "values": [ 0.2, 0.9, 0.9 ] },
-                { "name": "Color3", "values": [ 0.9, 0.2, 0.9 ] },
-                { "name": "Color4", "values": [ 0.7, 0.7, 0.7 ] }
-            ],
+            "uniforms": {
+                "PrintMaskConfig": [
+                    {
+                        "name": "Color1",
+                        "type": "vec3",
+                        "value": [
+                            0.9,
+                            0.9,
+                            0.2
+                        ]
+                    },
+                    {
+                        "name": "Color2",
+                        "type": "vec3",
+                        "value": [
+                            0.2,
+                            0.9,
+                            0.9
+                        ]
+                    },
+                    {
+                        "name": "Color3",
+                        "type": "vec3",
+                        "value": [
+                            0.9,
+                            0.2,
+                            0.9
+                        ]
+                    },
+                    {
+                        "name": "Color4",
+                        "type": "vec3",
+                        "value": [
+                            0.7,
+                            0.7,
+                            0.7
+                        ]
+                    },
+                    {
+                        "name": "Base",
+                        "type": "vec3",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "Combinations",
+                        "type": "int",
+                        "value": 16
+                    },
+                    {
+                        "name": "Dithering",
+                        "type": "float",
+                        "value": 0.0
+                    }
+                ]
+            },
             "output": "0"
         },
         {
-            "program": "soup:post/offset_print",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/offset_print",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -32,20 +87,112 @@
                     "target": "minecraft:main"
                 }
             ],
-            "uniforms": [
-                { "name": "Color1", "values": [ 0.9, 0.9, 0.2 ] },
-                { "name": "Color2", "values": [ 0.2, 0.9, 0.9 ] },
-                { "name": "Color3", "values": [ 0.9, 0.2, 0.9 ] },
-                { "name": "Color4", "values": [ 0.7, 0.7, 0.7 ] },
-                { "name": "Offset1", "values": [  5,  0 ] },
-                { "name": "Offset2", "values": [ -5,  0 ] },
-                { "name": "Offset3", "values": [  0,  5 ] },
-                { "name": "Offset4", "values": [  0, -5 ] }
-            ],
+            "uniforms": {
+                "OffsetPrintConfig": [
+                    {
+                        "name": "Color1",
+                        "type": "vec3",
+                        "value": [
+                            0.9,
+                            0.9,
+                            0.2
+                        ]
+                    },
+                    {
+                        "name": "Color2",
+                        "type": "vec3",
+                        "value": [
+                            0.2,
+                            0.9,
+                            0.9
+                        ]
+                    },
+                    {
+                        "name": "Color3",
+                        "type": "vec3",
+                        "value": [
+                            0.9,
+                            0.2,
+                            0.9
+                        ]
+                    },
+                    {
+                        "name": "Color4",
+                        "type": "vec3",
+                        "value": [
+                            0.7,
+                            0.7,
+                            0.7
+                        ]
+                    },
+                    {
+                        "name": "Base",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "Offset1",
+                        "type": "vec2",
+                        "value": [
+                            5,
+                            0
+                        ]
+                    },
+                    {
+                        "name": "Offset2",
+                        "type": "vec2",
+                        "value": [
+                            -5,
+                            0
+                        ]
+                    },
+                    {
+                        "name": "Offset3",
+                        "type": "vec2",
+                        "value": [
+                            0,
+                            5
+                        ]
+                    },
+                    {
+                        "name": "Offset4",
+                        "type": "vec2",
+                        "value": [
+                            0,
+                            -5
+                        ]
+                    },
+                    {
+                        "name": "Threshold",
+                        "type": "vec4",
+                        "value": [
+                            0.5,
+                            0.5,
+                            0.5,
+                            0.5
+                        ]
+                    },
+                    {
+                        "name": "Boost",
+                        "type": "vec3",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            },
             "output": "1"
         },
         {
-            "program": "luminance:post/merge",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "luminance:post/merge",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -56,17 +203,41 @@
                     "target": "minecraft:main"
                 }
             ],
-            "output": "0"
+            "output": "0",
+            "uniforms": {
+                "MergeConfig": [
+                    {
+                        "name": "luminance_alpha_smooth",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/blit",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "0"
                 }
             ],
-            "output": "minecraft:main"
+            "output": "minecraft:main",
+            "uniforms": {
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         }
     ]
 }

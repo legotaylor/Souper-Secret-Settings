@@ -2,11 +2,14 @@
     "targets": {
         "0": {},
         "1": {},
-        "previous": {"persistent": true}
+        "previous": {
+            "persistent": true
+        }
     },
     "passes": [
         {
-            "program": "soup:post/dissolve",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/dissolve",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -17,20 +20,88 @@
                     "target": "previous"
                 }
             ],
-            "output": "0"
+            "output": "0",
+            "uniforms": {
+                "DissolveConfig": [
+                    {
+                        "name": "Scale",
+                        "type": "vec2",
+                        "value": [
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "Offset",
+                        "type": "vec2",
+                        "value": [
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "Pixelate",
+                        "type": "float",
+                        "value": 16.0
+                    },
+                    {
+                        "name": "Seed",
+                        "type": "float",
+                        "value": 0.0
+                    },
+                    {
+                        "name": "Step",
+                        "type": "vec2",
+                        "value": [
+                            0.1,
+                            1.0
+                        ]
+                    },
+                    {
+                        "name": "Cycle",
+                        "type": "vec3",
+                        "value": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "luminance_time",
+                        "type": "float",
+                        "value": 0.0
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/blit",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "0"
                 }
             ],
-            "output": "previous"
+            "output": "previous",
+            "uniforms": {
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         },
         {
-            "program": "luminance:post/merge",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "luminance:post/merge",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -41,17 +112,41 @@
                     "target": "minecraft:main"
                 }
             ],
-            "output": "1"
+            "output": "1",
+            "uniforms": {
+                "MergeConfig": [
+                    {
+                        "name": "luminance_alpha_smooth",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/blit",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "1"
                 }
             ],
-            "output": "minecraft:main"
+            "output": "minecraft:main",
+            "uniforms": {
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         }
     ]
 }

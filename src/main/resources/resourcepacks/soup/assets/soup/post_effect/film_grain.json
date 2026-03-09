@@ -4,24 +4,79 @@
     },
     "passes": [
         {
-            "program": "soup:post/film_grain",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "soup:post/film_grain",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "minecraft:main"
                 }
             ],
-            "output": "0"
+            "output": "0",
+            "uniforms": {
+                "FilmGrainConfig": [
+                    {
+                        "name": "luminance_random",
+                        "type": "float",
+                        "value": 1.0
+                    },
+                    {
+                        "name": "Rate",
+                        "type": "float",
+                        "value": 123.456
+                    },
+                    {
+                        "name": "Pitch",
+                        "type": "float",
+                        "value": 1.0
+                    },
+                    {
+                        "name": "Strength",
+                        "type": "float",
+                        "value": 1.0
+                    },
+                    {
+                        "name": "ColorStrength",
+                        "type": "float",
+                        "value": 1.0
+                    },
+                    {
+                        "name": "MixMode",
+                        "type": "float",
+                        "value": 0.1
+                    },
+                    {
+                        "name": "luminance_alpha_smooth",
+                        "type": "float",
+                        "value": 1.0
+                    }
+                ]
+            }
         },
         {
-            "program": "minecraft:post/blit",
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
             "inputs": [
                 {
                     "sampler_name": "In",
                     "target": "0"
                 }
             ],
-            "output": "minecraft:main"
+            "output": "minecraft:main",
+            "uniforms": {
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            }
         }
     ]
 }
