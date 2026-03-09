@@ -58,6 +58,7 @@ public class ParameterOverrideSource implements OverrideSource {
     private static final UniformConfig template = new MapConfig(List.of(new ConfigData("range", new ArrayList<>(List.of(0.0f, 1.0f)))));
 
     public static OverrideSource parameterSourceFromString(String s) {
+        // TODO: this needs to also work with NullSources
         OverrideSource overrideSource = LuminanceUniformOverride.sourceFromString(s);
         if (overrideSource instanceof UniformSource uniformSource) {
             return new ParameterOverrideSource(uniformSource);
