@@ -1,5 +1,7 @@
 package com.nettakrim.souper_secret_settings.gui;
 
+
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.input.AbstractInput;
 
@@ -20,6 +22,11 @@ public class CycleWidget extends ButtonWidget {
     public void onPress(AbstractInput input) {
         advance.accept(input.hasShift() ? -1 : 1);
         setMessage(getText.get());
+    }
+
+    @Override
+    protected void drawIcon(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
+        drawButton(context);
     }
 
     public static int cycleInt(int value, int max) {

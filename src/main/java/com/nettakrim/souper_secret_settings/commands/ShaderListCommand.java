@@ -2,8 +2,8 @@ package com.nettakrim.souper_secret_settings.commands;
 
 import com.mclegoman.luminance.client.shaders.ShaderRegistryEntry;
 import com.mclegoman.luminance.client.shaders.Shaders;
-import com.mclegoman.luminance.client.shaders.interfaces.PostEffectPassInterface;
-import com.mclegoman.luminance.client.shaders.interfaces.PostEffectProcessorInterface;
+import com.mclegoman.luminance.client.shaders.interfaces.PostChainInterface;
+import com.mclegoman.luminance.client.shaders.interfaces.PostPassInterface;
 import com.mclegoman.luminance.client.shaders.overrides.LuminanceUniformOverride;
 import com.mclegoman.luminance.client.shaders.overrides.OverrideSource;
 import com.mclegoman.luminance.client.shaders.overrides.UniformOverride;
@@ -442,11 +442,11 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
 
             int total = 0;
             for (Identifier identifier : SouperSecretSettingsClient.soupRenderer.getRegistryPasses(getRegistry())) {
-                PostEffectProcessorInterface processor = (PostEffectProcessorInterface) shader.shader.getPostProcessor();
+                PostChainInterface processor = (PostChainInterface)shader.shader.getPostProcessor();
                 List<PostEffectPass> passes = processor.luminance$getPasses(identifier);
                 if (passes != null) {
                     for (PostEffectPass pass : passes) {
-                        builder.suggest(total, Text.literal(((PostEffectPassInterface) pass).luminance$getID().replace(":post/", ":")));
+                        builder.suggest(total, Text.literal(((PostPassInterface)pass).luminance$getID().replace(":post/", ":")));
                         total++;
                     }
                 }

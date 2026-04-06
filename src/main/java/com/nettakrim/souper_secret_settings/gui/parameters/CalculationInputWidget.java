@@ -1,9 +1,9 @@
 package com.nettakrim.souper_secret_settings.gui.parameters;
 
-import com.mclegoman.luminance.client.data.ClientData;
 import com.nettakrim.souper_secret_settings.gui.ParameterTextWidget;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 
@@ -18,6 +18,6 @@ public class CalculationInputWidget extends ParameterTextWidget {
     @Override
     public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
         super.renderWidget(context, mouseX, mouseY, delta);
-        drawScrollableText(context, ClientData.minecraft.textRenderer, getMessage(), this.getX()-textWidth, this.getY(), this.getX(), this.getY()+20, (this.active ? 16777215 : 10526880) | MathHelper.ceil(this.alpha * 255.0F) << 24);
+        context.getTextConsumer().text(getMessage().copy().setStyle(Style.EMPTY.withColor((this.active ? 16777215 : 10526880) | MathHelper.ceil(this.alpha * 255.0F) << 24)), this.getX()-textWidth, this.getX(), this.getY(), this.getY()+20);
     }
 }

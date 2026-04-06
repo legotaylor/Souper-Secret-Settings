@@ -18,7 +18,7 @@ public abstract class EatingMixin extends Entity {
 
     @Inject(at = @At("HEAD"), method = "consumeItem")
     protected void finishUsing(CallbackInfo ci) {
-        if (getWorld().isClient && isLocalPlayerOrLogicalSideForUpdatingMovement()) {
+        if (getEntityWorld().isClient()) {
             SouperSecretSettingsClient.consumeItem(getActiveItem());
         }
     }

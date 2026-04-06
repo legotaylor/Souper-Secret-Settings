@@ -1,6 +1,5 @@
 package com.nettakrim.souper_secret_settings.gui.layers;
 
-import com.mclegoman.luminance.client.data.ClientData;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.actions.LayerRenameAction;
 import com.nettakrim.souper_secret_settings.actions.ShaderLoadAction;
@@ -12,6 +11,7 @@ import com.nettakrim.souper_secret_settings.shaders.Toggleable;
 import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -46,7 +46,7 @@ public class LayerWidget extends ListWidget {
         int infoPos = this.getY()+collapseHeight - info.length*infoHeight - 1;
         for (Text text : info) {
             int next = infoPos + infoHeight;
-            drawScrollableText(context, ClientData.minecraft.textRenderer, text, this.getX(), infoPos, this.getX() + this.getWidth(), next, (this.active ? 16777215 : 10526880) | MathHelper.ceil(this.alpha * 255.0F) << 24);
+            context.getTextConsumer().text(text.copy().setStyle(Style.EMPTY.withColor((this.active ? 16777215 : 10526880) | MathHelper.ceil(this.alpha * 255.0F) << 24)), this.getX(), this.getX() + this.getWidth(), infoPos, next);
             infoPos = next;
         }
     }

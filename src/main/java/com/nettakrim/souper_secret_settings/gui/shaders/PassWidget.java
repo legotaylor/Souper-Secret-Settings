@@ -1,6 +1,5 @@
 package com.nettakrim.souper_secret_settings.gui.shaders;
 
-import com.mclegoman.luminance.client.data.ClientData;
 import com.mclegoman.luminance.client.shaders.UniformBlock;
 import com.mclegoman.luminance.client.shaders.UniformInstance;
 import com.mclegoman.luminance.client.shaders.interfaces.PostPassInterface;
@@ -10,6 +9,7 @@ import net.minecraft.client.gl.PostEffectPass;
 import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
@@ -52,13 +52,14 @@ public class PassWidget extends CollapseWidget {
     @Override
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
         int y = getY();
+        Style style = Style.EMPTY.withColor((this.active ? 16777215 : 10526880) | MathHelper.ceil(this.alpha * 255.0F) << 24);
         if (isFirstCustom) {
             context.fill(getX(), y, getX() + getWidth(), y+firstCustomHeight, ColorHelper.fromFloats(0.4f, 0, 0, 0));
-            drawScrollableText(context, ClientData.minecraft.textRenderer, Text.literal(customPass.getPath()), this.getX()+2, y, this.getX()+this.getWidth()-2, y+firstCustomHeight, (this.active ? 16777215 : 10526880) | MathHelper.ceil(this.alpha * 255.0F) << 24);
+            context.getTextConsumer().text(Text.literal(customPass.getPath()).setStyle(style), this.getX()+2, this.getX()+this.getWidth()-2, y, y+firstCustomHeight);
             y += firstCustomHeight;
         }
 
-        drawScrollableText(context, ClientData.minecraft.textRenderer, this.getMessage(), this.getX()+2, y, this.getX()+this.getWidth()-2, y+20, (this.active ? 16777215 : 10526880) | MathHelper.ceil(this.alpha * 255.0F) << 24);
+        context.getTextConsumer().text(this.getMessage(), this.getX()+2, this.getX()+this.getWidth()-2, y, y+20);
 
         if (expanded) {
             context.fill(getX(), getY() + getCollapseHeight(), getX() + getWidth(), y+20, ColorHelper.fromFloats(0.2f, 0, 0, 0));

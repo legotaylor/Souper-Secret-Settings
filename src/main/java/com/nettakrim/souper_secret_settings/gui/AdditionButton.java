@@ -1,12 +1,9 @@
 package com.nettakrim.souper_secret_settings.gui;
 
 import com.mclegoman.luminance.common.util.Couple;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.text.Text;
 
 import java.util.function.Consumer;
 
@@ -43,13 +40,11 @@ public class AdditionButton extends HoverButtonWidget {
         if (onEdit != null) {
             context.drawTexture(RenderPipelines.GUI_TEXTURED, ListWidget.ICON_TEXTURE, getX()+getWidth()-12, getY(), 20, 0, 10, 20, 40, 20, dragState > 0 ? ListWidget.texColWhite : ListWidget.texColBlack);
         }
-    }
 
-    @Override
-    public void drawMessage(DrawContext context, TextRenderer textRenderer, int color) {
+        // TODO: this was part of drawMessage(), not sure if it needs to be seperate
         int i = this.getX() + (onRemove == null ? 4 : 12);
         int j = this.getX() + this.getWidth() - 2;
-        drawScrollableText(context, textRenderer, this.getMessage(), i, i, getY(), j, this.getY() + this.getHeight(), color);
+        context.getTextConsumer().text(this.getMessage(), i, j, getY(), this.getY() + this.getHeight());
     }
 
     @Override

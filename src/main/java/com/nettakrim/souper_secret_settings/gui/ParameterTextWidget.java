@@ -3,6 +3,7 @@ package com.nettakrim.souper_secret_settings.gui;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,12 +23,12 @@ public class ParameterTextWidget extends SuggestionTextFieldWidget {
     }
 
     protected List<String> getParameters() {
-        List<String> validUniforms = SouperSecretSettingsClient.soupRenderer.getValidUniforms();
+        List<Identifier> validUniforms = SouperSecretSettingsClient.soupRenderer.getValidUniforms();
 
         List<String> parameters = new ArrayList<>(layer.parameterValues.size()+validUniforms.size()+1);
 
         parameters.addAll(layer.parameterValues.keySet());
-        parameters.addAll(validUniforms);
+        parameters.addAll(validUniforms.stream().map(Identifier::toString).toList());
 
         Collections.sort(parameters);
         if (!defaultValue.isEmpty()) {

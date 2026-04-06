@@ -1,6 +1,5 @@
 package com.nettakrim.souper_secret_settings.gui;
 
-import com.mclegoman.luminance.client.data.ClientData;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.actions.ToggleAction;
 import com.nettakrim.souper_secret_settings.shaders.Toggleable;
@@ -9,7 +8,7 @@ import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.render.RenderLayer;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
@@ -35,7 +34,8 @@ public abstract class ListWidget extends CollapseWidget {
         float buttonColor = getToggleable().isActive() ? 1f : 0.5f;
 
         context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, TEXTURES.get(this.active, this.isSelected()), this.getX(), this.getY(), this.getWidth(), getCollapseHeight(), ColorHelper.fromFloats(this.alpha, buttonColor, buttonColor, buttonColor));
-        drawScrollableText(context, ClientData.minecraft.textRenderer, this.getMessage(), this.getX()+2, this.getY(), this.getX()+this.getWidth()-2, getY()+getHeight(), (this.active ? 16777215 : 10526880) | MathHelper.ceil(this.alpha * 255.0F) << 24);
+
+        drawTextWithMargin(context.getTextConsumer(), getMessage().copy().setStyle(Style.EMPTY.withColor((this.active ? 16777215 : 10526880) | MathHelper.ceil(this.alpha * 255.0F) << 24)), 2);
         context.drawTexture(RenderPipelines.GUI_TEXTURED, ICON_TEXTURE, getX(), getY(), 0, 0, 10, 20, 40, 20, dragState < 0 ? texColWhite : texColBlack);
         context.drawTexture(RenderPipelines.GUI_TEXTURED, ICON_TEXTURE, getX()+getWidth()-10, getY(), 10, 0, 10, 20, 40, 20, dragState > 0 ? texColWhite : texColBlack);
 

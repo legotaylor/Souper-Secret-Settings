@@ -2,7 +2,7 @@ package com.nettakrim.souper_secret_settings.shaders;
 
 import com.mclegoman.luminance.client.shaders.Shader;
 import com.mclegoman.luminance.client.shaders.Shaders;
-import com.mclegoman.luminance.client.shaders.interfaces.PostEffectProcessorInterface;
+import com.mclegoman.luminance.client.shaders.interfaces.PostChainInterface;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import net.minecraft.client.gl.PostEffectPass;
 import net.minecraft.client.gl.PostEffectProcessor;
@@ -30,7 +30,7 @@ public class ShaderData implements Toggleable {
             this.shader.setPostProcessor();
         }
 
-        PostEffectProcessorInterface processor = (PostEffectProcessorInterface)this.shader.getPostProcessor();
+        PostChainInterface processor = (PostChainInterface)this.shader.getPostProcessor();
         Set<Identifier> customPasses = processor.luminance$getCustomPassNames();
 
         List<PostEffectPass> defaultPasses = processor.luminance$getPasses(null);
@@ -53,7 +53,7 @@ public class ShaderData implements Toggleable {
 
     public boolean render(FrameGraphBuilder builder, int textureWidth, int textureHeight, PostEffectProcessor.FramebufferSet framebufferSet, @Nullable Identifier customPasses) {
         if (!active) return false;
-        PostEffectProcessorInterface processor = (PostEffectProcessorInterface)shader.getPostProcessor();
+        PostChainInterface processor = (PostChainInterface)shader.getPostProcessor();
         if (customPasses != null && !processor.luminance$getCustomPassNames().contains(customPasses)) {
             return false;
         }

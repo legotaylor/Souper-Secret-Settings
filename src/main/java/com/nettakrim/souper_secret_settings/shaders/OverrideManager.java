@@ -79,11 +79,15 @@ public class OverrideManager {
             assert currentShaders.peek() != null;
             Couple<ShaderData, Identifier> shaderData = currentShaders.peek();
 
+            // TODO: update this
+
+            /*
             PostPassInterface pass = ((PostPassInterface)postEffectPass);
             Map<String, UniformConfig> configs = pass.luminance$getUniformConfigs();
 
             overrideReplacement.replace(shaderData.getFirst().getPassData(shaderData.getSecond()).overrides.get(currentPassIndex), pass::luminance$addUniformOverride);
             configReplacement.replace(shaderData.getFirst().getPassData(shaderData.getSecond()).configs.get(currentPassIndex), configs::put);
+             */
         }
     }
 
@@ -94,11 +98,15 @@ public class OverrideManager {
                 return;
             }
 
+            // TODO: update this
+
+            /*
             PostPassInterface pass = ((PostPassInterface)postEffectPass);
             Map<String, UniformConfig> configs = pass.luminance$getUniformConfigs();
 
             overrideReplacement.reset(pass::luminance$addUniformOverride, pass::luminance$removeUniformOverride);
             configReplacement.reset(configs::put, configs::remove);
+             */
         }
     }
 

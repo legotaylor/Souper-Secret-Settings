@@ -1,6 +1,5 @@
 package com.nettakrim.souper_secret_settings.gui;
 
-import com.mclegoman.luminance.client.data.ClientData;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
@@ -35,7 +34,7 @@ public abstract class DisplayWidget<T> extends CollapseWidget {
 
     @Override
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-        drawScrollableText(context, ClientData.minecraft.textRenderer, this.getMessage(), this.getX()+2, this.getY(), this.getX()+this.getWidth()-displayWidth-2, this.getY()+20, -1);
+        context.getTextConsumer().text(this.getMessage(), this.getX()+2, this.getX()+this.getWidth()-displayWidth-2, this.getY(), this.getY()+20);
 
         super.renderWidget(context, mouseX, mouseY, delta);
 
