@@ -1,14 +1,12 @@
 package com.nettakrim.souper_secret_settings.gui.shaders;
 
 import com.mclegoman.luminance.client.data.ClientData;
-import com.mclegoman.luminance.client.shaders.interfaces.PostEffectPassInterface;
-import com.mclegoman.luminance.client.shaders.interfaces.ShaderProgramInterface;
+import com.mclegoman.luminance.client.shaders.UniformBlock;
+import com.mclegoman.luminance.client.shaders.UniformInstance;
+import com.mclegoman.luminance.client.shaders.interfaces.PostPassInterface;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.CollapseWidget;
-import com.nettakrim.souper_secret_settings.shaders.PassData;
-import net.minecraft.client.gl.GlUniform;
 import net.minecraft.client.gl.PostEffectPass;
-import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
@@ -19,7 +17,7 @@ import net.minecraft.util.math.MathHelper;
 
 public class PassWidget extends CollapseWidget {
     public ShaderWidget shader;
-    public PostEffectPass postEffectPass;
+    public PostPassInterface postPass;
     public int passIndex;
     public Identifier customPass;
 
@@ -28,21 +26,22 @@ public class PassWidget extends CollapseWidget {
     protected static int firstCustomHeight = 10;
 
     public PassWidget(ShaderWidget shader, PostEffectPass postEffectPass, Identifier customPass, int passIndex, int x, int width, ListScreen<?> listScreen) {
-        super(x, width, Text.literal(((PostEffectPassInterface)postEffectPass).luminance$getID().replace(":post/",":")), listScreen);
+        super(x, width, Text.literal(((PostPassInterface)postEffectPass).luminance$getID().replace(":post/",":")), listScreen);
 
         this.shader = shader;
-        this.postEffectPass = postEffectPass;
+        this.postPass = (PostPassInterface)postEffectPass;
         this.customPass = customPass;
         this.passIndex = passIndex;
 
         active = false;
-        ShaderProgram program = postEffectPass.getProgram();
-        for (String name : ((ShaderProgramInterface)program).luminance$getUniformNames()) {
-            if (PassData.allowUniform(name) && program.getUniform(name) != null) {
+        for (String blockName : postPass.luminance$getUniformBlockNames()) {
+            UniformBlock block = postPass.luminance$getUniformBlock(blockName);
+            if (!block.uniforms.isEmpty()) {
                 active = true;
                 break;
             }
         }
+
 
         if (customPass != null && passIndex == 0) {
             setHeight(getHeight()+firstCustomHeight);
@@ -74,11 +73,10 @@ public class PassWidget extends CollapseWidget {
             return;
         }
 
-        ShaderProgram program = postEffectPass.getProgram();
-        for (String name : ((ShaderProgramInterface)program).luminance$getUniformNames()) {
-            GlUniform uniform = program.getUniform(name);
-            if (uniform != null && PassData.allowUniform(name)) {
-                UniformWidget uniformWidget = new UniformWidget(this, uniform, Text.literal(uniform.getName()), x, width, listScreen);
+        for (String blockName : postPass.luminance$getUniformBlockNames()) {
+            UniformBlock block = postPass.luminance$getUniformBlock(blockName);
+            for (UniformInstance uniform : block.uniforms) {
+                UniformWidget uniformWidget = new UniformWidget(this, uniform, Text.literal(uniform.name), x, width, listScreen);
                 listScreen.addSelectable(uniformWidget);
                 children.add(uniformWidget);
             }

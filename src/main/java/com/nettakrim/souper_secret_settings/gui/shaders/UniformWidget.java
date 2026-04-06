@@ -13,7 +13,6 @@ import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.DisplayWidget;
 import com.nettakrim.souper_secret_settings.shaders.PassData;
 import com.nettakrim.souper_secret_settings.shaders.UniformData;
-import net.minecraft.client.gl.GlUniform;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
 
@@ -82,16 +81,15 @@ public class UniformWidget extends DisplayWidget<Couple<UniformData<String>,Unif
         UniformConfig config = passData.configs.get(pass.passIndex).get(uniform.name).value;
 
         List<Float> display = override.getOverride(config, Uniforms.shaderTime);
-        List<Float> base = PassData.getDefaultValues((PostEffectPassInterface)pass.postEffectPass, uniform.name, Uniforms.shaderTime);
         for (int i = 0; i < display.size(); i++) {
             if (display.get(i) == null) {
-                display.set(i, base.get(i));
+                display.set(i, uniform.defaultValue.get(i).floatValue());
             }
 
-            //allow dragging luminance_alpha_smooth to replace it with its current value
+            //allow dragging luminance:alpha_smooth to replace it with its current value
             if (expanded) {
                 ConfigWidget configWidget = ((ConfigWidget)children.get(i));
-                if (configWidget.getText().startsWith("luminance_alpha")) {
+                if (configWidget.getText().startsWith("luminance:alpha")) {
                     configWidget.dragValue = display.get(i);
                 }
             }

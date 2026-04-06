@@ -1,8 +1,10 @@
 package com.nettakrim.souper_secret_settings.shaders;
 
 import com.mclegoman.luminance.client.events.Runnables;
+import com.mclegoman.luminance.client.shaders.interfaces.PostChainInterface;
 import com.mclegoman.luminance.client.shaders.interfaces.PostEffectPassInterface;
 import com.mclegoman.luminance.client.shaders.interfaces.PostEffectProcessorInterface;
+import com.mclegoman.luminance.client.shaders.interfaces.PostPassInterface;
 import com.mclegoman.luminance.client.shaders.overrides.UniformOverride;
 import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
 import com.mclegoman.luminance.common.util.Couple;
@@ -43,7 +45,7 @@ public class OverrideManager {
             }
 
             if (shaderData.getFirst().active) {
-                List<PostEffectPass> currentPasses = ((PostEffectProcessorInterface) shaderData.getFirst().shader.getPostProcessor()).luminance$getPasses(shaderData.getSecond());
+                List<PostEffectPass> currentPasses = ((PostChainInterface)shaderData.getFirst().shader.getPostProcessor()).luminance$getPasses(shaderData.getSecond());
                 // render queue is only added to when the passes *do* exist
                 assert currentPasses != null;
 
@@ -79,7 +81,7 @@ public class OverrideManager {
             assert currentShaders.peek() != null;
             Couple<ShaderData, Identifier> shaderData = currentShaders.peek();
 
-            PostEffectPassInterface pass = ((PostEffectPassInterface)postEffectPass);
+            PostPassInterface pass = ((PostPassInterface)postEffectPass);
             Map<String, UniformConfig> configs = pass.luminance$getUniformConfigs();
 
             overrideReplacement.replace(shaderData.getFirst().getPassData(shaderData.getSecond()).overrides.get(currentPassIndex), pass::luminance$addUniformOverride);
@@ -94,7 +96,7 @@ public class OverrideManager {
                 return;
             }
 
-            PostEffectPassInterface pass = ((PostEffectPassInterface)postEffectPass);
+            PostPassInterface pass = ((PostPassInterface)postEffectPass);
             Map<String, UniformConfig> configs = pass.luminance$getUniformConfigs();
 
             overrideReplacement.reset(pass::luminance$addUniformOverride, pass::luminance$removeUniformOverride);
