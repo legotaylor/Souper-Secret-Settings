@@ -8,19 +8,20 @@ import com.nettakrim.souper_secret_settings.gui.ListWidget;
 import com.nettakrim.souper_secret_settings.gui.SuggestionTextFieldWidget;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import com.nettakrim.souper_secret_settings.shaders.Toggleable;
-import net.minecraft.client.gui.Click;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.Mth;
+import org.jetbrains.annotations.NotNull;
 
 public class LayerWidget extends ListWidget {
     public final ShaderLayer layer;
 
-    private ButtonWidget saveButton;
-    private ButtonWidget loadButton;
+    private Button saveButton;
+    private Button loadButton;
 
     private SuggestionTextFieldWidget nameWidget;
 
@@ -34,7 +35,7 @@ public class LayerWidget extends ListWidget {
     }
 
     @Override
-    protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
+    protected void renderWidget(@NotNull GuiGraphics context, int mouseX, int mouseY, float delta) {
         super.renderWidget(context, mouseX, mouseY, delta);
 
         if (!expanded) {
@@ -42,27 +43,27 @@ public class LayerWidget extends ListWidget {
         }
         loadButton.render(context, mouseX, mouseY, delta);
 
-        Text[] info = layer.getInfo();
+        Component[] info = layer.getInfo();
         int infoPos = this.getY()+collapseHeight - info.length*infoHeight - 1;
-        for (Text text : info) {
+        for (Component text : info) {
             int next = infoPos + infoHeight;
-            context.getTextConsumer().text(text.copy().setStyle(Style.EMPTY.withColor((this.active ? 16777215 : 10526880) | MathHelper.ceil(this.alpha * 255.0F) << 24)), this.getX(), this.getX() + this.getWidth(), infoPos, next);
+            context.textRenderer().acceptScrollingWithDefaultCenter(text.copy().setStyle(Style.EMPTY.withColor((this.active ? 16777215 : 10526880) | Mth.ceil(this.alpha * 255.0F) << 24)), this.getX(), this.getX() + this.getWidth(), infoPos, next);
             infoPos = next;
         }
     }
 
     @Override
     protected void createChildren(int x, int width) {
-        saveButton = ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.save"), (buttonWidget) -> save()).dimensions(x,0,width/2,20).build();
-        loadButton = ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.load"), (buttonWidget) -> load()).dimensions(x + width/2,0,width/2,20).build();
+        saveButton = Button.builder(SouperSecretSettingsClient.translate("gui.save"), (buttonWidget) -> save()).bounds(x,0,width/2,20).build();
+        loadButton = Button.builder(SouperSecretSettingsClient.translate("gui.load"), (buttonWidget) -> load()).bounds(x + width/2,0,width/2,20).build();
 
         updateDataButtons();
 
-        nameWidget = new SuggestionTextFieldWidget(x, width, 20, Text.of("layer id"), false);
+        nameWidget = new SuggestionTextFieldWidget(x, width, 20, Component.nullToEmpty("layer id"), false);
         nameWidget.setListeners(() -> SouperSecretSettingsClient.soupData.getSavedLayers(true), this::setNameDisambiguate, false);
         nameWidget.submitOnLostFocus = true;
-        nameWidget.setText(layer.name);
-        nameWidget.setChangedListener(this::setName);
+        nameWidget.setValue(layer.name);
+        nameWidget.setResponder(this::setName);
 
         children.add(nameWidget);
         listScreen.addSelectable(nameWidget);
@@ -83,7 +84,7 @@ public class LayerWidget extends ListWidget {
     }
 
     @Override
-    public void onClick(Click click, boolean doubled) {
+    public void onClick(@NotNull MouseButtonEvent click, boolean doubled) {
         int distance = getX()+getWidth() - (int)click.x();
         if (distance < 20 && distance > 10) {
             SouperSecretSettingsClient.soupRenderer.activeLayer = layer;
@@ -137,13 +138,13 @@ public class LayerWidget extends ListWidget {
 
         updateDataButtons();
 
-        nameWidget.setText(layer.name);
-        nameWidget.setCursorToEnd(false);
+        nameWidget.setValue(layer.name);
+        nameWidget.moveCursorToEnd(false);
         setMessage(getNameText(layer.name));
     }
 
-    private static Text getNameText(String name) {
-        return name.isBlank() ? SouperSecretSettingsClient.translate("gui.unnamed") : Text.literal(name);
+    private static Component getNameText(String name) {
+        return name.isBlank() ? SouperSecretSettingsClient.translate("gui.unnamed") : Component.literal(name);
     }
 
     private void save() {

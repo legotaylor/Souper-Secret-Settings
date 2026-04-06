@@ -12,11 +12,11 @@ import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.shaders.*;
 import com.nettakrim.souper_secret_settings.shaders.calculations.Calculation;
 import com.nettakrim.souper_secret_settings.shaders.calculations.Calculations;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.dynamic.Codecs;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.ExtraCodecs;
 
 public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>> modifiers, Optional<List<CalculationData>> parameters) implements DeletableCodec {
     public static final Codec<LayerCodecs> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
@@ -95,7 +95,7 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
         }
 
         public void apply(ShaderLayer layer, Identifier registry) {
-            List<ShaderData> shaderDatas = SouperSecretSettingsClient.soupRenderer.getShaderAdditions(layer, registry, Identifier.of(id), 1, -1, false);
+            List<ShaderData> shaderDatas = SouperSecretSettingsClient.soupRenderer.getShaderAdditions(layer, registry, Identifier.parse(id), 1, -1, false);
             if (shaderDatas == null || shaderDatas.isEmpty()) {
                 sayError("shader.missing", id);
                 return;
@@ -183,7 +183,7 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
     protected record Uniform(List<String> values, Optional<Map<String, List<Object>>> config) {
         public static final Codec<Uniform> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
                 Codec.STRING.listOf().fieldOf("values").forGetter(Uniform::values),
-                Codec.unboundedMap(Codec.STRING, Codecs.BASIC_OBJECT.listOf()).optionalFieldOf("config").forGetter(Uniform::config)
+                Codec.unboundedMap(Codec.STRING, ExtraCodecs.JAVA.listOf()).optionalFieldOf("config").forGetter(Uniform::config)
         ).apply(instance, Uniform::new));
 
         public static Uniform from(LuminanceUniformOverride override, MapConfig config) {

@@ -1,34 +1,34 @@
 package com.nettakrim.souper_secret_settings.gui;
 
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ButtonTextures;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-
 import java.util.function.BiFunction;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.WidgetSprites;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import org.jetbrains.annotations.NotNull;
 
-public class LabelledWidget extends ClickableWidget {
-    protected static final ButtonTextures TEXTURES = new ButtonTextures(Identifier.ofVanilla("widget/button"), Identifier.ofVanilla("widget/button_disabled"), Identifier.ofVanilla("widget/button_highlighted"));
+public class LabelledWidget extends AbstractWidget {
+    protected static final WidgetSprites TEXTURES = new WidgetSprites(Identifier.withDefaultNamespace("widget/button"), Identifier.withDefaultNamespace("widget/button_disabled"), Identifier.withDefaultNamespace("widget/button_highlighted"));
 
-    public final ClickableWidget widget;
+    public final AbstractWidget widget;
 
-    public LabelledWidget(int x, int width, Text message, BiFunction<Integer, Integer, ClickableWidget> widgetFunction) {
+    public LabelledWidget(int x, int width, Component message, BiFunction<Integer, Integer, AbstractWidget> widgetFunction) {
         super(x, 0, width/3, 20, message);
         widget = widgetFunction.apply(x + width/3, width - width/3);
     }
 
     @Override
-    protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, TEXTURES.get(true, false), getX(), getY(), getWidth()*2, getHeight(), -1);
-        drawTextWithMargin(context.getTextConsumer(), getMessage(), 2);
+    protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float delta) {
+        context.blitSprite(RenderPipelines.GUI_TEXTURED, TEXTURES.get(true, false), getX(), getY(), getWidth()*2, getHeight(), -1);
+        renderScrollingStringOverContents(context.textRenderer(), getMessage(), 2);
         widget.render(context, mouseX, mouseY, delta);
     }
 
     @Override
-    protected void appendClickableNarrations(NarrationMessageBuilder builder) {
+    protected void updateWidgetNarration(@NotNull NarrationElementOutput builder) {
 
     }
 

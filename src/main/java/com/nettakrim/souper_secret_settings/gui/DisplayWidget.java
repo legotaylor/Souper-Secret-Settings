@@ -1,19 +1,19 @@
 package com.nettakrim.souper_secret_settings.gui;
 
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.ColorHelper;
-
 import java.util.List;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.ARGB;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class DisplayWidget<T> extends CollapseWidget {
     protected static int displayWidth = 10;
 
     public int count;
-    public DisplayWidget(int count, Text name, int x, int width, ListScreen<?> listScreen) {
+    public DisplayWidget(int count, Component name, int x, int width, ListScreen<?> listScreen) {
         super(x, width, name, listScreen);
         this.count = count;
     }
@@ -22,31 +22,31 @@ public abstract class DisplayWidget<T> extends CollapseWidget {
     protected void createChildren(int x, int width) {
         List<T> values = getChildData();
         for (int i = 0; i < values.size(); i++) {
-            ClickableWidget widget = createChildWidget(values.get(i), i);
+            AbstractWidget widget = createChildWidget(values.get(i), i);
             listScreen.addSelectable(widget);
             children.add(widget);
         }
     }
 
-    protected abstract ClickableWidget createChildWidget(T data, int i);
+    protected abstract AbstractWidget createChildWidget(T data, int i);
 
     protected abstract List<T> getChildData();
 
     @Override
-    protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-        context.getTextConsumer().text(this.getMessage(), this.getX()+2, this.getX()+this.getWidth()-displayWidth-2, this.getY(), this.getY()+20);
+    protected void renderWidget(@NotNull GuiGraphics context, int mouseX, int mouseY, float delta) {
+        context.textRenderer().acceptScrollingWithDefaultCenter(this.getMessage(), this.getX()+2, this.getX()+this.getWidth()-displayWidth-2, this.getY(), this.getY()+20);
 
         super.renderWidget(context, mouseX, mouseY, delta);
 
         List<Float> currentDisplay = getDisplayFloats();
         drawIndicator(context, currentDisplay);
 
-        if (hovered && mouseX > this.getX()+this.getWidth()-displayWidth-2) {
+        if (isHovered && mouseX > this.getX()+this.getWidth()-displayWidth-2) {
             SouperSecretSettingsClient.soupGui.setHoverText(getHoverText(currentDisplay));
         }
     }
 
-    private static Text getHoverText(List<Float> currentDisplay) {
+    private static Component getHoverText(List<Float> currentDisplay) {
         StringBuilder stringBuilder = new StringBuilder("[ ");
         for (Float f : currentDisplay) {
             String s = f.toString();
@@ -59,10 +59,10 @@ public abstract class DisplayWidget<T> extends CollapseWidget {
         }
         stringBuilder.append("]");
 
-        return Text.of(stringBuilder.toString());
+        return Component.nullToEmpty(stringBuilder.toString());
     }
 
-    protected void drawIndicator(DrawContext context, List<Float> currentDisplay) {
+    protected void drawIndicator(GuiGraphics context, List<Float> currentDisplay) {
         int x = getX()+getWidth();
         int y = getY();
 
@@ -114,11 +114,11 @@ public abstract class DisplayWidget<T> extends CollapseWidget {
             b = (b*(1-scale))+scale;
         }
 
-        return ColorHelper.fromFloats(1f, r, g, b);
+        return ARGB.colorFromFloat(1f, r, g, b);
     }
 
     @Override
-    protected void appendClickableNarrations(NarrationMessageBuilder builder) {
+    protected void updateWidgetNarration(@NotNull NarrationElementOutput builder) {
 
     }
 

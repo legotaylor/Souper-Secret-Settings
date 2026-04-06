@@ -8,12 +8,12 @@ import com.nettakrim.souper_secret_settings.gui.ParameterTextWidget;
 import com.nettakrim.souper_secret_settings.shaders.ParameterOverrideSource;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import com.nettakrim.souper_secret_settings.shaders.calculations.Calculation;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.text.Text;
-
 import java.util.Arrays;
 import java.util.List;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
 public class CalculationWidget extends DisplayWidget<OverrideSource> {
     public Calculation calculation;
@@ -21,7 +21,7 @@ public class CalculationWidget extends DisplayWidget<OverrideSource> {
 
     protected ParameterTextWidget[] outputs;
 
-    public CalculationWidget(Calculation calculation, ShaderLayer layer, Text name, int x, int width, ListScreen<?> listScreen) {
+    public CalculationWidget(Calculation calculation, ShaderLayer layer, Component name, int x, int width, ListScreen<?> listScreen) {
         super(calculation.inputs.length, name, x, width, listScreen);
         this.calculation = calculation;
         this.layer = layer;
@@ -35,11 +35,11 @@ public class CalculationWidget extends DisplayWidget<OverrideSource> {
 
         int split = (getWidth()-displayWidth)/outputCount;
         for (int i = 0; i < outputCount; i++) {
-            ParameterTextWidget parameterTextWidget = new ParameterTextWidget(getX() + split*i, split, 20, Text.literal("output"+i), layer, "");
+            ParameterTextWidget parameterTextWidget = new ParameterTextWidget(getX() + split*i, split, 20, Component.literal("output"+i), layer, "");
             listScreen.addSelectable(parameterTextWidget);
             int finalI = i;
-            parameterTextWidget.setText(calculation.outputs[i]);
-            parameterTextWidget.setChangedListener((s) -> onOutputChanged(finalI, s));
+            parameterTextWidget.setValue(calculation.outputs[i]);
+            parameterTextWidget.setResponder((s) -> onOutputChanged(finalI, s));
             outputs[i] = parameterTextWidget;
         }
 
@@ -47,7 +47,7 @@ public class CalculationWidget extends DisplayWidget<OverrideSource> {
     }
 
     @Override
-    protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
+    protected void renderWidget(@NotNull GuiGraphics context, int mouseX, int mouseY, float delta) {
         for (ParameterTextWidget parameterTextWidget : outputs) {
             parameterTextWidget.renderWidget(context, mouseX, mouseY, delta);
         }
@@ -56,11 +56,11 @@ public class CalculationWidget extends DisplayWidget<OverrideSource> {
     }
 
     @Override
-    protected ClickableWidget createChildWidget(OverrideSource data, int i) {
+    protected AbstractWidget createChildWidget(OverrideSource data, int i) {
         String value = data.getString();
-        ParameterTextWidget parameterTextWidget = new CalculationInputWidget(getX(), getWidth(), 20, Text.literal(calculation.inputNames[i]), layer, value);
-        parameterTextWidget.setText(value);
-        parameterTextWidget.setChangedListener((s) -> onInputChanged(i, s));
+        ParameterTextWidget parameterTextWidget = new CalculationInputWidget(getX(), getWidth(), 20, Component.literal(calculation.inputNames[i]), layer, value);
+        parameterTextWidget.setValue(value);
+        parameterTextWidget.setResponder((s) -> onInputChanged(i, s));
         return parameterTextWidget;
     }
 

@@ -1,6 +1,6 @@
 package com.nettakrim.souper_secret_settings.shaders.calculations.oscillator;
 
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.Mth;
 
 public class SawCalculation extends PeriodicCalculation {
     public SawCalculation(String id) {
@@ -9,7 +9,7 @@ public class SawCalculation extends PeriodicCalculation {
 
     @Override
     protected float periodicCalculation(float t) {
-        return MathHelper.floorMod(t,1);
+        return Mth.positiveModulo(t,1);
     }
 }
 

@@ -11,26 +11,26 @@ import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.actions.Actions;
 import com.nettakrim.souper_secret_settings.gui.*;
 import com.nettakrim.souper_secret_settings.gui.shaders.ShaderScreen;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.option.KeybindsScreen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.gui.widget.SliderWidget;
-import net.minecraft.client.gui.widget.TextWidget;
-import net.minecraft.command.argument.ItemStackArgument;
-import net.minecraft.command.argument.ItemStringReader;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.BuiltinRegistries;
-import net.minecraft.registry.Registries;
-import net.minecraft.text.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractSliderButton;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.StringWidget;
+import net.minecraft.client.gui.screens.options.controls.KeyBindsScreen;
+import net.minecraft.commands.arguments.item.ItemInput;
+import net.minecraft.commands.arguments.item.ItemParser;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.registries.VanillaRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public class OptionScreen extends ScrollScreen {
-    public final List<ClickableWidget> widgets = new ArrayList<>();
+    public final List<AbstractWidget> widgets = new ArrayList<>();
 
     private final int scrollIndex;
 
@@ -38,14 +38,14 @@ public class OptionScreen extends ScrollScreen {
     private final CompletableFuture<?>[] itemFutures = new CompletableFuture[2];
 
     public OptionScreen(int scrollIndex) {
-        super(Text.empty());
+        super(Component.empty());
         this.scrollIndex = scrollIndex;
     }
 
     @Override
     protected void init() {
-        for (ClickableWidget clickableWidget : SouperSecretSettingsClient.soupGui.getHeader()) {
-            addDrawableChild(clickableWidget);
+        for (AbstractWidget clickableWidget : SouperSecretSettingsClient.soupGui.getHeader()) {
+            addRenderableWidget(clickableWidget);
         }
 
         createScrollWidget(SoupGui.listStart);
@@ -54,57 +54,57 @@ public class OptionScreen extends ScrollScreen {
 
         widgets.clear();
 
-        widgets.add(new TextWidget(SoupGui.listX, 0, widgetWidth, 8, SouperSecretSettingsClient.translate("option.gui.main"), ClientData.minecraft.textRenderer));
+        widgets.add(new StringWidget(SoupGui.listX, 0, widgetWidth, 8, SouperSecretSettingsClient.translate("option.gui.main"), ClientData.minecraft.font));
         widgets.add(new CycleWidget(SoupGui.listX, widgetWidth,
                 (direction) -> SouperSecretSettingsClient.soupData.config.disableState = CycleWidget.cycleInt(SouperSecretSettingsClient.soupData.config.disableState + direction, 2),
                 () -> SouperSecretSettingsClient.translate("option.gui.toggle."+SouperSecretSettingsClient.soupData.config.disableState))
         );
-        SliderWidget sliderWidget = new SoupAlphaSlider(SoupGui.listX, 0, widgetWidth, 20, Uniforms.getRawAlpha() / 100.0F, () -> Uniforms.updatingAlpha = true);
+        AbstractSliderButton sliderWidget = new SoupAlphaSlider(SoupGui.listX, 0, widgetWidth, 20, Uniforms.getRawAlpha() / 100.0F, () -> Uniforms.updatingAlpha = true);
         widgets.add(sliderWidget);
 
-        widgets.add(new TextWidget(SoupGui.listX, 0, widgetWidth, 8, SouperSecretSettingsClient.translate("option.gui.eating"), ClientData.minecraft.textRenderer));
+        widgets.add(new StringWidget(SoupGui.listX, 0, widgetWidth, 8, SouperSecretSettingsClient.translate("option.gui.eating"), ClientData.minecraft.font));
         widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, SouperSecretSettingsClient.translate("option.gui.random"),
                 (x, width) -> {
-                    SuggestionTextFieldWidget widget = new SuggestionTextFieldWidget(x, width, 20, Text.empty(), false);
+                    SuggestionTextFieldWidget widget = new SuggestionTextFieldWidget(x, width, 20, Component.empty(), false);
                     widget.setMaxLengthMin(1024);
-                    CompletableFuture.runAsync(() -> widget.setText(itemStackToString(SouperSecretSettingsClient.soupData.config.randomItem)));
+                    CompletableFuture.runAsync(() -> widget.setValue(itemStackToString(SouperSecretSettingsClient.soupData.config.randomItem)));
                     widget.setListeners(this::getItemSuggestions, null, true);
-                    widget.setChangedListener(value -> getItemStack(value, 1, itemStack -> SouperSecretSettingsClient.soupData.config.randomItem = itemStack));
+                    widget.setResponder(value -> getItemStack(value, 1, itemStack -> SouperSecretSettingsClient.soupData.config.randomItem = itemStack));
                     widget.disableDrag = true;
                     return widget;
                 })
         );
         widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, SouperSecretSettingsClient.translate("option.gui.shader"),
                 (x, width) -> {
-                    SuggestionTextFieldWidget widget = new SuggestionTextFieldWidget(x, width, 20, Text.empty(), false);
-                    widget.setText(SouperSecretSettingsClient.soupData.config.randomShader);
+                    SuggestionTextFieldWidget widget = new SuggestionTextFieldWidget(x, width, 20, Component.empty(), false);
+                    widget.setValue(SouperSecretSettingsClient.soupData.config.randomShader);
                     widget.setListeners(() -> ShaderScreen.calculateAdditions(Shaders.getMainRegistryId()), null, true);
-                    widget.setChangedListener((value) -> SouperSecretSettingsClient.soupData.config.randomShader = value);
+                    widget.setResponder((value) -> SouperSecretSettingsClient.soupData.config.randomShader = value);
                     widget.disableDrag = true;
                     return widget;
                 })
         );
         widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, SouperSecretSettingsClient.translate("option.gui.count"),
                 (x, width) -> {
-                    DraggableIntWidget widget = new DraggableIntWidget(x, width, 20, Text.empty(), 1, 256, 1, (value) -> SouperSecretSettingsClient.soupData.config.randomCount = value);
-                    widget.setText(Integer.toString(SouperSecretSettingsClient.soupData.config.randomCount));
+                    DraggableIntWidget widget = new DraggableIntWidget(x, width, 20, Component.empty(), 1, 256, 1, (value) -> SouperSecretSettingsClient.soupData.config.randomCount = value);
+                    widget.setValue(Integer.toString(SouperSecretSettingsClient.soupData.config.randomCount));
                     return widget;
                 })
         );
         widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, SouperSecretSettingsClient.translate("option.gui.duration"),
                 (x, width) -> {
-                    DraggableIntWidget widget = new DraggableIntWidget(x, width, 20, Text.empty(), 0, Integer.MAX_VALUE, 0, (value) -> SouperSecretSettingsClient.soupData.config.randomDuration = value);
-                    widget.setText(Integer.toString(SouperSecretSettingsClient.soupData.config.randomDuration));
+                    DraggableIntWidget widget = new DraggableIntWidget(x, width, 20, Component.empty(), 0, Integer.MAX_VALUE, 0, (value) -> SouperSecretSettingsClient.soupData.config.randomDuration = value);
+                    widget.setValue(Integer.toString(SouperSecretSettingsClient.soupData.config.randomDuration));
                     return widget;
                 })
         );
         widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, SouperSecretSettingsClient.translate("option.gui.clear"),
                 (x, width) -> {
-                    SuggestionTextFieldWidget widget = new SuggestionTextFieldWidget(x, width, 20, Text.empty(), false);
+                    SuggestionTextFieldWidget widget = new SuggestionTextFieldWidget(x, width, 20, Component.empty(), false);
                     widget.setMaxLengthMin(1024);
-                    CompletableFuture.runAsync(() -> widget.setText(itemStackToString(SouperSecretSettingsClient.soupData.config.clearItem)));
+                    CompletableFuture.runAsync(() -> widget.setValue(itemStackToString(SouperSecretSettingsClient.soupData.config.clearItem)));
                     widget.setListeners(this::getItemSuggestions, null, true);
-                    widget.setChangedListener(value -> getItemStack(value, 0, itemStack -> SouperSecretSettingsClient.soupData.config.clearItem = itemStack));
+                    widget.setResponder(value -> getItemStack(value, 0, itemStack -> SouperSecretSettingsClient.soupData.config.clearItem = itemStack));
                     widget.disableDrag = true;
                     return widget;
                 })
@@ -114,9 +114,9 @@ public class OptionScreen extends ScrollScreen {
                 () -> SouperSecretSettingsClient.translate("option.gui.sound."+(SouperSecretSettingsClient.soupData.config.randomSound ? "on" : "off")))
         );
 
-        widgets.add(new TextWidget(SoupGui.listX, 0, widgetWidth, 8, SouperSecretSettingsClient.translate("option.gui.misc"), ClientData.minecraft.textRenderer));
-        widgets.add(ButtonWidget.builder(SouperSecretSettingsClient.translate("option.gui.luminance"), (buttonWidget) -> ClientData.minecraft.setScreen(new ConfigScreen(this, false, DateHelper.isPride()))).dimensions(SoupGui.listX, 0, widgetWidth, 20).build());
-        widgets.add(ButtonWidget.builder(SouperSecretSettingsClient.translate("option.gui.keybinds"), (buttonWidget) -> ClientData.minecraft.setScreen(new KeybindsScreen(this, ClientData.minecraft.options))).dimensions(SoupGui.listX, 0, widgetWidth, 20).build());
+        widgets.add(new StringWidget(SoupGui.listX, 0, widgetWidth, 8, SouperSecretSettingsClient.translate("option.gui.misc"), ClientData.minecraft.font));
+        widgets.add(Button.builder(SouperSecretSettingsClient.translate("option.gui.luminance"), (buttonWidget) -> ClientData.minecraft.setScreen(new ConfigScreen(this, false, DateHelper.isPride()))).bounds(SoupGui.listX, 0, widgetWidth, 20).build());
+        widgets.add(Button.builder(SouperSecretSettingsClient.translate("option.gui.keybinds"), (buttonWidget) -> ClientData.minecraft.setScreen(new KeyBindsScreen(this, ClientData.minecraft.options))).bounds(SoupGui.listX, 0, widgetWidth, 20).build());
         widgets.add(new CycleWidget(SoupGui.listX, widgetWidth,
                 (direction) -> SouperSecretSettingsClient.soupData.config.messageFilter = CycleWidget.cycleInt(SouperSecretSettingsClient.soupData.config.messageFilter - direction, 2),
                 () -> SouperSecretSettingsClient.translate("option.gui.filter."+SouperSecretSettingsClient.soupData.config.messageFilter))
@@ -127,22 +127,22 @@ public class OptionScreen extends ScrollScreen {
         );
         widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, SouperSecretSettingsClient.translate("option.gui.undo_limit"),
                 (x, width) -> {
-                    DraggableIntWidget widget = new DraggableIntWidget(x, width, 20, Text.empty(), 16, Integer.MAX_VALUE, Actions.defaultLength, (value) -> SouperSecretSettingsClient.soupData.config.undoLimit = value);
-                    widget.setText(Integer.toString(SouperSecretSettingsClient.soupData.config.undoLimit));
+                    DraggableIntWidget widget = new DraggableIntWidget(x, width, 20, Component.empty(), 16, Integer.MAX_VALUE, Actions.defaultLength, (value) -> SouperSecretSettingsClient.soupData.config.undoLimit = value);
+                    widget.setValue(Integer.toString(SouperSecretSettingsClient.soupData.config.undoLimit));
                     return widget;
                 })
         );
 
         int height = -2;
-        for (ClickableWidget widget : widgets) {
-            if (widget instanceof TextWidget) {
+        for (AbstractWidget widget : widgets) {
+            if (widget instanceof StringWidget) {
                 height += 5;
             }
 
             if (widget instanceof LabelledWidget labelledWidget) {
-                addSelectableChild(labelledWidget.widget);
+                addWidget(labelledWidget.widget);
             } else {
-                addSelectableChild(widget);
+                addWidget(widget);
             }
             height += widget.getHeight() + SoupGui.listGap;
         }
@@ -155,8 +155,8 @@ public class OptionScreen extends ScrollScreen {
     public void setScroll(int scroll) {
         int y = (SoupGui.headerHeight - scroll) + SoupGui.listGap*2 - 2;
 
-        for (ClickableWidget widget : widgets) {
-            if (widget instanceof TextWidget) {
+        for (AbstractWidget widget : widgets) {
+            if (widget instanceof StringWidget) {
                 y += 5;
             }
 
@@ -168,20 +168,20 @@ public class OptionScreen extends ScrollScreen {
     }
 
     @Override
-    protected void renderScrollables(DrawContext context, int mouseX, int mouseY, float delta) {
-        for (ClickableWidget widget : widgets) {
+    protected void renderScrollables(GuiGraphics context, int mouseX, int mouseY, float delta) {
+        for (AbstractWidget widget : widgets) {
             widget.render(context, mouseX, mouseY, delta);
         }
     }
 
     @Override
-    public void close() {
+    public void onClose() {
         SouperSecretSettingsClient.soupGui.onClose();
     }
 
     private List<String> getItemSuggestions() {
-        List<String> items = new ArrayList<>(Registries.ITEM.size());
-        Registries.ITEM.forEach((item) -> items.add(item.toString()));
+        List<String> items = new ArrayList<>(BuiltInRegistries.ITEM.size());
+        BuiltInRegistries.ITEM.forEach((item) -> items.add(item.toString()));
         return items;
     }
 
@@ -198,16 +198,16 @@ public class OptionScreen extends ScrollScreen {
         itemFutures[index] = CompletableFuture.runAsync(() -> {
             try {
                 StringReader stringReader = new StringReader(s);
-                ItemStringReader.ItemResult result = new ItemStringReader(BuiltinRegistries.createWrapperLookup()).consume(stringReader);
+                ItemParser.ItemResult result = new ItemParser(VanillaRegistries.createLookup()).parse(stringReader);
                 ItemStack itemStack = new ItemStack(result.item(), 1);
-                itemStack.applyUnvalidatedChanges(result.components());
+                itemStack.applyComponents(result.components());
                 consumer.accept(itemStack);
             } catch (Exception ignored) {}
         });
     }
 
     private String itemStackToString(ItemStack itemStack) {
-        return new ItemStackArgument(itemStack.getRegistryEntry(), itemStack.getComponentChanges()).asString(BuiltinRegistries.createWrapperLookup());
+        return new ItemInput(itemStack.getItemHolder(), itemStack.getComponentsPatch()).serialize(VanillaRegistries.createLookup());
     }
 
     private static class SoupAlphaSlider extends ConfigScreen.AlphaSlider {
@@ -216,10 +216,10 @@ public class OptionScreen extends ScrollScreen {
         }
 
         @Override
-        public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
+        public void renderWidget(@NotNull GuiGraphics context, int mouseX, int mouseY, float delta) {
             super.renderWidget(context, mouseX, mouseY, delta);
-            if (hovered) {
-                SouperSecretSettingsClient.soupGui.setHoverText(SouperSecretSettingsClient.translate("option.gui.alpha", Keybindings.adjustAlpha.getBoundKeyLocalizedText()));
+            if (isHovered) {
+                SouperSecretSettingsClient.soupGui.setHoverText(SouperSecretSettingsClient.translate("option.gui.alpha", Keybindings.adjustAlpha.getTranslatedKeyMessage()));
             }
         }
     }

@@ -9,11 +9,10 @@ import com.nettakrim.souper_secret_settings.gui.SoupGui;
 import com.nettakrim.souper_secret_settings.shaders.Group;
 import com.nettakrim.souper_secret_settings.shaders.ShaderData;
 import com.nettakrim.souper_secret_settings.shaders.SoupRenderer;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-
 import java.util.Map;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 
 public class ShaderAdditionScreen extends ListAdditionScreen<ShaderData> {
     protected final ShaderScreen shaderScreen;
@@ -28,15 +27,15 @@ public class ShaderAdditionScreen extends ListAdditionScreen<ShaderData> {
 
     int[] scrolls = new int[2];
 
-    ButtonWidget createButton;
+    Button createButton;
 
     @Override
     protected int createHeader() {
-        addDrawableChild(ButtonWidget.builder(Text.translatable("gui.back"), (widget) -> close()).dimensions(SoupGui.listGap, SoupGui.listGap, SoupGui.headerWidthSmall, 20).build());
+        addRenderableWidget(Button.builder(Component.translatable("gui.back"), (widget) -> onClose()).bounds(SoupGui.listGap, SoupGui.listGap, SoupGui.headerWidthSmall, 20).build());
 
         int halfWidth = (SoupGui.headerWidthSmall-SoupGui.listGap)/2;
-        addDrawableChild(ButtonWidget.builder(SouperSecretSettingsClient.translate(isGroups ? "gui.groups" : (shaderScreen.registry == SoupRenderer.modifierRegistry ? "gui.modifiers" : "gui.shaders")), (widget) -> toggleMode()).dimensions(SoupGui.listGap, SoupGui.listGap*2 + 20, halfWidth, 20).build());
-        createButton = addDrawableChild(ButtonWidget.builder(Text.literal("Create New"), (widget) -> createGroup()).dimensions(SoupGui.listGap*2+halfWidth, SoupGui.listGap*2 + 20, halfWidth, 20).build());
+        addRenderableWidget(Button.builder(SouperSecretSettingsClient.translate(isGroups ? "gui.groups" : (shaderScreen.registry == SoupRenderer.modifierRegistry ? "gui.modifiers" : "gui.shaders")), (widget) -> toggleMode()).bounds(SoupGui.listGap, SoupGui.listGap*2 + 20, halfWidth, 20).build());
+        createButton = addRenderableWidget(Button.builder(Component.literal("Create New"), (widget) -> createGroup()).bounds(SoupGui.listGap*2+halfWidth, SoupGui.listGap*2 + 20, halfWidth, 20).build());
         createButton.active = isGroups;
 
         return SoupGui.listStart;
@@ -58,7 +57,7 @@ public class ShaderAdditionScreen extends ListAdditionScreen<ShaderData> {
     }
 
     protected AdditionButton createGroupButton(String name, Group group) {
-        Couple<Text, Text> text;
+        Couple<Component, Component> text;
         group.requestUpdate();
 
         String title = name.replaceFirst("/", ":");
@@ -68,7 +67,7 @@ public class ShaderAdditionScreen extends ListAdditionScreen<ShaderData> {
             text = new Couple<>(SouperSecretSettingsClient.translate("gui.group_error", title).setStyle(Style.EMPTY.withColor(0xFF1010)), SouperSecretSettingsClient.translate("gui.group_loop_index", recursionIndex));
         } else {
             int size = group.getComputed(shaderScreen.registry, name).size();
-            text = new Couple<>(Text.literal(title), SouperSecretSettingsClient.translate("shader.group_suggestion", size));
+            text = new Couple<>(Component.literal(title), SouperSecretSettingsClient.translate("shader.group_suggestion", size));
         }
 
         AdditionButton groupButton = new AdditionButton("random_"+name, text, SoupGui.listX, SoupGui.listWidth, 20, this::add);
@@ -78,7 +77,7 @@ public class ShaderAdditionScreen extends ListAdditionScreen<ShaderData> {
         }
         groupButton.addEditListener(this::selectGroup);
         children.add(groupButton);
-        addSelectableChild(groupButton);
+        addWidget(groupButton);
 
         return groupButton;
     }
@@ -92,7 +91,7 @@ public class ShaderAdditionScreen extends ListAdditionScreen<ShaderData> {
     protected void toggleMode() {
         isGroups = !isGroups;
         int scroll = scrolls[isGroups ? 1 : 0];
-        clearAndInit();
+        rebuildWidgets();
         scrollWidget.offsetScroll(scroll);
     }
 
@@ -126,12 +125,12 @@ public class ShaderAdditionScreen extends ListAdditionScreen<ShaderData> {
     }
 
     @Override
-    public void close() {
+    public void onClose() {
         if (changedGroups) {
             shaderScreen.recalculateAdditions();
             SouperSecretSettingsClient.soupData.changeData(true);
             SouperSecretSettingsClient.soupData.saveConfig();
         }
-        super.close();
+        super.onClose();
     }
 }

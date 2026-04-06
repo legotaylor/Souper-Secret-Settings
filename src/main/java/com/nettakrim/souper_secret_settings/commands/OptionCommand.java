@@ -12,17 +12,16 @@ import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.actions.Actions;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.argument.ItemStackArgument;
-import net.minecraft.command.argument.ItemStackArgumentType;
-import net.minecraft.command.argument.TimeArgumentType;
-import net.minecraft.item.ItemStack;
-
+import net.minecraft.commands.CommandBuildContext;
+import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.arguments.TimeArgument;
+import net.minecraft.commands.arguments.item.ItemArgument;
+import net.minecraft.commands.arguments.item.ItemInput;
+import net.minecraft.world.item.ItemStack;
 import java.util.List;
 
 public class OptionCommand {
-    public static void register(RootCommandNode<FabricClientCommandSource> root, CommandRegistryAccess commandRegistryAccess) {
+    public static void register(RootCommandNode<FabricClientCommandSource> root, CommandBuildContext commandRegistryAccess) {
         LiteralCommandNode<FabricClientCommandSource> commandNode = ClientCommandManager.literal("soup:option").build();
         root.addChild(commandNode);
 
@@ -34,8 +33,8 @@ public class OptionCommand {
         LiteralCommandNode<FabricClientCommandSource> randomNode = ClientCommandManager
                 .literal("item_random")
                 .then(
-                        ClientCommandManager.argument("item", ItemStackArgumentType.itemStack(commandRegistryAccess))
-                                .executes(context -> setRandomItem(ItemStackArgumentType.getItemStackArgument(context, "item")))
+                        ClientCommandManager.argument("item", ItemArgument.item(commandRegistryAccess))
+                                .executes(context -> setRandomItem(ItemArgument.getItem(context, "item")))
                 )
                 .executes(context -> queryRandomItem())
                 .build();
@@ -44,8 +43,8 @@ public class OptionCommand {
         LiteralCommandNode<FabricClientCommandSource> clearNode = ClientCommandManager
                 .literal("item_clear")
                 .then(
-                        ClientCommandManager.argument("item", ItemStackArgumentType.itemStack(commandRegistryAccess))
-                                .executes(context -> setClearItem(ItemStackArgumentType.getItemStackArgument(context, "item")))
+                        ClientCommandManager.argument("item", ItemArgument.item(commandRegistryAccess))
+                                .executes(context -> setClearItem(ItemArgument.getItem(context, "item")))
                 )
                 .executes(context -> queryClearItem())
                 .build();
@@ -75,7 +74,7 @@ public class OptionCommand {
         LiteralCommandNode<FabricClientCommandSource> randomDurationNode = ClientCommandManager
                 .literal("duration")
                 .then(
-                        ClientCommandManager.argument("duration", TimeArgumentType.time())
+                        ClientCommandManager.argument("duration", TimeArgument.time())
                                 .suggests(durationSuggestion)
                                 .executes(context -> setRandomDuration(IntegerArgumentType.getInteger(context, "duration")))
                 )
@@ -166,8 +165,8 @@ public class OptionCommand {
         commandNode.addChild(undoLimitNode);
     }
 
-    public static int setRandomItem(ItemStackArgument itemStack) throws CommandSyntaxException {
-        SouperSecretSettingsClient.soupData.config.randomItem = itemStack.createStack(1, false);
+    public static int setRandomItem(ItemInput itemStack) throws CommandSyntaxException {
+        SouperSecretSettingsClient.soupData.config.randomItem = itemStack.createItemStack(1, false);
         sayItem("option.random.set", SouperSecretSettingsClient.soupData.config.randomItem, 0);
         SouperSecretSettingsClient.soupData.changeData(false);
         return 1;
@@ -178,8 +177,8 @@ public class OptionCommand {
         return 1;
     }
 
-    public static int setClearItem(ItemStackArgument itemStack) throws CommandSyntaxException {
-        SouperSecretSettingsClient.soupData.config.clearItem = itemStack.createStack(1, false);
+    public static int setClearItem(ItemInput itemStack) throws CommandSyntaxException {
+        SouperSecretSettingsClient.soupData.config.clearItem = itemStack.createItemStack(1, false);
         sayItem("option.clear.set", SouperSecretSettingsClient.soupData.config.clearItem, 0);
         SouperSecretSettingsClient.soupData.changeData(false);
         return 1;
@@ -228,8 +227,8 @@ public class OptionCommand {
 
     public static void sayItem(String key, ItemStack itemStack, int priority) {
         String s = itemStack.getItem().toString();
-        if (!itemStack.getComponentChanges().isEmpty()) {
-            s += " "+itemStack.getComponentChanges().toString();
+        if (!itemStack.getComponentsPatch().isEmpty()) {
+            s += " "+itemStack.getComponentsPatch();
         }
         SouperSecretSettingsClient.say(key, priority, s);
     }
@@ -295,6 +294,6 @@ public class OptionCommand {
             return builder.buildFuture();
         }
 
-        return CommandSource.suggestMatching(List.of("t","s","d"), builder.createOffset(builder.getStart() + stringReader.getCursor()));
+        return SharedSuggestionProvider.suggest(List.of("t","s","d"), builder.createOffset(builder.getStart() + stringReader.getCursor()));
     };
 }

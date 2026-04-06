@@ -4,24 +4,24 @@ import com.mclegoman.luminance.client.keybindings.KeybindingHelper;
 import com.mclegoman.luminance.client.shaders.RenderLocations;
 import com.nettakrim.souper_secret_settings.commands.OptionCommand;
 import com.nettakrim.souper_secret_settings.commands.SouperSecretSettingsCommands;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.resources.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 public class Keybinds {
-    public static final KeyBinding openGUI = KeybindingHelper.getKeybinding(SouperSecretSettingsClient.MODID, SouperSecretSettingsClient.MODID, "open_gui", GLFW.GLFW_KEY_U);
-    public static final KeyBinding toggleSoup = KeybindingHelper.getKeybinding(SouperSecretSettingsClient.MODID, SouperSecretSettingsClient.MODID, "cycle_mode", GLFW.GLFW_KEY_UNKNOWN);
-    public static final KeyBinding clear = KeybindingHelper.getKeybinding(SouperSecretSettingsClient.MODID, SouperSecretSettingsClient.MODID, "clear", GLFW.GLFW_KEY_UNKNOWN);
-    public static final KeyBinding undo = KeybindingHelper.getKeybinding(SouperSecretSettingsClient.MODID, SouperSecretSettingsClient.MODID, "undo", GLFW.GLFW_KEY_UNKNOWN);
-    public static final KeyBinding redo = KeybindingHelper.getKeybinding(SouperSecretSettingsClient.MODID, SouperSecretSettingsClient.MODID, "redo", GLFW.GLFW_KEY_UNKNOWN);
-    public static final KeyBinding random = KeybindingHelper.getKeybinding(SouperSecretSettingsClient.MODID, SouperSecretSettingsClient.MODID, "random", GLFW.GLFW_KEY_UNKNOWN);
-    public static final KeyBinding sound = KeybindingHelper.getKeybinding(SouperSecretSettingsClient.MODID, SouperSecretSettingsClient.MODID, "sound", GLFW.GLFW_KEY_UNKNOWN);
+    public static final KeyMapping openGUI = KeybindingHelper.getKeybinding(SouperSecretSettingsClient.MODID, SouperSecretSettingsClient.MODID, "open_gui", GLFW.GLFW_KEY_U);
+    public static final KeyMapping toggleSoup = KeybindingHelper.getKeybinding(SouperSecretSettingsClient.MODID, SouperSecretSettingsClient.MODID, "cycle_mode", GLFW.GLFW_KEY_UNKNOWN);
+    public static final KeyMapping clear = KeybindingHelper.getKeybinding(SouperSecretSettingsClient.MODID, SouperSecretSettingsClient.MODID, "clear", GLFW.GLFW_KEY_UNKNOWN);
+    public static final KeyMapping undo = KeybindingHelper.getKeybinding(SouperSecretSettingsClient.MODID, SouperSecretSettingsClient.MODID, "undo", GLFW.GLFW_KEY_UNKNOWN);
+    public static final KeyMapping redo = KeybindingHelper.getKeybinding(SouperSecretSettingsClient.MODID, SouperSecretSettingsClient.MODID, "redo", GLFW.GLFW_KEY_UNKNOWN);
+    public static final KeyMapping random = KeybindingHelper.getKeybinding(SouperSecretSettingsClient.MODID, SouperSecretSettingsClient.MODID, "random", GLFW.GLFW_KEY_UNKNOWN);
+    public static final KeyMapping sound = KeybindingHelper.getKeybinding(SouperSecretSettingsClient.MODID, SouperSecretSettingsClient.MODID, "sound", GLFW.GLFW_KEY_UNKNOWN);
 
     public static void tick() {
-        if (openGUI.wasPressed()) {
+        if (openGUI.consumeClick()) {
             SouperSecretSettingsClient.soupGui.open(SouperSecretSettingsClient.soupGui.getCurrentScreenType(), true);
         }
-        if (toggleSoup.wasPressed()) {
+        if (toggleSoup.consumeClick()) {
             if (SouperSecretSettingsClient.soupData.config.disableState > 0) {
                 SouperSecretSettingsClient.soupData.config.disableState = 0;
                 OptionCommand.setRenderType(RenderLocations.WORLD);
@@ -31,19 +31,19 @@ public class Keybinds {
                 OptionCommand.toggle(false);
             }
         }
-        if (undo.wasPressed()) {
+        if (undo.consumeClick()) {
             SouperSecretSettingsClient.actions.undo();
         }
-        if (redo.wasPressed()) {
+        if (redo.consumeClick()) {
             SouperSecretSettingsClient.actions.redo();
         }
-        if (clear.wasPressed()) {
+        if (clear.consumeClick()) {
             SouperSecretSettingsCommands.layerCommand.removeAll(null);
         }
-        if (random.wasPressed()) {
-            SouperSecretSettingsCommands.shaderCommand.add(Identifier.of("random_edible"), 1, -1, true);
+        if (random.consumeClick()) {
+            SouperSecretSettingsCommands.shaderCommand.add(Identifier.parse("random_edible"), 1, -1, true);
         }
-        if (sound.wasPressed()) {
+        if (sound.consumeClick()) {
             RandomSound.play();
         }
     }

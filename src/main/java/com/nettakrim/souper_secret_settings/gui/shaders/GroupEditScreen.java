@@ -10,9 +10,6 @@ import com.nettakrim.souper_secret_settings.gui.ListWidget;
 import com.nettakrim.souper_secret_settings.gui.SoupGui;
 import com.nettakrim.souper_secret_settings.gui.SuggestionTextFieldWidget;
 import com.nettakrim.souper_secret_settings.shaders.Group;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,6 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 
 public class GroupEditScreen extends ListScreen<String> {
     protected final ShaderAdditionScreen groupScreen;
@@ -40,21 +40,21 @@ public class GroupEditScreen extends ListScreen<String> {
 
     @Override
     protected int createHeader() {
-        addDrawableChild(ButtonWidget.builder(Text.translatable("gui.back"), (widget) -> close()).dimensions(SoupGui.listGap, SoupGui.listGap, SoupGui.headerWidthSmall, 20).build());
+        addRenderableWidget(Button.builder(Component.translatable("gui.back"), (widget) -> onClose()).bounds(SoupGui.listGap, SoupGui.listGap, SoupGui.headerWidthSmall, 20).build());
 
-        nameWidget = new SuggestionTextFieldWidget(SoupGui.listGap, SoupGui.headerWidthSmall, 20, Text.literal("name"), false);
+        nameWidget = new SuggestionTextFieldWidget(SoupGui.listGap, SoupGui.headerWidthSmall, 20, Component.literal("name"), false);
         nameWidget.setY(SoupGui.listGap*2 + 20);
-        nameWidget.setText(name.replace("user/", ""));
-        nameWidget.setChangedListener((s) -> name = s);
+        nameWidget.setValue(name.replace("user/", ""));
+        nameWidget.setResponder((s) -> name = s);
         nameWidget.setListeners(() -> List.of(startingName), (s) -> resolveName(false), false);
-        nameWidget.setTextPredicate(Identifier::isPathValid);
+        nameWidget.setFilter(Identifier::isValidPath);
         nameWidget.active = name.startsWith("user/");
-        addDrawableChild(nameWidget);
+        addRenderableWidget(nameWidget);
 
         if (!nameWidget.active) {
             nameWidget.setEditable(false);
             nameWidget.setWidth((nameWidget.getWidth()-SoupGui.listGap)/2);
-            addDrawableChild(ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.group_reset"), (widget) -> reset()).dimensions(SoupGui.listGap+nameWidget.getWidth()+SoupGui.listGap, nameWidget.getY(), nameWidget.getWidth(), 20).build());
+            addRenderableWidget(Button.builder(SouperSecretSettingsClient.translate("gui.group_reset"), (widget) -> reset()).bounds(SoupGui.listGap+nameWidget.getWidth()+SoupGui.listGap, nameWidget.getY(), nameWidget.getWidth(), 20).build());
         }
 
         return SoupGui.listStart;
@@ -98,9 +98,9 @@ public class GroupEditScreen extends ListScreen<String> {
     }
 
     @Override
-    protected Couple<Text, Text> getAdditionText(String addition) {
+    protected Couple<Component, Component> getAdditionText(String addition) {
         if (addition.equals("all")) {
-            return new Couple<>(Text.literal(addition), SouperSecretSettingsClient.translate("shader.group_suggestion", Shaders.getRegistry(groupScreen.shaderScreen.registry).size()));
+            return new Couple<>(Component.literal(addition), SouperSecretSettingsClient.translate("shader.group_suggestion", Shaders.getRegistry(groupScreen.shaderScreen.registry).size()));
         }
         return groupScreen.shaderScreen.getAdditionText(addition);
     }
@@ -130,7 +130,7 @@ public class GroupEditScreen extends ListScreen<String> {
     }
 
     @Override
-    public void close() {
+    public void onClose() {
         resolveName(true);
         group.changed = true;
         ClientData.minecraft.setScreen(groupScreen);
@@ -145,8 +145,8 @@ public class GroupEditScreen extends ListScreen<String> {
 
         Map<String, Group> map = groupScreen.getRegistryGroups();
         if (map.containsKey(newName)) {
-            nameWidget.setText(startingName);
-            nameWidget.setCursorToEnd(false);
+            nameWidget.setValue(startingName);
+            nameWidget.moveCursorToEnd(false);
         }
 
         if (move) {
@@ -195,6 +195,6 @@ public class GroupEditScreen extends ListScreen<String> {
             group.entries.add("+random_"+startingName);
         }
         group.changed = true;
-        clearAndInit();
+        rebuildWidgets();
     }
 }

@@ -1,26 +1,25 @@
 package com.nettakrim.souper_secret_settings.gui;
 
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.text.Text;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.network.chat.Component;
 
 public class ListAdditionScreen<V> extends ScrollScreen {
     public ListScreen<V> listScreen;
 
-    protected List<ClickableWidget> children;
+    protected List<AbstractWidget> children;
 
     protected String lastAddition;
 
     protected int headerHeight;
 
     protected ListAdditionScreen(ListScreen<V> listScreen) {
-        super(Text.empty());
+        super(Component.empty());
         this.listScreen = listScreen;
         this.lastAddition = null;
     }
@@ -39,7 +38,7 @@ public class ListAdditionScreen<V> extends ScrollScreen {
     }
 
     protected int createHeader() {
-        addDrawableChild(ButtonWidget.builder(Text.translatable("gui.back"), (widget) -> close()).dimensions(SoupGui.listGap, SoupGui.listGap, SoupGui.headerWidthSmall, 20).build());
+        addRenderableWidget(Button.builder(Component.translatable("gui.back"), (widget) -> onClose()).bounds(SoupGui.listGap, SoupGui.listGap, SoupGui.headerWidthSmall, 20).build());
 
         return 20+SoupGui.listGap*2;
     }
@@ -50,13 +49,13 @@ public class ListAdditionScreen<V> extends ScrollScreen {
             additionButton.addRemoveListener(this::removeAddition);
         }
         children.add(additionButton);
-        addSelectableChild(additionButton);
+        addWidget(additionButton);
     }
 
     protected void add(String addition) {
         if (lastAddition != null) {
             if (lastAddition.equals(addition) && !(listScreen.canUseRandom() && lastAddition.startsWith("random"))) {
-                close();
+                onClose();
                 return;
             }
 
@@ -71,13 +70,13 @@ public class ListAdditionScreen<V> extends ScrollScreen {
         }
 
         if (!listScreen.canPreview()) {
-            close();
+            onClose();
         }
     }
 
     @Override
-    public void renderScrollables(DrawContext context, int mouseX, int mouseY, float delta) {
-        for (Drawable drawable : children) {
+    public void renderScrollables(GuiGraphics context, int mouseX, int mouseY, float delta) {
+        for (Renderable drawable : children) {
             drawable.render(context, mouseX, mouseY, delta);
         }
     }
@@ -85,20 +84,19 @@ public class ListAdditionScreen<V> extends ScrollScreen {
     @Override
     public void setScroll(int scroll) {
         int y = headerHeight - scroll;
-        for (ClickableWidget widget : children) {
+        for (AbstractWidget widget : children) {
             widget.setY(y);
             y += widget.getHeight()+SoupGui.listGap;
         }
     }
 
     @Override
-    public void close() {
-        assert client != null;
-        client.setScreen(listScreen);
+    public void onClose() {
+        minecraft.setScreen(listScreen);
     }
 
     protected void removeAddition(AdditionButton button) {
-        remove(button);
+        removeWidget(button);
         children.remove(button);
         scrollWidget.setContentHeight(children.size()*(20+SoupGui.listGap) - SoupGui.listGap);
 

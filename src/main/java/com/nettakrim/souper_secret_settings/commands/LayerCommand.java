@@ -14,10 +14,9 @@ import com.nettakrim.souper_secret_settings.data.LayerCodecs;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import java.util.List;
 import java.util.Optional;
 
@@ -138,10 +137,10 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
                 )
                 .then(
                         ClientCommandManager.literal("load")
-                                .executes(context -> loadFromString(ClientData.minecraft.keyboard.getClipboard()))
+                                .executes(context -> loadFromString(ClientData.minecraft.keyboardHandler.getClipboard()))
                                 .then(
                                         ClientCommandManager.literal("clipboard")
-                                                .executes(context -> loadFromString(ClientData.minecraft.keyboard.getClipboard()))
+                                                .executes(context -> loadFromString(ClientData.minecraft.keyboardHandler.getClipboard()))
                                 )
                                 .then(
                                         ClientCommandManager.literal("text")
@@ -275,8 +274,8 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
     }
 
     private int info() {
-        SouperSecretSettingsClient.sayStyled(Text.translatable(SouperSecretSettingsClient.MODID+".layer.info.name", SouperSecretSettingsClient.soupRenderer.activeLayer.name), 1);
-        for (MutableText text : SouperSecretSettingsClient.soupRenderer.activeLayer.getInfo()) {
+        SouperSecretSettingsClient.sayStyled(Component.translatable(SouperSecretSettingsClient.MODID+".layer.info.name", SouperSecretSettingsClient.soupRenderer.activeLayer.name), 1);
+        for (MutableComponent text : SouperSecretSettingsClient.soupRenderer.activeLayer.getInfo()) {
             SouperSecretSettingsClient.sayRaw(text.setStyle(Style.EMPTY.withColor(SouperSecretSettingsClient.textColor)), 1);
         }
         return 1;
@@ -297,7 +296,7 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
 
     private int copyCodec(LayerCodecs layerCodec, String name, String key) {
         String text = LayerCodecs.CODEC.encodeStart(JsonOps.INSTANCE, layerCodec).getOrThrow().toString();
-        ClientData.minecraft.keyboard.setClipboard(text);
+        ClientData.minecraft.keyboardHandler.setClipboard(text);
         SouperSecretSettingsClient.say(key, 0, name, text.length());
         return 1;
     }
@@ -336,7 +335,7 @@ public class LayerCommand extends ListCommand<ShaderLayer> {
 
     private static final SuggestionProvider<FabricClientCommandSource> layerIndexes = SouperSecretSettingsCommands.createIndexSuggestion(
             (context) -> SouperSecretSettingsClient.soupRenderer.shaderLayers,
-            (message) -> Text.literal(message.name)
+            (message) -> Component.literal(message.name)
     );
 
     @Override

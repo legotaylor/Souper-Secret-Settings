@@ -1,6 +1,6 @@
 package com.nettakrim.souper_secret_settings.shaders.calculations.oscillator;
 
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.Mth;
 
 public class SineCalculation extends PeriodicCalculation {
     public SineCalculation(String id) {
@@ -9,7 +9,7 @@ public class SineCalculation extends PeriodicCalculation {
 
     @Override
     protected float periodicCalculation(float t) {
-        return (MathHelper.cos(t*MathHelper.TAU)+1)/2f;
+        return (Mth.cos(t*Mth.TWO_PI)+1)/2f;
     }
 }
 

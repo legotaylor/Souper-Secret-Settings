@@ -6,13 +6,13 @@ import com.mclegoman.luminance.client.util.JsonResourceReloader;
 import com.mojang.serialization.JsonOps;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.data.LayerCodecs;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.profiler.Profiler;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.profiling.ProfilerFiller;
+import org.jetbrains.annotations.NotNull;
 
 public class SoupReloader extends JsonResourceReloader {
     public static final String resourceLocation = "souper_secret_settings";
@@ -21,7 +21,7 @@ public class SoupReloader extends JsonResourceReloader {
     }
 
     @Override
-    protected void apply(Map<Identifier, JsonElement> prepared, ResourceManager manager, Profiler profiler) {
+    protected void apply(Map<Identifier, JsonElement> prepared, @NotNull ResourceManager manager, @NotNull ProfilerFiller profiler) {
         SouperSecretSettingsClient.soupData.resourceLayers.clear();
         SouperSecretSettingsClient.soupData.resourceGroups.clear();
 
@@ -29,7 +29,7 @@ public class SoupReloader extends JsonResourceReloader {
             try {
                 if (identifier.getPath().startsWith("layers/")) {
                     Optional<LayerCodecs> layerCodecs = LayerCodecs.CODEC.parse(JsonOps.INSTANCE, jsonElement).result();
-                    layerCodecs.ifPresent(codecs -> SouperSecretSettingsClient.soupData.resourceLayers.put(Identifier.of(identifier.getNamespace(), identifier.getPath().substring(7)), codecs));
+                    layerCodecs.ifPresent(codecs -> SouperSecretSettingsClient.soupData.resourceLayers.put(Identifier.fromNamespaceAndPath(identifier.getNamespace(), identifier.getPath().substring(7)), codecs));
                 }
                 else if (identifier.getPath().startsWith("groups/")) {
                     String full = identifier.getPath().substring(7);

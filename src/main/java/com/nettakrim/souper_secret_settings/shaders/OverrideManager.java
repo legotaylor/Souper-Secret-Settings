@@ -6,13 +6,12 @@ import com.mclegoman.luminance.client.shaders.interfaces.PostPassInterface;
 import com.mclegoman.luminance.client.shaders.overrides.UniformOverride;
 import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
 import com.mclegoman.luminance.common.util.Couple;
-import net.minecraft.client.gl.PostEffectPass;
-import net.minecraft.util.Identifier;
-
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import net.minecraft.client.renderer.PostPass;
+import net.minecraft.resources.Identifier;
 
 public class OverrideManager {
     private static Queue<Couple<ShaderData, Identifier>> currentShaders;
@@ -31,7 +30,7 @@ public class OverrideManager {
         }
     }
 
-    private static void searchFor(PostEffectPass postEffectPass) {
+    private static void searchFor(PostPass postEffectPass) {
         if (currentShaders == null) return;
 
         while (!currentShaders.isEmpty()) {
@@ -43,7 +42,7 @@ public class OverrideManager {
             }
 
             if (shaderData.getFirst().active) {
-                List<PostEffectPass> currentPasses = ((PostChainInterface)shaderData.getFirst().shader.getPostProcessor()).luminance$getPasses(shaderData.getSecond());
+                List<PostPass> currentPasses = ((PostChainInterface)shaderData.getFirst().shader.getPostProcessor()).luminance$getPasses(shaderData.getSecond());
                 // render queue is only added to when the passes *do* exist
                 assert currentPasses != null;
 
@@ -70,7 +69,7 @@ public class OverrideManager {
 
     public static class BeforeShaderRender implements Runnables.Shader {
         @Override
-        public void run(PostEffectPass postEffectPass) {
+        public void run(PostPass postEffectPass) {
             searchFor(postEffectPass);
             if (currentShaders == null || currentShaders.isEmpty()) {
                 return;
@@ -93,7 +92,7 @@ public class OverrideManager {
 
     public static class AfterShaderRender implements Runnables.Shader {
         @Override
-        public void run(PostEffectPass postEffectPass) {
+        public void run(PostPass postEffectPass) {
             if (currentShaders == null || currentShaders.isEmpty()) {
                 return;
             }

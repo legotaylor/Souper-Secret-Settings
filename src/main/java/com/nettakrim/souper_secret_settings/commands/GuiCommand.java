@@ -22,7 +22,7 @@ public class GuiCommand {
 
     public static int open(SoupGui.ScreenType screenType) {
         // delay by a tick, since the chat screen is closed *after* the command is executed
-        ClientData.minecraft.send(() -> SouperSecretSettingsClient.soupGui.open(screenType, true));
+        ClientData.minecraft.schedule(() -> SouperSecretSettingsClient.soupGui.open(screenType, true));
         return 1;
     }
 }

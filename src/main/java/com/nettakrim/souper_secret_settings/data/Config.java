@@ -7,9 +7,8 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.actions.Actions;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;

@@ -12,10 +12,10 @@ import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.shaders.Group;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.DataWriter;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.Nullable;
 
@@ -248,7 +248,7 @@ public class SoupData {
                 try {
                     jsonWriter.setSerializeNulls(false);
                     jsonWriter.setIndent("");
-                    JsonHelper.writeSorted(jsonWriter, json, DataProvider.JSON_KEY_SORTING_COMPARATOR);
+                    GsonHelper.writeValue(jsonWriter, json, DataProvider.KEY_COMPARATOR);
                 } catch (Throwable var9) {
                     try {
                         jsonWriter.close();
@@ -260,12 +260,12 @@ public class SoupData {
                 }
 
                 jsonWriter.close();
-                DataWriter.UNCACHED.write(path, byteArrayOutputStream.toByteArray(), hashingOutputStream.hash());
+                CachedOutput.NO_CACHE.writeIfNeeded(path, byteArrayOutputStream.toByteArray(), hashingOutputStream.hash());
             } catch (IOException e) {
                 SouperSecretSettingsClient.log("Failed to save file to", path, e);
             }
 
-        }, Util.getMainWorkerExecutor().named("saveStable"));
+        }, Util.backgroundExecutor().forName("saveStable"));
     }
 
     protected static void deleteFile(Path path) {

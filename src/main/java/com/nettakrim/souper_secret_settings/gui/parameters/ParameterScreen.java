@@ -9,11 +9,11 @@ import com.nettakrim.souper_secret_settings.gui.SoupGui;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import com.nettakrim.souper_secret_settings.shaders.calculations.Calculations;
 import com.nettakrim.souper_secret_settings.shaders.calculations.Calculation;
-import net.minecraft.client.gui.DrawContext;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import net.minecraft.client.gui.GuiGraphics;
+import org.jetbrains.annotations.NotNull;
 
 public class ParameterScreen extends ListScreen<Calculation> {
     public final ShaderLayer layer;
@@ -24,7 +24,7 @@ public class ParameterScreen extends ListScreen<Calculation> {
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void render(@NotNull GuiGraphics context, int mouseX, int mouseY, float delta) {
         ShaderTime.currentRenderLocation = SouperSecretSettingsClient.soupRenderer.getRenderType();
         super.render(context, mouseX, mouseY, delta);
         ShaderTime.currentRenderLocation = RenderLocations.UI;

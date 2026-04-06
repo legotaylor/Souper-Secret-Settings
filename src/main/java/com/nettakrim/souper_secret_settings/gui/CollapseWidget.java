@@ -1,19 +1,19 @@
 package com.nettakrim.souper_secret_settings.gui;
 
-import net.minecraft.client.gui.Click;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.text.Text;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
-public abstract class CollapseWidget extends ClickableWidget implements ListChild {
+public abstract class CollapseWidget extends AbstractWidget implements ListChild {
     protected boolean expanded;
 
-    protected final List<ClickableWidget> children = new ArrayList<>();
+    protected final List<AbstractWidget> children = new ArrayList<>();
 
     protected ListScreen<?> listScreen;
 
@@ -24,7 +24,7 @@ public abstract class CollapseWidget extends ClickableWidget implements ListChil
     private boolean initExpanded = true;
     private boolean initChildren = true;
 
-    public CollapseWidget(int x, int width, Text message, ListScreen<?> listScreen) {
+    public CollapseWidget(int x, int width, Component message, ListScreen<?> listScreen) {
         super(x, 0, width, 20, message);
 
         this.listScreen = listScreen;
@@ -33,10 +33,10 @@ public abstract class CollapseWidget extends ClickableWidget implements ListChil
     }
 
     @Override
-    protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
+    protected void renderWidget(@NotNull GuiGraphics context, int mouseX, int mouseY, float delta) {
         if (expanded) {
-            for (ClickableWidget clickableWidget : children) {
-                ((Drawable)clickableWidget).render(context, mouseX, mouseY, delta);
+            for (AbstractWidget clickableWidget : children) {
+                ((Renderable)clickableWidget).render(context, mouseX, mouseY, delta);
             }
         }
     }
@@ -61,7 +61,7 @@ public abstract class CollapseWidget extends ClickableWidget implements ListChil
 
         int height = getHeight();
         if (expanded) {
-            for (ClickableWidget widget : children) {
+            for (AbstractWidget widget : children) {
                 setVisible(widget, true);
                 if (widget instanceof CollapseWidget collapseWidget) {
                     collapseWidget.updateCollapse(height + y);
@@ -69,7 +69,7 @@ public abstract class CollapseWidget extends ClickableWidget implements ListChil
                 height += getCollapseHeight(widget);
             }
         } else {
-            for (ClickableWidget widget : children) {
+            for (AbstractWidget widget : children) {
                 setVisible(widget, false);
             }
         }
@@ -85,22 +85,22 @@ public abstract class CollapseWidget extends ClickableWidget implements ListChil
         super.setY(y);
         int height = getHeight();
         if (expanded) {
-            for (ClickableWidget widget : children) {
+            for (AbstractWidget widget : children) {
                 widget.setY(height + y);
                 height += getCollapseHeight(widget);
             }
         }
     }
 
-    protected static void setVisible(ClickableWidget clickableWidget, boolean visible) {
-        if (clickableWidget instanceof TextFieldWidget textFieldWidget) {
+    protected static void setVisible(AbstractWidget clickableWidget, boolean visible) {
+        if (clickableWidget instanceof EditBox textFieldWidget) {
             textFieldWidget.setVisible(visible);
         } else {
             clickableWidget.visible = visible;
         }
 
         if (!visible && clickableWidget instanceof CollapseWidget collapseWidget) {
-            for (ClickableWidget child : collapseWidget.children) {
+            for (AbstractWidget child : collapseWidget.children) {
                 if (child.visible) {
                     setVisible(child, false);
                 }
@@ -108,7 +108,7 @@ public abstract class CollapseWidget extends ClickableWidget implements ListChil
         }
     }
 
-    protected static int getCollapseHeight(ClickableWidget widget) {
+    protected static int getCollapseHeight(AbstractWidget widget) {
         if (widget instanceof ListChild listChild) {
             return listChild.getCollapseHeight();
         } else {
@@ -117,7 +117,7 @@ public abstract class CollapseWidget extends ClickableWidget implements ListChil
     }
 
     @Override
-    public void onClick(Click click, boolean doubled) {
+    public void onClick(@NotNull MouseButtonEvent click, boolean doubled) {
         setExpanded(!expanded);
     }
 
@@ -136,7 +136,7 @@ public abstract class CollapseWidget extends ClickableWidget implements ListChil
     @Override
     public void onRemove() {
         listScreen.removeSelectable(this);
-        for (ClickableWidget clickableWidget : children) {
+        for (AbstractWidget clickableWidget : children) {
             if (clickableWidget instanceof ListChild listChild) {
                 listChild.onRemove();
             } else {

@@ -5,15 +5,15 @@ import com.nettakrim.souper_secret_settings.gui.ListWidget;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import com.nettakrim.souper_secret_settings.shaders.Toggleable;
 import com.nettakrim.souper_secret_settings.shaders.calculations.Calculation;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
 public class ParameterWidget extends ListWidget {
     protected Calculation calculation;
 
     public ParameterWidget(Calculation calculation, ShaderLayer layer, ListScreen<?> listScreen, int x, int width) {
-        super(x, width, Text.literal(calculation.getID()), listScreen);
+        super(x, width, Component.literal(calculation.getID()), listScreen);
 
-        CalculationWidget calculationWidget = new CalculationWidget(calculation, layer, Text.empty(), x, width, listScreen);
+        CalculationWidget calculationWidget = new CalculationWidget(calculation, layer, Component.empty(), x, width, listScreen);
         children.add(calculationWidget);
         listScreen.addSelectable(calculationWidget);
 

@@ -8,13 +8,13 @@ import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.ParameterTextWidget;
 import com.nettakrim.souper_secret_settings.shaders.ParameterOverrideSource;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.ColorHelper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.Consumer;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.ARGB;
 
 public class ConfigWidget extends ParameterTextWidget {
     protected final List<ConfigValueWidget> children;
@@ -28,7 +28,7 @@ public class ConfigWidget extends ParameterTextWidget {
     public OverrideSource overrideSource;
 
 
-    public ConfigWidget(int x, int width, int height, Text message, ShaderLayer layer, ListScreen<?> listScreen, String initialValue, String defaultValue, UniformConfig initialConfig, UniformConfig defaultConfig, int index) {
+    public ConfigWidget(int x, int width, int height, Component message, ShaderLayer layer, ListScreen<?> listScreen, String initialValue, String defaultValue, UniformConfig initialConfig, UniformConfig defaultConfig, int index) {
         super(x, width, height, message, layer, defaultValue);
 
         children = new ArrayList<>();
@@ -44,19 +44,19 @@ public class ConfigWidget extends ParameterTextWidget {
             previousValues.put(name, initial.getObjects(name));
         }
 
-        setText(initialValue);
+        setValue(initialValue);
         updateOverrideSource();
         createChildren(initial);
 
-        setChangedListener(this::setValue);
+        setResponder(this::setValue);
     }
 
     @Override
-    public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void renderWidget(@NotNull GuiGraphics context, int mouseX, int mouseY, float delta) {
         super.renderWidget(context, mouseX, mouseY, delta);
 
         if (!children.isEmpty()) {
-            context.fill(getX(), getY() + getHeight(), getX() + getWidth() / 3, getY() + getHeight() + 20 * children.size(), ColorHelper.fromFloats(0.4f, 0, 0, 0));
+            context.fill(getX(), getY() + getHeight(), getX() + getWidth() / 3, getY() + getHeight() + 20 * children.size(), ARGB.colorFromFloat(0.4f, 0, 0, 0));
 
             for (ConfigValueWidget child : children) {
                 child.renderWidget(context, mouseX, mouseY, delta);
@@ -64,7 +64,7 @@ public class ConfigWidget extends ParameterTextWidget {
         }
     }
 
-    protected void setValue(String value) {
+    public void setValue(@NotNull String value) {
         for (ConfigValueWidget child : children) {
             child.removeFromScreen(listScreen);
         }
@@ -77,7 +77,7 @@ public class ConfigWidget extends ParameterTextWidget {
     }
 
     protected boolean updateOverrideSource() {
-        overrideSource = ParameterOverrideSource.parameterSourceFromString(getText());
+        overrideSource = ParameterOverrideSource.parameterSourceFromString(getValue());
         return overrideSource instanceof ParameterOverrideSource;
     }
 

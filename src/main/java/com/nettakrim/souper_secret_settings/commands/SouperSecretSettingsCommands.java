@@ -9,8 +9,7 @@ import com.mojang.brigadier.tree.RootCommandNode;
 import com.nettakrim.souper_secret_settings.shaders.SoupRenderer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.text.Text;
-
+import net.minecraft.network.chat.Component;
 import java.util.List;
 import java.util.function.Function;
 
@@ -40,7 +39,7 @@ public class SouperSecretSettingsCommands {
         });
     }
 
-    static <T> SuggestionProvider<FabricClientCommandSource> createIndexSuggestion(Function<CommandContext<FabricClientCommandSource>, List<T>> listFunction, Function<T, Text> messageFunction) {
+    static <T> SuggestionProvider<FabricClientCommandSource> createIndexSuggestion(Function<CommandContext<FabricClientCommandSource>, List<T>> listFunction, Function<T, Component> messageFunction) {
         return (context, builder) -> {
             List<T> list = listFunction.apply(context);
             if (list != null) {

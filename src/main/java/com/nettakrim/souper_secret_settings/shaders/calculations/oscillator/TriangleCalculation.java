@@ -1,6 +1,6 @@
 package com.nettakrim.souper_secret_settings.shaders.calculations.oscillator;
 
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.Mth;
 
 public class TriangleCalculation extends PeriodicCalculation {
     public TriangleCalculation(String id) {
@@ -9,7 +9,7 @@ public class TriangleCalculation extends PeriodicCalculation {
 
     @Override
     protected float periodicCalculation(float t) {
-        return MathHelper.abs(MathHelper.floorMod(t,1) - 0.5f)*2f;
+        return Mth.abs(Mth.positiveModulo(t,1) - 0.5f)*2f;
     }
 }
 

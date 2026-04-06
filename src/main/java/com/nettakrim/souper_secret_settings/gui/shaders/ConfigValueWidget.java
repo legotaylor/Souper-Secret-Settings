@@ -3,17 +3,17 @@ package com.nettakrim.souper_secret_settings.gui.shaders;
 import com.mclegoman.luminance.client.data.ClientData;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.SuggestionTextFieldWidget;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.widget.TextWidget;
-import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.StringWidget;
+import net.minecraft.network.chat.Component;
 
-public class ConfigValueWidget extends TextWidget {
+public class ConfigValueWidget extends StringWidget {
     public final String name;
 
     protected boolean visible;
@@ -25,7 +25,7 @@ public class ConfigValueWidget extends TextWidget {
     public List<Object> objects;
 
     public ConfigValueWidget(int x, int width, int height, String name, @NotNull List<Object> objects, @NotNull List<Object> defaultObjects) {
-        super(x, 0, width, height, Text.literal(name), ClientData.minecraft.textRenderer);
+        super(x, 0, width, height, Component.literal(name), ClientData.minecraft.font);
 
         this.name = name;
         this.objects = new ArrayList<>(objects);
@@ -36,11 +36,11 @@ public class ConfigValueWidget extends TextWidget {
             setWidth(childStart);
             int childWidth = (width - childStart) / objects.size();
             for (int i = 0; i < objects.size(); i++) {
-                SuggestionTextFieldWidget textFieldWidget = new SuggestionTextFieldWidget(x + childStart + (childWidth * i), childWidth, height, Text.literal(String.valueOf(i)), true);
+                SuggestionTextFieldWidget textFieldWidget = new SuggestionTextFieldWidget(x + childStart + (childWidth * i), childWidth, height, Component.literal(String.valueOf(i)), true);
                 int finalI = i;
                 Object object = objects.get(i);
-                textFieldWidget.setText(String.valueOf(object));
-                textFieldWidget.setChangedListener((s) -> valueChanged(s, finalI));
+                textFieldWidget.setValue(String.valueOf(object));
+                textFieldWidget.setResponder((s) -> valueChanged(s, finalI));
                 textFieldWidget.setListeners(() -> Collections.singletonList(String.valueOf(defaultObjects.get(finalI))), null, false);
                 children.add(textFieldWidget);
 
@@ -52,7 +52,7 @@ public class ConfigValueWidget extends TextWidget {
     }
 
     @Override
-    public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void renderWidget(@NotNull GuiGraphics context, int mouseX, int mouseY, float delta) {
         if (visible) {
             super.renderWidget(context, mouseX, mouseY, delta);
             for (SuggestionTextFieldWidget textFieldWidget : children) {

@@ -15,10 +15,12 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.*;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.ItemStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +45,7 @@ public class SouperSecretSettingsClient implements ClientModInitializer {
 		soupGui = new SoupGui();
 		actions = new Actions();
 
-		ResourceManagerHelper.registerBuiltinResourcePack(Identifier.of("soup"), FabricLoader.getInstance().getModContainer(MODID).orElseThrow(), translate("resourcepack_soup"), ResourcePackActivationType.DEFAULT_ENABLED);
+		ResourceManagerHelper.registerBuiltinResourcePack(Identifier.parse("soup"), FabricLoader.getInstance().getModContainer(MODID).orElseThrow(), translate("resourcepack_soup"), ResourcePackActivationType.DEFAULT_ENABLED);
 		Keybinds.tick();
 
 		SoupUniforms.register();
@@ -51,7 +53,7 @@ public class SouperSecretSettingsClient implements ClientModInitializer {
 		SouperSecretSettingsCommands.initialize();
 
 		ClientTickEvents.END_CLIENT_TICK.register((client) -> {
-			if (!ClientData.minecraft.isFinishedLoading()) {
+			if (!ClientData.minecraft.isGameLoadFinished()) {
 				return;
 			}
 
@@ -62,10 +64,10 @@ public class SouperSecretSettingsClient implements ClientModInitializer {
 
 		ClientLifecycleEvents.CLIENT_STOPPING.register((client) -> soupData.saveConfig());
 
-		Events.ClientResourceReloaders.register(Identifier.of(MODID, "shaders"), new SoupReloader());
+		Events.ClientResourceReloaders.register(Identifier.fromNamespaceAndPath(MODID, "shaders"), new SoupReloader());
 
-		Identifier transfer = Identifier.of(SouperSecretSettingsClient.MODID, "transfer");
-		Events.AfterClientResourceReload.register(transfer, () -> ClientData.minecraft.send(() -> {
+		Identifier transfer = Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "transfer");
+		Events.AfterClientResourceReload.register(transfer, () -> ClientData.minecraft.schedule(() -> {
             soupData.config.transferOldData();
             Events.AfterClientResourceReload.remove(transfer);
         }));
@@ -75,17 +77,17 @@ public class SouperSecretSettingsClient implements ClientModInitializer {
 		sayStyled(translate(key, args).setStyle(Style.EMPTY.withColor(textColor)), priority);
 	}
 
-	public static void sayStyled(MutableText text, int priority) {
-		sayRaw(Text.translatable(MODID + ".say").setStyle(Style.EMPTY.withColor(nameTextColor)).append(text.setStyle(Style.EMPTY.withColor(textColor))), priority);
+	public static void sayStyled(MutableComponent text, int priority) {
+		sayRaw(Component.translatable(MODID + ".say").setStyle(Style.EMPTY.withColor(nameTextColor)).append(text.setStyle(Style.EMPTY.withColor(textColor))), priority);
 	}
 
-	public static void sayRaw(MutableText text, int priority) {
+	public static void sayRaw(MutableComponent text, int priority) {
 		if (ClientData.minecraft.player == null || priority < soupData.config.messageFilter) return;
-		ClientData.minecraft.player.sendMessage(text, false);
+		ClientData.minecraft.player.displayClientMessage(text, false);
 	}
 
-	public static MutableText translate(String key, Object... args) {
-		return Text.translatable(MODID+"."+key, args);
+	public static MutableComponent translate(String key, Object... args) {
+		return Component.translatable(MODID+"."+key, args);
 	}
 
 	public static void log(Object... args) {
@@ -103,7 +105,7 @@ public class SouperSecretSettingsClient implements ClientModInitializer {
 		if (stacksMatch(stack, soupData.config.randomItem)) {
 			SouperSecretSettingsClient.soupRenderer.randomTimer = 0;
 			SouperSecretSettingsCommands.shaderCommand.removeAll(null);
-			SouperSecretSettingsCommands.shaderCommand.add(Identifier.of(SouperSecretSettingsClient.soupData.config.randomShader), SouperSecretSettingsClient.soupData.config.randomCount, -1, true);
+			SouperSecretSettingsCommands.shaderCommand.add(Identifier.parse(SouperSecretSettingsClient.soupData.config.randomShader), SouperSecretSettingsClient.soupData.config.randomCount, -1, true);
 			SouperSecretSettingsClient.soupRenderer.randomTimer = SouperSecretSettingsClient.soupData.config.randomDuration;
 			if (SouperSecretSettingsClient.soupData.config.randomSound) {
 				RandomSound.play();
@@ -115,6 +117,6 @@ public class SouperSecretSettingsClient implements ClientModInitializer {
 	}
 
 	private static boolean stacksMatch(ItemStack stack, ItemStack reference) {
-		return stack.isOf(reference.getItem()) && stack.getComponentChanges().toString().equals(reference.getComponentChanges().toString());
+		return stack.is(reference.getItem()) && stack.getComponentsPatch().toString().equals(reference.getComponentsPatch().toString());
 	}
 }

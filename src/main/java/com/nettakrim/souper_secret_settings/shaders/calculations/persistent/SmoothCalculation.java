@@ -3,7 +3,7 @@ package com.nettakrim.souper_secret_settings.shaders.calculations.persistent;
 import com.mclegoman.luminance.client.shaders.ShaderTime;
 import com.mclegoman.luminance.client.shaders.Uniforms;
 import com.nettakrim.souper_secret_settings.shaders.calculations.Calculation;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.Mth;
 
 public class SmoothCalculation extends Calculation {
     public SmoothCalculation(String id) {
@@ -29,7 +29,7 @@ public class SmoothCalculation extends Calculation {
 
     @Override
     protected void calculateOutputValues() {
-        current = MathHelper.lerp(Uniforms.shaderTime.getExpDeltaTime(inputValues[1]), current, inputValues[0]);
+        current = Mth.lerp(Uniforms.shaderTime.getExpDeltaTime(inputValues[1]), current, inputValues[0]);
         outputValues[0] = current;
     }
 }

@@ -5,11 +5,11 @@ import com.mclegoman.luminance.client.shaders.Shaders;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.*;
+import net.minecraft.resources.Identifier;
 
 public class Group {
     public final List<String> entries;

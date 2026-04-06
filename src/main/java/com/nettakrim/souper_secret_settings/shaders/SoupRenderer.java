@@ -10,14 +10,9 @@ import com.mclegoman.luminance.client.shaders.ShaderRegistryEntry;
 import com.mclegoman.luminance.client.shaders.Shaders;
 import com.mclegoman.luminance.client.shaders.uniforms.Uniform;
 import com.mclegoman.luminance.client.util.Accessors;
+import com.mojang.blaze3d.framegraph.FrameGraphBuilder;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.commands.SouperSecretSettingsCommands;
-import net.minecraft.client.gl.PostEffectProcessor;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.render.FrameGraphBuilder;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,6 +21,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.PostChain;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.RandomSource;
 
 public class SoupRenderer implements Runnables.WorldRender {
     public final List<ShaderLayer> shaderLayers;
@@ -40,7 +40,7 @@ public class SoupRenderer implements Runnables.WorldRender {
     public final Map<Identifier, Map<String, Group>> shaderGroups;
     public final Map<Identifier, Map<String, List<ShaderRegistryEntry>>> shaderGroupRegistries;
 
-    public static final Identifier modifierRegistry = Identifier.of(SouperSecretSettingsClient.MODID, "modifiers");
+    public static final Identifier modifierRegistry = Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "modifiers");
 
     public int randomTimer;
 
@@ -51,8 +51,8 @@ public class SoupRenderer implements Runnables.WorldRender {
         renderType = RenderLocations.WORLD;
 
         spectateHandler = new SoupSpectateHandler();
-        Events.SpectatorHandlers.register(Identifier.of(SouperSecretSettingsClient.MODID, "spectate_handler"), spectateHandler);
-        Events.AfterVanillaPostEffectRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "rendering"), (framebuffer, objectAllocator) -> {
+        Events.SpectatorHandlers.register(Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "spectate_handler"), spectateHandler);
+        Events.AfterVanillaPostEffectRender.register(Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "rendering"), (framebuffer, objectAllocator) -> {
             if (SouperSecretSettingsClient.soupData.config.disableState == 0) {
                 if (spectateHandler.shaderLayer != null) {
                     Runnables.WorldRender.fromGameRender(spectateHandler.shaderLayer::render, framebuffer, objectAllocator);
@@ -63,34 +63,34 @@ public class SoupRenderer implements Runnables.WorldRender {
                 }
             }
         });
-        Events.AfterUiRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "rendering"), (framebuffer, objectAllocator) -> {
+        Events.AfterUiRender.register(Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "rendering"), (framebuffer, objectAllocator) -> {
             if (renderType == RenderLocations.UI && SouperSecretSettingsClient.soupData.config.disableState == 0) {
                 Runnables.WorldRender.fromGameRender(this, framebuffer, objectAllocator);
             }
         });
 
-        Events.OnShaderDataReset.register(Identifier.of(SouperSecretSettingsClient.MODID, "reset"), () -> {
+        Events.OnShaderDataReset.register(Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "reset"), () -> {
             clearAll();
             SouperSecretSettingsClient.actions.clear();
             shaderGroupRegistries.clear();
             SouperSecretSettingsClient.soupRenderer.shaderGroups.clear();
         });
-        Events.OnShaderDataRegistered.register(Identifier.of(SouperSecretSettingsClient.MODID, "add"), (shaderRegistryEntry, registries) -> runForGroups(shaderRegistryEntry, registries, (registry, group) -> shaderGroupRegistries.computeIfAbsent(registry, (i) -> new HashMap<>()).computeIfAbsent(group, (i) -> new ArrayList<>()).add(shaderRegistryEntry)));
-        Events.OnShaderDataRemoved.register(Identifier.of(SouperSecretSettingsClient.MODID, "remove"), (shaderRegistryEntry, registries) -> runForGroups(shaderRegistryEntry, registries, (registry, group) -> {
+        Events.OnShaderDataRegistered.register(Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "add"), (shaderRegistryEntry, registries) -> runForGroups(shaderRegistryEntry, registries, (registry, group) -> shaderGroupRegistries.computeIfAbsent(registry, (i) -> new HashMap<>()).computeIfAbsent(group, (i) -> new ArrayList<>()).add(shaderRegistryEntry)));
+        Events.OnShaderDataRemoved.register(Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "remove"), (shaderRegistryEntry, registries) -> runForGroups(shaderRegistryEntry, registries, (registry, group) -> {
             Map<String, List<ShaderRegistryEntry>> map = shaderGroupRegistries.get(registry);
             if (map != null) {
                 List<ShaderRegistryEntry> list = map.get(group);
                 list.remove(shaderRegistryEntry);
             }
         }));
-        Events.AfterClientResourceReload.register(Identifier.of(SouperSecretSettingsClient.MODID, "reload"), this::loadDefault);
+        Events.AfterClientResourceReload.register(Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "reload"), this::loadDefault);
 
-        Events.BeforeShaderRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "before_render"), new OverrideManager.BeforeShaderRender());
-        Events.AfterShaderRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "after_render"), new OverrideManager.AfterShaderRender());
+        Events.BeforeShaderRender.register(Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "before_render"), new OverrideManager.BeforeShaderRender());
+        Events.AfterShaderRender.register(Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "after_render"), new OverrideManager.AfterShaderRender());
     }
 
     @Override
-    public void run(FrameGraphBuilder builder, int textureWidth, int textureHeight, PostEffectProcessor.FramebufferSet framebufferSet) {
+    public void run(FrameGraphBuilder builder, int textureWidth, int textureHeight, PostChain.TargetBundle framebufferSet) {
         if (shaderLayers != null) {
             for (ShaderLayer layer : shaderLayers) {
                 layer.render(builder, textureWidth, textureHeight, framebufferSet);
@@ -191,12 +191,12 @@ public class SoupRenderer implements Runnables.WorldRender {
             return registryEntries.getFirst();
         }
 
-        Random random = Accessors.getGameRenderer().getRandom();
+        RandomSource random = Accessors.getGameRenderer().getRandom();
         ShaderRegistryEntry newShader;
 
         int attempts = 0;
         do {
-            newShader = registryEntries.get(random.nextBetween(0, size-1));
+            newShader = registryEntries.get(random.nextIntBetweenInclusive(0, size-1));
             attempts++;
         } while (attempts < 100 && previous == newShader);
 
@@ -245,7 +245,7 @@ public class SoupRenderer implements Runnables.WorldRender {
         return validUniforms;
     }
 
-    public void cycleRenderType(ButtonWidget buttonWidget) {
+    public void cycleRenderType(Button buttonWidget) {
         setRenderType(renderType == RenderLocations.UI ? RenderLocations.WORLD : RenderLocations.UI);
         buttonWidget.setMessage(getRenderTypeText());
     }
@@ -258,7 +258,7 @@ public class SoupRenderer implements Runnables.WorldRender {
         return renderType;
     }
 
-    public Text getRenderTypeText() {
+    public Component getRenderTypeText() {
         return SouperSecretSettingsClient.translate(renderType == RenderLocations.UI ? "gui.ui" : "gui.world");
     }
 
@@ -293,10 +293,10 @@ public class SoupRenderer implements Runnables.WorldRender {
     }
 
     private static final Identifier[] modifierPasses = new Identifier[]{
-            Identifier.of(SouperSecretSettingsClient.MODID, "before_layer_render"),
-            Identifier.of(SouperSecretSettingsClient.MODID, "before_shader_render"),
-            Identifier.of(SouperSecretSettingsClient.MODID, "after_shader_render"),
-            Identifier.of(SouperSecretSettingsClient.MODID, "after_layer_render")
+            Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "before_layer_render"),
+            Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "before_shader_render"),
+            Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "after_shader_render"),
+            Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "after_layer_render")
     };
 
     public Identifier[] getRegistryPasses(@Nullable Identifier registry) {

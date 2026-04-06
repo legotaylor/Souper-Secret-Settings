@@ -1,11 +1,11 @@
 package com.nettakrim.souper_secret_settings.gui;
 
 import com.mclegoman.luminance.common.util.Couple;
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gui.Click;
-import net.minecraft.client.gui.DrawContext;
-
 import java.util.function.Consumer;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.RenderPipelines;
+import org.jetbrains.annotations.NotNull;
 
 public class AdditionButton extends HoverButtonWidget {
     public String addition;
@@ -14,7 +14,7 @@ public class AdditionButton extends HoverButtonWidget {
 
     protected int dragState;
 
-    public AdditionButton(String addition, Couple<net.minecraft.text.Text, net.minecraft.text.Text> message, int x, int width, int height, Consumer<String> onPress) {
+    public AdditionButton(String addition, Couple<net.minecraft.network.chat.Component, net.minecraft.network.chat.Component> message, int x, int width, int height, Consumer<String> onPress) {
         super(x, 0, width, height, message.getFirst(), message.getSecond(), (widget) -> onPress.accept(addition));
         this.addition = addition;
         this.onRemove = null;
@@ -30,25 +30,25 @@ public class AdditionButton extends HoverButtonWidget {
     }
 
     @Override
-    protected void drawIcon(DrawContext context, int mouseX, int mouseY, float delta) {
+    protected void renderContents(@NotNull GuiGraphics context, int mouseX, int mouseY, float delta) {
         super.renderWidget(context, mouseX, mouseY, delta);
 
         if (onRemove != null) {
-            context.drawTexture(RenderPipelines.GUI_TEXTURED, ListWidget.ICON_TEXTURE, getX(), getY(), 0, 0, 10, 20, 40, 20, dragState < 0 ? ListWidget.texColWhite : ListWidget.texColBlack);
+            context.blit(RenderPipelines.GUI_TEXTURED, ListWidget.ICON_TEXTURE, getX(), getY(), 0, 0, 10, 20, 40, 20, dragState < 0 ? ListWidget.texColWhite : ListWidget.texColBlack);
         }
 
         if (onEdit != null) {
-            context.drawTexture(RenderPipelines.GUI_TEXTURED, ListWidget.ICON_TEXTURE, getX()+getWidth()-12, getY(), 20, 0, 10, 20, 40, 20, dragState > 0 ? ListWidget.texColWhite : ListWidget.texColBlack);
+            context.blit(RenderPipelines.GUI_TEXTURED, ListWidget.ICON_TEXTURE, getX()+getWidth()-12, getY(), 20, 0, 10, 20, 40, 20, dragState > 0 ? ListWidget.texColWhite : ListWidget.texColBlack);
         }
 
         // TODO: this was part of drawMessage(), not sure if it needs to be seperate
         int i = this.getX() + (onRemove == null ? 4 : 12);
         int j = this.getX() + this.getWidth() - 2;
-        context.getTextConsumer().text(this.getMessage(), i, j, getY(), this.getY() + this.getHeight());
+        context.textRenderer().acceptScrollingWithDefaultCenter(this.getMessage(), i, j, getY(), this.getY() + this.getHeight());
     }
 
     @Override
-    public void onClick(Click click, boolean doubled) {
+    public void onClick(MouseButtonEvent click, boolean doubled) {
         dragState = 0;
         if (click.x() < getX()+getWidth()-14 || onEdit == null) {
             if (click.x() > getX()+10 || onRemove == null) {
@@ -62,7 +62,7 @@ public class AdditionButton extends HoverButtonWidget {
     }
 
     @Override
-    public void onRelease(Click click) {
+    public void onRelease(MouseButtonEvent click) {
         if (dragState == 1 && onEdit != null) {
             onEdit.accept(this);
         }

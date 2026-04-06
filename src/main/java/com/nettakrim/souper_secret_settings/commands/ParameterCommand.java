@@ -16,7 +16,7 @@ import com.nettakrim.souper_secret_settings.shaders.calculations.Calculation;
 import com.nettakrim.souper_secret_settings.shaders.calculations.Calculations;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -171,7 +171,7 @@ public class ParameterCommand extends ListCommand<Calculation> {
 
     static SuggestionProvider<FabricClientCommandSource> calculationIndexes = SouperSecretSettingsCommands.createIndexSuggestion(
             (context) -> SouperSecretSettingsClient.soupRenderer.activeLayer.calculations,
-            (value) -> Text.literal(value.getID())
+            (value) -> Component.literal(value.getID())
     );
 
     static SuggestionProvider<FabricClientCommandSource> calculationInputs = SouperSecretSettingsCommands.createIndexSuggestion(
@@ -179,7 +179,7 @@ public class ParameterCommand extends ListCommand<Calculation> {
                 Calculation calculation = getCalculation(context, false);
                 return calculation == null ? null : List.of(calculation.inputNames);
             },
-            Text::literal
+            Component::literal
     );
 
     static SuggestionProvider<FabricClientCommandSource> calculationInputValue = SouperSecretSettingsCommands.createValueSuggestion(

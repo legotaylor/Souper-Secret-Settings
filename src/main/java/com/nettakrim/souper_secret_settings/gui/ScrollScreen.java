@@ -1,26 +1,27 @@
 package com.nettakrim.souper_secret_settings.gui;
 
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class ScrollScreen extends Screen {
     protected ScrollWidget scrollWidget;
 
-    protected ScrollScreen(Text title) {
+    protected ScrollScreen(Component title) {
         super(title);
     }
 
     protected void createScrollWidget(int start) {
-        scrollWidget = new ScrollWidget(SoupGui.listGap, start, SoupGui.scrollWidth, height-start-SoupGui.listGap, Text.literal("scroll"), this::setScroll);
-        addDrawableChild(scrollWidget);
+        scrollWidget = new ScrollWidget(SoupGui.listGap, start, SoupGui.scrollWidth, height-start-SoupGui.listGap, Component.literal("scroll"), this::setScroll);
+        addRenderableWidget(scrollWidget);
     }
 
     public abstract void setScroll(int scroll);
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void render(@NotNull GuiGraphics context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
 
         context.enableScissor(SoupGui.listX, scrollWidget.getY(), width, height);
@@ -30,7 +31,7 @@ public abstract class ScrollScreen extends Screen {
         SouperSecretSettingsClient.soupGui.drawCurrentHoverText(context, mouseX, mouseY);
     }
 
-    protected abstract void renderScrollables(DrawContext context, int mouseX, int mouseY, float delta);
+    protected abstract void renderScrollables(GuiGraphics context, int mouseX, int mouseY, float delta);
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
@@ -39,12 +40,12 @@ public abstract class ScrollScreen extends Screen {
     }
 
     @Override
-    protected void applyBlur(DrawContext context) {}
+    protected void renderBlurredBackground(@NotNull GuiGraphics context) {}
 
     @Override
-    protected void renderDarkening(DrawContext context, int x, int y, int width, int height) {}
+    protected void renderMenuBackground(@NotNull GuiGraphics context, int x, int y, int width, int height) {}
 
     @Override
-    public boolean shouldPause() {return false;}
+    public boolean isPauseScreen() {return false;}
 
 }

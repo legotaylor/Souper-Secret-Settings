@@ -2,8 +2,8 @@ package com.nettakrim.souper_secret_settings.shaders;
 
 import com.mclegoman.luminance.client.shaders.SpectatorHandler;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.Entity;
 
 public class SoupSpectateHandler implements SpectatorHandler {
     public ShaderLayer shaderLayer;
@@ -21,7 +21,7 @@ public class SoupSpectateHandler implements SpectatorHandler {
     private Identifier getID(Entity entity) {
         String s = entity.getType().toString().substring(7);
         int i = s.indexOf('.');
-        return Identifier.of(s.substring(0, i), s.substring(i+1));
+        return Identifier.fromNamespaceAndPath(s.substring(0, i), s.substring(i+1));
     }
 
     @Override

@@ -12,17 +12,16 @@ import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.DisplayWidget;
 import com.nettakrim.souper_secret_settings.shaders.PassData;
 import com.nettakrim.souper_secret_settings.shaders.UniformData;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.text.Text;
-
 import java.util.*;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.network.chat.Component;
 
 public class UniformWidget extends DisplayWidget<Couple<UniformData<String>,UniformData<UniformConfig>>> {
     public PassWidget pass;
 
     public UniformInstance uniform;
 
-    public UniformWidget(PassWidget pass, UniformInstance uniform, Text name, int x, int width, ListScreen<?> listScreen) {
+    public UniformWidget(PassWidget pass, UniformInstance uniform, Component name, int x, int width, ListScreen<?> listScreen) {
         super(uniform.length(), name, x, width, listScreen);
         this.pass = pass;
         this.uniform = uniform;
@@ -46,11 +45,11 @@ public class UniformWidget extends DisplayWidget<Couple<UniformData<String>,Unif
     }
 
     @Override
-    protected ClickableWidget createChildWidget(Couple<UniformData<String>,UniformData<UniformConfig>> data, int i) {
+    protected AbstractWidget createChildWidget(Couple<UniformData<String>,UniformData<UniformConfig>> data, int i) {
         UniformData<String> uniformOverride = data.getFirst();
         UniformData<UniformConfig> uniformConfig = data.getSecond();
 
-        ConfigWidget configWidget = new ConfigWidget(getX(), getWidth(), 20, Text.empty(), pass.shader.layer, listScreen, uniformOverride.value, uniformOverride.defaultValue, uniformConfig.value, uniformConfig.defaultValue, i);
+        ConfigWidget configWidget = new ConfigWidget(getX(), getWidth(), 20, Component.empty(), pass.shader.layer, listScreen, uniformOverride.value, uniformOverride.defaultValue, uniformConfig.value, uniformConfig.defaultValue, i);
         configWidget.onChangeListener((w) -> onValueChanged(i, w));
         return configWidget;
     }
@@ -88,7 +87,7 @@ public class UniformWidget extends DisplayWidget<Couple<UniformData<String>,Unif
             //allow dragging luminance:alpha_smooth to replace it with its current value
             if (expanded) {
                 ConfigWidget configWidget = ((ConfigWidget)children.get(i));
-                if (configWidget.getText().startsWith("luminance:alpha")) {
+                if (configWidget.getValue().startsWith("luminance:alpha")) {
                     configWidget.dragValue = display.get(i);
                 }
             }

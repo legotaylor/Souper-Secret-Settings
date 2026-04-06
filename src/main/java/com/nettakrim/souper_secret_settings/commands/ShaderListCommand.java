@@ -24,11 +24,11 @@ import com.nettakrim.souper_secret_settings.actions.UniformChangeAction;
 import com.nettakrim.souper_secret_settings.shaders.*;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.client.gl.PostEffectPass;
-import net.minecraft.command.argument.IdentifierArgumentType;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.renderer.PostPass;
+import net.minecraft.commands.arguments.IdentifierArgument;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -59,7 +59,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
         LiteralCommandNode<FabricClientCommandSource> addNode = ClientCommandManager
                 .literal("add")
                 .then(
-                        ClientCommandManager.argument("shader", IdentifierArgumentType.identifier())
+                        ClientCommandManager.argument("shader", IdentifierArgument.id())
                                 .suggests(registrySuggestions)
                                 .executes((context -> add(context.getArgument("shader", Identifier.class), 1, -1, false)))
                                 .then(
@@ -131,12 +131,12 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
                 .then(
                         ClientCommandManager.literal("modify")
                                 .then(
-                                        ClientCommandManager.argument("name", IdentifierArgumentType.identifier())
+                                        ClientCommandManager.argument("name", IdentifierArgument.id())
                                                 .suggests(groupSuggestions)
                                                 .then(
                                                         ClientCommandManager.literal("add")
                                                                 .then(
-                                                                        ClientCommandManager.argument("value", IdentifierArgumentType.identifier())
+                                                                        ClientCommandManager.argument("value", IdentifierArgument.id())
                                                                                 .suggests(getRegistrySuggestions(registry, true))
                                                                                 .executes(context -> addGroupEntry(context.getArgument("name", Identifier.class).getPath(), context.getArgument("value", Identifier.class), -1))
                                                                                 .then(
@@ -347,7 +347,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
         if (shaders.isEmpty()) {
             SouperSecretSettingsClient.say("shader.info.none", 1);
         } else {
-            MutableText text = Text.empty();
+            MutableComponent text = Component.empty();
 
             int count = 1;
             String key = SouperSecretSettingsClient.MODID+".shader.info";
@@ -363,9 +363,9 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
                 if (!search || !shaderData.shader.getShaderId().equals(next.shader.getShaderId())) {
                     String s = shaderData.getTranslatedName().getString();
                     if (count == 1) {
-                        text.append(Text.translatable(key, s));
+                        text.append(Component.translatable(key, s));
                     } else {
-                        text.append(Text.translatable(key+".multiple", s, count));
+                        text.append(Component.translatable(key+".multiple", s, count));
                     }
                     if (i == count-1) {
                         key = SouperSecretSettingsClient.MODID+".shader.info.join";
@@ -394,7 +394,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
                 Identifier identifier = shaderRegistry.getID();
                 String name = identifier.toString();
 
-                Text text = Text.translatableWithFallback("gui.luminance.shader."+name.replace(':','.')+".description", "");
+                Component text = Component.translatableWithFallback("gui.luminance.shader."+name.replace(':','.')+".description", "");
                 builder.suggest(name, text.getString().isBlank() ? null : text);
 
                 if (searchPaths) {
@@ -416,7 +416,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
 
             if (searchPaths) {
                 for (Identifier identifier : paths.values()) {
-                    builder.suggest(identifier.getPath(), Text.literal(identifier.toString()));
+                    builder.suggest(identifier.getPath(), Component.literal(identifier.toString()));
                 }
             }
 
@@ -443,10 +443,10 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
             int total = 0;
             for (Identifier identifier : SouperSecretSettingsClient.soupRenderer.getRegistryPasses(getRegistry())) {
                 PostChainInterface processor = (PostChainInterface)shader.shader.getPostProcessor();
-                List<PostEffectPass> passes = processor.luminance$getPasses(identifier);
+                List<PostPass> passes = processor.luminance$getPasses(identifier);
                 if (passes != null) {
-                    for (PostEffectPass pass : passes) {
-                        builder.suggest(total, Text.literal(((PostPassInterface)pass).luminance$getID().replace(":post/", ":")));
+                    for (PostPass pass : passes) {
+                        builder.suggest(total, Component.literal(((PostPassInterface)pass).luminance$getID().replace(":post/", ":")));
                         total++;
                     }
                 }
@@ -600,7 +600,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
         return builder.buildFuture();
     };
 
-    protected final SuggestionProvider<FabricClientCommandSource> groupIndexes = SouperSecretSettingsCommands.createIndexSuggestion(context -> SouperSecretSettingsClient.soupRenderer.getShaderGroups(getRegistry()).getOrDefault(context.getArgument("name", Identifier.class).getPath(), new Group()).entries, Text::literal);
+    protected final SuggestionProvider<FabricClientCommandSource> groupIndexes = SouperSecretSettingsCommands.createIndexSuggestion(context -> SouperSecretSettingsClient.soupRenderer.getShaderGroups(getRegistry()).getOrDefault(context.getArgument("name", Identifier.class).getPath(), new Group()).entries, Component::literal);
 
     @Override
     List<ShaderData> getList() {

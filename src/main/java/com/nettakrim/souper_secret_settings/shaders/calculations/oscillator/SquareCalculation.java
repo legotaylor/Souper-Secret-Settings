@@ -1,6 +1,6 @@
 package com.nettakrim.souper_secret_settings.shaders.calculations.oscillator;
 
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.Mth;
 
 public class SquareCalculation extends PeriodicCalculation {
     public SquareCalculation(String id) {
@@ -19,7 +19,7 @@ public class SquareCalculation extends PeriodicCalculation {
 
     @Override
     protected float periodicCalculation(float t) {
-        return MathHelper.floorMod(t,1) > inputValues[3] ? 0 : 1;
+        return Mth.positiveModulo(t,1) > inputValues[3] ? 0 : 1;
     }
 }
 

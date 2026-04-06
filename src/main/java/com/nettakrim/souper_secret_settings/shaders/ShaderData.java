@@ -3,15 +3,15 @@ package com.nettakrim.souper_secret_settings.shaders;
 import com.mclegoman.luminance.client.shaders.Shader;
 import com.mclegoman.luminance.client.shaders.Shaders;
 import com.mclegoman.luminance.client.shaders.interfaces.PostChainInterface;
+import com.mojang.blaze3d.framegraph.FrameGraphBuilder;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
-import net.minecraft.client.gl.PostEffectPass;
-import net.minecraft.client.gl.PostEffectProcessor;
-import net.minecraft.client.render.FrameGraphBuilder;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import net.minecraft.client.renderer.PostChain;
+import net.minecraft.client.renderer.PostPass;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 
 public class ShaderData implements Toggleable {
     public Shader shader;
@@ -33,7 +33,7 @@ public class ShaderData implements Toggleable {
         PostChainInterface processor = (PostChainInterface)this.shader.getPostProcessor();
         Set<Identifier> customPasses = processor.luminance$getCustomPassNames();
 
-        List<PostEffectPass> defaultPasses = processor.luminance$getPasses(null);
+        List<PostPass> defaultPasses = processor.luminance$getPasses(null);
 
         if (defaultPasses.isEmpty()) {
             passDatas = new HashMap<>(customPasses.size());
@@ -43,15 +43,15 @@ public class ShaderData implements Toggleable {
         }
 
         for (Identifier customPass : customPasses) {
-            List<PostEffectPass> passes = processor.luminance$getPasses(customPass);
+            List<PostPass> passes = processor.luminance$getPasses(customPass);
             assert passes != null;
             passDatas.put(customPass, new PassData(passes));
         }
 
-        uuid = Identifier.of(SouperSecretSettingsClient.MODID, String.valueOf(uuidCounter++));
+        uuid = Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, String.valueOf(uuidCounter++));
     }
 
-    public boolean render(FrameGraphBuilder builder, int textureWidth, int textureHeight, PostEffectProcessor.FramebufferSet framebufferSet, @Nullable Identifier customPasses) {
+    public boolean render(FrameGraphBuilder builder, int textureWidth, int textureHeight, PostChain.TargetBundle framebufferSet, @Nullable Identifier customPasses) {
         if (!active) return false;
         PostChainInterface processor = (PostChainInterface)shader.getPostProcessor();
         if (customPasses != null && !processor.luminance$getCustomPassNames().contains(customPasses)) {
@@ -77,9 +77,9 @@ public class ShaderData implements Toggleable {
         return passData.configs.size();
     }
 
-    public Text getTranslatedName() {
+    public Component getTranslatedName() {
         String s = shader.getShaderId().toString();
-        return Text.translatableWithFallback("gui.luminance.shader."+s.replace(':','.'), s);
+        return Component.translatableWithFallback("gui.luminance.shader."+s.replace(':','.'), s);
     }
 
     @Override

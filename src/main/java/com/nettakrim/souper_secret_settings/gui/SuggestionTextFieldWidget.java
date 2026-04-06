@@ -1,13 +1,13 @@
 package com.nettakrim.souper_secret_settings.gui;
 
-import net.minecraft.client.input.KeyInput;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import org.jetbrains.annotations.NotNull;
 
 public class SuggestionTextFieldWidget extends DraggableTextFieldWidget {
     protected Supplier<List<String>> validAdditions;
@@ -25,14 +25,14 @@ public class SuggestionTextFieldWidget extends DraggableTextFieldWidget {
 
     public int maxLengthMin = 32;
 
-    public SuggestionTextFieldWidget(int x, int width, int height, Text message, boolean resetOnEmpty) {
+    public SuggestionTextFieldWidget(int x, int width, int height, Component message, boolean resetOnEmpty) {
         super(x, width, height, message);
-        super.setChangedListener(this::onChange);
+        super.setResponder(this::onChange);
         this.resetOnEmpty = resetOnEmpty;
     }
 
     @Override
-    public void setChangedListener(Consumer<String> changedListener) {
+    public void setResponder(@NotNull Consumer<String> changedListener) {
         onChange = changedListener;
     }
 
@@ -111,21 +111,21 @@ public class SuggestionTextFieldWidget extends DraggableTextFieldWidget {
             currentSuggestionIndex -= suggestions;
         }
 
-        setSuggestion(currentSuggestions.get(currentSuggestionIndex).substring(getText().length()));
+        setSuggestion(currentSuggestions.get(currentSuggestionIndex).substring(getValue().length()));
     }
 
     @Override
-    public boolean keyPressed(KeyInput keyInput) {
+    public boolean keyPressed(@NotNull KeyEvent keyInput) {
         if (this.isFocused()) {
             if (keyInput.key() == 257 && onSubmit != null) {
-                onSubmit.accept(getText());
+                onSubmit.accept(getValue());
                 return true;
             }
             if (!currentSuggestions.isEmpty()) {
                 if (keyInput.key() == 258) {
-                    String text = getText();
-                    setText(text + currentSuggestions.get(currentSuggestionIndex).substring(text.length()));
-                    setCursorToEnd(false);
+                    String text = getValue();
+                    setValue(text + currentSuggestions.get(currentSuggestionIndex).substring(text.length()));
+                    moveCursorToEnd(false);
                     return true;
                 } else if (keyInput.key() == 265) {
                     cycleSuggestion(-1);
@@ -143,7 +143,7 @@ public class SuggestionTextFieldWidget extends DraggableTextFieldWidget {
     public void setFocused(boolean focused) {
         super.setFocused(focused);
         if (!focused && submitOnLostFocus) {
-            onSubmit.accept(getText());
+            onSubmit.accept(getValue());
         }
     }
 

@@ -5,24 +5,24 @@ import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.actions.ListAddAction;
 import com.nettakrim.souper_secret_settings.actions.ListRemoveAction;
 import com.nettakrim.souper_secret_settings.actions.ListShiftAction;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.Selectable;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 
 public abstract class ListScreen<V> extends ScrollScreen {
     protected ArrayList<ListWidget> listWidgets;
 
     protected SuggestionTextFieldWidget suggestionTextFieldWidget;
-    protected ButtonWidget suggestionScreenButton;
+    protected Button suggestionScreenButton;
 
     protected int currentListSize;
 
@@ -31,7 +31,7 @@ public abstract class ListScreen<V> extends ScrollScreen {
     protected List<String> additions;
 
     protected ListScreen(int scrollIndex) {
-        super(Text.empty());
+        super(Component.empty());
         this.scrollIndex = scrollIndex;
         this.additions = null;
     }
@@ -44,16 +44,16 @@ public abstract class ListScreen<V> extends ScrollScreen {
         listWidgets = new ArrayList<>(listValues.size());
         for (V value : listValues) {
             ListWidget listWidget = createListWidget(value);
-            addSelectableChild(listWidget);
+            addWidget(listWidget);
             listWidgets.add(listWidget);
         }
 
-        suggestionTextFieldWidget = new SuggestionTextFieldWidget(SoupGui.listX, SoupGui.listWidth-20-SoupGui.listGap, 20, Text.literal("list addition"), false);
+        suggestionTextFieldWidget = new SuggestionTextFieldWidget(SoupGui.listX, SoupGui.listWidth-20-SoupGui.listGap, 20, Component.literal("list addition"), false);
         suggestionTextFieldWidget.setListeners(this::getAdditions, this::addAddition, matchIdentifiers());
-        addDrawableChild(suggestionTextFieldWidget);
+        addRenderableWidget(suggestionTextFieldWidget);
 
-        suggestionScreenButton = ButtonWidget.builder(SouperSecretSettingsClient.translate("gui.addition"), (widget) -> enterAdditionScreen()).dimensions(SoupGui.listX+SoupGui.listWidth-20, 0, 20, 20).build();
-        addDrawableChild(suggestionScreenButton);
+        suggestionScreenButton = Button.builder(SouperSecretSettingsClient.translate("gui.addition"), (widget) -> enterAdditionScreen()).bounds(SoupGui.listX+SoupGui.listWidth-20, 0, 20, 20).build();
+        addRenderableWidget(suggestionScreenButton);
 
         updateSpacing();
         if (scrollIndex >= 0) {
@@ -62,15 +62,15 @@ public abstract class ListScreen<V> extends ScrollScreen {
     }
 
     @Override
-    public void renderScrollables(DrawContext context, int mouseX, int mouseY, float delta) {
-        for (Drawable drawable : listWidgets) {
+    public void renderScrollables(GuiGraphics context, int mouseX, int mouseY, float delta) {
+        for (Renderable drawable : listWidgets) {
             drawable.render(context, mouseX, mouseY, delta);
         }
     }
 
     protected int createHeader() {
-        for (ClickableWidget clickableWidget : SouperSecretSettingsClient.soupGui.getHeader()) {
-            addDrawableChild(clickableWidget);
+        for (AbstractWidget clickableWidget : SouperSecretSettingsClient.soupGui.getHeader()) {
+            addRenderableWidget(clickableWidget);
         }
 
         return SoupGui.listStart;
@@ -80,12 +80,12 @@ public abstract class ListScreen<V> extends ScrollScreen {
 
     protected abstract ListWidget createListWidget(V value);
 
-    public <T extends Element & Selectable> void addSelectable(T child) {
-        addSelectableChild(child);
+    public <T extends GuiEventListener & NarratableEntry> void addSelectable(T child) {
+        addWidget(child);
     }
 
-    public void removeSelectable(Element child) {
-        remove(child);
+    public void removeSelectable(GuiEventListener child) {
+        removeWidget(child);
     }
 
     public void updateSpacing() {
@@ -125,7 +125,7 @@ public abstract class ListScreen<V> extends ScrollScreen {
             addSelectable(listWidget);
             updateSpacing();
         }
-        suggestionTextFieldWidget.setText("");
+        suggestionTextFieldWidget.setValue("");
         return entry;
     }
 
@@ -148,7 +148,7 @@ public abstract class ListScreen<V> extends ScrollScreen {
 
     public void swapEntry(ListWidget listWidget, int direction) {
         int index = listWidgets.indexOf(listWidget);
-        int newIndex = MathHelper.clamp(index+direction, 0, listWidgets.size()-1);
+        int newIndex = Mth.clamp(index+direction, 0, listWidgets.size()-1);
 
         if (index != newIndex) {
             if (useHistory()) {
@@ -168,7 +168,7 @@ public abstract class ListScreen<V> extends ScrollScreen {
             new ListRemoveAction<>(getListValues(), index).addToHistory();
         }
 
-        remove(listWidget);
+        removeWidget(listWidget);
         removeEntry(index, true);
 
         updateSpacing();
@@ -188,8 +188,7 @@ public abstract class ListScreen<V> extends ScrollScreen {
     }
 
     protected void enterAdditionScreen() {
-        assert client != null;
-        client.setScreen(new ListAdditionScreen<>(this));
+        minecraft.setScreen(new ListAdditionScreen<>(this));
     }
 
     protected boolean canRemoveAddition(String addition) {
@@ -206,14 +205,14 @@ public abstract class ListScreen<V> extends ScrollScreen {
         return true;
     }
 
-    protected Couple<Text,Text> getAdditionText(String addition) {
-        return new Couple<>(Text.literal(addition), null);
+    protected Couple<Component,Component> getAdditionText(String addition) {
+        return new Couple<>(Component.literal(addition), null);
     }
 
     protected abstract boolean matchIdentifiers();
 
     @Override
-    public void close() {
+    public void onClose() {
         SouperSecretSettingsClient.soupGui.onClose();
     }
 

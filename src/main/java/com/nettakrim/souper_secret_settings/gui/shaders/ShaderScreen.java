@@ -10,11 +10,11 @@ import com.nettakrim.souper_secret_settings.shaders.Group;
 import com.nettakrim.souper_secret_settings.shaders.OverrideManager;
 import com.nettakrim.souper_secret_settings.shaders.ShaderData;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-
 import java.util.*;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import org.jetbrains.annotations.NotNull;
 
 public class ShaderScreen extends ListScreen<ShaderData> {
     public final ShaderLayer layer;
@@ -92,7 +92,7 @@ public class ShaderScreen extends ListScreen<ShaderData> {
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void render(@NotNull GuiGraphics context, int mouseX, int mouseY, float delta) {
         OverrideManager.currentShaderIndex = 0;
         ShaderTime.currentRenderLocation = SouperSecretSettingsClient.soupRenderer.getRenderType();
         super.render(context, mouseX, mouseY, delta);
@@ -105,22 +105,22 @@ public class ShaderScreen extends ListScreen<ShaderData> {
     }
 
     @Override
-    public Couple<Text,Text> getAdditionText(String addition) {
+    public Couple<Component,Component> getAdditionText(String addition) {
         if (addition.startsWith("random")) {
             if (addition.length() > 7) {
                 String name = addition.substring(7);
                 Group group = SouperSecretSettingsClient.soupRenderer.getShaderGroups(registry).get(name);
                 if (group != null) {
-                    return new Couple<>(Text.literal(addition), SouperSecretSettingsClient.translate("shader.group_suggestion", group.getComputed(registry, name).size()));
+                    return new Couple<>(Component.literal(addition), SouperSecretSettingsClient.translate("shader.group_suggestion", group.getComputed(registry, name).size()));
                 }
             }
 
-            return new Couple<>(Text.literal(addition), SouperSecretSettingsClient.translate("shader.group_suggestion", Shaders.getRegistry(registry).size()));
+            return new Couple<>(Component.literal(addition), SouperSecretSettingsClient.translate("shader.group_suggestion", Shaders.getRegistry(registry).size()));
         }
 
         String s = "gui.luminance.shader."+addition.replace(':','.');
-        Text description = Text.translatableWithFallback(s+".description", "");
-        return new Couple<>(Text.translatableWithFallback(s, addition), description.getString().isBlank() ? null : description);
+        Component description = Component.translatableWithFallback(s+".description", "");
+        return new Couple<>(Component.translatableWithFallback(s, addition), description.getString().isBlank() ? null : description);
     }
 
     @Override
@@ -130,7 +130,6 @@ public class ShaderScreen extends ListScreen<ShaderData> {
 
     @Override
     protected void enterAdditionScreen() {
-        assert client != null;
-        client.setScreen(new ShaderAdditionScreen(this));
+        minecraft.setScreen(new ShaderAdditionScreen(this));
     }
 }

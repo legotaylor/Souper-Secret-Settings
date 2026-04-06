@@ -2,23 +2,22 @@ package com.nettakrim.souper_secret_settings.gui;
 
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 
 public class ParameterTextWidget extends SuggestionTextFieldWidget {
     protected final String defaultValue;
     protected final ShaderLayer layer;
 
-    public ParameterTextWidget(int x, int width, int height, Text message, ShaderLayer layer, String defaultValue) {
+    public ParameterTextWidget(int x, int width, int height, Component message, ShaderLayer layer, String defaultValue) {
         super(x, width, height, message, true);
         this.layer = layer;
         this.defaultValue = defaultValue;
         if (defaultValue != null) {
-            setListeners(this::getParameters, this::setText, false);
+            setListeners(this::getParameters, this::setValue, false);
         }
     }
 

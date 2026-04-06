@@ -11,10 +11,9 @@ import com.mclegoman.luminance.client.shaders.uniforms.config.EmptyConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.MapConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
-import net.minecraft.client.gl.PostEffectPass;
-import net.minecraft.util.Identifier;
-
 import java.util.*;
+import net.minecraft.client.renderer.PostPass;
+import net.minecraft.resources.Identifier;
 
 public class PassData {
     // TODO: these should use indices, since uniform name isnt entirely reliable
@@ -24,16 +23,16 @@ public class PassData {
     public BitSet expanded;
     public ArrayList<Set<String>> uniformExpanded;
 
-    public static final Identifier overridePath = Identifier.of(SouperSecretSettingsClient.MODID, "uniform_override");
-    public static final Identifier configPath = Identifier.of(SouperSecretSettingsClient.MODID, "uniform_config");
+    public static final Identifier overridePath = Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "uniform_override");
+    public static final Identifier configPath = Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "uniform_config");
 
-    public PassData(List<PostEffectPass> passes) {
+    public PassData(List<PostPass> passes) {
         this.overrides = new ArrayList<>(passes.size());
         this.configs = new ArrayList<>(passes.size());
         this.expanded = new BitSet(passes.size());
         this.uniformExpanded = new ArrayList<>(passes.size());
 
-        for (PostEffectPass pass : passes) {
+        for (PostPass pass : passes) {
             Map<String, UniformData<UniformOverride>> override = new HashMap<>(0);
             Map<String, UniformData<UniformConfig>> config = new HashMap<>(0);
 

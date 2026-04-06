@@ -3,17 +3,17 @@ package com.nettakrim.souper_secret_settings.shaders;
 import com.mclegoman.luminance.client.shaders.Shaders;
 import com.mclegoman.luminance.client.shaders.interfaces.FramePassInterface;
 import com.mclegoman.luminance.common.util.Couple;
+import com.mojang.blaze3d.framegraph.FrameGraphBuilder;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.shaders.calculations.Calculation;
-import net.minecraft.client.gl.PostEffectProcessor;
-import net.minecraft.client.render.FrameGraphBuilder;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import net.minecraft.client.renderer.PostChain;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.Identifier;
 
 public class ShaderLayer implements Toggleable {
     @NotNull
@@ -28,10 +28,10 @@ public class ShaderLayer implements Toggleable {
     public boolean active = true;
     public boolean expanded = false;
 
-    private static final Identifier beforeLayerRender = Identifier.of(SouperSecretSettingsClient.MODID, "before_layer_render");
-    private static final Identifier beforeShaderRender = Identifier.of(SouperSecretSettingsClient.MODID, "before_shader_render");
-    private static final Identifier afterShaderRender = Identifier.of(SouperSecretSettingsClient.MODID, "after_shader_render");
-    private static final Identifier afterLayerRender = Identifier.of(SouperSecretSettingsClient.MODID, "after_layer_render");
+    private static final Identifier beforeLayerRender = Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "before_layer_render");
+    private static final Identifier beforeShaderRender = Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "before_shader_render");
+    private static final Identifier afterShaderRender = Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "after_shader_render");
+    private static final Identifier afterLayerRender = Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "after_layer_render");
 
     private static ShaderLayer renderingLayer;
 
@@ -55,7 +55,7 @@ public class ShaderLayer implements Toggleable {
         calculations.clear();
     }
 
-    public void render(FrameGraphBuilder builder, int textureWidth, int textureHeight, PostEffectProcessor.FramebufferSet framebufferSet) {
+    public void render(FrameGraphBuilder builder, int textureWidth, int textureHeight, PostChain.TargetBundle framebufferSet) {
         if (!active) {
             return;
         }
@@ -67,7 +67,7 @@ public class ShaderLayer implements Toggleable {
         }
 
         Queue<Couple<ShaderData, Identifier>> shaderQueue = new LinkedList<>();
-        FramePassInterface.createForcedPass(builder, Identifier.of(SouperSecretSettingsClient.MODID, "layer_start"), () -> {
+        FramePassInterface.createForcedPass(builder, Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "layer_start"), () -> {
             renderingLayer = this;
             OverrideManager.startShaderQueue(shaderQueue);
         });
@@ -86,13 +86,13 @@ public class ShaderLayer implements Toggleable {
         renderList(modifiers.reversed(), shaderQueue, builder, textureWidth, textureHeight, framebufferSet, afterLayerRender);
     }
 
-    public void renderList(List<ShaderData> shaders, Queue<Couple<ShaderData, Identifier>> shaderQueue, FrameGraphBuilder builder, int textureWidth, int textureHeight, PostEffectProcessor.FramebufferSet framebufferSet, @Nullable Identifier customPasses) {
+    public void renderList(List<ShaderData> shaders, Queue<Couple<ShaderData, Identifier>> shaderQueue, FrameGraphBuilder builder, int textureWidth, int textureHeight, PostChain.TargetBundle framebufferSet, @Nullable Identifier customPasses) {
         for (ShaderData shaderData : shaders) {
             renderShader(shaderData, shaderQueue, builder, textureWidth, textureHeight, framebufferSet, customPasses);
         }
     }
 
-    public void renderShader(ShaderData shaderData, Queue<Couple<ShaderData, Identifier>> shaderQueue, FrameGraphBuilder builder, int textureWidth, int textureHeight, PostEffectProcessor.FramebufferSet framebufferSet, @Nullable Identifier customPasses) {
+    public void renderShader(ShaderData shaderData, Queue<Couple<ShaderData, Identifier>> shaderQueue, FrameGraphBuilder builder, int textureWidth, int textureHeight, PostChain.TargetBundle framebufferSet, @Nullable Identifier customPasses) {
         if (shaderData.render(builder, textureWidth, textureHeight, framebufferSet, customPasses)) {
             shaderQueue.add(new Couple<>(shaderData, customPasses));
         }
@@ -110,7 +110,7 @@ public class ShaderLayer implements Toggleable {
         return List.of();
     }
 
-    public MutableText[] getInfo() {
+    public MutableComponent[] getInfo() {
         int shaders = 0;
         int modifiers = 0;
         int passes = 0;
@@ -130,10 +130,10 @@ public class ShaderLayer implements Toggleable {
             modifiers++;
         }
 
-        return new MutableText[]{
-                Text.translatable(SouperSecretSettingsClient.MODID+".layer.info.shaders", shaders),
-                Text.translatable(SouperSecretSettingsClient.MODID+".layer.info.modifiers", modifiers),
-                Text.translatable(SouperSecretSettingsClient.MODID+".layer.info.passes", passes)
+        return new MutableComponent[]{
+                Component.translatable(SouperSecretSettingsClient.MODID+".layer.info.shaders", shaders),
+                Component.translatable(SouperSecretSettingsClient.MODID+".layer.info.modifiers", modifiers),
+                Component.translatable(SouperSecretSettingsClient.MODID+".layer.info.passes", passes)
         };
     }
 
@@ -144,7 +144,7 @@ public class ShaderLayer implements Toggleable {
     public static void renderCleanup(@Nullable FrameGraphBuilder builder) {
         renderingLayer = null;
         if (builder != null) {
-            FramePassInterface.createForcedPass(builder, Identifier.of(SouperSecretSettingsClient.MODID, "layer_cleanup"), () -> renderingLayer = null);
+            FramePassInterface.createForcedPass(builder, Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "layer_cleanup"), () -> renderingLayer = null);
         }
     }
 

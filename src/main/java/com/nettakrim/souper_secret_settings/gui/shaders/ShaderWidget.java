@@ -8,19 +8,19 @@ import com.nettakrim.souper_secret_settings.shaders.OverrideManager;
 import com.nettakrim.souper_secret_settings.shaders.ShaderData;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import com.nettakrim.souper_secret_settings.shaders.Toggleable;
-import net.minecraft.client.gl.PostEffectPass;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-
 import java.util.List;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.PostPass;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import org.jetbrains.annotations.NotNull;
 
 public class ShaderWidget extends ListWidget {
     public ShaderLayer layer;
     public ShaderData shaderData;
 
     public ShaderWidget(ShaderLayer layer, ShaderData shaderData, ListScreen<?> listScreen, int x, int width) {
-        super(x, width, Text.literal(shaderData.shader.getShaderId().toString()), listScreen);
+        super(x, width, Component.literal(shaderData.shader.getShaderId().toString()), listScreen);
 
         this.layer = layer;
         this.shaderData = shaderData;
@@ -34,13 +34,13 @@ public class ShaderWidget extends ListWidget {
     }
 
     protected void addPasses(Identifier customPasses) {
-        List<PostEffectPass> passes = ((PostChainInterface)shaderData.shader.getPostProcessor()).luminance$getPasses(customPasses);
+        List<PostPass> passes = ((PostChainInterface)shaderData.shader.getPostProcessor()).luminance$getPasses(customPasses);
         if (passes == null) {
             return;
         }
 
         int i = 0;
-        for (PostEffectPass postEffectPass : passes) {
+        for (PostPass postEffectPass : passes) {
             PassWidget passWidget = new PassWidget(this, postEffectPass, customPasses, i, getX(), width, listScreen);
             children.add(passWidget);
             listScreen.addSelectable(passWidget);
@@ -59,7 +59,7 @@ public class ShaderWidget extends ListWidget {
     }
 
     @Override
-    protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
+    protected void renderWidget(@NotNull GuiGraphics context, int mouseX, int mouseY, float delta) {
         super.renderWidget(context, mouseX, mouseY, delta);
         if (shaderData.active) {
             OverrideManager.currentShaderIndex++;

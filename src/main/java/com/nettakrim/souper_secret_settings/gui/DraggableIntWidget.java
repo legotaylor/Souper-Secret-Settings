@@ -1,15 +1,15 @@
 package com.nettakrim.souper_secret_settings.gui;
 
 import com.mclegoman.luminance.client.data.ClientData;
-import net.minecraft.client.gui.Click;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.input.KeyInput;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.MathHelper;
-
 import java.util.function.Consumer;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
+import org.jetbrains.annotations.NotNull;
 
-public class DraggableIntWidget extends TextFieldWidget {
+public class DraggableIntWidget extends EditBox {
     protected final int min;
     protected final int max;
     protected final String defaultValue;
@@ -17,9 +17,9 @@ public class DraggableIntWidget extends TextFieldWidget {
 
     float value;
 
-    public DraggableIntWidget(int x, int width, int height, Text message, int min, int max, int defaultValue, Consumer<Integer> onChange) {
-        super(ClientData.minecraft.textRenderer, x, 0, width, height, message);
-        setChangedListener(this::onChange);
+    public DraggableIntWidget(int x, int width, int height, Component message, int min, int max, int defaultValue, Consumer<Integer> onChange) {
+        super(ClientData.minecraft.font, x, 0, width, height, message);
+        setResponder(this::onChange);
         this.min = min;
         this.max = max;
         this.onChange = onChange;
@@ -28,10 +28,10 @@ public class DraggableIntWidget extends TextFieldWidget {
     }
 
     @Override
-    protected void onDrag(Click click, double deltaX, double deltaY) {
+    protected void onDrag(@NotNull MouseButtonEvent click, double deltaX, double deltaY) {
         try {
             value += (float)(deltaX/50.0 * Math.max(Math.abs(value), 4));
-            setText(String.valueOf(MathHelper.clamp(Math.round(value), min, max)));
+            setValue(String.valueOf(Mth.clamp(Math.round(value), min, max)));
         } catch (Exception ignored) {}
     }
 
@@ -57,21 +57,21 @@ public class DraggableIntWidget extends TextFieldWidget {
     }
 
     @Override
-    public boolean keyPressed(KeyInput keyInput) {
+    public boolean keyPressed(@NotNull KeyEvent keyInput) {
         if (this.isFocused()) {
             if (keyInput.key() == 258) {
-                String text = getText();
+                String text = getValue();
                 if (defaultValue.startsWith(text)) {
-                    setText(defaultValue);
+                    setValue(defaultValue);
                 } else {
                     try {
                         float f = Float.parseFloat(text);
-                        setText(Integer.toString(MathHelper.clamp(Math.round(f), min, max)));
+                        setValue(Integer.toString(Mth.clamp(Math.round(f), min, max)));
                     } catch (Exception ignored) {
-                        setText(defaultValue);
+                        setValue(defaultValue);
                     }
                 }
-                setCursorToEnd(false);
+                moveCursorToEnd(false);
                 return true;
             }
         }
@@ -79,8 +79,8 @@ public class DraggableIntWidget extends TextFieldWidget {
     }
 
     @Override
-    public void setText(String text) {
-        super.setText(text);
-        this.setCursorToStart(false);
+    public void setValue(@NotNull String text) {
+        super.setValue(text);
+        this.moveCursorToStart(false);
     }
 }

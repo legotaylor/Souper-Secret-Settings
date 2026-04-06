@@ -3,9 +3,10 @@ package com.nettakrim.souper_secret_settings.gui.shaders;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.gui.ListWidget;
 import com.nettakrim.souper_secret_settings.shaders.Toggleable;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import org.jetbrains.annotations.NotNull;
 
 public class GroupEntryWidget extends ListWidget {
     protected final GroupEditScreen groupEditScreen;
@@ -15,15 +16,15 @@ public class GroupEntryWidget extends ListWidget {
     protected Integer delta;
 
     public GroupEntryWidget(int x, int width, GroupEditScreen groupEditScreen, String entry) {
-        super(x, width, Text.literal(entry), groupEditScreen);
+        super(x, width, Component.literal(entry), groupEditScreen);
         this.groupEditScreen = groupEditScreen;
         this.entry = entry;
     }
 
     @Override
-    protected void renderWidget(DrawContext context, int mouseX, int mouseY, float tickDelta) {
+    protected void renderWidget(@NotNull GuiGraphics context, int mouseX, int mouseY, float tickDelta) {
         super.renderWidget(context, mouseX, mouseY, tickDelta);
-        if (hovered) {
+        if (isHovered) {
             SouperSecretSettingsClient.soupGui.setHoverText(this.delta == null ? SouperSecretSettingsClient.translate("gui.group_loop") : SouperSecretSettingsClient.translate("gui.group_delta", this.delta >= 0 ? "+"+this.delta : this.delta));
         }
     }
@@ -77,7 +78,7 @@ public class GroupEntryWidget extends ListWidget {
         if (delta == null) {
             setMessage(SouperSecretSettingsClient.translate("gui.group_error", entry).setStyle(Style.EMPTY.withColor(0xFF1010)));
         } else {
-            setMessage(Text.literal(entry));
+            setMessage(Component.literal(entry));
         }
     }
 }
