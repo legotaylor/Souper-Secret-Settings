@@ -2,7 +2,6 @@ package com.nettakrim.souper_secret_settings.gui.shaders;
 
 import com.mclegoman.luminance.client.shaders.UniformInstance;
 import com.mclegoman.luminance.client.shaders.Uniforms;
-import com.mclegoman.luminance.client.shaders.interfaces.PostEffectPassInterface;
 import com.mclegoman.luminance.client.shaders.overrides.LuminanceUniformOverride;
 import com.mclegoman.luminance.client.shaders.overrides.UniformOverride;
 import com.mclegoman.luminance.client.shaders.uniforms.config.MapConfig;

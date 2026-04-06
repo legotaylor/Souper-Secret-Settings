@@ -1,9 +1,6 @@
 package com.nettakrim.souper_secret_settings.gui.shaders;
 
-import com.mclegoman.luminance.client.shaders.Shader;
-import com.mclegoman.luminance.client.shaders.ShaderRegistryEntry;
-import com.mclegoman.luminance.client.shaders.ShaderTime;
-import com.mclegoman.luminance.client.shaders.Shaders;
+import com.mclegoman.luminance.client.shaders.*;
 import com.mclegoman.luminance.common.util.Couple;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
@@ -99,7 +96,7 @@ public class ShaderScreen extends ListScreen<ShaderData> {
         OverrideManager.currentShaderIndex = 0;
         ShaderTime.currentRenderType = SouperSecretSettingsClient.soupRenderer.getRenderType();
         super.render(context, mouseX, mouseY, delta);
-        ShaderTime.currentRenderType = Shader.RenderType.UI;
+        ShaderTime.currentRenderType = RenderTypes.UI;
     }
 
     @Override

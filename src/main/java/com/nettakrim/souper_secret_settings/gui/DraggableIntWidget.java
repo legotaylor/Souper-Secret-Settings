@@ -1,7 +1,9 @@
 package com.nettakrim.souper_secret_settings.gui;
 
 import com.mclegoman.luminance.client.data.ClientData;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 
@@ -26,7 +28,7 @@ public class DraggableIntWidget extends TextFieldWidget {
     }
 
     @Override
-    protected void onDrag(double mouseX, double mouseY, double deltaX, double deltaY) {
+    protected void onDrag(Click click, double deltaX, double deltaY) {
         try {
             value += (float)(deltaX/50.0 * Math.max(Math.abs(value), 4));
             setText(String.valueOf(MathHelper.clamp(Math.round(value), min, max)));
@@ -55,9 +57,9 @@ public class DraggableIntWidget extends TextFieldWidget {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(KeyInput keyInput) {
         if (this.isFocused()) {
-            if (keyCode == 258) {
+            if (keyInput.key() == 258) {
                 String text = getText();
                 if (defaultValue.startsWith(text)) {
                     setText(defaultValue);
@@ -73,7 +75,7 @@ public class DraggableIntWidget extends TextFieldWidget {
                 return true;
             }
         }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(keyInput);
     }
 
     @Override

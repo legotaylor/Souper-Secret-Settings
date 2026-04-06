@@ -1,7 +1,7 @@
 package com.nettakrim.souper_secret_settings;
 
 import com.mclegoman.luminance.client.keybindings.KeybindingHelper;
-import com.mclegoman.luminance.client.shaders.Shader;
+import com.mclegoman.luminance.client.shaders.RenderTypes;
 import com.nettakrim.souper_secret_settings.commands.OptionCommand;
 import com.nettakrim.souper_secret_settings.commands.SouperSecretSettingsCommands;
 import net.minecraft.client.option.KeyBinding;
@@ -24,9 +24,9 @@ public class Keybinds {
         if (toggleSoup.wasPressed()) {
             if (SouperSecretSettingsClient.soupData.config.disableState > 0) {
                 SouperSecretSettingsClient.soupData.config.disableState = 0;
-                OptionCommand.setRenderType(Shader.RenderType.WORLD);
-            } else if (SouperSecretSettingsClient.soupRenderer.getRenderType().equals(Shader.RenderType.WORLD)) {
-                OptionCommand.setRenderType(Shader.RenderType.UI);
+                OptionCommand.setRenderType(RenderTypes.WORLD);
+            } else if (SouperSecretSettingsClient.soupRenderer.getRenderType().equals(RenderTypes.WORLD)) {
+                OptionCommand.setRenderType(RenderTypes.UI);
             } else {
                 OptionCommand.toggle(false);
             }
