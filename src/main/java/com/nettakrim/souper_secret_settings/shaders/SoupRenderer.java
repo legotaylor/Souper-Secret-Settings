@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.mclegoman.luminance.client.events.Events;
 import com.mclegoman.luminance.client.events.Runnables;
-import com.mclegoman.luminance.client.shaders.RenderTypes;
+import com.mclegoman.luminance.client.shaders.RenderLocations;
 import com.mclegoman.luminance.client.shaders.Shader;
 import com.mclegoman.luminance.client.shaders.ShaderRegistryEntry;
 import com.mclegoman.luminance.client.shaders.Shaders;
@@ -35,7 +35,7 @@ public class SoupRenderer implements Runnables.WorldRender {
 
     private List<Identifier> validUniforms;
 
-    private RenderTypes.RenderType renderType;
+    private RenderLocations.RenderLocation renderType;
 
     public final Map<Identifier, Map<String, Group>> shaderGroups;
     public final Map<Identifier, Map<String, List<ShaderRegistryEntry>>> shaderGroupRegistries;
@@ -48,7 +48,7 @@ public class SoupRenderer implements Runnables.WorldRender {
         shaderLayers = new ArrayList<>();
         shaderGroups = new HashMap<>();
         shaderGroupRegistries = new HashMap<>();
-        renderType = RenderTypes.WORLD;
+        renderType = RenderLocations.WORLD;
 
         spectateHandler = new SoupSpectateHandler();
         Events.SpectatorHandlers.register(Identifier.of(SouperSecretSettingsClient.MODID, "spectate_handler"), spectateHandler);
@@ -58,13 +58,13 @@ public class SoupRenderer implements Runnables.WorldRender {
                     Runnables.WorldRender.fromGameRender(spectateHandler.shaderLayer::render, framebuffer, objectAllocator);
                     ShaderLayer.renderCleanup(null);
                 }
-                if (renderType == RenderTypes.WORLD) {
+                if (renderType == RenderLocations.WORLD) {
                     Runnables.WorldRender.fromGameRender(this, framebuffer, objectAllocator);
                 }
             }
         });
         Events.AfterUiRender.register(Identifier.of(SouperSecretSettingsClient.MODID, "rendering"), (framebuffer, objectAllocator) -> {
-            if (renderType == RenderTypes.UI && SouperSecretSettingsClient.soupData.config.disableState == 0) {
+            if (renderType == RenderLocations.UI && SouperSecretSettingsClient.soupData.config.disableState == 0) {
                 Runnables.WorldRender.fromGameRender(this, framebuffer, objectAllocator);
             }
         });
@@ -246,20 +246,20 @@ public class SoupRenderer implements Runnables.WorldRender {
     }
 
     public void cycleRenderType(ButtonWidget buttonWidget) {
-        setRenderType(renderType == RenderTypes.UI ? RenderTypes.WORLD : RenderTypes.UI);
+        setRenderType(renderType == RenderLocations.UI ? RenderLocations.WORLD : RenderLocations.UI);
         buttonWidget.setMessage(getRenderTypeText());
     }
 
-    public void setRenderType(RenderTypes.RenderType renderType) {
+    public void setRenderType(RenderLocations.RenderLocation renderType) {
         this.renderType = renderType;
     }
 
-    public RenderTypes.RenderType getRenderType() {
+    public RenderLocations.RenderLocation getRenderType() {
         return renderType;
     }
 
     public Text getRenderTypeText() {
-        return SouperSecretSettingsClient.translate(renderType == RenderTypes.UI ? "gui.ui" : "gui.world");
+        return SouperSecretSettingsClient.translate(renderType == RenderLocations.UI ? "gui.ui" : "gui.world");
     }
 
     private void runForGroups(ShaderRegistryEntry shaderRegistryEntry, List<Identifier> registries, BiConsumer<Identifier, String> consumer) {

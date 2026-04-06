@@ -1,6 +1,6 @@
 package com.nettakrim.souper_secret_settings.gui.parameters;
 
-import com.mclegoman.luminance.client.shaders.RenderTypes;
+import com.mclegoman.luminance.client.shaders.RenderLocations;
 import com.mclegoman.luminance.client.shaders.ShaderTime;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
@@ -25,9 +25,9 @@ public class ParameterScreen extends ListScreen<Calculation> {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        ShaderTime.currentRenderType = SouperSecretSettingsClient.soupRenderer.getRenderType();
+        ShaderTime.currentRenderLocation = SouperSecretSettingsClient.soupRenderer.getRenderType();
         super.render(context, mouseX, mouseY, delta);
-        ShaderTime.currentRenderType = RenderTypes.UI;
+        ShaderTime.currentRenderLocation = RenderLocations.UI;
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.nettakrim.souper_secret_settings.commands;
 
-import com.mclegoman.luminance.client.shaders.RenderTypes;
+import com.mclegoman.luminance.client.shaders.RenderLocations;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -100,10 +100,10 @@ public class OptionCommand {
         LiteralCommandNode<FabricClientCommandSource> renderTypeNode = ClientCommandManager
                 .literal("render_type")
                 .then(
-                        ClientCommandManager.literal("world").executes(context -> setRenderType(RenderTypes.WORLD))
+                        ClientCommandManager.literal("world").executes(context -> setRenderType(RenderLocations.WORLD))
                 )
                 .then(
-                        ClientCommandManager.literal("ui").executes(context -> setRenderType(RenderTypes.UI))
+                        ClientCommandManager.literal("ui").executes(context -> setRenderType(RenderLocations.UI))
                 )
                 .executes(context -> queryRenderType(1))
                 .build();
@@ -234,7 +234,7 @@ public class OptionCommand {
         SouperSecretSettingsClient.say(key, priority, s);
     }
 
-    public static int setRenderType(RenderTypes.RenderType renderType) {
+    public static int setRenderType(RenderLocations.RenderLocation renderType) {
         SouperSecretSettingsClient.soupRenderer.setRenderType(renderType);
         return queryRenderType(0);
     }
