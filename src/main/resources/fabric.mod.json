@@ -32,14 +32,11 @@
   ],
 
   "depends": {
-    "fabricloader": ">=0.14.21",
-    "fabric": "*",
-    "minecraft": [
-      "1.21.4",
-      "1.21.3"
-    ],
+    "fabric-api": ">=0.141.3",
+    "fabricloader": "*",
+    "minecraft": ">=1.21.11",
     "java": ">=21",
-    "luminance": ">=1.0.1-release.1"
+    "luminance": ">=1.1.0-alpha.1"
   },
   "suggests": {
   }
