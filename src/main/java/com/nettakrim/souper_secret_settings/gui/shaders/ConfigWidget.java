@@ -186,9 +186,9 @@ public class ConfigWidget extends ParameterTextWidget {
     }
 
     public UniformConfig getConfig(String prefix) {
-        MapConfig mapConfig = new MapConfig(List.of());
+        MapConfig mapConfig = new MapConfig(Map.of());
         for (ConfigValueWidget child : children) {
-            mapConfig.config.put(prefix+child.name, child.objects);
+            mapConfig.config().put(prefix+child.name, child.objects);
         }
         return mapConfig;
     }

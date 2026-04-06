@@ -39,7 +39,7 @@ public abstract class ScrollScreen extends Screen {
     }
 
     @Override
-    protected void applyBlur() {}
+    protected void applyBlur(DrawContext context) {}
 
     @Override
     protected void renderDarkening(DrawContext context, int x, int y, int width, int height) {}

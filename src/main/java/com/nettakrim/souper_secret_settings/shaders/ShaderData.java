@@ -3,6 +3,7 @@ package com.nettakrim.souper_secret_settings.shaders;
 import com.mclegoman.luminance.client.shaders.Shader;
 import com.mclegoman.luminance.client.shaders.Shaders;
 import com.mclegoman.luminance.client.shaders.interfaces.PostEffectProcessorInterface;
+import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import net.minecraft.client.gl.PostEffectPass;
 import net.minecraft.client.gl.PostEffectProcessor;
 import net.minecraft.client.render.FrameGraphBuilder;
@@ -19,6 +20,9 @@ public class ShaderData implements Toggleable {
 
     public boolean active = true;
     public boolean expanded = false;
+
+    static long uuidCounter = 0;
+    private final Identifier uuid;
 
     public ShaderData(Shader shader) {
         this.shader = shader;
@@ -43,6 +47,8 @@ public class ShaderData implements Toggleable {
             assert passes != null;
             passDatas.put(customPass, new PassData(passes));
         }
+
+        uuid = Identifier.of(SouperSecretSettingsClient.MODID, String.valueOf(uuidCounter++));
     }
 
     public boolean render(FrameGraphBuilder builder, int textureWidth, int textureHeight, PostEffectProcessor.FramebufferSet framebufferSet, @Nullable Identifier customPasses) {
@@ -52,8 +58,8 @@ public class ShaderData implements Toggleable {
             return false;
         }
 
-        processor.luminance$setPersistentBufferSource(this);
-        Shaders.renderProcessorUsingFramebufferSet(shader, builder, textureWidth, textureHeight, framebufferSet, customPasses);
+        processor.luminance$setPersistentBufferSource(uuid);
+        Shaders.renderProcessorUsingTargetBundle(shader, builder, textureWidth, textureHeight, framebufferSet, customPasses);
         processor.luminance$setPersistentBufferSource(null);
         return true;
     }

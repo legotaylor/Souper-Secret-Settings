@@ -44,8 +44,8 @@ public class UniformChangeAction implements Action {
         Map<String, List<Object>> prev = backup();
 
         String prefix = i+"_";
-        uniformConfig.config.keySet().removeIf((s) -> s.startsWith(prefix));
-        uniformConfig.config.putAll(mapBackup);
+        uniformConfig.config().keySet().removeIf((s) -> s.startsWith(prefix));
+        uniformConfig.config().putAll(mapBackup);
 
         mapBackup = prev;
     }
@@ -67,7 +67,7 @@ public class UniformChangeAction implements Action {
     private Map<String, List<Object>> backup() {
         String prefix = i+"_";
         Map<String, List<Object>> map = new HashMap<>();
-        uniformConfig.config.forEach((key, value) -> {
+        uniformConfig.config().forEach((key, value) -> {
             if (key.startsWith(prefix)) {
                 map.put(key, new ArrayList<>(value));
             }

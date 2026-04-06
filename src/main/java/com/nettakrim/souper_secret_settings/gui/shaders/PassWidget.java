@@ -9,6 +9,7 @@ import com.nettakrim.souper_secret_settings.shaders.PassData;
 import net.minecraft.client.gl.GlUniform;
 import net.minecraft.client.gl.PostEffectPass;
 import net.minecraft.client.gl.ShaderProgram;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.text.Text;
@@ -92,11 +93,11 @@ public class PassWidget extends CollapseWidget {
     }
 
     @Override
-    public void onClick(double mouseX, double mouseY) {
-        if (isFirstCustom && mouseY < getY() + firstCustomHeight) {
+    public void onClick(Click click, boolean doubled) {
+        if (isFirstCustom && click.y() < getY() + firstCustomHeight) {
             return;
         }
-        super.onClick(mouseX, mouseY);
+        super.onClick(click, doubled);
     }
 
     @Override

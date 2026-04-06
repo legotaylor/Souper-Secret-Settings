@@ -1,5 +1,6 @@
 package com.nettakrim.souper_secret_settings.gui;
 
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.widget.ClickableWidget;
@@ -116,7 +117,7 @@ public abstract class CollapseWidget extends ClickableWidget implements ListChil
     }
 
     @Override
-    public void onClick(double mouseX, double mouseY) {
+    public void onClick(Click click, boolean doubled) {
         setExpanded(!expanded);
     }
 

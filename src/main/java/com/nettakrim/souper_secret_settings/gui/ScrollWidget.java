@@ -1,5 +1,7 @@
 package com.nettakrim.souper_secret_settings.gui;
 
+import net.minecraft.client.gl.RenderPipelines;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ClickableWidget;
@@ -28,13 +30,13 @@ public class ScrollWidget extends ClickableWidget {
 
     @Override
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-        context.drawGuiTexture(RenderLayer::getGuiTextured, SCROLLER_BACKGROUND_TEXTURE, getX(), getY(), getWidth(), getHeight(), ColorHelper.getWhite(alpha));
+        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, SCROLLER_BACKGROUND_TEXTURE, getX(), getY(), getWidth(), getHeight(), ColorHelper.getWhite(alpha));
 
         int barHeight = (int)(getBarHeight()*getHeight());
         int y = scrollHeight > 0 ? (int)Math.round(scrollY/scrollHeight * (getHeight()-barHeight)) : 0;
 
-        context.drawGuiTexture(RenderLayer::getGuiTextured, SCROLLER_TEXTURE, getX(), y + getY(), getWidth(), barHeight, ColorHelper.getWhite(alpha));
-        context.drawGuiTexture(RenderLayer::getGuiTextured, SCROLLER_TEXTURE, getX(), y + getY() + MathHelper.floor(barHeight/2f), getWidth(), 1, ColorHelper.getArgb(255, 128, 128, 128));
+        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, SCROLLER_TEXTURE, getX(), y + getY(), getWidth(), barHeight, ColorHelper.getWhite(alpha));
+        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, SCROLLER_TEXTURE, getX(), y + getY() + MathHelper.floor(barHeight/2f), getWidth(), 1, ColorHelper.getArgb(255, 128, 128, 128));
     }
 
     @Override
@@ -43,13 +45,13 @@ public class ScrollWidget extends ClickableWidget {
     }
 
     @Override
-    public void onClick(double mouseX, double mouseY) {
-        setScroll(mouseY);
+    public void onClick(Click click, boolean doubled) {
+        setScroll(click.y());
     }
 
     @Override
-    protected void onDrag(double mouseX, double mouseY, double deltaX, double deltaY) {
-        setScroll(mouseY);
+    protected void onDrag(Click click, double deltaX, double deltaY) {
+        setScroll(click.y());
     }
 
     public void offsetScroll(double offset) {

@@ -3,10 +3,9 @@ package com.nettakrim.souper_secret_settings.shaders;
 import com.mclegoman.luminance.client.shaders.ShaderTime;
 import com.mclegoman.luminance.client.shaders.interfaces.CustomPassData;
 import com.mclegoman.luminance.client.shaders.interfaces.PostEffectPassInterface;
-import com.mclegoman.luminance.client.shaders.interfaces.ShaderProgramInterface;
 import com.mclegoman.luminance.client.shaders.overrides.*;
 import com.mclegoman.luminance.client.shaders.uniforms.Uniform;
-import com.mclegoman.luminance.client.shaders.uniforms.UniformValue;
+import com.mclegoman.luminance.client.shaders.uniforms.UniformVector;
 import com.mclegoman.luminance.client.shaders.uniforms.config.EmptyConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.MapConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
@@ -71,7 +70,7 @@ public class PassData {
             }
         }
 
-        MapConfig configOverride = new MapConfig(List.of());
+        MapConfig configOverride = new MapConfig(Map.of());
         configOverride.mergeWithConfig(defaultConfig);
 
         overrideMap.put(uniform.getName(), new UniformData<>(uniformOverride, defaultOverride));
@@ -152,8 +151,8 @@ public class PassData {
 
         float a = 0;
         float b = 1;
-        Optional<UniformValue> min = uniformSource.getUniform().getMin(null, null);
-        Optional<UniformValue> max = uniformSource.getUniform().getMax(null, null);
+        Optional<UniformVector> min = uniformSource.getUniform().getMin(null, null);
+        Optional<UniformVector> max = uniformSource.getUniform().getMax(null, null);
         if (min.isPresent() && max.isPresent()) {
             a = min.get().values.getFirst();
             b = max.get().values.getFirst();
@@ -216,18 +215,18 @@ public class PassData {
 
         MapConfig mapConfig = (MapConfig)config.value;
 
-        if (mapConfig.config.isEmpty() && config.defaultValue == EmptyConfig.INSTANCE) {
+        if (mapConfig.config().isEmpty() && config.defaultValue == EmptyConfig.INSTANCE) {
             return false;
         }
 
         if (config.defaultValue instanceof MapConfig defaultMap) {
-            if (!defaultMap.config.keySet().equals(mapConfig.config.keySet())) {
+            if (!defaultMap.config().keySet().equals(mapConfig.config().keySet())) {
                 return true;
             }
 
-            for (String s : defaultMap.config.keySet()) {
-                List<Object> defaultObjects = defaultMap.config.get(s);
-                List<Object> currentObjects = mapConfig.config.get(s);
+            for (String s : defaultMap.config().keySet()) {
+                List<Object> defaultObjects = defaultMap.config().get(s);
+                List<Object> currentObjects = mapConfig.config().get(s);
                 if (defaultObjects.size() != currentObjects.size()) {
                     return true;
                 }

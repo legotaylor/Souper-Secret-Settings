@@ -32,7 +32,7 @@ public class SoupRenderer implements Runnables.WorldRender {
 
     private final SoupSpectateHandler spectateHandler;
 
-    private List<String> validUniforms;
+    private List<Identifier> validUniforms;
 
     private Shader.RenderType renderType;
 
@@ -234,7 +234,7 @@ public class SoupRenderer implements Runnables.WorldRender {
     public List<String> getValidUniforms() {
         if (validUniforms == null) {
             validUniforms = new ArrayList<>();
-            for (Map.Entry<String, Uniform> entry : Events.ShaderUniform.registry.entrySet()) {
+            for (Map.Entry<Identifier, Uniform> entry : Events.ShaderUniform.registry.entrySet()) {
                 if (entry.getValue().getLength() == 1) {
                     validUniforms.add(entry.getKey());
                 }

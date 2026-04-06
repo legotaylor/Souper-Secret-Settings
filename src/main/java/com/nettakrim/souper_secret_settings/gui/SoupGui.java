@@ -161,10 +161,11 @@ public class SoupGui {
             return;
         }
         int offset = (mouseY > 30 && context.scissorContains(mouseX, mouseY-17)) ? -15 : 8;
-        RenderSystem.depthMask(false);
-        context.fill(mouseX-2, mouseY+offset-2, mouseX + ClientData.minecraft.textRenderer.getWidth(currentHoverText)+2, mouseY+offset+10, 8, ColorHelper.getArgb(128,0,0,0));
+        // TODO: fix this
+        //RenderSystem.depthMask(false);
+        //context.fill(mouseX-2, mouseY+offset-2, mouseX + ClientData.minecraft.textRenderer.getWidth(currentHoverText)+2, mouseY+offset+10, 8, ColorHelper.getArgb(128,0,0,0));
         context.drawText(ClientData.minecraft.textRenderer, currentHoverText, mouseX,  mouseY+offset, -1, true);
-        RenderSystem.depthMask(true);
+        //RenderSystem.depthMask(true);
         currentHoverText = null;
     }
 

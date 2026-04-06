@@ -1,6 +1,7 @@
 package com.nettakrim.souper_secret_settings.gui;
 
 import com.mclegoman.luminance.client.data.ClientData;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 
@@ -13,7 +14,7 @@ public class DraggableTextFieldWidget extends TextFieldWidget implements ListChi
     }
 
     @Override
-    protected void onDrag(double mouseX, double mouseY, double deltaX, double deltaY) {
+    protected void onDrag(Click click, double deltaX, double deltaY) {
         if (disableDrag) {
             return;
         }

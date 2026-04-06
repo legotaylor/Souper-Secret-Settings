@@ -187,7 +187,7 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
         ).apply(instance, Uniform::new));
 
         public static Uniform from(LuminanceUniformOverride override, MapConfig config) {
-            return new Uniform(override.getStrings(), config.config.isEmpty() ? Optional.empty() : Optional.of(config.config));
+            return new Uniform(override.getStrings(), config.config().isEmpty() ? Optional.empty() : Optional.of(config.config()));
         }
 
         public void apply(LuminanceUniformOverride override, MapConfig config) {
@@ -200,8 +200,8 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
             }
 
             this.config.ifPresent(c -> {
-                config.config.clear();
-                config.config.putAll(c);
+                config.config().clear();
+                config.config().putAll(c);
             });
         }
     }

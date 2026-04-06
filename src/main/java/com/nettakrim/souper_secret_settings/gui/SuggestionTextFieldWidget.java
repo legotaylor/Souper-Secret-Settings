@@ -1,5 +1,6 @@
 package com.nettakrim.souper_secret_settings.gui;
 
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -114,28 +115,28 @@ public class SuggestionTextFieldWidget extends DraggableTextFieldWidget {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(KeyInput keyInput) {
         if (this.isFocused()) {
-            if (keyCode == 257 && onSubmit != null) {
+            if (keyInput.key() == 257 && onSubmit != null) {
                 onSubmit.accept(getText());
                 return true;
             }
             if (!currentSuggestions.isEmpty()) {
-                if (keyCode == 258) {
+                if (keyInput.key() == 258) {
                     String text = getText();
                     setText(text + currentSuggestions.get(currentSuggestionIndex).substring(text.length()));
                     setCursorToEnd(false);
                     return true;
-                } else if (keyCode == 265) {
+                } else if (keyInput.key() == 265) {
                     cycleSuggestion(-1);
                     return true;
-                } else if (keyCode == 264) {
+                } else if (keyInput.key() == 264) {
                     cycleSuggestion(1);
                     return true;
                 }
             }
         }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(keyInput);
     }
 
     @Override

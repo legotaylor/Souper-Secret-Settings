@@ -2,12 +2,12 @@ package com.nettakrim.souper_secret_settings.shaders.calculations.oscillator;
 
 import com.mclegoman.luminance.client.shaders.Uniforms;
 import com.mclegoman.luminance.client.shaders.overrides.OverrideSource;
-import com.mclegoman.luminance.client.shaders.uniforms.config.ConfigData;
 import com.mclegoman.luminance.client.shaders.uniforms.config.EmptyConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.MapConfig;
 import com.nettakrim.souper_secret_settings.shaders.calculations.Calculation;
 
 import java.util.List;
+import java.util.Map;
 
 public abstract class PeriodicCalculation extends Calculation {
     protected boolean useConfig;
@@ -41,7 +41,7 @@ public abstract class PeriodicCalculation extends Calculation {
         assert overrideSource != null;
 
         useConfig = overrideSource.getTemplateConfig().getNames().contains("period");
-        Float f = overrideSource.get(useConfig ? new MapConfig(List.of(new ConfigData("period", List.of(inputValues[1])))) : EmptyConfig.INSTANCE, Uniforms.shaderTime);
+        Float f = overrideSource.get(useConfig ? new MapConfig(Map.of("period", List.of(inputValues[1]))) : EmptyConfig.INSTANCE, Uniforms.shaderTime);
         if (f == null) return;
 
         inputValues[0] = f;

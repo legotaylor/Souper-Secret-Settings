@@ -9,6 +9,7 @@ import com.nettakrim.souper_secret_settings.gui.ListWidget;
 import com.nettakrim.souper_secret_settings.gui.SuggestionTextFieldWidget;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import com.nettakrim.souper_secret_settings.shaders.Toggleable;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
@@ -82,14 +83,14 @@ public class LayerWidget extends ListWidget {
     }
 
     @Override
-    public void onClick(double mouseX, double mouseY) {
-        int distance = getX()+getWidth() - (int)mouseX;
+    public void onClick(Click click, boolean doubled) {
+        int distance = getX()+getWidth() - (int)click.x();
         if (distance < 20 && distance > 10) {
             SouperSecretSettingsClient.soupRenderer.activeLayer = layer;
             SouperSecretSettingsClient.soupGui.updateActiveLayerMessageOrScreen();
             return;
         }
-        super.onClick(mouseX, mouseY);
+        super.onClick(click, doubled);
     }
 
     @Override

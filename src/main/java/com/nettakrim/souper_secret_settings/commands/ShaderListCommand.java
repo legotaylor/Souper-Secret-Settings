@@ -279,15 +279,15 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
             override.overrideSources.set(index, source);
 
             String prefix = index+"_";
-            MapConfig mapConfig = new MapConfig(List.of());
+            MapConfig mapConfig = new MapConfig(Map.of());
             UniformConfig templateConfig = source.getTemplateConfig();
             for (String templateName : templateConfig.getNames()) {
                 List<Object> objects = templateConfig.getObjects(templateName);
                 if (objects != null) {
-                    mapConfig.config.put(prefix + templateName, new ArrayList<>(objects));
+                    mapConfig.config().put(prefix + templateName, new ArrayList<>(objects));
                 }
             }
-            config.config.keySet().removeIf((s) -> s.startsWith(prefix) && !mapConfig.config.containsKey(s));
+            config.config().keySet().removeIf((s) -> s.startsWith(prefix) && !mapConfig.config().containsKey(s));
             config.mergeWithConfig(mapConfig);
         } else {
             List<Object> values = config.getObjects(text);
@@ -334,7 +334,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
             } catch (Exception e) {
                 ArrayList<Object> valuesMutable = new ArrayList<>(values);
                 valuesMutable.set(index, object);
-                config.config.put(text, valuesMutable);
+                config.config().put(text, valuesMutable);
             }
         }
 
