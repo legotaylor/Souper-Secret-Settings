@@ -20,6 +20,9 @@ public class HoverButtonWidget extends Button {
 
     @Override
     protected void renderContents(@NotNull GuiGraphics context, int mouseX, int mouseY, float delta) {
+        renderDefaultSprite(context);
+        context.textRenderer().acceptScrollingWithDefaultCenter(getMessage(), getX(), getX()+getWidth(), getY(), getY()+getHeight());
+
         if (isHovered && hoverText != null && passesRangeCheck(mouseX, mouseY)) {
             SouperSecretSettingsClient.soupGui.setHoverText(hoverText);
         }

@@ -31,7 +31,7 @@ public class AdditionButton extends HoverButtonWidget {
 
     @Override
     protected void renderContents(@NotNull GuiGraphics context, int mouseX, int mouseY, float delta) {
-        super.renderWidget(context, mouseX, mouseY, delta);
+        super.renderContents(context, mouseX, mouseY, delta);
 
         if (onRemove != null) {
             context.blit(RenderPipelines.GUI_TEXTURED, ListWidget.ICON_TEXTURE, getX(), getY(), 0, 0, 10, 20, 40, 20, dragState < 0 ? ListWidget.texColWhite : ListWidget.texColBlack);
@@ -62,7 +62,7 @@ public class AdditionButton extends HoverButtonWidget {
     }
 
     @Override
-    public void onRelease(MouseButtonEvent click) {
+    public void onRelease(@NotNull MouseButtonEvent click) {
         if (dragState == 1 && onEdit != null) {
             onEdit.accept(this);
         }
