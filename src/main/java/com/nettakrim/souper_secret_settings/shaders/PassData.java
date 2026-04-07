@@ -10,6 +10,7 @@ import com.mclegoman.luminance.client.shaders.uniforms.UniformVector;
 import com.mclegoman.luminance.client.shaders.uniforms.config.EmptyConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.MapConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import java.util.*;
 import net.minecraft.client.renderer.PostPass;
@@ -37,8 +38,7 @@ public class PassData {
             Map<String, UniformData<UniformConfig>> config = new HashMap<>(0);
 
             initialiseUniforms((PostPassInterface)pass);
-            for (String blockName : ((PostPassInterface)pass).luminance$getUniformBlockNames()) {
-                UniformBlock block = ((PostPassInterface)pass).luminance$getUniformBlock(blockName);
+            for (UniformBlock block : ((PostPassInterface)pass).luminance$getUniformBlocks().values()) {
                 for (UniformInstance uniformInstance : block.uniforms) {
                     defaultOverride(((PostPassInterface)pass), uniformInstance, override, config);
                 }
@@ -76,15 +76,14 @@ public class PassData {
         }
 
         int count = 0;
-        for (String blockName : pass.luminance$getUniformBlockNames()) {
-            count += pass.luminance$getUniformBlock(blockName).uniforms.size();
+        for (UniformBlock block : pass.luminance$getUniformBlocks().values()) {
+            count += block.uniforms.size();
         }
 
         CustomPassData.CustomPassDataMap<String,LuminanceUniformOverride> overrideMap = new CustomPassData.CustomPassDataMap<>(count);
         CustomPassData.CustomPassDataMap<String,UniformConfig> configMap = new CustomPassData.CustomPassDataMap<>(count);
 
-        for (String blockName : pass.luminance$getUniformBlockNames()) {
-            UniformBlock block = pass.luminance$getUniformBlock(blockName);
+        for (UniformBlock block : pass.luminance$getUniformBlocks().values()) {
             for (UniformInstance uniformInstance : block.uniforms) {
                 // create new config instance
                 MapConfig configOverride = new MapConfig(Map.of());
@@ -189,5 +188,12 @@ public class PassData {
         }
 
         return true;
+    }
+
+    public static String getName(PostPassInterface pass) {
+        // if the vertex shader isnt core/screenquad, then its probably important
+        RenderPipeline pipeline = pass.luminance$getPipeline();
+        Identifier identifier = pipeline.getVertexShader().equals(Identifier.withDefaultNamespace("core/screenquad")) ? pipeline.getFragmentShader() : pipeline.getVertexShader();
+        return identifier.toString().replace(":post/",":");
     }
 }

@@ -446,7 +446,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
                 List<PostPass> passes = processor.luminance$getPasses(identifier);
                 if (passes != null) {
                     for (PostPass pass : passes) {
-                        builder.suggest(total, Component.literal(((PostPassInterface)pass).luminance$getID().replace(":post/", ":")));
+                        builder.suggest(total, Component.literal(PassData.getName((PostPassInterface)pass)));
                         total++;
                     }
                 }
