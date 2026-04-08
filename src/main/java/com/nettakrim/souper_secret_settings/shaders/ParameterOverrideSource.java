@@ -1,7 +1,7 @@
 package com.nettakrim.souper_secret_settings.shaders;
 
 import com.mclegoman.luminance.client.shaders.ShaderTime;
-import com.mclegoman.luminance.client.shaders.overrides.LuminanceUniformOverride;
+import com.mclegoman.luminance.client.shaders.overrides.PerValueOverride;
 import com.mclegoman.luminance.client.shaders.overrides.OverrideSource;
 import com.mclegoman.luminance.client.shaders.overrides.UniformSource;
 import com.mclegoman.luminance.client.shaders.uniforms.config.DefaultableConfig;
@@ -59,7 +59,7 @@ public class ParameterOverrideSource implements OverrideSource {
 
     public static OverrideSource parameterSourceFromString(String s) {
         // TODO: this needs to also work with NullSources
-        OverrideSource overrideSource = LuminanceUniformOverride.sourceFromString(s);
+        OverrideSource overrideSource = PerValueOverride.sourceFromString(s);
         if (overrideSource instanceof UniformSource uniformSource) {
             return new ParameterOverrideSource(uniformSource);
         }

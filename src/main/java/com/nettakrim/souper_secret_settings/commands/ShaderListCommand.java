@@ -4,7 +4,7 @@ import com.mclegoman.luminance.client.shaders.ShaderRegistryEntry;
 import com.mclegoman.luminance.client.shaders.Shaders;
 import com.mclegoman.luminance.client.shaders.interfaces.PostChainInterface;
 import com.mclegoman.luminance.client.shaders.interfaces.PostPassInterface;
-import com.mclegoman.luminance.client.shaders.overrides.LuminanceUniformOverride;
+import com.mclegoman.luminance.client.shaders.overrides.PerValueOverride;
 import com.mclegoman.luminance.client.shaders.overrides.OverrideSource;
 import com.mclegoman.luminance.client.shaders.overrides.UniformOverride;
 import com.mclegoman.luminance.client.shaders.uniforms.config.MapConfig;
@@ -261,7 +261,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
             return 0;
         }
 
-        LuminanceUniformOverride override = (LuminanceUniformOverride)uniforms.getFirst().get(uniform).value;
+        PerValueOverride override = (PerValueOverride)uniforms.getFirst().get(uniform).value;
         MapConfig config = (MapConfig)uniforms.getSecond().get(uniform).value;
 
         String text = name.substring(0, breakIndex);
@@ -446,7 +446,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
                 List<PostPass> passes = processor.luminance$getPasses(identifier);
                 if (passes != null) {
                     for (PostPass pass : passes) {
-                        builder.suggest(total, Component.literal(PassData.getName((PostPassInterface)pass)));
+                        builder.suggest(total, Component.literal(ChainData.getName((PostPassInterface)pass)));
                         total++;
                     }
                 }
@@ -476,7 +476,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
 
             UniformData<UniformOverride> override = uniforms.getFirst().get(uniform);
             if (override != null) {
-                for (int i = 0; i < ((LuminanceUniformOverride)override.value).overrideSources.size(); i++) {
+                for (int i = 0; i < ((PerValueOverride)override.value).overrideSources.size(); i++) {
                     builder.suggest("value." + i);
                 }
 
@@ -516,10 +516,10 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
 
                         String text = name.substring(0, breakIndex);
                         if (text.equals("value")) {
-                            List<String> values = ((LuminanceUniformOverride) override.value).getStrings();
+                            List<String> values = ((PerValueOverride) override.value).getStrings();
                             if (index < values.size()) {
                                 currentValue = values.get(index);
-                                defaultValue = ((LuminanceUniformOverride) override.defaultValue).getStrings().get(index);
+                                defaultValue = ((PerValueOverride) override.defaultValue).getStrings().get(index);
                             }
                         } else {
                             UniformData<UniformConfig> config = uniforms.getSecond().get(uniform);
@@ -567,11 +567,11 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
         ShaderData shader = shaders.get(shaderIndex);
 
         for (Identifier identifier : SouperSecretSettingsClient.soupRenderer.getRegistryPasses(registry)) {
-            PassData passData = shader.passDatas.get(identifier);
-            if (passData != null) {
-                int size = passData.overrides.size();
+            ChainData chainData = shader.passDatas.get(identifier);
+            if (chainData != null) {
+                int size = chainData.overrides.size();
                 if (pass < size) {
-                    return new Couple<>(passData.overrides.get(pass), passData.configs.get(pass));
+                    return new Couple<>(chainData.overrides.get(pass), chainData.configs.get(pass));
                 }
                 pass -= size;
                 total += size;

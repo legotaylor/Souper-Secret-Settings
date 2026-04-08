@@ -1,6 +1,6 @@
 package com.nettakrim.souper_secret_settings.actions;
 
-import com.mclegoman.luminance.client.shaders.overrides.LuminanceUniformOverride;
+import com.mclegoman.luminance.client.shaders.overrides.PerValueOverride;
 import com.mclegoman.luminance.client.shaders.overrides.OverrideSource;
 import com.mclegoman.luminance.client.shaders.uniforms.config.MapConfig;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
@@ -14,13 +14,13 @@ public class UniformChangeAction implements Action {
     private final String uniform;
     private final int i;
 
-    private final LuminanceUniformOverride uniformOverride;
+    private final PerValueOverride uniformOverride;
     private final MapConfig uniformConfig;
 
     private OverrideSource sourceBackup;
     private Map<String, List<Object>> mapBackup;
 
-    public UniformChangeAction(String uniform, int i, LuminanceUniformOverride uniformOverride, MapConfig uniformConfig) {
+    public UniformChangeAction(String uniform, int i, PerValueOverride uniformOverride, MapConfig uniformConfig) {
         this.uniform = uniform;
         this.i = i;
         this.uniformOverride = uniformOverride;

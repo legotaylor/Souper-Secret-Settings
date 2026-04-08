@@ -1,7 +1,7 @@
 package com.nettakrim.souper_secret_settings.data;
 
 import com.mclegoman.luminance.client.shaders.Shaders;
-import com.mclegoman.luminance.client.shaders.overrides.LuminanceUniformOverride;
+import com.mclegoman.luminance.client.shaders.overrides.PerValueOverride;
 import com.mclegoman.luminance.client.shaders.overrides.OverrideSource;
 import com.mclegoman.luminance.client.shaders.overrides.UniformOverride;
 import com.mclegoman.luminance.client.shaders.uniforms.config.MapConfig;
@@ -102,22 +102,22 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
             }
             ShaderData shaderData = shaderDatas.getFirst();
             passes.ifPresent(stringListMap -> stringListMap.forEach((name, passes) -> {
-                PassData passData = null;
+                ChainData chainData = null;
                 Identifier identifier = Identifier.tryParse(name);
                 if (identifier != null) {
-                    passData = shaderData.passDatas.get(name.equals("default") ? null : identifier);
+                    chainData = shaderData.passDatas.get(name.equals("default") ? null : identifier);
                 }
-                if (passData == null) {
+                if (chainData == null) {
                     sayError("shader.error.pass_id", name);
                     return;
                 }
 
                 for (int i = 0; i < passes.size(); i++) {
-                    if (i >= passData.overrides.size()) {
-                        sayError("shader.error.pass", i, passData.overrides.size()-1);
+                    if (i >= chainData.overrides.size()) {
+                        sayError("shader.error.pass", i, chainData.overrides.size()-1);
                         break;
                     }
-                    passes.get(i).apply(passData.overrides.get(i), passData.configs.get(i));
+                    passes.get(i).apply(chainData.overrides.get(i), chainData.configs.get(i));
                 }
             }));
             shaderData.active = active;
@@ -130,11 +130,11 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
                 Codec.unboundedMap(Codec.STRING, Uniform.CODEC).optionalFieldOf("uniforms").forGetter(Pass::uniforms)
         ).apply(instance, Pass::new));
 
-        public static List<Pass> from(PassData passData) {
-            List<Pass> passes = new ArrayList<>(passData.overrides.size());
+        public static List<Pass> from(ChainData chainData) {
+            List<Pass> passes = new ArrayList<>(chainData.overrides.size());
 
-            for (int passIndex = 0; passIndex < passData.overrides.size(); passIndex++) {
-                Map<String,Uniform> uniforms = getUniforms(passData, passIndex);
+            for (int passIndex = 0; passIndex < chainData.overrides.size(); passIndex++) {
+                Map<String,Uniform> uniforms = getUniforms(chainData, passIndex);
                 passes.add(new Pass(uniforms.isEmpty() ? Optional.empty() : Optional.of(uniforms)));
             }
 
@@ -150,15 +150,15 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
             return passes;
         }
 
-        private static @NotNull Map<String, Uniform> getUniforms(PassData passData, int passIndex) {
-            Map<String, UniformData<UniformOverride>> overrides = passData.overrides.get(passIndex);
-            Map<String, UniformData<UniformConfig>> configs = passData.configs.get(passIndex);
+        private static @NotNull Map<String, Uniform> getUniforms(ChainData chainData, int passIndex) {
+            Map<String, UniformData<UniformOverride>> overrides = chainData.overrides.get(passIndex);
+            Map<String, UniformData<UniformConfig>> configs = chainData.configs.get(passIndex);
 
             Map<String, Uniform> uniforms = new HashMap<>();
             overrides.forEach((uniform, override) -> {
                 UniformData<UniformConfig> config = configs.get(uniform);
-                if (PassData.isChanged(override, config)) {
-                    uniforms.put(uniform, Uniform.from((LuminanceUniformOverride) override.value, (MapConfig) config.value));
+                if (ChainData.isChanged(override, config)) {
+                    uniforms.put(uniform, Uniform.from((PerValueOverride)override.value, (MapConfig) config.value));
                 }
             });
             return uniforms;
@@ -172,7 +172,7 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
             uniforms.get().forEach((uniform, uniformData) -> {
                 UniformData<UniformOverride> override = overrides.get(uniform);
                 if (override != null) {
-                    uniformData.apply((LuminanceUniformOverride)override.value, (MapConfig)configs.get(uniform).value);
+                    uniformData.apply((PerValueOverride)override.value, (MapConfig)configs.get(uniform).value);
                 } else {
                     sayError("shader.error.uniform", uniform);
                 }
@@ -186,11 +186,11 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
                 Codec.unboundedMap(Codec.STRING, ExtraCodecs.JAVA.listOf()).optionalFieldOf("config").forGetter(Uniform::config)
         ).apply(instance, Uniform::new));
 
-        public static Uniform from(LuminanceUniformOverride override, MapConfig config) {
+        public static Uniform from(PerValueOverride override, MapConfig config) {
             return new Uniform(override.getStrings(), config.config().isEmpty() ? Optional.empty() : Optional.of(config.config()));
         }
 
-        public void apply(LuminanceUniformOverride override, MapConfig config) {
+        public void apply(PerValueOverride override, MapConfig config) {
             for (int i = 0; i < values().size(); i++) {
                 if (i >= override.overrideSources.size()) {
                     sayError("shader.error.value", i, override.overrideSources.size()-1);

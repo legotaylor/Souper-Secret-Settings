@@ -1,6 +1,6 @@
 package com.nettakrim.souper_secret_settings.gui.shaders;
 
-import com.mclegoman.luminance.client.shaders.overrides.OverrideConfig;
+import com.mclegoman.luminance.client.shaders.overrides.PerValueConfig;
 import com.mclegoman.luminance.client.shaders.overrides.OverrideSource;
 import com.mclegoman.luminance.client.shaders.uniforms.config.MapConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
@@ -20,7 +20,7 @@ public class ConfigWidget extends ParameterTextWidget {
     protected final List<ConfigValueWidget> children;
     protected final ListScreen<?> listScreen;
     protected final int index;
-    protected final OverrideConfig defaultConfig;
+    protected final PerValueConfig defaultConfig;
     protected final Map<String, List<Object>> previousValues;
 
     protected Consumer<ConfigWidget> onChange;
@@ -34,9 +34,9 @@ public class ConfigWidget extends ParameterTextWidget {
         children = new ArrayList<>();
         this.listScreen = listScreen;
         this.index = index;
-        this.defaultConfig = new OverrideConfig(defaultConfig);
+        this.defaultConfig = new PerValueConfig(defaultConfig);
 
-        OverrideConfig initial = new OverrideConfig(initialConfig);
+        PerValueConfig initial = new PerValueConfig(initialConfig);
         initial.setIndex(index);
 
         previousValues = new HashMap<>();
@@ -71,7 +71,7 @@ public class ConfigWidget extends ParameterTextWidget {
         children.clear();
 
         if (updateOverrideSource()) {
-            createChildren(new OverrideConfig(overrideSource.getTemplateConfig(), index));
+            createChildren(new PerValueConfig(overrideSource.getTemplateConfig(), index));
         }
         onChange();
     }
@@ -81,7 +81,7 @@ public class ConfigWidget extends ParameterTextWidget {
         return overrideSource instanceof ParameterOverrideSource;
     }
 
-    protected void createChildren(OverrideConfig templateConfig) {
+    protected void createChildren(PerValueConfig templateConfig) {
         templateConfig.setIndex(index);
         defaultConfig.setIndex(index);
         for (String name : getFilteredNames(templateConfig)) {

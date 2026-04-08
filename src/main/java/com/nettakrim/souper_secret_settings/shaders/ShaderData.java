@@ -16,7 +16,7 @@ import net.minecraft.resources.Identifier;
 public class ShaderData implements Toggleable {
     public Shader shader;
 
-    public Map<Identifier, PassData> passDatas;
+    public Map<Identifier, ChainData> passDatas;
 
     public boolean active = true;
     public boolean expanded = false;
@@ -39,13 +39,13 @@ public class ShaderData implements Toggleable {
             passDatas = new HashMap<>(customPasses.size());
         } else {
             passDatas = new HashMap<>(customPasses.size() + 1);
-            passDatas.put(null, new PassData(defaultPasses));
+            passDatas.put(null, new ChainData(defaultPasses));
         }
 
         for (Identifier customPass : customPasses) {
             List<PostPass> passes = processor.luminance$getPasses(customPass);
             assert passes != null;
-            passDatas.put(customPass, new PassData(passes));
+            passDatas.put(customPass, new ChainData(passes));
         }
 
         uuid = Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, String.valueOf(uuidCounter++));
@@ -64,17 +64,17 @@ public class ShaderData implements Toggleable {
         return true;
     }
 
-    public PassData getPassData(@Nullable Identifier customPasses) {
+    public ChainData getPassData(@Nullable Identifier customPasses) {
         return passDatas.get(customPasses);
     }
 
     public int getRenderPassCount(@Nullable Identifier customPasses) {
-        PassData passData = passDatas.get(customPasses);
-        if (passData == null) {
+        ChainData chainData = passDatas.get(customPasses);
+        if (chainData == null) {
             return 0;
         }
 
-        return passData.configs.size();
+        return chainData.configs.size();
     }
 
     public Component getTranslatedName() {

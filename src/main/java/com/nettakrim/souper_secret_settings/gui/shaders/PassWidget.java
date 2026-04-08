@@ -4,7 +4,7 @@ import com.mclegoman.luminance.client.shaders.UniformBlock;
 import com.mclegoman.luminance.client.shaders.UniformInstance;
 import com.mclegoman.luminance.client.shaders.interfaces.PostPassInterface;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
-import com.nettakrim.souper_secret_settings.shaders.PassData;
+import com.nettakrim.souper_secret_settings.shaders.ChainData;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -28,7 +28,7 @@ public class PassWidget extends CollapseWidget {
     protected static int firstCustomHeight = 10;
 
     public PassWidget(ShaderWidget shader, PostPass postEffectPass, Identifier customPass, int passIndex, int x, int width, ListScreen<?> listScreen) {
-        super(x, width, Component.literal(PassData.getName((PostPassInterface)postEffectPass)), listScreen);
+        super(x, width, Component.literal(ChainData.getName((PostPassInterface)postEffectPass)), listScreen);
 
         this.shader = shader;
         this.postPass = (PostPassInterface)postEffectPass;

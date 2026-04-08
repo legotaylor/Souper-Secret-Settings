@@ -16,7 +16,7 @@ import java.util.*;
 import net.minecraft.client.renderer.PostPass;
 import net.minecraft.resources.Identifier;
 
-public class PassData {
+public class ChainData {
     // TODO: these should use indices, since uniform name isnt entirely reliable
     public final ArrayList<Map<String, UniformData<UniformOverride>>> overrides;
     public final ArrayList<Map<String, UniformData<UniformConfig>>> configs;
@@ -27,7 +27,7 @@ public class PassData {
     public static final Identifier overridePath = Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "uniform_override");
     public static final Identifier configPath = Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "uniform_config");
 
-    public PassData(List<PostPass> passes) {
+    public ChainData(List<PostPass> passes) {
         this.overrides = new ArrayList<>(passes.size());
         this.configs = new ArrayList<>(passes.size());
         this.expanded = new BitSet(passes.size());
@@ -52,10 +52,10 @@ public class PassData {
 
     @SuppressWarnings({"OptionalGetWithoutIsPresent", "unchecked"})
     private void defaultOverride(PostPassInterface pass, UniformInstance uniform, Map<String, UniformData<UniformOverride>> overrideMap, Map<String, UniformData<UniformConfig>> configMap) {
-        LuminanceUniformOverride defaultOverride = ((Map<String,LuminanceUniformOverride>)pass.luminance$getCustomData(overridePath).get()).get(uniform.name);
+        PerValueOverride defaultOverride = ((Map<String,PerValueOverride>)pass.luminance$getCustomData(overridePath).get()).get(uniform.name);
         UniformConfig defaultConfig = ((Map<String,UniformConfig>)pass.luminance$getCustomData(configPath).get()).get(uniform.name);
 
-        LuminanceUniformOverride uniformOverride = new LuminanceUniformOverride(defaultOverride.getStrings());
+        PerValueOverride uniformOverride = new PerValueOverride(defaultOverride.getStrings());
         for (int i = 0; i < uniformOverride.overrideSources.size(); i++) {
             OverrideSource overrideSource = uniformOverride.overrideSources.get(i);
             if (overrideSource instanceof UniformSource uniformSource) {
@@ -80,21 +80,21 @@ public class PassData {
             count += block.uniforms.size();
         }
 
-        CustomPassData.CustomPassDataMap<String,LuminanceUniformOverride> overrideMap = new CustomPassData.CustomPassDataMap<>(count);
+        CustomPassData.CustomPassDataMap<String,PerValueOverride> overrideMap = new CustomPassData.CustomPassDataMap<>(count);
         CustomPassData.CustomPassDataMap<String,UniformConfig> configMap = new CustomPassData.CustomPassDataMap<>(count);
 
         for (UniformBlock block : pass.luminance$getUniformBlocks().values()) {
             for (UniformInstance uniformInstance : block.uniforms) {
                 // create new config instance
                 MapConfig configOverride = new MapConfig(Map.of());
-                LuminanceUniformOverride defaultOverride = null;
+                PerValueOverride defaultOverride = null;
 
-                if (uniformInstance.override instanceof LuminanceUniformOverride luminanceUniformOverride) {
+                if (uniformInstance.override instanceof PerValueOverride luminanceUniformOverride) {
                     // TODO: should this create a new instance? it seemingly didnt before
                     defaultOverride = luminanceUniformOverride;
                 }
                 if (defaultOverride == null) {
-                    defaultOverride = new LuminanceUniformOverride(List.of());
+                    defaultOverride = new PerValueOverride(List.of());
                     for (Number number : uniformInstance.defaultValue) {
                         defaultOverride.overrideSources.add(ParameterOverrideSource.parameterSourceFromString(number.toString()));
                     }
@@ -110,9 +110,9 @@ public class PassData {
                     if (overrideSource instanceof UniformSource uniformSource) {
                         defaultOverride.overrideSources.set(i, new ParameterOverrideSource(uniformSource));
                         configOverride.config().putIfAbsent(i + "_range", getRange(uniformSource));
-                        OverrideConfig overrideConfig = new OverrideConfig(overrideSource.getTemplateConfig(), i);
-                        overrideConfig.setIndex(-1);
-                        configOverride.mergeWithConfig(overrideConfig);
+                        PerValueConfig perValueConfig = new PerValueConfig(overrideSource.getTemplateConfig(), i);
+                        perValueConfig.setIndex(-1);
+                        configOverride.mergeWithConfig(perValueConfig);
                     }
                 }
 
@@ -146,7 +146,7 @@ public class PassData {
     }
 
     public static boolean isChanged(UniformData<UniformOverride> override, UniformData<UniformConfig> config) {
-        if (!((LuminanceUniformOverride)override.value).getStrings().equals(((LuminanceUniformOverride)override.defaultValue).getStrings())) {
+        if (!((PerValueOverride)override.value).getStrings().equals(((PerValueOverride)override.defaultValue).getStrings())) {
             return true;
         }
 
