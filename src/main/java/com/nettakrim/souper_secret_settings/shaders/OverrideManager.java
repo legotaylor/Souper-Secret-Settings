@@ -1,14 +1,11 @@
 package com.nettakrim.souper_secret_settings.shaders;
 
 import com.mclegoman.luminance.client.events.Runnables;
+import com.mclegoman.luminance.client.shaders.UniformInstance;
 import com.mclegoman.luminance.client.shaders.interfaces.PostChainInterface;
-import com.mclegoman.luminance.client.shaders.overrides.UniformOverride;
-import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
+import com.mclegoman.luminance.client.shaders.interfaces.PostPassInterface;
 import com.mclegoman.luminance.common.util.Couple;
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
 import net.minecraft.client.renderer.PostPass;
 import net.minecraft.resources.Identifier;
 
@@ -17,9 +14,6 @@ public class OverrideManager {
     private static int currentPassIndex;
 
     public static int currentShaderIndex;
-
-    private static final Replacement<UniformOverride> overrideReplacement = new Replacement<>();
-    private static final Replacement<UniformConfig> configReplacement = new Replacement<>();
 
     public static void startShaderQueue(Queue<Couple<ShaderData, Identifier>> shaderQueue) {
         if (!shaderQueue.isEmpty()) {
@@ -77,15 +71,20 @@ public class OverrideManager {
             assert currentShaders.peek() != null;
             Couple<ShaderData, Identifier> shaderData = currentShaders.peek();
 
-            // TODO: update this
-
-            /*
             PostPassInterface pass = ((PostPassInterface)postEffectPass);
-            Map<String, UniformConfig> configs = pass.luminance$getUniformConfigs();
+            Map<String, BlockData> blockDataMap = shaderData.getFirst().getPassData(shaderData.getSecond()).passBlocks.get(currentPassIndex);
 
-            overrideReplacement.replace(shaderData.getFirst().getPassData(shaderData.getSecond()).overrides.get(currentPassIndex), pass::luminance$addUniformOverride);
-            configReplacement.replace(shaderData.getFirst().getPassData(shaderData.getSecond()).configs.get(currentPassIndex), configs::put);
-             */
+            // set overrides to current soup values
+            pass.luminance$getUniformBlocks().forEach((blockName, block) -> {
+                BlockData blockData = blockDataMap.get(blockName);
+
+                for (int i = 0; i < block.uniforms.size(); i++) {
+                    UniformInstance instance = block.uniforms.get(i);
+                    UniformData data = blockData.uniformDatas.get(i);
+                    instance.override = data.override;
+                    instance.config = data.config;
+                }
+            });
         }
     }
 
@@ -96,39 +95,24 @@ public class OverrideManager {
                 return;
             }
 
-            // TODO: update this
+            Couple<ShaderData, Identifier> shaderData = currentShaders.peek();
 
-            /*
             PostPassInterface pass = ((PostPassInterface)postEffectPass);
-            Map<String, UniformConfig> configs = pass.luminance$getUniformConfigs();
+            Map<String, BlockData> blockDataMap = shaderData.getFirst().getPassData(shaderData.getSecond()).passBlocks.get(currentPassIndex);
 
-            overrideReplacement.reset(pass::luminance$addUniformOverride, pass::luminance$removeUniformOverride);
-            configReplacement.reset(configs::put, configs::remove);
-             */
-        }
-    }
+            // return overrides to how soup first found them
+            pass.luminance$getUniformBlocks().forEach((blockName, block) -> {
+                BlockData blockData = blockDataMap.get(blockName);
 
-    private static class Replacement<T> {
-        Map<String, T> replacedValues = new HashMap<>();
-        List<String> nullValues = new ArrayList<>();
+                for (int i = 0; i < block.uniforms.size(); i++) {
+                    UniformInstance instance = block.uniforms.get(i);
+                    UniformData data = blockData.uniformDatas.get(i);
 
-        public void replace(Map<String, UniformDataOld<T>> replacement, BiFunction<String, T, T> replaceFunction) {
-            replacement.forEach((key, value) -> {
-                T previous = replaceFunction.apply(key, value.value);
-                if (previous == null) {
-                    nullValues.add(key);
-                } else {
-                    replacedValues.put(key, previous);
+                    assert data.defaultValue != null;
+                    instance.override = data.defaultValue.override;
+                    instance.config = data.defaultValue.config;
                 }
             });
-        }
-
-        public void reset(BiConsumer<String, T> addFunction, Consumer<String> removeFunction) {
-            replacedValues.forEach(addFunction);
-            replacedValues.clear();
-
-            nullValues.forEach(removeFunction);
-            nullValues.clear();
         }
     }
 }
