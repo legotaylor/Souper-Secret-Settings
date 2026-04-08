@@ -4,6 +4,7 @@ import com.mclegoman.luminance.client.shaders.UniformBlock;
 import com.mclegoman.luminance.client.shaders.UniformInstance;
 import com.nettakrim.souper_secret_settings.gui.CollapseWidget;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
@@ -19,6 +20,8 @@ public class BlockWidget extends CollapseWidget {
         this.pass = pass;
         this.block = block;
         this.blockName = blockName;
+        setHeight(12);
+        active = false;
     }
 
     @Override
@@ -31,6 +34,13 @@ public class BlockWidget extends CollapseWidget {
         }
     }
 
+    @Override
+    protected void renderWidget(@NotNull GuiGraphics context, int mouseX, int mouseY, float delta) {
+        super.renderWidget(context, mouseX, mouseY, delta);
+        renderScrollingStringOverContents(context.textRenderer(), getMessage(), 2);
+    }
+
+    // force expanded always
     @Override
     protected boolean getStoredExpanded() {
         return true;

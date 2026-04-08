@@ -17,8 +17,7 @@ public class ChainData {
     public final ArrayList<Map<String, BlockData>> passBlocks;
     public BitSet passesExpanded;
 
-    private static final Identifier overridePath = Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "uniform_override");
-    private static final Identifier configPath = Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "uniform_config");
+    private static final Identifier overridePath = Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "override");
 
     public ChainData(List<PostPass> passes) {
         this.passBlocks = new ArrayList<>(passes.size());

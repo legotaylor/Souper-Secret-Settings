@@ -1,8 +1,9 @@
 package com.nettakrim.souper_secret_settings.gui.shaders;
 
-import com.mclegoman.luminance.client.data.ClientData;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.SuggestionTextFieldWidget;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -10,10 +11,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.network.chat.Component;
 
-public class ConfigValueWidget extends StringWidget {
+public class ConfigValueWidget extends AbstractWidget {
     public final String name;
 
     protected boolean visible;
@@ -25,7 +25,7 @@ public class ConfigValueWidget extends StringWidget {
     public List<Object> objects;
 
     public ConfigValueWidget(int x, int width, int height, String name, @NotNull List<Object> objects, @NotNull List<Object> defaultObjects) {
-        super(x, 0, width, height, Component.literal(name), ClientData.minecraft.font);
+        super(x, 0, width, height, Component.literal(name));
 
         this.name = name;
         this.objects = new ArrayList<>(objects);
@@ -54,11 +54,16 @@ public class ConfigValueWidget extends StringWidget {
     @Override
     public void renderWidget(@NotNull GuiGraphics context, int mouseX, int mouseY, float delta) {
         if (visible) {
-            super.renderWidget(context, mouseX, mouseY, delta);
+            renderScrollingStringOverContents(context.textRenderer(), getMessage(), 2);
             for (SuggestionTextFieldWidget textFieldWidget : children) {
                 textFieldWidget.renderWidget(context, mouseX, mouseY, delta);
             }
         }
+    }
+
+    @Override
+    protected void updateWidgetNarration(@NotNull NarrationElementOutput narrationElementOutput) {
+
     }
 
     public void setVisible(boolean visible) {
