@@ -8,14 +8,13 @@ import com.nettakrim.souper_secret_settings.gui.ParameterTextWidget;
 import com.nettakrim.souper_secret_settings.shaders.ParameterOverrideSource;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import com.nettakrim.souper_secret_settings.shaders.calculations.Calculation;
-import java.util.Arrays;
 import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
-public class CalculationWidget extends DisplayWidget<OverrideSource> {
+public class CalculationWidget extends DisplayWidget {
     public Calculation calculation;
     protected ShaderLayer layer;
 
@@ -43,7 +42,11 @@ public class CalculationWidget extends DisplayWidget<OverrideSource> {
             outputs[i] = parameterTextWidget;
         }
 
-        super.createChildren(x, width);
+        for (int i = 0; i < calculation.inputs.length; i++) {
+            AbstractWidget widget = createChildWidget(calculation.inputs[i], i);
+            listScreen.addSelectable(widget);
+            children.add(widget);
+        }
     }
 
     @Override
@@ -55,18 +58,12 @@ public class CalculationWidget extends DisplayWidget<OverrideSource> {
         super.renderWidget(context, mouseX, mouseY, delta);
     }
 
-    @Override
     protected AbstractWidget createChildWidget(OverrideSource data, int i) {
         String value = data.getString();
         ParameterTextWidget parameterTextWidget = new CalculationInputWidget(getX(), getWidth(), 20, Component.literal(calculation.inputNames[i]), layer, value);
         parameterTextWidget.setValue(value);
         parameterTextWidget.setResponder((s) -> onInputChanged(i, s));
         return parameterTextWidget;
-    }
-
-    @Override
-    protected List<OverrideSource> getChildData() {
-        return Arrays.asList(calculation.inputs);
     }
 
     @Override

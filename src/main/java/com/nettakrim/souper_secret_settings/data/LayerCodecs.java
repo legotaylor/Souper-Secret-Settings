@@ -112,6 +112,8 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
                     return;
                 }
 
+                // TODO: update to blocks
+                /*
                 for (int i = 0; i < passes.size(); i++) {
                     if (i >= chainData.overrides.size()) {
                         sayError("shader.error.pass", i, chainData.overrides.size()-1);
@@ -119,6 +121,7 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
                     }
                     passes.get(i).apply(chainData.overrides.get(i), chainData.configs.get(i));
                 }
+                 */
             }));
             shaderData.active = active;
             layer.getList(registry).add(shaderData);
@@ -131,9 +134,9 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
         ).apply(instance, Pass::new));
 
         public static List<Pass> from(ChainData chainData) {
-            List<Pass> passes = new ArrayList<>(chainData.overrides.size());
+            List<Pass> passes = new ArrayList<>(chainData.passBlocks.size());
 
-            for (int passIndex = 0; passIndex < chainData.overrides.size(); passIndex++) {
+            for (int passIndex = 0; passIndex < chainData.passBlocks.size(); passIndex++) {
                 Map<String,Uniform> uniforms = getUniforms(chainData, passIndex);
                 passes.add(new Pass(uniforms.isEmpty() ? Optional.empty() : Optional.of(uniforms)));
             }
@@ -151,26 +154,30 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
         }
 
         private static @NotNull Map<String, Uniform> getUniforms(ChainData chainData, int passIndex) {
-            Map<String, UniformData<UniformOverride>> overrides = chainData.overrides.get(passIndex);
-            Map<String, UniformData<UniformConfig>> configs = chainData.configs.get(passIndex);
-
             Map<String, Uniform> uniforms = new HashMap<>();
+
+            // TODO: update to blocks
+            /*
+            Map<String, UniformDataOld<UniformOverride>> overrides = chainData.overrides.get(passIndex);
+            Map<String, UniformDataOld<UniformConfig>> configs = chainData.configs.get(passIndex);
+
             overrides.forEach((uniform, override) -> {
-                UniformData<UniformConfig> config = configs.get(uniform);
+                UniformDataOld<UniformConfig> config = configs.get(uniform);
                 if (ChainData.isChanged(override, config)) {
                     uniforms.put(uniform, Uniform.from((PerValueOverride)override.value, (MapConfig) config.value));
                 }
             });
+             */
             return uniforms;
         }
 
-        public void apply(Map<String, UniformData<UniformOverride>> overrides, Map<String, UniformData<UniformConfig>> configs) {
+        public void apply(Map<String, UniformDataOld<UniformOverride>> overrides, Map<String, UniformDataOld<UniformConfig>> configs) {
             if (uniforms.isEmpty()) {
                 return;
             }
 
             uniforms.get().forEach((uniform, uniformData) -> {
-                UniformData<UniformOverride> override = overrides.get(uniform);
+                UniformDataOld<UniformOverride> override = overrides.get(uniform);
                 if (override != null) {
                     uniformData.apply((PerValueOverride)override.value, (MapConfig)configs.get(uniform).value);
                 } else {

@@ -2,70 +2,60 @@ package com.nettakrim.souper_secret_settings.gui.shaders;
 
 import com.mclegoman.luminance.client.shaders.UniformInstance;
 import com.mclegoman.luminance.client.shaders.Uniforms;
-import com.mclegoman.luminance.client.shaders.overrides.PerValueOverride;
-import com.mclegoman.luminance.client.shaders.overrides.UniformOverride;
 import com.mclegoman.luminance.client.shaders.uniforms.config.MapConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
-import com.mclegoman.luminance.common.util.Couple;
 import com.nettakrim.souper_secret_settings.actions.UniformChangeAction;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.DisplayWidget;
-import com.nettakrim.souper_secret_settings.shaders.ChainData;
+import com.nettakrim.souper_secret_settings.shaders.BlockData;
 import com.nettakrim.souper_secret_settings.shaders.UniformData;
 import java.util.*;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.network.chat.Component;
 
-public class UniformWidget extends DisplayWidget<Couple<UniformData<String>,UniformData<UniformConfig>>> {
-    public PassWidget pass;
+public class UniformWidget extends DisplayWidget {
+    public BlockWidget block;
 
+    public int uniformIndex;
     public UniformInstance uniform;
 
-    public UniformWidget(PassWidget pass, UniformInstance uniform, Component name, int x, int width, ListScreen<?> listScreen) {
+    public UniformWidget(BlockWidget block, UniformInstance uniform, Component name, int index, int x, int width, ListScreen<?> listScreen) {
         super(uniform.length(), name, x, width, listScreen);
-        this.pass = pass;
+        this.block = block;
+        this.uniformIndex = index;
         this.uniform = uniform;
     }
 
     @Override
-    protected List<Couple<UniformData<String>,UniformData<UniformConfig>>> getChildData() {
-        List<Couple<UniformData<String>,UniformData<UniformConfig>>> list = new ArrayList<>();
+    protected void createChildren(int x, int width) {
+        UniformData uniformData = getBlockData().uniformDatas.get(uniformIndex);
+        assert uniformData.defaultValue != null;
+        List<String> valueStrings = (uniformData.override).getStrings();
+        List<String> defaultStrings = (uniformData.defaultValue.override).getStrings();
 
-        UniformData<UniformOverride> uniformOverride = pass.shader.shaderData.getPassData(pass.customPass).overrides.get(pass.passIndex).get(uniform.name);
-        UniformData<UniformConfig> uniformConfig = pass.shader.shaderData.getPassData(pass.customPass).configs.get(pass.passIndex).get(uniform.name);
-
-        List<String> valueStrings = ((PerValueOverride)uniformOverride.value).getStrings();
-        List<String> defaultStrings = ((PerValueOverride)uniformOverride.defaultValue).getStrings();
-
-        for (int i = 0; i < uniform.length(); i++) {
-            list.add(new Couple<>(new UniformData<>(valueStrings.get(i), defaultStrings.get(i)), uniformConfig));
+        for (int i = 0; i < valueStrings.size(); i++) {
+            AbstractWidget widget = createChildWidget(valueStrings.get(i), defaultStrings.get(i), uniformData.config, uniformData.defaultValue.config, i);
+            listScreen.addSelectable(widget);
+            children.add(widget);
         }
-
-        return list;
     }
 
-    @Override
-    protected AbstractWidget createChildWidget(Couple<UniformData<String>,UniformData<UniformConfig>> data, int i) {
-        UniformData<String> uniformOverride = data.getFirst();
-        UniformData<UniformConfig> uniformConfig = data.getSecond();
-
-        ConfigWidget configWidget = new ConfigWidget(getX(), getWidth(), 20, Component.empty(), pass.shader.layer, listScreen, uniformOverride.value, uniformOverride.defaultValue, uniformConfig.value, uniformConfig.defaultValue, i);
+    protected AbstractWidget createChildWidget(String currentValue, String defaultValue, UniformConfig currentConfig, UniformConfig defaultConfig, int i) {
+        ConfigWidget configWidget = new ConfigWidget(getX(), getWidth(), 20, Component.empty(), block.pass.shader.layer, listScreen, currentValue, defaultValue, currentConfig, defaultConfig, i);
         configWidget.onChangeListener((w) -> onValueChanged(i, w));
         return configWidget;
     }
 
     protected void onValueChanged(int i, ConfigWidget widget) {
-        ChainData chainData = pass.shader.shaderData.getPassData(pass.customPass);
-        PerValueOverride override = (PerValueOverride) chainData.overrides.get(pass.passIndex).get(uniform.name).value;
-        MapConfig config = (MapConfig) chainData.configs.get(pass.passIndex).get(uniform.name).value;
+        UniformData uniformData = getBlockData().uniformDatas.get(uniformIndex);
 
-        new UniformChangeAction(uniform.name, i, override, config).addToHistory();
+        new UniformChangeAction(uniform.name, i, uniformData.override, (MapConfig)uniformData.config).addToHistory();
 
-        override.overrideSources.set(i, widget.overrideSource);
+        uniformData.override.overrideSources.set(i, widget.overrideSource);
 
         String prefix = i+"_";
-        config.config().keySet().removeIf((s) -> s.startsWith(prefix));
-        config.mergeWithConfig(widget.getConfig(prefix));
+        ((MapConfig)uniformData.config).config().keySet().removeIf((s) -> s.startsWith(prefix));
+        ((MapConfig)uniformData.config).mergeWithConfig(widget.getConfig(prefix));
 
         widget.dragValue = null;
 
@@ -74,17 +64,15 @@ public class UniformWidget extends DisplayWidget<Couple<UniformData<String>,Unif
 
     @Override
     protected List<Float> getDisplayFloats() {
-        ChainData chainData = pass.shader.shaderData.getPassData(pass.customPass);
-        UniformOverride override = chainData.overrides.get(pass.passIndex).get(uniform.name).value;
-        UniformConfig config = chainData.configs.get(pass.passIndex).get(uniform.name).value;
+        UniformData uniformData = getBlockData().uniformDatas.get(uniformIndex);
 
-        List<Float> display = override.getOverride(config, Uniforms.shaderTime);
+        List<Float> display = uniformData.override.getOverride(uniformData.config, Uniforms.shaderTime);
         for (int i = 0; i < display.size(); i++) {
             if (display.get(i) == null) {
                 display.set(i, uniform.defaultValue.get(i).floatValue());
             }
 
-            //allow dragging luminance:alpha_smooth to replace it with its current value
+            //allow dragging luminance:alpha/smooth to replace it with its current value
             if (expanded) {
                 ConfigWidget configWidget = ((ConfigWidget)children.get(i));
                 if (configWidget.getValue().startsWith("luminance:alpha")) {
@@ -95,19 +83,17 @@ public class UniformWidget extends DisplayWidget<Couple<UniformData<String>,Unif
         return display;
     }
 
-    // TODO: these should use indices, since uniform name isnt entirely reliable
     @Override
     protected boolean getStoredExpanded() {
-        return pass.shader.shaderData.getPassData(pass.customPass).uniformExpanded.get(pass.passIndex).contains(uniform.name);
+        return getBlockData().uniformExpanded.get(uniformIndex);
     }
 
     @Override
     protected void setStoredExpanded(boolean to) {
-        Set<String> expanded = pass.shader.shaderData.getPassData(pass.customPass).uniformExpanded.get(pass.passIndex);
-        if (to) {
-            expanded.add(uniform.name);
-        } else {
-            expanded.remove(uniform.name);
-        }
+        getBlockData().uniformExpanded.set(uniformIndex);
+    }
+
+    private BlockData getBlockData() {
+        return block.pass.shader.shaderData.getPassData(block.pass.customPass).passBlocks.get(block.pass.passIndex).get(block.blockName);
     }
 }

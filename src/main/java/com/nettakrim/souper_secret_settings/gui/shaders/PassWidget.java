@@ -1,7 +1,6 @@
 package com.nettakrim.souper_secret_settings.gui.shaders;
 
 import com.mclegoman.luminance.client.shaders.UniformBlock;
-import com.mclegoman.luminance.client.shaders.UniformInstance;
 import com.mclegoman.luminance.client.shaders.interfaces.PostPassInterface;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.shaders.ChainData;
@@ -75,13 +74,11 @@ public class PassWidget extends CollapseWidget {
             return;
         }
 
-        for (UniformBlock block : postPass.luminance$getUniformBlocks().values()) {
-            for (UniformInstance uniform : block.uniforms) {
-                UniformWidget uniformWidget = new UniformWidget(this, uniform, Component.literal(uniform.name), x, width, listScreen);
-                listScreen.addSelectable(uniformWidget);
-                children.add(uniformWidget);
-            }
-        }
+        postPass.luminance$getUniformBlocks().forEach((blockName, block) -> {
+            BlockWidget blockWidget = new BlockWidget(this, block, blockName, x, width, listScreen);
+            listScreen.addSelectable(blockWidget);
+            children.add(blockWidget);
+        });
 
         if (children.isEmpty()) active = false;
     }
@@ -101,11 +98,11 @@ public class PassWidget extends CollapseWidget {
 
     @Override
     protected boolean getStoredExpanded() {
-        return shader.shaderData.getPassData(customPass).expanded.get(passIndex);
+        return shader.shaderData.getPassData(customPass).passesExpanded.get(passIndex);
     }
 
     @Override
     protected void setStoredExpanded(boolean to) {
-        shader.shaderData.getPassData(customPass).expanded.set(passIndex, to);
+        shader.shaderData.getPassData(customPass).passesExpanded.set(passIndex, to);
     }
 }

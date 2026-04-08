@@ -2,7 +2,6 @@ package com.nettakrim.souper_secret_settings.shaders;
 
 import com.mclegoman.luminance.client.events.Runnables;
 import com.mclegoman.luminance.client.shaders.interfaces.PostChainInterface;
-import com.mclegoman.luminance.client.shaders.interfaces.PostPassInterface;
 import com.mclegoman.luminance.client.shaders.overrides.UniformOverride;
 import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
 import com.mclegoman.luminance.common.util.Couple;
@@ -113,7 +112,7 @@ public class OverrideManager {
         Map<String, T> replacedValues = new HashMap<>();
         List<String> nullValues = new ArrayList<>();
 
-        public void replace(Map<String, UniformData<T>> replacement, BiFunction<String, T, T> replaceFunction) {
+        public void replace(Map<String, UniformDataOld<T>> replacement, BiFunction<String, T, T> replaceFunction) {
             replacement.forEach((key, value) -> {
                 T previous = replaceFunction.apply(key, value.value);
                 if (previous == null) {

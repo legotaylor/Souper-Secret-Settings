@@ -74,7 +74,7 @@ public class ShaderData implements Toggleable {
             return 0;
         }
 
-        return chainData.configs.size();
+        return chainData.passBlocks.size();
     }
 
     public Component getTranslatedName() {

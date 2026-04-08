@@ -3,13 +3,12 @@ package com.nettakrim.souper_secret_settings.gui;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class DisplayWidget<T> extends CollapseWidget {
+public abstract class DisplayWidget extends CollapseWidget {
     protected static int displayWidth = 10;
 
     public int count;
@@ -17,20 +16,6 @@ public abstract class DisplayWidget<T> extends CollapseWidget {
         super(x, width, name, listScreen);
         this.count = count;
     }
-
-    @Override
-    protected void createChildren(int x, int width) {
-        List<T> values = getChildData();
-        for (int i = 0; i < values.size(); i++) {
-            AbstractWidget widget = createChildWidget(values.get(i), i);
-            listScreen.addSelectable(widget);
-            children.add(widget);
-        }
-    }
-
-    protected abstract AbstractWidget createChildWidget(T data, int i);
-
-    protected abstract List<T> getChildData();
 
     @Override
     protected void renderWidget(@NotNull GuiGraphics context, int mouseX, int mouseY, float delta) {
