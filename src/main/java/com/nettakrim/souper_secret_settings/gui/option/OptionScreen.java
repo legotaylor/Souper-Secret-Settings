@@ -1,11 +1,11 @@
 package com.nettakrim.souper_secret_settings.gui.option;
 
 import com.mclegoman.luminance.client.data.ClientData;
+import com.mclegoman.luminance.client.gui.screen.config.ConfigScreen;
+import com.mclegoman.luminance.client.gui.widget.AlphaSliderWidget;
 import com.mclegoman.luminance.client.keybindings.Keybindings;
-import com.mclegoman.luminance.client.screen.config.ConfigScreen;
 import com.mclegoman.luminance.client.shaders.Shaders;
 import com.mclegoman.luminance.client.shaders.Uniforms;
-import com.mclegoman.luminance.common.util.DateHelper;
 import com.mojang.brigadier.StringReader;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.actions.Actions;
@@ -115,7 +115,7 @@ public class OptionScreen extends ScrollScreen {
         );
 
         widgets.add(new StringWidget(SoupGui.listX, 0, widgetWidth, 8, SouperSecretSettingsClient.translate("option.gui.misc"), ClientData.minecraft.font));
-        widgets.add(Button.builder(SouperSecretSettingsClient.translate("option.gui.luminance"), (buttonWidget) -> ClientData.minecraft.setScreen(new ConfigScreen(this, false, DateHelper.isPride()))).bounds(SoupGui.listX, 0, widgetWidth, 20).build());
+        widgets.add(Button.builder(SouperSecretSettingsClient.translate("option.gui.luminance"), (buttonWidget) -> ClientData.minecraft.setScreen(new ConfigScreen(this))).bounds(SoupGui.listX, 0, widgetWidth, 20).build());
         widgets.add(Button.builder(SouperSecretSettingsClient.translate("option.gui.keybinds"), (buttonWidget) -> ClientData.minecraft.setScreen(new KeyBindsScreen(this, ClientData.minecraft.options))).bounds(SoupGui.listX, 0, widgetWidth, 20).build());
         widgets.add(new CycleWidget(SoupGui.listX, widgetWidth,
                 (direction) -> SouperSecretSettingsClient.soupData.config.messageFilter = CycleWidget.cycleInt(SouperSecretSettingsClient.soupData.config.messageFilter - direction, 2),
@@ -210,7 +210,7 @@ public class OptionScreen extends ScrollScreen {
         return new ItemInput(itemStack.getItemHolder(), itemStack.getComponentsPatch()).serialize(VanillaRegistries.createLookup());
     }
 
-    private static class SoupAlphaSlider extends ConfigScreen.AlphaSlider {
+    private static class SoupAlphaSlider extends AlphaSliderWidget {
         public SoupAlphaSlider(int x, int y, int width, int height, double value, Runnable onChange) {
             super(x, y, width, height, value, onChange);
         }
