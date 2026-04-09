@@ -40,8 +40,8 @@ public class UniformWidget extends DisplayWidget {
         }
     }
 
-    protected AbstractWidget createChildWidget(String currentValue, String defaultValue, UniformConfig currentConfig, UniformConfig defaultConfig, int i) {
-        ConfigWidget configWidget = new ConfigWidget(getX(), getWidth(), 20, Component.empty(), block.pass.shader.layer, listScreen, currentValue, defaultValue, currentConfig, defaultConfig, i);
+    protected AbstractWidget createChildWidget(String initialValue, String defaultValue, UniformConfig initialConfig, UniformConfig defaultConfig, int i) {
+        ConfigWidget configWidget = new ConfigWidget(getX(), getWidth(), 20, Component.empty(), block.pass.shader.layer, listScreen, initialValue, defaultValue, initialConfig, defaultConfig, i);
         configWidget.onChangeListener((w) -> onValueChanged(i, w));
         return configWidget;
     }

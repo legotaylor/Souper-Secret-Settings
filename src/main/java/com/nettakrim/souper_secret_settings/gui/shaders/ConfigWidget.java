@@ -48,7 +48,7 @@ public class ConfigWidget extends ParameterTextWidget {
         updateOverrideSource();
         createChildren(initial);
 
-        setResponder(this::setValue);
+        setResponder(this::textChange);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class ConfigWidget extends ParameterTextWidget {
         }
     }
 
-    public void setValue(@NotNull String value) {
+    public void textChange(@NotNull String value) {
         for (ConfigValueWidget child : children) {
             child.removeFromScreen(listScreen);
         }
