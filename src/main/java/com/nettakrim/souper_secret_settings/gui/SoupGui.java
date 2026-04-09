@@ -2,7 +2,6 @@ package com.nettakrim.souper_secret_settings.gui;
 
 import com.mclegoman.luminance.client.data.ClientData;
 import com.mclegoman.luminance.client.shaders.Shaders;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.gui.option.OptionScreen;
 import com.nettakrim.souper_secret_settings.gui.layers.LayerScreen;
@@ -159,12 +158,9 @@ public class SoupGui {
         if (currentHoverText == null) {
             return;
         }
-        int offset = (mouseY > 30 && context.containsPointInScissor(mouseX, mouseY-17)) ? -15 : 8;
-        // TODO: fix this
-        //RenderSystem.depthMask(false);
-        //context.fill(mouseX-2, mouseY+offset-2, mouseX + ClientData.minecraft.textRenderer.getWidth(currentHoverText)+2, mouseY+offset+10, 8, ColorHelper.getArgb(128,0,0,0));
+        int offset = (mouseY > 30 && context.containsPointInScissor(mouseX, mouseY-17)) ? -13 : 13;
+        context.fill(mouseX-2, mouseY+offset-2, mouseX + ClientData.minecraft.font.width(currentHoverText)+2, mouseY+offset+10, 128 << 24);
         context.drawString(ClientData.minecraft.font, currentHoverText, mouseX,  mouseY+offset, -1, true);
-        //RenderSystem.depthMask(true);
         currentHoverText = null;
     }
 
