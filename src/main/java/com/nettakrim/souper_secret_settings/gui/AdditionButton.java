@@ -40,8 +40,10 @@ public class AdditionButton extends HoverButtonWidget {
         if (onEdit != null) {
             context.blit(RenderPipelines.GUI_TEXTURED, ListWidget.ICON_TEXTURE, getX()+getWidth()-12, getY(), 20, 0, 10, 20, 40, 20, dragState > 0 ? ListWidget.texColWhite : ListWidget.texColBlack);
         }
+    }
 
-        // TODO: this was part of drawMessage(), not sure if it needs to be seperate
+    @Override
+    protected void renderText(@NotNull GuiGraphics context) {
         int i = this.getX() + (onRemove == null ? 4 : 12);
         int j = this.getX() + this.getWidth() - 2;
         context.textRenderer().acceptScrollingWithDefaultCenter(this.getMessage(), i, j, getY(), this.getY() + this.getHeight());
