@@ -59,7 +59,7 @@ public class PassWidget extends CollapseWidget {
             y += firstCustomHeight;
         }
 
-        context.textRenderer().acceptScrollingWithDefaultCenter(this.getMessage(), this.getX()+2, this.getX()+this.getWidth()-2, y, y+20);
+        context.textRenderer().acceptScrollingWithDefaultCenter(this.getMessage().copy().setStyle(style), this.getX()+2, this.getX()+this.getWidth()-2, y, y+20);
 
         if (expanded) {
             context.fill(getX(), getY() + getCollapseHeight(), getX() + getWidth(), y+20, ARGB.colorFromFloat(0.2f, 0, 0, 0));
