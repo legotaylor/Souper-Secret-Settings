@@ -1,11 +1,10 @@
 package com.nettakrim.souper_secret_settings.data;
 
 import com.mclegoman.luminance.client.shaders.Shaders;
+import com.mclegoman.luminance.client.shaders.UniformInstance;
 import com.mclegoman.luminance.client.shaders.overrides.PerValueOverride;
 import com.mclegoman.luminance.client.shaders.overrides.OverrideSource;
-import com.mclegoman.luminance.client.shaders.overrides.UniformOverride;
 import com.mclegoman.luminance.client.shaders.uniforms.config.MapConfig;
-import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
@@ -95,6 +94,11 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
         }
 
         public void apply(ShaderLayer layer, Identifier registry) {
+            // backwards compatibility
+            if (registry.getPath().equals("color_convolve") && registry.getNamespace().equals("minecraft")) {
+                registry = Identifier.fromNamespaceAndPath("luminance", "saturate");
+            }
+
             List<ShaderData> shaderDatas = SouperSecretSettingsClient.soupRenderer.getShaderAdditions(layer, registry, Identifier.parse(id), 1, -1, false);
             if (shaderDatas == null || shaderDatas.isEmpty()) {
                 sayError("shader.missing", id);
@@ -112,38 +116,37 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
                     return;
                 }
 
-                // TODO: update to blocks
-                /*
                 for (int i = 0; i < passes.size(); i++) {
-                    if (i >= chainData.overrides.size()) {
-                        sayError("shader.error.pass", i, chainData.overrides.size()-1);
+                    if (i >= chainData.passBlocks.size()) {
+                        sayError("shader.error.pass", i, chainData.passBlocks.size()-1);
                         break;
                     }
-                    passes.get(i).apply(chainData.overrides.get(i), chainData.configs.get(i));
+                    passes.get(i).apply(chainData.passBlocks.get(i));
                 }
-                 */
             }));
             shaderData.active = active;
             layer.getList(registry).add(shaderData);
         }
     }
 
-    protected record Pass(Optional<Map<String,Uniform>> uniforms) {
+    protected record Pass(Optional<Map<String,List<Uniform>>> blocks, Optional<Map<String,Uniform>> uniformsOld) {
         public static final Codec<Pass> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-                Codec.unboundedMap(Codec.STRING, Uniform.CODEC).optionalFieldOf("uniforms").forGetter(Pass::uniforms)
+                Codec.unboundedMap(Codec.STRING, Uniform.CODEC.listOf()).optionalFieldOf("blocks").forGetter(Pass::blocks),
+                // backwards compatibility
+                Codec.unboundedMap(Codec.STRING, Uniform.CODEC).optionalFieldOf("uniforms").forGetter(Pass::uniformsOld)
         ).apply(instance, Pass::new));
 
         public static List<Pass> from(ChainData chainData) {
             List<Pass> passes = new ArrayList<>(chainData.passBlocks.size());
 
             for (int passIndex = 0; passIndex < chainData.passBlocks.size(); passIndex++) {
-                Map<String,Uniform> uniforms = getUniforms(chainData, passIndex);
-                passes.add(new Pass(uniforms.isEmpty() ? Optional.empty() : Optional.of(uniforms)));
+                Map<String,List<Uniform>> blocks = getBlocks(chainData, passIndex);
+                passes.add(new Pass(blocks.isEmpty() ? Optional.empty() : Optional.of(blocks), Optional.empty()));
             }
 
             for (int passIndex = passes.size()-1; passIndex >= 0; passIndex--) {
                 Pass pass = passes.get(passIndex);
-                if (pass.uniforms.isEmpty()) {
+                if (pass.blocks.isEmpty()) {
                     passes.removeLast();
                 } else {
                     break;
@@ -153,57 +156,99 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
             return passes;
         }
 
-        private static @NotNull Map<String, Uniform> getUniforms(ChainData chainData, int passIndex) {
-            Map<String, Uniform> uniforms = new HashMap<>();
+        private static @NotNull Map<String, List<Uniform>> getBlocks(ChainData chainData, int passIndex) {
+            Map<String, List<Uniform>> blocks = new HashMap<>();
 
-            // TODO: update to blocks
-            /*
-            Map<String, UniformDataOld<UniformOverride>> overrides = chainData.overrides.get(passIndex);
-            Map<String, UniformDataOld<UniformConfig>> configs = chainData.configs.get(passIndex);
-
-            overrides.forEach((uniform, override) -> {
-                UniformDataOld<UniformConfig> config = configs.get(uniform);
-                if (ChainData.isChanged(override, config)) {
-                    uniforms.put(uniform, Uniform.from((PerValueOverride)override.value, (MapConfig) config.value));
+            Map<String, BlockData> blockDataMap = chainData.passBlocks.get(passIndex);
+            blockDataMap.forEach((blockName, blockData) -> {
+                List<Uniform> uniforms = new ArrayList<>(blockData.uniformDatas.size());
+                for (UniformData uniformData : blockData.uniformDatas) {
+                    if (uniformData.isChanged()) {
+                        uniforms.add(Uniform.from(uniformData.override, (MapConfig)uniformData.config));
+                    } else {
+                        uniforms.add(Uniform.EMPTY);
+                    }
                 }
+                for (int i = uniforms.size()-1; i >= 0; i--) {
+                    if (uniforms.get(i) != Uniform.EMPTY) {
+                        break;
+                    }
+                    uniforms.removeLast();
+                }
+                blocks.put(blockName, uniforms);
             });
-             */
-            return uniforms;
+
+            return blocks;
         }
 
-        public void apply(Map<String, UniformDataOld<UniformOverride>> overrides, Map<String, UniformDataOld<UniformConfig>> configs) {
-            if (uniforms.isEmpty()) {
-                return;
-            }
-
-            uniforms.get().forEach((uniform, uniformData) -> {
-                UniformDataOld<UniformOverride> override = overrides.get(uniform);
-                if (override != null) {
-                    uniformData.apply((PerValueOverride)override.value, (MapConfig)configs.get(uniform).value);
-                } else {
-                    sayError("shader.error.uniform", uniform);
+        public void apply(Map<String,BlockData> blockDataMap) {
+            // backwards compatibility
+            uniformsOld.ifPresent(uniformMap -> uniformMap.forEach((uniform, uniformCodec) -> {
+                // convert a uniform luminance_alpha_smooth to Alpha
+                if (uniform.startsWith("luminance_")) {
+                    uniform = uniform.substring(10);
+                    int second = uniform.indexOf('_');
+                    if (second < 0) second = uniform.length();
+                    uniform = String.valueOf(uniform.charAt(0)).toUpperCase(Locale.ROOT) + uniform.substring(1, second);
                 }
-            });
+
+                for (BlockData blockData : blockDataMap.values()) {
+                    for (int i = 0; i < blockData.uniformDatas.size(); i++) {
+                        UniformInstance uniformInstance = blockData.block.uniforms.get(i);
+                        if (uniformInstance.name.equals(uniform)) {
+                            UniformData uniformData = blockData.uniformDatas.get(i);
+                            uniformCodec.apply(uniformData.override, (MapConfig)uniformData.config, true);
+                            return;
+                        }
+                    }
+                }
+                sayError("shader.error.uniform", uniform);
+            }));
+
+            blocks.ifPresent(blockMap -> blockMap.forEach((blockName, uniformCodecs) -> {
+                BlockData blockData = blockDataMap.get(blockName);
+                for (int i = 0; i < uniformCodecs.size(); i++) {
+                    UniformData data = blockData.uniformDatas.get(i);
+                    uniformCodecs.get(i).apply(data.override, (MapConfig)data.config, false);
+                }
+            }));
         }
     }
 
-    protected record Uniform(List<String> values, Optional<Map<String, List<Object>>> config) {
+    protected record Uniform(Optional<List<String>> values, Optional<Map<String, List<Object>>> config) {
         public static final Codec<Uniform> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-                Codec.STRING.listOf().fieldOf("values").forGetter(Uniform::values),
+                Codec.STRING.listOf().optionalFieldOf("values").forGetter(Uniform::values),
                 Codec.unboundedMap(Codec.STRING, ExtraCodecs.JAVA.listOf()).optionalFieldOf("config").forGetter(Uniform::config)
         ).apply(instance, Uniform::new));
 
         public static Uniform from(PerValueOverride override, MapConfig config) {
-            return new Uniform(override.getStrings(), config.config().isEmpty() ? Optional.empty() : Optional.of(config.config()));
+            return new Uniform(Optional.of(override.getStrings()), config.config().isEmpty() ? Optional.empty() : Optional.of(config.config()));
         }
 
-        public void apply(PerValueOverride override, MapConfig config) {
-            for (int i = 0; i < values().size(); i++) {
+        public static Uniform EMPTY = new Uniform(Optional.empty(), Optional.empty());
+
+        public void apply(PerValueOverride override, MapConfig config, boolean isOld) {
+            if (values().isEmpty()) {
+                return;
+            }
+
+            List<String> currentValues = values().get();
+
+            for (int i = 0; i < currentValues.size(); i++) {
                 if (i >= override.overrideSources.size()) {
                     sayError("shader.error.value", i, override.overrideSources.size()-1);
                     break;
                 }
-                override.overrideSources.set(i, ParameterOverrideSource.parameterSourceFromString(values.get(i)));
+                String value = currentValues.get(i);
+                // backwards compatibility
+                if (isOld) {
+                    // convert an override of luminance_alpha_smooth to luminance:alpha/smooth
+                    if (value.startsWith("luminance_")) {
+                        value = value.replaceFirst("_", ":").replace('_','/');
+                    }
+                }
+
+                override.overrideSources.set(i, ParameterOverrideSource.parameterSourceFromString(value));
             }
 
             this.config.ifPresent(c -> {

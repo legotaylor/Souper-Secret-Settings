@@ -13,14 +13,16 @@ import net.minecraft.resources.Identifier;
 import java.util.*;
 
 public class BlockData {
+    public final UniformBlock block;
     public final ArrayList<UniformData> uniformDatas;
     public final BitSet uniformExpanded;
 
     public BlockData(UniformBlock block, PostPassInterface pass, Identifier dataPath) {
+        this.block = block;
         uniformDatas = new ArrayList<>(block.uniforms.size());
         uniformExpanded = new BitSet(block.uniforms.size());
 
-        storeDefaults(block, pass, dataPath);
+        storeDefaults(pass, dataPath);
         readDefaults(pass, dataPath);
     }
 
@@ -45,7 +47,7 @@ public class BlockData {
         }
     }
 
-    private void storeDefaults(UniformBlock block, PostPassInterface pass, Identifier dataPath) {
+    private void storeDefaults(PostPassInterface pass, Identifier dataPath) {
         if (pass.luminance$getCustomData(dataPath).isPresent()) {
             return;
         }
