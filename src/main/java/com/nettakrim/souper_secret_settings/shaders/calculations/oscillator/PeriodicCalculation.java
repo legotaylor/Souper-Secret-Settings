@@ -18,7 +18,7 @@ public abstract class PeriodicCalculation extends Calculation {
 
     @Override
     protected String[] getInputs() {
-        return new String[]{"luminance_time", "1", "0"};
+        return new String[]{"luminance:time", "1", "0"};
     }
 
     @Override

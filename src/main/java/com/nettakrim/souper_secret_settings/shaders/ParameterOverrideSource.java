@@ -1,6 +1,7 @@
 package com.nettakrim.souper_secret_settings.shaders;
 
 import com.mclegoman.luminance.client.shaders.ShaderTime;
+import com.mclegoman.luminance.client.shaders.overrides.NullSource;
 import com.mclegoman.luminance.client.shaders.overrides.PerValueOverride;
 import com.mclegoman.luminance.client.shaders.overrides.OverrideSource;
 import com.mclegoman.luminance.client.shaders.overrides.UniformSource;
@@ -14,10 +15,10 @@ import java.util.List;
 import java.util.Map;
 
 public class ParameterOverrideSource implements OverrideSource {
-    public UniformSource source;
+    private final OverrideSource source;
     private Float lastValue = 0f;
 
-    public ParameterOverrideSource(UniformSource source) {
+    public ParameterOverrideSource(OverrideSource source) {
         this.source = source;
     }
 
@@ -58,10 +59,9 @@ public class ParameterOverrideSource implements OverrideSource {
     private static final UniformConfig template = new MapConfig(Map.of("range", new ArrayList<>(List.of(0.0f, 1.0f))));
 
     public static OverrideSource parameterSourceFromString(String s) {
-        // TODO: this needs to also work with NullSources
         OverrideSource overrideSource = PerValueOverride.sourceFromString(s);
-        if (overrideSource instanceof UniformSource uniformSource) {
-            return new ParameterOverrideSource(uniformSource);
+        if (overrideSource instanceof UniformSource || overrideSource instanceof NullSource) {
+            return new ParameterOverrideSource(overrideSource);
         }
         return overrideSource;
     }
