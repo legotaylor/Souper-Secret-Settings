@@ -30,7 +30,17 @@ public class DraggableTextFieldWidget extends EditBox implements ListChild, Curs
                 f = dragValue;
                 dragValue = null;
             }
+            float prev = f;
             f += (float)(deltaX/50.0 * Math.max(Math.abs(f), 0.5f));
+            if (!Float.isFinite(f)) {
+                f = prev < 0 ? -Float.MAX_VALUE : Float.MAX_VALUE;
+            }
+
+            // always hit zero if swapping sign
+            if (f != 0 && prev != 0 && f > 0 != prev > 0) {
+                f = 0;
+            }
+
             setValue(String.valueOf(f));
         } catch (Exception ignored) {}
     }

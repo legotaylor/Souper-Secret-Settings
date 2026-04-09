@@ -35,11 +35,21 @@ public abstract class DisplayWidget extends CollapseWidget {
         StringBuilder stringBuilder = new StringBuilder("[ ");
         for (Float f : currentDisplay) {
             String s = f.toString();
+            int e = s.indexOf('E');
+            String exponent = null;
+            if (e > 0) {
+                exponent = s.substring(e);
+                s = s.substring(0, e);
+            }
+
             int point = s.indexOf('.');
             if (point > 0 && s.length() > point+4) {
                 s = s.substring(0, point+4);
             }
             stringBuilder.append(s);
+            if (exponent != null) {
+                stringBuilder.append(exponent);
+            }
             stringBuilder.append(" ");
         }
         stringBuilder.append("]");
