@@ -4,6 +4,7 @@ import com.nettakrim.souper_secret_settings.shaders.calculations.key.SliderCalcu
 import com.nettakrim.souper_secret_settings.shaders.calculations.key.ToggleCalculation;
 import com.nettakrim.souper_secret_settings.shaders.calculations.logic.CompareCalculation;
 import com.nettakrim.souper_secret_settings.shaders.calculations.logic.NearCalculation;
+import com.nettakrim.souper_secret_settings.shaders.calculations.misc.AssignCalculation;
 import com.nettakrim.souper_secret_settings.shaders.calculations.mix.LinearCalculation;
 import com.nettakrim.souper_secret_settings.shaders.calculations.mix.MultiplyCalculation;
 import com.nettakrim.souper_secret_settings.shaders.calculations.oscillator.SawCalculation;
@@ -25,6 +26,8 @@ public class Calculations {
     private static final Map<String, Function<String, Calculation>> factories = new HashMap<>();
 
     public static void register() {
+        registerCalculation("assign_value", AssignCalculation::new);
+
         registerCalculation("key_slider", SliderCalculation::new);
         registerCalculation("key_toggle", ToggleCalculation::new);
 

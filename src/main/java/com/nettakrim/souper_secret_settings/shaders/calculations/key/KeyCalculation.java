@@ -9,7 +9,6 @@ import net.minecraft.network.chat.Component;
 import java.util.function.Consumer;
 
 public abstract class KeyCalculation extends Calculation {
-
     public KeyCalculation(String id) {
         super(id);
     }
