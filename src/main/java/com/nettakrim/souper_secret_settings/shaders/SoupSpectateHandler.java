@@ -4,9 +4,10 @@ import com.mclegoman.luminance.client.shaders.SpectatorHandler;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.Nullable;
 
 public class SoupSpectateHandler implements SpectatorHandler {
-    public ShaderLayer shaderLayer;
+    public @Nullable ShaderLayer shaderLayer;
 
     @Override
     public int getPriority(Entity entity) {

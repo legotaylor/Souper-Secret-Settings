@@ -1,11 +1,14 @@
 package com.nettakrim.souper_secret_settings.shaders;
 
+import com.mclegoman.luminance.client.data.ClientData;
 import com.mclegoman.luminance.client.shaders.Shaders;
 import com.mclegoman.luminance.client.shaders.interfaces.FramePassInterface;
 import com.mclegoman.luminance.common.util.Couple;
 import com.mojang.blaze3d.framegraph.FrameGraphBuilder;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.shaders.calculations.Calculation;
+import com.nettakrim.souper_secret_settings.shaders.calculations.key.SliderCalculation;
+import net.minecraft.client.input.MouseButtonInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,6 +17,7 @@ import net.minecraft.client.renderer.PostChain;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
+import org.joml.Vector2i;
 
 public class ShaderLayer implements Toggleable {
     @NotNull
@@ -34,6 +38,8 @@ public class ShaderLayer implements Toggleable {
     private static final Identifier afterLayerRender = Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "after_layer_render");
 
     private static ShaderLayer renderingLayer;
+
+    private final Set<SliderCalculation> activeSliders = new HashSet<>();
 
     public ShaderLayer(@NotNull String name) {
         this.name = name;
@@ -61,6 +67,8 @@ public class ShaderLayer implements Toggleable {
         }
 
         renderingLayer = this;
+
+        activeSliders.clear();
         parameterValues.clear();
         for (Calculation calculation : calculations) {
             calculation.update(this);
@@ -177,5 +185,34 @@ public class ShaderLayer implements Toggleable {
     @Override
     public void setActive(boolean to) {
         active = to;
+    }
+
+    public void addActiveSliderCalculation(SliderCalculation sliderCalculation) {
+        activeSliders.add(sliderCalculation);
+    }
+
+    public boolean onMouseScroll(Vector2i scroll) {
+        if (!activeSliders.isEmpty()) {
+            if (ClientData.minecraft.player != null) {
+                int scrollAmount = scroll.y == 0 ? -scroll.x : scroll.y;
+                for (SliderCalculation calculation : activeSliders) {
+                    calculation.adjust(scrollAmount);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean onMouseButton(MouseButtonInfo mouseButtonInfo) {
+        if (!activeSliders.isEmpty()) {
+            if (mouseButtonInfo.button() == 2) {
+                for (SliderCalculation calculation : activeSliders) {
+                    calculation.reset();
+                }
+                return true;
+            }
+        }
+        return false;
     }
 }

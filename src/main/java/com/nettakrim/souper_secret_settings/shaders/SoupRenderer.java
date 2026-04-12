@@ -13,6 +13,7 @@ import com.mclegoman.luminance.client.util.Accessors;
 import com.mojang.blaze3d.framegraph.FrameGraphBuilder;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.commands.SouperSecretSettingsCommands;
+import net.minecraft.client.input.MouseButtonInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,6 +27,7 @@ import net.minecraft.client.renderer.PostChain;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
+import org.joml.Vector2i;
 
 public class SoupRenderer implements Runnables.WorldRender {
     public final List<ShaderLayer> shaderLayers;
@@ -87,6 +89,9 @@ public class SoupRenderer implements Runnables.WorldRender {
 
         Events.BeforeShaderRender.register(Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "before_render"), new OverrideManager.BeforeShaderRender());
         Events.AfterShaderRender.register(Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "after_render"), new OverrideManager.AfterShaderRender());
+
+        Events.OnMouseScroll.register(Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "adjust_values"), this::onMouseScroll);
+        Events.OnMouseButton.register(Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "reset_values"), this::onMouseButton);
     }
 
     @Override
@@ -323,5 +328,31 @@ public class SoupRenderer implements Runnables.WorldRender {
         if (!shaderLayers.isEmpty() && !shaderLayers.contains(activeLayer)) {
             activeLayer = shaderLayers.getLast();
         }
+    }
+
+    public boolean onMouseScroll(long windowHandle, double horizontal, double vertical, Vector2i scroll) {
+        boolean cancel = false;
+        for (ShaderLayer layer : shaderLayers) {
+            if (layer.onMouseScroll(scroll)) {
+                cancel = true;
+            }
+        }
+        if (spectateHandler.shaderLayer != null && spectateHandler.shaderLayer.onMouseScroll(scroll)) {
+            cancel = true;
+        }
+        return cancel;
+    }
+
+    public boolean onMouseButton(long windowHandle, MouseButtonInfo mouseButtonInfo, int action) {
+        boolean cancel = false;
+        for (ShaderLayer layer : shaderLayers) {
+            if (layer.onMouseButton(mouseButtonInfo)) {
+                cancel = true;
+            }
+        }
+        if (spectateHandler.shaderLayer != null && spectateHandler.shaderLayer.onMouseButton(mouseButtonInfo)) {
+            cancel = true;
+        }
+        return cancel;
     }
 }
