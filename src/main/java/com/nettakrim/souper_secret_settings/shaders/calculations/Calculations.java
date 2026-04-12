@@ -1,6 +1,6 @@
 package com.nettakrim.souper_secret_settings.shaders.calculations;
 
-import com.nettakrim.souper_secret_settings.shaders.calculations.key.SliderCalculation;
+import com.nettakrim.souper_secret_settings.shaders.calculations.key.ScrollCalculation;
 import com.nettakrim.souper_secret_settings.shaders.calculations.key.ToggleCalculation;
 import com.nettakrim.souper_secret_settings.shaders.calculations.logic.CompareCalculation;
 import com.nettakrim.souper_secret_settings.shaders.calculations.logic.NearCalculation;
@@ -28,7 +28,7 @@ public class Calculations {
     public static void register() {
         registerCalculation("assign_value", AssignCalculation::new);
 
-        registerCalculation("key_slider", SliderCalculation::new);
+        registerCalculation("key_scroll", ScrollCalculation::new);
         registerCalculation("key_toggle", ToggleCalculation::new);
 
         registerCalculation("logic_compare", CompareCalculation::new);

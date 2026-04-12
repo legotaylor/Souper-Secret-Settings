@@ -7,7 +7,7 @@ import com.mclegoman.luminance.common.util.Couple;
 import com.mojang.blaze3d.framegraph.FrameGraphBuilder;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.shaders.calculations.Calculation;
-import com.nettakrim.souper_secret_settings.shaders.calculations.key.SliderCalculation;
+import com.nettakrim.souper_secret_settings.shaders.calculations.key.ScrollCalculation;
 import net.minecraft.client.input.MouseButtonInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -39,7 +39,7 @@ public class ShaderLayer implements Toggleable {
 
     private static ShaderLayer renderingLayer;
 
-    private final Set<SliderCalculation> activeSliders = new HashSet<>();
+    private final Set<ScrollCalculation> activeScrollers = new HashSet<>();
 
     public ShaderLayer(@NotNull String name) {
         this.name = name;
@@ -68,7 +68,7 @@ public class ShaderLayer implements Toggleable {
 
         renderingLayer = this;
 
-        activeSliders.clear();
+        activeScrollers.clear();
         parameterValues.clear();
         for (Calculation calculation : calculations) {
             calculation.update(this);
@@ -187,15 +187,15 @@ public class ShaderLayer implements Toggleable {
         active = to;
     }
 
-    public void addActiveSliderCalculation(SliderCalculation sliderCalculation) {
-        activeSliders.add(sliderCalculation);
+    public void addActiveSliderCalculation(ScrollCalculation scrollCalculation) {
+        activeScrollers.add(scrollCalculation);
     }
 
     public boolean onMouseScroll(Vector2i scroll) {
-        if (!activeSliders.isEmpty()) {
+        if (!activeScrollers.isEmpty()) {
             if (ClientData.minecraft.player != null) {
                 int scrollAmount = scroll.y == 0 ? -scroll.x : scroll.y;
-                for (SliderCalculation calculation : activeSliders) {
+                for (ScrollCalculation calculation : activeScrollers) {
                     calculation.adjust(scrollAmount);
                 }
                 return true;
@@ -205,9 +205,9 @@ public class ShaderLayer implements Toggleable {
     }
 
     public boolean onMouseButton(MouseButtonInfo mouseButtonInfo) {
-        if (!activeSliders.isEmpty()) {
+        if (!activeScrollers.isEmpty()) {
             if (mouseButtonInfo.button() == 2) {
-                for (SliderCalculation calculation : activeSliders) {
+                for (ScrollCalculation calculation : activeScrollers) {
                     calculation.reset();
                 }
                 return true;

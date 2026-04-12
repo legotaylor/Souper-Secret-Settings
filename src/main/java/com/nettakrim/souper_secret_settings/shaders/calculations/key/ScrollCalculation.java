@@ -2,10 +2,10 @@ package com.nettakrim.souper_secret_settings.shaders.calculations.key;
 
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 
-public class SliderCalculation extends KeyCalculation {
+public class ScrollCalculation extends KeyCalculation {
         private int value = 100;
 
-    public SliderCalculation(String id) {
+    public ScrollCalculation(String id) {
         super(id);
     }
 
