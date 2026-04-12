@@ -8,15 +8,22 @@ import com.mclegoman.luminance.client.shaders.overrides.UniformSource;
 import com.mclegoman.luminance.client.shaders.uniforms.config.DefaultableConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.MapConfig;
 import com.mclegoman.luminance.client.shaders.uniforms.config.UniformConfig;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
+import com.nettakrim.souper_secret_settings.mixin.KeyAccessor;
+import net.minecraft.client.KeyMapping;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ParameterOverrideSource implements OverrideSource {
     private final OverrideSource source;
     private Float lastValue = 0f;
+
+    private static final Map<InputConstants.Key, KeyMapping> keyBindingCache = new HashMap<>();
+    private static long keyBindingUUID;
 
     public ParameterOverrideSource(OverrideSource source) {
         this.source = source;
@@ -31,8 +38,24 @@ public class ParameterOverrideSource implements OverrideSource {
 
         if (layer != null) {
             String parameter = source.getString();
-            if (!parameter.isEmpty() && layer.parameterValues.containsKey(parameter)) {
-                lastValue = layer.parameterValues.get(parameter);
+
+            boolean replaced = false;
+
+            if (!parameter.isEmpty()) {
+                if (layer.parameterValues.containsKey(parameter)) {
+                    lastValue = layer.parameterValues.get(parameter);
+                    replaced = true;
+                } else {
+                    InputConstants.Key foundKey = KeyAccessor.getNameMap().get(parameter);
+                    if (foundKey != null) {
+                        KeyMapping mapping = keyBindingCache.computeIfAbsent(foundKey, (key) -> new KeyMapping("soup.key"+(keyBindingUUID++), key.getValue(), KeyMapping.Category.MISC));
+                        lastValue = mapping.isDown() ? 1f : 0f;
+                        replaced = true;
+                    }
+                }
+            }
+
+            if (replaced) {
                 List<Object> range = uniformConfig.getObjects("range");
                 if (range != null && range.size() >= 2) {
                     lastValue = UniformSource.remapRange(lastValue, 0f, 1f, range.get(0), range.get(1));
