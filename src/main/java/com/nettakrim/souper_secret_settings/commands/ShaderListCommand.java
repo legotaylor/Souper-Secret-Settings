@@ -441,7 +441,7 @@ public class ShaderListCommand extends ListCommand<ShaderData> {
             ShaderData shader = shaders.get(shaderIndex);
 
             int total = 0;
-            for (Identifier identifier : SouperSecretSettingsClient.soupRenderer.getRegistryPasses(getRegistry())) {
+            for (Identifier identifier : SouperSecretSettingsClient.soupRenderer.getRegistryChains(getRegistry())) {
                 PostChainInterface processor = (PostChainInterface)shader.shader.getPostProcessor();
                 List<PostPass> passes = processor.luminance$getPasses(identifier);
                 if (passes != null) {

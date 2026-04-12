@@ -94,6 +94,6 @@ public class UniformWidget extends DisplayWidget {
     }
 
     private BlockData getBlockData() {
-        return block.pass.shader.shaderData.getPassData(block.pass.customPass).passBlocks.get(block.pass.passIndex).get(block.blockName);
+        return block.pass.shader.shaderData.getPassData(block.pass.chain).passBlocks.get(block.pass.passIndex).get(block.blockName);
     }
 }

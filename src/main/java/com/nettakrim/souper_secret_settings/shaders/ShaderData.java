@@ -16,7 +16,7 @@ import net.minecraft.resources.Identifier;
 public class ShaderData implements Toggleable {
     public Shader shader;
 
-    public Map<Identifier, ChainData> passDatas;
+    public Map<Identifier, ChainData> chainDatas;
 
     public boolean active = true;
     public boolean expanded = false;
@@ -31,45 +31,45 @@ public class ShaderData implements Toggleable {
         }
 
         PostChainInterface processor = (PostChainInterface)this.shader.getPostProcessor();
-        Set<Identifier> customPasses = processor.luminance$getCustomPassNames();
+        Set<Identifier> customChains = processor.luminance$getCustomChainNames();
 
         List<PostPass> defaultPasses = processor.luminance$getPasses(null);
 
         if (defaultPasses.isEmpty()) {
-            passDatas = new HashMap<>(customPasses.size());
+            chainDatas = new HashMap<>(customChains.size());
         } else {
-            passDatas = new HashMap<>(customPasses.size() + 1);
-            passDatas.put(null, new ChainData(defaultPasses));
+            chainDatas = new HashMap<>(customChains.size() + 1);
+            chainDatas.put(null, new ChainData(defaultPasses));
         }
 
-        for (Identifier customPass : customPasses) {
-            List<PostPass> passes = processor.luminance$getPasses(customPass);
+        for (Identifier customChain : customChains) {
+            List<PostPass> passes = processor.luminance$getPasses(customChain);
             assert passes != null;
-            passDatas.put(customPass, new ChainData(passes));
+            chainDatas.put(customChain, new ChainData(passes));
         }
 
         uuid = Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, String.valueOf(uuidCounter++));
     }
 
-    public boolean render(FrameGraphBuilder builder, int textureWidth, int textureHeight, PostChain.TargetBundle framebufferSet, @Nullable Identifier customPasses) {
+    public boolean render(FrameGraphBuilder builder, int textureWidth, int textureHeight, PostChain.TargetBundle targetBundle, @Nullable Identifier chain) {
         if (!active) return false;
         PostChainInterface processor = (PostChainInterface)shader.getPostProcessor();
-        if (customPasses != null && !processor.luminance$getCustomPassNames().contains(customPasses)) {
+        if (chain != null && !processor.luminance$getCustomChainNames().contains(chain)) {
             return false;
         }
 
         processor.luminance$setPersistentBufferSource(uuid);
-        Shaders.renderProcessorUsingTargetBundle(shader, builder, textureWidth, textureHeight, framebufferSet, customPasses);
+        Shaders.renderProcessorUsingTargetBundle(shader, builder, textureWidth, textureHeight, targetBundle, chain);
         processor.luminance$setPersistentBufferSource(null);
         return true;
     }
 
-    public ChainData getPassData(@Nullable Identifier customPasses) {
-        return passDatas.get(customPasses);
+    public ChainData getPassData(@Nullable Identifier chain) {
+        return chainDatas.get(chain);
     }
 
-    public int getRenderPassCount(@Nullable Identifier customPasses) {
-        ChainData chainData = passDatas.get(customPasses);
+    public int getRenderPassCount(@Nullable Identifier chain) {
+        ChainData chainData = chainDatas.get(chain);
         if (chainData == null) {
             return 0;
         }

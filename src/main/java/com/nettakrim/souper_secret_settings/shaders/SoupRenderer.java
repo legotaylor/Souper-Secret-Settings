@@ -292,16 +292,16 @@ public class SoupRenderer implements Runnables.WorldRender {
         return List.of("edible");
     }
 
-    private static final Identifier[] modifierPasses = new Identifier[]{
+    private static final Identifier[] modifierChains = new Identifier[]{
             Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "before_layer_render"),
             Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "before_shader_render"),
             Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "after_shader_render"),
             Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "after_layer_render")
     };
 
-    public Identifier[] getRegistryPasses(@Nullable Identifier registry) {
+    public Identifier[] getRegistryChains(@Nullable Identifier registry) {
         if (modifierRegistry.equals(registry)) {
-            return modifierPasses;
+            return modifierChains;
         } else {
             return new Identifier[]{null};
         }

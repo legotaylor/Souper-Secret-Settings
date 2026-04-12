@@ -20,18 +20,18 @@ public class PassWidget extends CollapseWidget {
     public ShaderWidget shader;
     public PostPassInterface postPass;
     public int passIndex;
-    public Identifier customPass;
+    public Identifier chain;
 
     protected boolean isFirstCustom;
 
     protected static int firstCustomHeight = 10;
 
-    public PassWidget(ShaderWidget shader, PostPass postEffectPass, Identifier customPass, int passIndex, int x, int width, ListScreen<?> listScreen) {
+    public PassWidget(ShaderWidget shader, PostPass postEffectPass, Identifier chain, int passIndex, int x, int width, ListScreen<?> listScreen) {
         super(x, width, Component.literal(ChainData.getName((PostPassInterface)postEffectPass)), listScreen);
 
         this.shader = shader;
         this.postPass = (PostPassInterface)postEffectPass;
-        this.customPass = customPass;
+        this.chain = chain;
         this.passIndex = passIndex;
 
         active = false;
@@ -43,7 +43,7 @@ public class PassWidget extends CollapseWidget {
         }
 
 
-        if (customPass != null && passIndex == 0) {
+        if (chain != null && passIndex == 0) {
             setHeight(getHeight()+firstCustomHeight);
             isFirstCustom = true;
         }
@@ -55,7 +55,7 @@ public class PassWidget extends CollapseWidget {
         Style style = Style.EMPTY.withColor((this.active ? 16777215 : 10526880) | Mth.ceil(this.alpha * 255.0F) << 24);
         if (isFirstCustom) {
             context.fill(getX(), y, getX() + getWidth(), y+firstCustomHeight, ARGB.colorFromFloat(0.4f, 0, 0, 0));
-            context.textRenderer().acceptScrollingWithDefaultCenter(Component.literal(customPass.getPath()).setStyle(style), this.getX()+2, this.getX()+this.getWidth()-2, y, y+firstCustomHeight);
+            context.textRenderer().acceptScrollingWithDefaultCenter(Component.literal(chain.getPath()).setStyle(style), this.getX()+2, this.getX()+this.getWidth()-2, y, y+firstCustomHeight);
             y += firstCustomHeight;
         }
 
@@ -98,11 +98,11 @@ public class PassWidget extends CollapseWidget {
 
     @Override
     protected boolean getStoredExpanded() {
-        return shader.shaderData.getPassData(customPass).passesExpanded.get(passIndex);
+        return shader.shaderData.getPassData(chain).passesExpanded.get(passIndex);
     }
 
     @Override
     protected void setStoredExpanded(boolean to) {
-        shader.shaderData.getPassData(customPass).passesExpanded.set(passIndex, to);
+        shader.shaderData.getPassData(chain).passesExpanded.set(passIndex, to);
     }
 }

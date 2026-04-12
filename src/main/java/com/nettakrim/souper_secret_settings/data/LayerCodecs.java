@@ -83,8 +83,8 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
         }
 
         public static Shader from(ShaderData shader) {
-            Map<String, List<Pass>> passes = new HashMap<>(shader.passDatas.size());
-            shader.passDatas.forEach((identifier, passData) -> {
+            Map<String, List<Pass>> passes = new HashMap<>(shader.chainDatas.size());
+            shader.chainDatas.forEach((identifier, passData) -> {
                 List<Pass> pass = Pass.from(passData);
                 if (!pass.isEmpty()) {
                     passes.put(identifier == null ? "default" : identifier.toString(), pass);
@@ -109,7 +109,7 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
                 ChainData chainData = null;
                 Identifier identifier = Identifier.tryParse(name);
                 if (identifier != null) {
-                    chainData = shaderData.passDatas.get(name.equals("default") ? null : identifier);
+                    chainData = shaderData.chainDatas.get(name.equals("default") ? null : identifier);
                 }
                 if (chainData == null) {
                     sayError("shader.error.pass_id", name);

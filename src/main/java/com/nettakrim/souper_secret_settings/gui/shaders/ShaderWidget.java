@@ -28,20 +28,20 @@ public class ShaderWidget extends ListWidget {
 
     @Override
     protected void createChildren(int x, int width) {
-        for (Identifier customPasses : SouperSecretSettingsClient.soupRenderer.getRegistryPasses(((ShaderScreen)listScreen).registry)) {
-            addPasses(customPasses);
+        for (Identifier chain : SouperSecretSettingsClient.soupRenderer.getRegistryChains(((ShaderScreen)listScreen).registry)) {
+            addChain(chain);
         }
     }
 
-    protected void addPasses(Identifier customPasses) {
-        List<PostPass> passes = ((PostChainInterface)shaderData.shader.getPostProcessor()).luminance$getPasses(customPasses);
+    protected void addChain(Identifier chain) {
+        List<PostPass> passes = ((PostChainInterface)shaderData.shader.getPostProcessor()).luminance$getPasses(chain);
         if (passes == null) {
             return;
         }
 
         int i = 0;
         for (PostPass postEffectPass : passes) {
-            PassWidget passWidget = new PassWidget(this, postEffectPass, customPasses, i, getX(), width, listScreen);
+            PassWidget passWidget = new PassWidget(this, postEffectPass, chain, i, getX(), width, listScreen);
             children.add(passWidget);
             listScreen.addSelectable(passWidget);
             i++;
