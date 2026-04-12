@@ -2,6 +2,7 @@ package com.nettakrim.souper_secret_settings;
 
 import com.mclegoman.luminance.client.data.ClientData;
 import com.mclegoman.luminance.client.events.Events;
+import com.mclegoman.luminance.client.texture.ResourcePackHelper;
 import com.nettakrim.souper_secret_settings.actions.Actions;
 import com.nettakrim.souper_secret_settings.data.SoupData;
 import com.nettakrim.souper_secret_settings.gui.SoupGui;
@@ -13,8 +14,7 @@ import com.nettakrim.souper_secret_settings.shaders.calculations.key.SliderCalcu
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
+import net.fabricmc.fabric.api.resource.v1.pack.PackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -47,7 +47,7 @@ public class SouperSecretSettingsClient implements ClientModInitializer {
 		soupGui = new SoupGui();
 		actions = new Actions();
 
-		ResourceManagerHelper.registerBuiltinResourcePack(Identifier.parse("soup"), FabricLoader.getInstance().getModContainer(MODID).orElseThrow(), translate("resourcepack_soup"), ResourcePackActivationType.DEFAULT_ENABLED);
+		ResourcePackHelper.register(Identifier.parse("soup"), FabricLoader.getInstance().getModContainer(MODID).orElseThrow(), translate("resourcepack_soup"), PackActivationType.DEFAULT_ENABLED);
 		Keybinds.tick();
 
 		SoupUniforms.register();
