@@ -60,10 +60,7 @@ public class CalculationWidget extends DisplayWidget {
 
     protected AbstractWidget createChildWidget(OverrideSource data, int i) {
         String value = data.getString();
-        ParameterTextWidget parameterTextWidget = new CalculationInputWidget(getX(), getWidth(), 20, Component.literal(calculation.inputNames[i]), layer, value);
-        parameterTextWidget.setValue(value);
-        parameterTextWidget.setResponder((s) -> onInputChanged(i, s));
-        return parameterTextWidget;
+        return calculation.createWidget(getX(), getWidth(), i, layer, value, (s) -> onInputChanged(i, s));
     }
 
     @Override

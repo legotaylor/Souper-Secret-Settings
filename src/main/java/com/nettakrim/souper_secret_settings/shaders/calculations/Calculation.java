@@ -3,12 +3,17 @@ package com.nettakrim.souper_secret_settings.shaders.calculations;
 import com.mclegoman.luminance.client.shaders.Uniforms;
 import com.mclegoman.luminance.client.shaders.overrides.OverrideSource;
 import com.mclegoman.luminance.client.shaders.uniforms.config.EmptyConfig;
+import com.nettakrim.souper_secret_settings.gui.ParameterTextWidget;
+import com.nettakrim.souper_secret_settings.gui.parameters.CalculationInputWidget;
 import com.nettakrim.souper_secret_settings.shaders.ParameterOverrideSource;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import com.nettakrim.souper_secret_settings.shaders.Toggleable;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public abstract class Calculation implements Toggleable {
     public final OverrideSource[] inputs;
@@ -98,5 +103,12 @@ public abstract class Calculation implements Toggleable {
     @Override
     public void setActive(boolean to) {
         active = to;
+    }
+
+    public AbstractWidget createWidget(int x, int width, int index, ShaderLayer layer, String currentValue, Consumer<String> responder) {
+        ParameterTextWidget parameterTextWidget = new CalculationInputWidget(x, width, 20, Component.literal(inputNames[index]), layer, currentValue);
+        parameterTextWidget.setValue(currentValue);
+        parameterTextWidget.setResponder(responder);
+        return parameterTextWidget;
     }
 }

@@ -9,6 +9,7 @@ import com.nettakrim.souper_secret_settings.shaders.SoupReloader;
 import com.nettakrim.souper_secret_settings.shaders.SoupRenderer;
 import com.nettakrim.souper_secret_settings.shaders.SoupUniforms;
 import com.nettakrim.souper_secret_settings.shaders.calculations.Calculations;
+import com.nettakrim.souper_secret_settings.shaders.calculations.key.SliderCalculation;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -21,6 +22,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
+import org.joml.Vector2i;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,6 +73,31 @@ public class SouperSecretSettingsClient implements ClientModInitializer {
             soupData.config.transferOldData();
             Events.AfterClientResourceReload.remove(transfer);
         }));
+
+		Events.OnMouseScroll.register(Identifier.fromNamespaceAndPath(MODID, "adjust_values"), (long windowHandle, double horizontal, double vertical, Vector2i scroll) -> {
+			if (!SliderCalculation.waiting.isEmpty()) {
+				if (ClientData.minecraft.player != null) {
+					int scrollAmount = scroll.y == 0 ? -scroll.x : scroll.y;
+					for (SliderCalculation calculation : SliderCalculation.waiting) {
+						calculation.adjust(scrollAmount);
+					}
+					return true;
+				}
+			}
+			return false;
+		});
+
+		Events.OnMouseButton.register(Identifier.fromNamespaceAndPath(MODID, "reset_values"), (windowHandle, mouseButtonInfo, action) -> {
+			if (!SliderCalculation.waiting.isEmpty()) {
+				if (mouseButtonInfo.button() == 2) {
+					for (SliderCalculation calculation : SliderCalculation.waiting) {
+						calculation.reset();
+					}
+					return true;
+				}
+			}
+			return false;
+		});
 	}
 
 	public static void say(String key, int priority, Object... args) {
