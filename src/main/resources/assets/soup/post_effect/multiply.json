@@ -22,12 +22,7 @@
                         {
                             "name": "ColorModulate",
                             "type": "vec4",
-                            "value": [
-                                1.0,
-                                1.0,
-                                1.0,
-                                1.0
-                            ]
+                            "value": [ 1.0, 1.0, 1.0, 1.0 ]
                         }
                     ]
                 }
@@ -52,92 +47,52 @@
                         {
                             "name": "Swap",
                             "type": "vec3",
-                            "value": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ]
+                            "value": [ 0.0, 0.0, 0.0 ]
                         },
                         {
                             "name": "Add",
                             "type": "vec3",
-                            "value": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ]
+                            "value": [ 0.0, 0.0, 0.0 ]
                         },
                         {
                             "name": "Sub",
                             "type": "vec3",
-                            "value": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ]
+                            "value": [ 0.0, 0.0, 0.0 ]
                         },
                         {
                             "name": "Mul",
                             "type": "vec3",
-                            "value": [
-                                1.0,
-                                1.0,
-                                1.0
-                            ]
+                            "value": [ 1.0, 1.0, 1.0 ]
                         },
                         {
                             "name": "Div",
                             "type": "vec3",
-                            "value": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ]
+                            "value": [ 0.0, 0.0, 0.0 ]
                         },
                         {
                             "name": "Pow",
                             "type": "vec3",
-                            "value": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ]
+                            "value": [ 0.0, 0.0, 0.0 ]
                         },
                         {
                             "name": "Xor",
                             "type": "vec3",
-                            "value": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ]
+                            "value": [ 0.0, 0.0, 0.0 ]
                         },
                         {
                             "name": "InA",
                             "type": "vec3",
-                            "value": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ]
+                            "value": [ 0.0, 0.0, 0.0 ]
                         },
                         {
                             "name": "InB",
                             "type": "vec3",
-                            "value": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ]
+                            "value": [ 0.0, 0.0, 0.0 ]
                         },
                         {
                             "name": "Out",
                             "type": "vec3",
-                            "value": [
-                                1.0,
-                                1.0,
-                                1.0
-                            ]
+                            "value": [ 1.0, 1.0, 1.0 ]
                         }
                     ]
                 },
@@ -158,12 +113,7 @@
                         {
                             "name": "ColorModulate",
                             "type": "vec4",
-                            "value": [
-                                1.0,
-                                1.0,
-                                1.0,
-                                1.0
-                            ]
+                            "value": [ 1.0, 1.0, 1.0, 1.0 ]
                         }
                     ]
                 }

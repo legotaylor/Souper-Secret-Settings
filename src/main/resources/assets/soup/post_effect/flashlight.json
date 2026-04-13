@@ -23,12 +23,7 @@
                         {
                             "name": "ColorModulate",
                             "type": "vec4",
-                            "value": [
-                                1.0,
-                                1.0,
-                                1.0,
-                                1.0
-                            ]
+                            "value": [ 1.0, 1.0, 1.0, 1.0 ]
                         }
                     ]
                 }
@@ -69,10 +64,7 @@
                         {
                             "name": "luminance_clipping",
                             "type": "vec2",
-                            "value": [
-                                0.05,
-                                750
-                            ]
+                            "value": [ 0.05, 750 ]
                         }
                     ]
                 }
@@ -116,12 +108,7 @@
                         {
                             "name": "ColorModulate",
                             "type": "vec4",
-                            "value": [
-                                1.0,
-                                1.0,
-                                1.0,
-                                1.0
-                            ]
+                            "value": [ 1.0, 1.0, 1.0, 1.0 ]
                         }
                     ]
                 }
