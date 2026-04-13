@@ -18,32 +18,17 @@
                     {
                         "name": "Left",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            0.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 0.0, 1.0, 1.0 ]
                     },
                     {
                         "name": "Right",
                         "type": "vec4",
-                        "value": [
-                            0.0,
-                            1.0,
-                            -1.0,
-                            2.0
-                        ]
+                        "value": [ 0.0, 1.0, -1.0, 2.0 ]
                     },
                     {
                         "name": "Bitshifts",
                         "type": "ivec4",
-                        "value": [
-                            0,
-                            8,
-                            1,
-                            0
-                        ]
+                        "value": [ 0, 8, 1, 0 ]
                     },
                     {
                         "name": "Angle",
@@ -53,10 +38,7 @@
                     {
                         "name": "Range",
                         "type": "vec2",
-                        "value": [
-                            -0.165,
-                            1.5
-                        ]
+                        "value": [ -0.165, 1.5 ]
                     },
                     {
                         "name": "Alpha",
@@ -82,12 +64,7 @@
                     {
                         "name": "ColorModulate",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     }
                 ]
             }

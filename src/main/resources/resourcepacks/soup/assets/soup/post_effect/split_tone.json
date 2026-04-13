@@ -18,38 +18,22 @@
                     {
                         "name": "ScaleA",
                         "type": "vec3",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0 ]
                     },
                     {
                         "name": "OffsetA",
                         "type": "vec3",
-                        "value": [
-                            0.5,
-                            0.5,
-                            0.5
-                        ]
+                        "value": [ 0.5, 0.5, 0.5 ]
                     },
                     {
                         "name": "ScaleB",
                         "type": "vec3",
-                        "value": [
-                            0.5,
-                            0.5,
-                            0.5
-                        ]
+                        "value": [ 0.5, 0.5, 0.5 ]
                     },
                     {
                         "name": "OffsetB",
                         "type": "vec3",
-                        "value": [
-                            0.5,
-                            0.5,
-                            0.5
-                        ]
+                        "value": [ 0.5, 0.5, 0.5 ]
                     },
                     {
                         "name": "Normalise",
@@ -59,11 +43,7 @@
                     {
                         "name": "ColorModulate",
                         "type": "vec3",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0 ]
                     },
                     {
                         "name": "Alpha",
@@ -89,12 +69,7 @@
                     {
                         "name": "ColorModulate",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     }
                 ]
             }

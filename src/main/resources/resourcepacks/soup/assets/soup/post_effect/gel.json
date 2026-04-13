@@ -25,142 +25,77 @@
                     {
                         "name": "OnKernelOrtho",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     },
                     {
                         "name": "OnKernelDiag",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     },
                     {
                         "name": "OffKernelOrtho",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     },
                     {
                         "name": "OffKernelDiag",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     },
                     {
                         "name": "KernelDistance",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            0.0,
-                            1.414,
-                            0.125
-                        ]
+                        "value": [ 1.0, 0.0, 1.414, 0.125 ]
                     },
                     {
                         "name": "RedKernelMask",
                         "type": "vec3",
-                        "value": [
-                            1.0,
-                            -0.25,
-                            -0.25
-                        ]
+                        "value": [ 1.0, -0.25, -0.25 ]
                     },
                     {
                         "name": "RedTurnOn",
                         "type": "vec3",
-                        "value": [
-                            5.0,
-                            32.0,
-                            1.0
-                        ]
+                        "value": [ 5.0, 32.0, 1.0 ]
                     },
                     {
                         "name": "RedTurnOff",
                         "type": "vec3",
-                        "value": [
-                            -32.0,
-                            4.0,
-                            1.0
-                        ]
+                        "value": [ -32.0, 4.0, 1.0 ]
                     },
                     {
                         "name": "GreenKernelMask",
                         "type": "vec3",
-                        "value": [
-                            -0.25,
-                            1.0,
-                            -0.25
-                        ]
+                        "value": [ -0.25, 1.0, -0.25 ]
                     },
                     {
                         "name": "GreenTurnOn",
                         "type": "vec3",
-                        "value": [
-                            5.0,
-                            32.0,
-                            1.0
-                        ]
+                        "value": [ 5.0, 32.0, 1.0 ]
                     },
                     {
                         "name": "GreenTurnOff",
                         "type": "vec3",
-                        "value": [
-                            -32.0,
-                            4.0,
-                            1.0
-                        ]
+                        "value": [ -32.0, 4.0, 1.0 ]
                     },
                     {
                         "name": "BlueKernelMask",
                         "type": "vec3",
-                        "value": [
-                            -0.25,
-                            -0.25,
-                            1.0
-                        ]
+                        "value": [ -0.25, -0.25, 1.0 ]
                     },
                     {
                         "name": "BlueTurnOn",
                         "type": "vec3",
-                        "value": [
-                            5.0,
-                            32.0,
-                            1.0
-                        ]
+                        "value": [ 5.0, 32.0, 1.0 ]
                     },
                     {
                         "name": "BlueTurnOff",
                         "type": "vec3",
-                        "value": [
-                            -32.0,
-                            4.0,
-                            1.0
-                        ]
+                        "value": [ -32.0, 4.0, 1.0 ]
                     },
                     {
                         "name": "IsOnThreshold",
                         "type": "vec3",
-                        "value": [
-                            0.5,
-                            0.5,
-                            0.5
-                        ]
+                        "value": [ 0.5, 0.5, 0.5 ]
                     }
                 ]
             },
@@ -181,12 +116,7 @@
                     {
                         "name": "ColorModulate",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     }
                 ]
             }
@@ -231,12 +161,7 @@
                     {
                         "name": "ColorModulate",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     }
                 ]
             }

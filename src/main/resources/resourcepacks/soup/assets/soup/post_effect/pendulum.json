@@ -28,60 +28,32 @@
                     {
                         "name": "InputX",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            0.0,
-                            1.0,
-                            0.0
-                        ]
+                        "value": [ 1.0, 0.0, 1.0, 0.0 ]
                     },
                     {
                         "name": "InputY",
                         "type": "vec4",
-                        "value": [
-                            0.0,
-                            1.0,
-                            0.0,
-                            1.0
-                        ]
+                        "value": [ 0.0, 1.0, 0.0, 1.0 ]
                     },
                     {
                         "name": "InputOffset",
                         "type": "vec4",
-                        "value": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0
-                        ]
+                        "value": [ 0.0, 0.0, 0.0, 0.0 ]
                     },
                     {
                         "name": "OutputX",
                         "type": "vec4",
-                        "value": [
-                            0.0,
-                            0.0,
-                            1.0,
-                            0.0
-                        ]
+                        "value": [ 0.0, 0.0, 1.0, 0.0 ]
                     },
                     {
                         "name": "OutputY",
                         "type": "vec4",
-                        "value": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            1.0
-                        ]
+                        "value": [ 0.0, 0.0, 0.0, 1.0 ]
                     },
                     {
                         "name": "OutputOffset",
                         "type": "vec2",
-                        "value": [
-                            0.0,
-                            0.0
-                        ]
+                        "value": [ 0.0, 0.0 ]
                     },
                     {
                         "name": "Alpha",
@@ -107,12 +79,7 @@
                     {
                         "name": "ColorModulate",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     }
                 ]
             }

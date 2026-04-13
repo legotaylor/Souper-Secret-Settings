@@ -19,10 +19,7 @@
                     {
                         "name": "Direction",
                         "type": "vec2",
-                        "value": [
-                            30,
-                            0
-                        ]
+                        "value": [ 30, 0 ]
                     },
                     {
                         "name": "Steps",
@@ -51,10 +48,7 @@
                     {
                         "name": "Direction",
                         "type": "vec2",
-                        "value": [
-                            0,
-                            0
-                        ]
+                        "value": [ 0, 0 ]
                     },
                     {
                         "name": "Steps",
@@ -64,28 +58,17 @@
                     {
                         "name": "Radius",
                         "type": "vec2",
-                        "value": [
-                            10,
-                            10
-                        ]
+                        "value": [ 10, 10 ]
                     },
                     {
                         "name": "PrevDirection",
                         "type": "vec2",
-                        "value": [
-                            1.0,
-                            0.0
-                        ]
+                        "value": [ 1.0, 0.0 ]
                     },
                     {
                         "name": "Mix",
                         "type": "vec4",
-                        "value": [
-                            0.5,
-                            0.5,
-                            0.5,
-                            1.0
-                        ]
+                        "value": [ 0.5, 0.5, 0.5, 1.0 ]
                     }
                 ]
             }
@@ -130,12 +113,7 @@
                     {
                         "name": "ColorModulate",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     }
                 ]
             }

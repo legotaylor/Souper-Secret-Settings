@@ -24,29 +24,17 @@
                     {
                         "name": "Offset",
                         "type": "vec3",
-                        "value": [
-                            0,
-                            -1,
-                            0
-                        ]
+                        "value": [ 0, -1, 0 ]
                     },
                     {
                         "name": "Rotation",
                         "type": "vec3",
-                        "value": [
-                            0.0,
-                            0.0,
-                            0.0
-                        ]
+                        "value": [ 0.0, 0.0, 0.0 ]
                     },
                     {
                         "name": "Camera",
                         "type": "vec3",
-                        "value": [
-                            0.0,
-                            0.0,
-                            0.0
-                        ]
+                        "value": [ 0.0, 0.0, 0.0 ]
                     },
                     {
                         "name": "Fov",
@@ -87,10 +75,7 @@
                     {
                         "name": "Clipping",
                         "type": "vec2",
-                        "value": [
-                            0.05,
-                            750
-                        ],
+                        "value": [ 0.05, 750 ],
                         "override": "luminance:clipping"
                     }
                 ]
@@ -136,12 +121,7 @@
                     {
                         "name": "ColorModulate",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     }
                 ]
             }

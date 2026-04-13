@@ -22,12 +22,7 @@
                     {
                         "name": "Mode",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            0.5,
-                            1.0,
-                            0.0
-                        ]
+                        "value": [ 1.0, 0.5, 1.0, 0.0 ]
                     },
                     {
                         "name": "Colored",
@@ -37,10 +32,7 @@
                     {
                         "name": "NoiseCurve",
                         "type": "vec2",
-                        "value": [
-                            32.0,
-                            0.0
-                        ]
+                        "value": [ 32.0, 0.0 ]
                     },
                     {
                         "name": "Loop",
@@ -50,29 +42,17 @@
                     {
                         "name": "Scale",
                         "type": "vec3",
-                        "value": [
-                            4.0,
-                            4.0,
-                            4.0
-                        ]
+                        "value": [ 4.0, 4.0, 4.0 ]
                     },
                     {
                         "name": "Offset",
                         "type": "vec3",
-                        "value": [
-                            0.0,
-                            0.0,
-                            0.0
-                        ]
+                        "value": [ 0.0, 0.0, 0.0 ]
                     },
                     {
                         "name": "Scroll",
                         "type": "vec3",
-                        "value": [
-                            0.5,
-                            0.5,
-                            0.5
-                        ]
+                        "value": [ 0.5, 0.5, 0.5 ]
                     },
                     {
                         "name": "Fov",
@@ -95,40 +75,25 @@
                     {
                         "name": "CamFract",
                         "type": "vec3",
-                        "value": [
-                            0.0,
-                            0.0,
-                            0.0
-                        ],
+                        "value": [ 0.0, 0.0, 0.0 ],
                         "override": "luminance:cam_fract"
                     },
                     {
                         "name": "Cam",
                         "type": "vec3",
-                        "value": [
-                            0.0,
-                            0.0,
-                            0.0
-                        ],
+                        "value": [ 0.0, 0.0, 0.0 ],
                         "override": "luminance:cam"
                     },
                     {
                         "name": "Clipping",
                         "type": "vec2",
-                        "value": [
-                            0.05,
-                            750
-                        ],
+                        "value": [ 0.05, 750 ],
                         "override": "luminance:clipping"
                     },
                     {
                         "name": "ScreenScale",
                         "type": "vec3",
-                        "value": [
-                            32.0,
-                            32.0,
-                            0.0
-                        ]
+                        "value": [ 32.0, 32.0, 0.0 ]
                     },
                     {
                         "name": "RenderLocation",
@@ -161,12 +126,7 @@
                     {
                         "name": "ColorModulate",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     }
                 ]
             }

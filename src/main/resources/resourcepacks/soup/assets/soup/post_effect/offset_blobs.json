@@ -18,47 +18,27 @@
                     {
                         "name": "Color1",
                         "type": "vec3",
-                        "value": [
-                            0.9,
-                            0.8,
-                            0.2
-                        ]
+                        "value": [ 0.9, 0.8, 0.2 ]
                     },
                     {
                         "name": "Color2",
                         "type": "vec3",
-                        "value": [
-                            0.2,
-                            0.8,
-                            0.8
-                        ]
+                        "value": [ 0.2, 0.8, 0.8 ]
                     },
                     {
                         "name": "Color3",
                         "type": "vec3",
-                        "value": [
-                            0.8,
-                            0.2,
-                            0.8
-                        ]
+                        "value": [ 0.8, 0.2, 0.8 ]
                     },
                     {
                         "name": "Color4",
                         "type": "vec3",
-                        "value": [
-                            0.4,
-                            0.8,
-                            0.4
-                        ]
+                        "value": [ 0.4, 0.8, 0.4 ]
                     },
                     {
                         "name": "Base",
                         "type": "vec3",
-                        "value": [
-                            0.6,
-                            0.6,
-                            0.6
-                        ]
+                        "value": [ 0.6, 0.6, 0.6 ]
                     },
                     {
                         "name": "Combinations",
@@ -90,10 +70,7 @@
                     {
                         "name": "BlurDir",
                         "type": "vec2",
-                        "value": [
-                            1.0,
-                            0.0
-                        ]
+                        "value": [ 1.0, 0.0 ]
                     },
                     {
                         "name": "Radius",
@@ -139,10 +116,7 @@
                     {
                         "name": "BlurDir",
                         "type": "vec2",
-                        "value": [
-                            0.0,
-                            1.0
-                        ]
+                        "value": [ 0.0, 1.0 ]
                     },
                     {
                         "name": "Radius",
@@ -190,99 +164,57 @@
                     {
                         "name": "Color1",
                         "type": "vec3",
-                        "value": [
-                            1.0,
-                            0.8,
-                            0.2
-                        ]
+                        "value": [ 1.0, 0.8, 0.2 ]
                     },
                     {
                         "name": "Color2",
                         "type": "vec3",
-                        "value": [
-                            0.2,
-                            0.9,
-                            0.9
-                        ]
+                        "value": [ 0.2, 0.9, 0.9 ]
                     },
                     {
                         "name": "Color3",
                         "type": "vec3",
-                        "value": [
-                            0.8,
-                            0.2,
-                            1.0
-                        ]
+                        "value": [ 0.8, 0.2, 1.0 ]
                     },
                     {
                         "name": "Color4",
                         "type": "vec3",
-                        "value": [
-                            0.4,
-                            1.0,
-                            0.4
-                        ]
+                        "value": [ 0.4, 1.0, 0.4 ]
                     },
                     {
                         "name": "Base",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     },
                     {
                         "name": "Offset1",
                         "type": "vec2",
-                        "value": [
-                            5,
-                            0
-                        ]
+                        "value": [ 5, 0 ]
                     },
                     {
                         "name": "Offset2",
                         "type": "vec2",
-                        "value": [
-                            -5,
-                            0
-                        ]
+                        "value": [ -5, 0 ]
                     },
                     {
                         "name": "Offset3",
                         "type": "vec2",
-                        "value": [
-                            0,
-                            5
-                        ]
+                        "value": [ 0, 5 ]
                     },
                     {
                         "name": "Offset4",
                         "type": "vec2",
-                        "value": [
-                            0,
-                            -5
-                        ]
+                        "value": [ 0, -5 ]
                     },
                     {
                         "name": "Threshold",
                         "type": "vec4",
-                        "value": [
-                            0.4,
-                            0.4,
-                            0.4,
-                            0.4
-                        ]
+                        "value": [ 0.4, 0.4, 0.4, 0.4 ]
                     },
                     {
                         "name": "Boost",
                         "type": "vec3",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0 ]
                     }
                 ]
             },
@@ -328,12 +260,7 @@
                     {
                         "name": "ColorModulate",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     }
                 ]
             }

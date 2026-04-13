@@ -29,11 +29,7 @@
                     {
                         "name": "Luminance",
                         "type": "vec3",
-                        "value": [
-                            0.5,
-                            0.5,
-                            0.55
-                        ]
+                        "value": [ 0.5, 0.5, 0.55 ]
                     }
                 ]
             }
@@ -53,10 +49,7 @@
                     {
                         "name": "BlurDir",
                         "type": "vec2",
-                        "value": [
-                            1.0,
-                            0.0
-                        ]
+                        "value": [ 1.0, 0.0 ]
                     },
                     {
                         "name": "Radius",
@@ -101,10 +94,7 @@
                     {
                         "name": "BlurDir",
                         "type": "vec2",
-                        "value": [
-                            0.0,
-                            1.0
-                        ]
+                        "value": [ 0.0, 1.0 ]
                     },
                     {
                         "name": "Radius",
@@ -173,12 +163,7 @@
                     {
                         "name": "ColorModulate",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     }
                 ]
             }

@@ -18,29 +18,17 @@
                     {
                         "name": "Zig",
                         "type": "vec3",
-                        "value": [
-                            6.0,
-                            0.0,
-                            0.0
-                        ]
+                        "value": [ 6.0, 0.0, 0.0 ]
                     },
                     {
                         "name": "Zag",
                         "type": "vec3",
-                        "value": [
-                            0.0,
-                            0.25,
-                            0.5
-                        ]
+                        "value": [ 0.0, 0.25, 0.5 ]
                     },
                     {
                         "name": "Curve",
                         "type": "vec3",
-                        "value": [
-                            0.5,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 0.5, 1.0, 1.0 ]
                     },
                     {
                         "name": "Wrapping",
@@ -71,12 +59,7 @@
                     {
                         "name": "ColorModulate",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     }
                 ]
             }

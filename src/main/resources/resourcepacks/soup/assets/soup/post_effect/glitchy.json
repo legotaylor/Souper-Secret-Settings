@@ -19,21 +19,12 @@
                     {
                         "name": "Distance",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     },
                     {
                         "name": "Mix",
                         "type": "vec3",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0 ]
                     },
                     {
                         "name": "MixAmount",
@@ -58,18 +49,12 @@
                     {
                         "name": "Frequency",
                         "type": "vec2",
-                        "value": [
-                            11,
-                            17
-                        ]
+                        "value": [ 11, 17 ]
                     },
                     {
                         "name": "WobbleAmount",
                         "type": "vec2",
-                        "value": [
-                            0.0005,
-                            0.0005
-                        ]
+                        "value": [ 0.0005, 0.0005 ]
                     },
                     {
                         "name": "Time",
@@ -129,20 +114,12 @@
                     {
                         "name": "Base",
                         "type": "vec3",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0 ]
                     },
                     {
                         "name": "Amount",
                         "type": "vec3",
-                        "value": [
-                            0.75,
-                            0.75,
-                            0.75
-                        ]
+                        "value": [ 0.75, 0.75, 0.75 ]
                     }
                 ]
             }
@@ -187,12 +164,7 @@
                     {
                         "name": "ColorModulate",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     }
                 ]
             }

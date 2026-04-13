@@ -17,28 +17,17 @@
                     {
                         "name": "Pos",
                         "type": "vec3",
-                        "value": [
-                            0.0,
-                            3.0,
-                            0.0
-                        ]
+                        "value": [ 0.0, 3.0, 0.0 ]
                     },
                     {
                         "name": "Rotation",
                         "type": "vec3",
-                        "value": [
-                            0.0,
-                            0.0,
-                            0.0
-                        ]
+                        "value": [ 0.0, 0.0, 0.0 ]
                     },
                     {
                         "name": "Curvature",
                         "type": "vec2",
-                        "value": [
-                            -0.5,
-                            1.0
-                        ]
+                        "value": [ -0.5, 1.0 ]
                     },
                     {
                         "name": "Wrapping",
@@ -82,12 +71,7 @@
                     {
                         "name": "ColorModulate",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     }
                 ]
             }

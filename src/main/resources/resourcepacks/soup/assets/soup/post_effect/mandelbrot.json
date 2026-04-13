@@ -18,11 +18,7 @@
                     {
                         "name": "Zoom",
                         "type": "vec3",
-                        "value": [
-                            0.25,
-                            -0.4,
-                            0.0
-                        ]
+                        "value": [ 0.25, -0.4, 0.0 ]
                     },
                     {
                         "name": "Iterations",
@@ -32,65 +28,37 @@
                     {
                         "name": "Coloring",
                         "type": "vec3",
-                        "value": [
-                            1.0,
-                            0.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 0.0, 1.0 ]
                     },
                     {
                         "name": "ZR",
                         "type": "vec3",
-                        "value": [
-                            0.0,
-                            0.0,
-                            0.0
-                        ]
+                        "value": [ 0.0, 0.0, 0.0 ]
                     },
                     {
                         "name": "ZI",
                         "type": "vec3",
-                        "value": [
-                            0.0,
-                            0.0,
-                            0.0
-                        ]
+                        "value": [ 0.0, 0.0, 0.0 ]
                     },
                     {
                         "name": "XR",
                         "type": "vec3",
-                        "value": [
-                            0.0,
-                            0.0,
-                            2.0
-                        ]
+                        "value": [ 0.0, 0.0, 2.0 ]
                     },
                     {
                         "name": "XI",
                         "type": "vec3",
-                        "value": [
-                            0.0,
-                            0.0,
-                            0.0
-                        ]
+                        "value": [ 0.0, 0.0, 0.0 ]
                     },
                     {
                         "name": "CR",
                         "type": "vec3",
-                        "value": [
-                            1.0,
-                            0.0,
-                            0.0
-                        ]
+                        "value": [ 1.0, 0.0, 0.0 ]
                     },
                     {
                         "name": "CI",
                         "type": "vec3",
-                        "value": [
-                            0.0,
-                            1.0,
-                            0.0
-                        ]
+                        "value": [ 0.0, 1.0, 0.0 ]
                     },
                     {
                         "name": "Radius",
@@ -121,12 +89,7 @@
                     {
                         "name": "ColorModulate",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     }
                 ]
             }

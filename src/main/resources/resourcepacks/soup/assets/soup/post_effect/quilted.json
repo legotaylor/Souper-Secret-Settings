@@ -18,54 +18,32 @@
                     {
                         "name": "Pixels",
                         "type": "ivec2",
-                        "value": [
-                            20.0,
-                            20.0
-                        ]
+                        "value": [ 20.0, 20.0 ]
                     },
                     {
                         "name": "Blur",
                         "type": "vec2",
-                        "value": [
-                            20.0,
-                            0.0
-                        ]
+                        "value": [ 20.0, 0.0 ]
                     },
                     {
                         "name": "Highlight",
                         "type": "vec3",
-                        "value": [
-                            0.1,
-                            0.5,
-                            0.0
-                        ]
+                        "value": [ 0.1, 0.5, 0.0 ]
                     },
                     {
                         "name": "Exponent",
                         "type": "vec3",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0 ]
                     },
                     {
                         "name": "Center",
                         "type": "vec2",
-                        "value": [
-                            -0.5,
-                            -0.5
-                        ]
+                        "value": [ -0.5, -0.5 ]
                     },
                     {
                         "name": "Base",
                         "type": "vec4",
-                        "value": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0
-                        ]
+                        "value": [ 0.0, 0.0, 0.0, 0.0 ]
                     },
                     {
                         "name": "Alpha",
@@ -91,12 +69,7 @@
                     {
                         "name": "ColorModulate",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     }
                 ]
             }

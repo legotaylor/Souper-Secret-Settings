@@ -22,12 +22,7 @@
                     {
                         "name": "UVDistances",
                         "type": "vec4",
-                        "value": [
-                            3.0,
-                            3.0,
-                            3.0,
-                            3.0
-                        ]
+                        "value": [ 3.0, 3.0, 3.0, 3.0 ]
                     },
                     {
                         "name": "Alpha",
@@ -53,12 +48,7 @@
                     {
                         "name": "ColorModulate",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     }
                 ]
             }

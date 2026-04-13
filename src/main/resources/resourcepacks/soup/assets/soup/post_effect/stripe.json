@@ -25,11 +25,7 @@
                     {
                         "name": "Amount",
                         "type": "vec3",
-                        "value": [
-                            0.95,
-                            0.95,
-                            0.95
-                        ]
+                        "value": [ 0.95, 0.95, 0.95 ]
                     },
                     {
                         "name": "UseNoise",
@@ -39,18 +35,12 @@
                     {
                         "name": "Scale",
                         "type": "vec2",
-                        "value": [
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0 ]
                     },
                     {
                         "name": "Offset",
                         "type": "vec2",
-                        "value": [
-                            0.0,
-                            0.0
-                        ]
+                        "value": [ 0.0, 0.0 ]
                     },
                     {
                         "name": "Pixelate",
@@ -81,12 +71,7 @@
                     {
                         "name": "ColorModulate",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     }
                 ]
             }
@@ -115,38 +100,22 @@
                     {
                         "name": "StartOffset",
                         "type": "vec2",
-                        "value": [
-                            0.0,
-                            0.0
-                        ]
+                        "value": [ 0.0, 0.0 ]
                     },
                     {
                         "name": "StartMatrix",
                         "type": "vec4",
-                        "value": [
-                            0.1,
-                            0.0,
-                            0.0,
-                            0.0
-                        ]
+                        "value": [ 0.1, 0.0, 0.0, 0.0 ]
                     },
                     {
                         "name": "EndOffset",
                         "type": "vec2",
-                        "value": [
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0 ]
                     },
                     {
                         "name": "EndMatrix",
                         "type": "vec4",
-                        "value": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            1.0
-                        ]
+                        "value": [ 0.0, 0.0, 0.0, 1.0 ]
                     },
                     {
                         "name": "Wrapping",
@@ -156,11 +125,7 @@
                     {
                         "name": "Mix",
                         "type": "vec3",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0 ]
                     }
                 ]
             },
@@ -206,12 +171,7 @@
                     {
                         "name": "ColorModulate",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     }
                 ]
             }

@@ -42,30 +42,19 @@
                     {
                         "name": "CamFract",
                         "type": "vec3",
-                        "value": [
-                            0.0,
-                            0.0,
-                            0.0
-                        ],
+                        "value": [ 0.0, 0.0, 0.0 ],
                         "override": "luminance:cam_fract"
                     },
                     {
                         "name": "Cam",
                         "type": "vec3",
-                        "value": [
-                            0.0,
-                            0.0,
-                            0.0
-                        ],
+                        "value": [ 0.0, 0.0, 0.0 ],
                         "override": "luminance:cam"
                     },
                     {
                         "name": "Clipping",
                         "type": "vec2",
-                        "value": [
-                            0.05,
-                            750
-                        ],
+                        "value": [ 0.05, 750 ],
                         "override": "luminance:clipping"
                     },
                     {
@@ -76,11 +65,7 @@
                     {
                         "name": "Offset",
                         "type": "vec3",
-                        "value": [
-                            0.0,
-                            0.0,
-                            0.0
-                        ]
+                        "value": [ 0.0, 0.0, 0.0 ]
                     },
                     {
                         "name": "Aspect",
@@ -90,29 +75,17 @@
                     {
                         "name": "Coloring",
                         "type": "vec3",
-                        "value": [
-                            0.0,
-                            0.0,
-                            0.0
-                        ]
+                        "value": [ 0.0, 0.0, 0.0 ]
                     },
                     {
                         "name": "UVMix",
                         "type": "vec2",
-                        "value": [
-                            1.0,
-                            512.0
-                        ]
+                        "value": [ 1.0, 512.0 ]
                     },
                     {
                         "name": "UVDistances",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     }
                 ]
             }
@@ -157,12 +130,7 @@
                     {
                         "name": "ColorModulate",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     }
                 ]
             }

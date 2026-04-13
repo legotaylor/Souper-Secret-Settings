@@ -18,10 +18,7 @@
                     {
                         "name": "Center",
                         "type": "vec2",
-                        "value": [
-                            0.5,
-                            0.5
-                        ]
+                        "value": [ 0.5, 0.5 ]
                     },
                     {
                         "name": "Inside",
@@ -67,12 +64,7 @@
                     {
                         "name": "ColorModulate",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     }
                 ]
             }

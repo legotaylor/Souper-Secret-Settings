@@ -18,18 +18,12 @@
                     {
                         "name": "Distance",
                         "type": "vec2",
-                        "value": [
-                            0.0,
-                            20.0
-                        ]
+                        "value": [ 0.0, 20.0 ]
                     },
                     {
                         "name": "NoiseScale",
                         "type": "vec2",
-                        "value": [
-                            100,
-                            0.1
-                        ]
+                        "value": [ 100, 0.1 ]
                     },
                     {
                         "name": "Time",
@@ -61,12 +55,7 @@
                     {
                         "name": "ColorModulate",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     }
                 ]
             }

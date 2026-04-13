@@ -19,21 +19,12 @@
                     {
                         "name": "Distance",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     },
                     {
                         "name": "Mix",
                         "type": "vec3",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0 ]
                     },
                     {
                         "name": "MixAmount",
@@ -58,10 +49,7 @@
                     {
                         "name": "BlurDir",
                         "type": "vec2",
-                        "value": [
-                            1.5,
-                            0.666
-                        ]
+                        "value": [ 1.5, 0.666 ]
                     },
                     {
                         "name": "Radius",
@@ -136,12 +124,7 @@
                     {
                         "name": "ColorModulate",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     }
                 ]
             }

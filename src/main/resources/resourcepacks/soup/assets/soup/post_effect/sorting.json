@@ -24,47 +24,27 @@
                     {
                         "name": "RGBInfluence",
                         "type": "vec3",
-                        "value": [
-                            0.3,
-                            0.59,
-                            0.11
-                        ]
+                        "value": [ 0.3, 0.59, 0.11 ]
                     },
                     {
                         "name": "RGBLoop",
                         "type": "vec3",
-                        "value": [
-                            0.0,
-                            0.0,
-                            0.0
-                        ]
+                        "value": [ 0.0, 0.0, 0.0 ]
                     },
                     {
                         "name": "HSVInfluence",
                         "type": "vec3",
-                        "value": [
-                            0.0,
-                            0.0,
-                            0.0
-                        ]
+                        "value": [ 0.0, 0.0, 0.0 ]
                     },
                     {
                         "name": "HSVLoop",
                         "type": "vec3",
-                        "value": [
-                            0.0,
-                            0.0,
-                            0.0
-                        ]
+                        "value": [ 0.0, 0.0, 0.0 ]
                     },
                     {
                         "name": "Depth",
                         "type": "vec3",
-                        "value": [
-                            0.0,
-                            0.0,
-                            1.0
-                        ]
+                        "value": [ 0.0, 0.0, 1.0 ]
                     },
                     {
                         "name": "Flip",
@@ -108,28 +88,17 @@
                     {
                         "name": "Scroll",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            8.0,
-                            0.0,
-                            0.0
-                        ]
+                        "value": [ 1.0, 8.0, 0.0, 0.0 ]
                     },
                     {
                         "name": "Direction",
                         "type": "vec2",
-                        "value": [
-                            0.0,
-                            1.0
-                        ]
+                        "value": [ 0.0, 1.0 ]
                     },
                     {
                         "name": "LossRate",
                         "type": "vec2",
-                        "value": [
-                            0.0,
-                            1.0
-                        ]
+                        "value": [ 0.0, 1.0 ]
                     },
                     {
                         "name": "ShowRank",
@@ -179,12 +148,7 @@
                     {
                         "name": "ColorModulate",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     }
                 ]
             }

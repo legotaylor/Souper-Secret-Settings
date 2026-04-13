@@ -23,11 +23,7 @@
                     {
                         "name": "Power",
                         "type": "vec3",
-                        "value": [
-                            2.0,
-                            2.0,
-                            2.0
-                        ]
+                        "value": [ 2.0, 2.0, 2.0 ]
                     },
                     {
                         "name": "Alpha",
@@ -53,12 +49,7 @@
                     {
                         "name": "ColorModulate",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     }
                 ]
             }

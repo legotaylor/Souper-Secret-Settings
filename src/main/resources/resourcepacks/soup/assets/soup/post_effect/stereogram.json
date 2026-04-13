@@ -19,10 +19,7 @@
                     {
                         "name": "BlurDir",
                         "type": "vec2",
-                        "value": [
-                            1,
-                            0
-                        ]
+                        "value": [ 1, 0 ]
                     },
                     {
                         "name": "Radius",
@@ -52,10 +49,7 @@
                     {
                         "name": "BlurDir",
                         "type": "vec2",
-                        "value": [
-                            0,
-                            1
-                        ]
+                        "value": [ 0, 1 ]
                     },
                     {
                         "name": "Radius",
@@ -101,10 +95,7 @@
                     {
                         "name": "Clipping",
                         "type": "vec2",
-                        "value": [
-                            0.05,
-                            750
-                        ],
+                        "value": [ 0.05, 750 ],
                         "override": "luminance:clipping"
                     }
                 ]
@@ -150,12 +141,7 @@
                     {
                         "name": "ColorModulate",
                         "type": "vec4",
-                        "value": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ]
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     }
                 ]
             }
