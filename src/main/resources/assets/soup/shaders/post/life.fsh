@@ -1,34 +1,38 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 uniform sampler2D PrevSampler;
 
+layout(std140) uniform SamplerInfo {
+    vec2 OutSize;
+    vec2 InSize;
+};
+
+layout(std140) uniform LifeConfig {
+    vec4 OnKernelOrtho;
+    vec4 OnKernelDiag;
+
+    vec4 OffKernelOrtho;
+    vec4 OffKernelDiag;
+
+    vec4 KernelDistance;
+
+    vec3 RedKernelMask;
+    vec3 RedTurnOn;
+    vec3 RedTurnOff;
+
+    vec3 GreenKernelMask;
+    vec3 GreenTurnOn;
+    vec3 GreenTurnOff;
+
+    vec3 BlueKernelMask;
+    vec3 BlueTurnOn;
+    vec3 BlueTurnOff;
+
+    vec3 IsOnThreshold;
+};
+
 in vec2 texCoord;
-in vec2 oneTexel;
-
-uniform vec2 InSize;
-
-uniform vec4 OnKernelOrtho;
-uniform vec4 OnKernelDiag;
-
-uniform vec4 OffKernelOrtho;
-uniform vec4 OffKernelDiag;
-
-uniform vec4 KernelDistance;
-
-uniform vec3 RedKernelMask;
-uniform vec3 RedTurnOn;
-uniform vec3 RedTurnOff;
-
-uniform vec3 GreenKernelMask;
-uniform vec3 GreenTurnOn;
-uniform vec3 GreenTurnOff;
-
-uniform vec3 BlueKernelMask;
-uniform vec3 BlueTurnOn;
-uniform vec3 BlueTurnOff;
-
-uniform vec3 IsOnThreshold;
 
 out vec4 fragColor;
 
@@ -77,6 +81,8 @@ vec2 offset(float dist, float angle) {
 }
 
 void main() {
+    vec2 oneTexel = 1.0 / InSize;
+
     vec3 posZP = texture(PrevSampler, texCoord+offset(KernelDistance.x, KernelDistance.y     )*oneTexel).rgb;
     vec3 posPZ = texture(PrevSampler, texCoord+offset(KernelDistance.x, KernelDistance.y+0.25)*oneTexel).rgb;
     vec3 posZN = texture(PrevSampler, texCoord+offset(KernelDistance.x, KernelDistance.y+0.5 )*oneTexel).rgb;

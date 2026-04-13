@@ -1,15 +1,17 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 uniform sampler2D GridSampler;
 
+layout(std140) uniform GridConfig {
+    ivec2 Grid;
+    ivec2 Offset;
+    vec4 Clear;
+};
+
 in vec2 texCoord;
 
 out vec4 fragColor;
-
-uniform ivec2 Grid;
-uniform ivec2 Offset;
-uniform vec4 Clear;
 
 void main() {
     int index = Grid.x + Offset.x;

@@ -1,17 +1,18 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 
+layout(std140) uniform ZigZagConfig {
+    vec3 Zig;
+    vec3 Zag;
+    vec3 Curve;
+    float Wrapping;
+    float Alpha;
+};
+
 in vec2 texCoord;
-in vec2 oneTexel;
 
 out vec4 fragColor;
-
-uniform vec3 Zig;
-uniform vec3 Zag;
-uniform vec3 Curve;
-uniform float Wrapping;
-uniform float luminance_alpha_smooth;
 
 vec4 wrapTexture(sampler2D tex, vec2 coord) {
     return texture(tex, mix(coord, fract(coord), Wrapping));
@@ -24,5 +25,5 @@ float bounce(float t) {
 
 void main() {
     vec2 coord = texCoord + Zag.xy*(bounce(dot(texCoord-vec2(0.5), Zig.xy) + Zig.z)-Zag.z);
-    fragColor = vec4(mix(texture(InSampler, texCoord).rgb, wrapTexture(InSampler, coord).rgb, luminance_alpha_smooth), 1.0);
+    fragColor = vec4(mix(texture(InSampler, texCoord).rgb, wrapTexture(InSampler, coord).rgb, Alpha), 1.0);
 }

@@ -1,13 +1,15 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 uniform sampler2D BaseSampler;
 
+layout(std140) uniform VignetteConfig {
+    float Scale;
+};
+
 in vec2 texCoord;
 
 out vec4 fragColor;
-
-uniform float Scale;
 
 void main() {
     float d = distance(vec2(0.5), texCoord)*inversesqrt(0.5);

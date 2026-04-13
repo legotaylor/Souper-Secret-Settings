@@ -1,18 +1,19 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 
+layout(std140) uniform Config {
+    vec2 Center;
+    float Inside;
+    float Outside;
+    float Steps;
+    float Shadow;
+    float Alpha;
+};
+
 in vec2 texCoord;
-in vec2 oneTexel;
 
 out vec4 fragColor;
-
-uniform vec2 Center;
-uniform float Inside;
-uniform float Outside;
-uniform float Steps;
-uniform float Shadow;
-uniform float luminance_alpha_smooth;
 
 vec4 combine(vec4 a, vec4 b, float fade) {
     return mix(vec4(max(a.r,b.r), max(a.g,b.g), max(a.b,b.b), 1.0), a, fade);
@@ -35,5 +36,5 @@ void main(){
         col = base * (1 - length((shadowed - col).rgb));
     }
 
-    fragColor = vec4(mix(base, col, luminance_alpha_smooth).rgb, 1.0);
+    fragColor = vec4(mix(base, col, Alpha).rgb, 1.0);
 }

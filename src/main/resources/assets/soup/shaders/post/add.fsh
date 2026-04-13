@@ -1,16 +1,15 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 uniform sampler2D AddSampler;
 
-in vec2 texCoord;
-in vec2 oneTexel;
+layout(std140) uniform AddConfig {
+    float Mix;
+};
 
-uniform vec2 InSize;
+in vec2 texCoord;
 
 out vec4 fragColor;
-
-uniform float Mix;
 
 void main() {
     vec3 CurrTexel = texture(InSampler, texCoord).rgb;

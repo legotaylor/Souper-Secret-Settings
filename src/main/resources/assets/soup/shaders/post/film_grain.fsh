@@ -1,19 +1,25 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 
+layout(std140) uniform SamplerInfo {
+    vec2 OutSize;
+    vec2 InSize;
+};
+
+layout(std140) uniform FilmGrainConfig {
+    uniform float Random;
+    uniform float Rate;
+    uniform float Pitch;
+    uniform float Strength;
+    uniform float ColorStrength;
+    uniform float MixMode;
+    uniform float Alpha;
+};
+
 in vec2 texCoord;
-in vec2 oneTexel;
 
 out vec4 fragColor;
-
-uniform float luminance_random;
-uniform float Rate;
-uniform float Pitch;
-uniform float Strength;
-uniform float ColorStrength;
-uniform float MixMode;
-uniform float luminance_alpha_smooth;
 
 //https://www.shadertoy.com/view/3sGSWV
 
@@ -50,21 +56,21 @@ float grain_source(vec3 x, float strength, float pitch){
 }
 
 void main(){
-    vec2 pixel = texCoord/oneTexel;
+    vec2 pixel = texCoord*InSize;
 
     const float grain_strength = 1.0;
     const float grain_rate = 60.0;
     const float grain_pitch = 1.0;
 
-    float rg = grain_source(vec3(pixel, floor(Rate*(luminance_random))),     Strength, Pitch);
-    float gg = grain_source(vec3(pixel, floor(Rate*(luminance_random+9.0))), Strength, Pitch);
-    float bg = grain_source(vec3(pixel, floor(Rate*(luminance_random-9.0))), Strength, Pitch);
+    float rg = grain_source(vec3(pixel, floor(Rate*(Random))),     Strength, Pitch);
+    float gg = grain_source(vec3(pixel, floor(Rate*(Random+9.0))), Strength, Pitch);
+    float bg = grain_source(vec3(pixel, floor(Rate*(Random-9.0))), Strength, Pitch);
 
     vec3 grain = vec3(rg, gg, bg);
     grain = mix(vec3(dot(grain, vec3(0.2126, 0.7152, 0.0722))), grain, ColorStrength);
 
     vec3 color = texture(InSampler, texCoord).rgb;
-    color = mix(color, max(mix(color*grain, color+(grain-1.0), MixMode), 0.0), luminance_alpha_smooth);
+    color = mix(color, max(mix(color*grain, color+(grain-1.0), MixMode), 0.0), Alpha);
 
     fragColor = vec4(color.rgb, 1);
 }

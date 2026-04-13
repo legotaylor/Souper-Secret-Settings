@@ -1,24 +1,31 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 uniform sampler2D RankSampler;
 
+layout(std140) uniform SamplerInfo {
+    vec2 OutSize;
+    vec2 InSize;
+};
+
+layout(std140) uniform SortOrderConfig {
+    int SegmentSize;
+    int MaxLength;
+    vec4 Scroll;
+    vec2 Direction;
+    vec2 LossRate;
+    int ShowRank;
+};
+
 in vec2 texCoord;
-in vec2 oneTexel;
 
 out vec4 fragColor;
-
-uniform int SegmentSize;
-uniform int MaxLength;
-uniform vec4 Scroll;
-uniform vec2 Direction;
-uniform vec2 LossRate;
-uniform int ShowRank;
 
 const int MAX_SIZE = 256;
 
 float directionAngle = atan(Direction.y, Direction.x);
 vec2 texOffset = texCoord*vec2(sin(directionAngle), cos(directionAngle));
+vec2 oneTexel = 1.0 / InSize;
 
 vec2 GetListCoord(float offset) {
     return abs(vec2(offset)*oneTexel*Direction + texOffset);
@@ -76,7 +83,7 @@ void main(){
     listSize += int(mod(rand.x*Scroll.y,Scroll.y));
     int scroll = int(rand.y*Scroll.x*listSize + Scroll.w);
 
-    int pixelCoord = int((texCoord.x/oneTexel.x)*Direction.x) + int((texCoord.y/oneTexel.y)*Direction.y) + scroll;
+    int pixelCoord = int((texCoord.x*InSize.x)*Direction.x) + int((texCoord.y*InSize.y)*Direction.y) + scroll;
     int listIndex = pixelCoord%listSize;
     int listStart = (pixelCoord/listSize)*listSize;
     listStart -= scroll;

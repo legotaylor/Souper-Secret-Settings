@@ -1,24 +1,31 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 uniform sampler2D OverlaySampler;
 
+layout(std140) uniform SamplerInfo {
+    vec2 OutSize;
+    vec2 InSize;
+    vec2 OverlaySize;
+};
+
+layout(std140) uniform ImageOverlayConfig {
+    vec2 Position;
+    vec2 Scale;
+    vec4 Color;
+    vec4 DropShadow;
+    vec3 Strength;
+};
+
 in vec2 texCoord;
-in vec2 oneTexel;
 
 out vec4 fragColor;
-
-uniform vec2 Position;
-uniform vec2 Scale;
-uniform vec4 Color;
-uniform vec4 DropShadow;
-uniform vec3 Strength;
 
 void main() {
     vec3 col = texture(InSampler, texCoord).rgb;
 
-    vec2 size = textureSize(OverlaySampler, 0);
-    vec2 pos = floor((floor(texCoord/oneTexel) - Position/oneTexel)/Scale + floor(Position*size));
+    vec2 size = OverlaySize;
+    vec2 pos = floor((floor(texCoord*InSize) - Position*InSize)/Scale + floor(Position*size));
     bool inside = pos.x >= 0 && pos.x < size.x && pos.y >= 0 && pos.y < size.y;
     pos /= size-vec2(1.0);
 

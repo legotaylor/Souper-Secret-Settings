@@ -1,17 +1,19 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
+
+layout(std140) uniform SternConfig {
+    uniform mat2x2 Left;
+    uniform mat2x2 Right;
+    uniform ivec4 Bitshifts;
+    uniform float Angle;
+    uniform vec2 Range;
+    uniform float Alpha;
+};
 
 in vec2 texCoord;
 
 out vec4 fragColor;
-
-uniform mat2x2 Left;
-uniform mat2x2 Right;
-uniform ivec4 Bitshifts;
-uniform float Angle;
-uniform vec2 Range;
-uniform float luminance_alpha_smooth;
 
 void main(){
     vec3 base = texture(InSampler, texCoord).rgb;
@@ -31,5 +33,5 @@ void main(){
 
     vec3 col = (vec3(r.x/r.y, g.x/g.y, b.x/b.y) + Range.x) * Range.y;
 
-    fragColor = vec4(mix(base, clamp(col,0,1), luminance_alpha_smooth), 1.0);
+    fragColor = vec4(mix(base, clamp(col,0,1), Alpha), 1.0);
 }

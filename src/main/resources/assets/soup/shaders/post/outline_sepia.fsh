@@ -1,21 +1,29 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 
-in vec2 texCoord;
-in vec2 oneTexel;
+layout(std140) uniform SamplerInfo {
+    vec2 OutSize;
+    vec2 InSize;
+};
 
-uniform float LumaRamp;
-uniform float LumaLevel;
-uniform vec3 ColorAdd;
-uniform vec3 ColorMul;
-uniform vec3 Gray;
-uniform vec3 Mix;
-uniform float Outline;
+layout(std140) uniform OutlineSepiaConfig {
+    float LumaRamp;
+    float LumaLevel;
+    vec3 ColorAdd;
+    vec3 ColorMul;
+    vec3 Gray;
+    vec3 Mix;
+    float Outline;
+};
+
+in vec2 texCoord;
 
 out vec4 fragColor;
 
-void main(){
+void main() {
+    vec2 oneTexel = 1.0 / InSize;
+
     vec4 center = texture(InSampler, texCoord);
     vec4 up     = texture(InSampler, texCoord + vec2(        0.0, -oneTexel.y));
     vec4 up2    = texture(InSampler, texCoord + vec2(        0.0, -oneTexel.y) * 2.0);

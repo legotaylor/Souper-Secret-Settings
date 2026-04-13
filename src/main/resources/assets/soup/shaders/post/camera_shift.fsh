@@ -1,26 +1,33 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 uniform sampler2D InDepthSampler;
 
+layout(std140) uniform SamplerInfo {
+    vec2 OutSize;
+    vec2 InSize;
+    vec2 InDepthSize;
+};
+
+layout(std140) uniform CameraShiftConfig {
+    vec3 Offset;
+    vec3 Rotation;
+    vec3 Camera;
+
+    float Fov;
+    float ZStep;
+    float ZGrowth;
+    float Steps;
+    float SubThreshold;
+    float SubSteps;
+
+    float Wrapping;
+    vec2 Clipping;
+};
+
 in vec2 texCoord;
-in vec2 oneTexel;
 
 out vec4 fragColor;
-
-uniform vec3 Offset;
-uniform vec3 Rotation;
-uniform vec3 Camera;
-
-uniform float luminance_fov;
-uniform float ZStep;
-uniform float ZGrowth;
-uniform float Steps;
-uniform float SubThreshold;
-uniform float SubSteps;
-
-uniform float Wrapping;
-uniform vec2 luminance_clipping;
 
 vec2 wrapCoord(vec2 coord) {
     return mix(coord, fract(coord), Wrapping);
@@ -29,10 +36,10 @@ vec2 wrapCoord(vec2 coord) {
 float LinearizeDepth(float depth) {
     // treat the hand as at the far plane, so it doesnt cause issues
     if (depth == 0.0) {
-        return luminance_clipping.y;
+        return Clipping.y;
     }
 
-    return (luminance_clipping.x*luminance_clipping.y) / (depth * (luminance_clipping.x - luminance_clipping.y) + luminance_clipping.y);
+    return (Clipping.x*Clipping.y) / (depth * (Clipping.x - Clipping.y) + Clipping.y);
 }
 
 vec2 GetRayPos(mat4 projection, mat4 coord, float xSlope, float ySlope, float d) {
@@ -101,16 +108,16 @@ mat4 GetRotationMatrix(vec3 rotation) {
 }
 
 void main(){
-    float aspect = oneTexel.x/oneTexel.y;
+    float aspect = InSize.y/InSize.x;
 
-    float yTan = tan(luminance_fov/114.591559);
+    float yTan = tan(Fov/114.591559);
     float yCotan = 1.0/yTan;
 
     float xSlope = aspect*yTan * (texCoord.x*2.0 - 1.0);
     float ySlope = yTan * (texCoord.y*2.0 - 1.0);
 
     //https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/gluPerspective.xml
-    mat4 projection = mat4(yCotan/aspect, 0, 0, 0, 0, yCotan, 0, 0, 0, 0, (luminance_clipping.y+luminance_clipping.x)/(luminance_clipping.x-luminance_clipping.y), (2*luminance_clipping.y*luminance_clipping.x)/(luminance_clipping.x-luminance_clipping.y), 0, 0, -1, 0);
+    mat4 projection = mat4(yCotan/aspect, 0, 0, 0, 0, yCotan, 0, 0, 0, 0, (Clipping.y+Clipping.x)/(Clipping.x-Clipping.y), (2*Clipping.y*Clipping.x)/(Clipping.x-Clipping.y), 0, 0, -1, 0);
 
     mat4 coord = GetRotationMatrix(Rotation) * mat4(1, 0, 0, 0,  0, 1, 0, 0,  0, 0, 1, 0,  Offset.x, Offset.y, Offset.z, 1) * GetRotationMatrix(Camera);
 

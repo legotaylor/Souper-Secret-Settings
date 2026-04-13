@@ -1,15 +1,17 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 uniform sampler2D BaseSampler;
 
+layout(std140) uniform CompareConfig {
+    vec3 BackgroundColor;
+    float NearOpacity;
+    float FarOpacity;
+};
+
 in vec2 texCoord;
 
 out vec4 fragColor;
-
-uniform vec3 BackgroundColor;
-uniform float NearOpacity;
-uniform float FarOpacity;
 
 void main() {
     vec4 col;

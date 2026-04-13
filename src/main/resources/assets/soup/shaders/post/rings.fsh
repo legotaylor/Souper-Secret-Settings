@@ -1,17 +1,25 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 
-in vec2 texCoord;
-in vec2 oneTexel;
+layout(std140) uniform SamplerInfo {
+    vec2 OutSize;
+    vec2 InSize;
+};
 
-uniform float Radius;
-uniform float InnerPercent;
-uniform float luminance_alpha_smooth;
+layout(std140) uniform RingsConfig {
+    float Radius;
+    float InnerPercent;
+    float luminance_alpha_smooth;
+};
+
+in vec2 texCoord;
 
 out vec4 fragColor;
 
 void main(){
+    vec2 oneTexel = 1.0 / InSize;
+
     vec4 base = texture(InSampler, texCoord);
 
     vec4 maxVal = InnerPercent > 0 ? vec4(0) : base;

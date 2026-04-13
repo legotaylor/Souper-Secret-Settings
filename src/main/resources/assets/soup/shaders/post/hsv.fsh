@@ -1,14 +1,15 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 
-in vec2 texCoord;
-in vec2 oneTexel;
+layout(std140) uniform HSVConfig {
+    vec2 Hue;
+    vec2 Saturation;
+    vec2 Value;
+    float Alpha;
+};
 
-uniform vec2 Hue;
-uniform vec2 Saturation;
-uniform vec2 Value;
-uniform float luminance_alpha_smooth;
+in vec2 texCoord;
 
 out vec4 fragColor;
 
@@ -55,5 +56,5 @@ float offset(float value, vec2 off) {
 void main(){
     vec4 rgb = texture(InSampler, texCoord);
     vec3 hsv = RGBtoHSV(rgb.rgb);
-    fragColor = vec4(mix(rgb.rgb, HSVtoRGB(vec3(offset(hsv.x, Hue), offset(hsv.y, Saturation), offset(hsv.z, Value))), luminance_alpha_smooth), 1.0);
+    fragColor = vec4(mix(rgb.rgb, HSVtoRGB(vec3(offset(hsv.x, Hue), offset(hsv.y, Saturation), offset(hsv.z, Value))), Alpha), 1.0);
 }

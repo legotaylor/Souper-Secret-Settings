@@ -100,7 +100,7 @@
                     "target": "0"
                 },
                 {
-                    "sampler_name": "Depth",
+                    "sampler_name": "InDepth",
                     "target": "minecraft:main",
                     "use_depth_buffer": true
                 }

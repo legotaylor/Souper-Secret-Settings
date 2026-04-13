@@ -17,7 +17,7 @@
             ],
             "output": "bloom_clip",
             "uniforms": {
-                "ColorBrightnessThresholdConfig": [
+                "ThresholdConfig": [
                     {
                         "name": "ThresholdBrightness",
                         "type": "float",
@@ -52,7 +52,7 @@
             "output": "blur0",
             "bilinear": true,
             "uniforms": {
-                "OneWayBlurConfig": [
+                "BlurConfig": [
                     {
                         "name": "BlurDir",
                         "type": "vec2",
@@ -86,7 +86,7 @@
             "output": "blur1",
             "bilinear": true,
             "uniforms": {
-                "OneWayBlurConfig": [
+                "BlurConfig": [
                     {
                         "name": "BlurDir",
                         "type": "vec2",
@@ -120,7 +120,7 @@
             "output": "blur2",
             "bilinear": true,
             "uniforms": {
-                "OneWayBlurConfig": [
+                "BlurConfig": [
                     {
                         "name": "BlurDir",
                         "type": "vec2",

@@ -1,19 +1,25 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 uniform sampler2D BaseSampler;
 
+layout(std140) uniform SamplerInfo {
+    vec2 OutSize;
+    vec2 InSize;
+};
+
+layout(std140) uniform MixConfig {
+    vec3 Amount;
+    float UseNoise;
+    vec2 Scale;
+    vec2 Offset;
+    float Pixelate;
+    float Seed;
+};
+
 in vec2 texCoord;
-in vec2 oneTexel;
 
 out vec4 fragColor;
-
-uniform vec3 Amount;
-uniform float UseNoise;
-uniform vec2 Scale;
-uniform vec2 Offset;
-uniform float Pixelate;
-uniform float Seed;
 
 float hash(vec3 p3){
     p3 = fract(p3 * 0.1031);
@@ -37,7 +43,7 @@ void main() {
 
     vec3 mixAmounts = Amount;
     if (UseNoise != 0) {
-        vec2 noiseCoord = (texCoord-vec2(0.5))/oneTexel;
+        vec2 noiseCoord = (texCoord-vec2(0.5))*InSize;
         if (Pixelate != 0) {
             noiseCoord = floor(noiseCoord/Pixelate)*Pixelate;
         }

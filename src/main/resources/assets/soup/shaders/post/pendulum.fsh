@@ -1,6 +1,21 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
+
+layout(std140) uniform PendulumConfig {
+    float Iterations;
+    float TimeStep;
+
+    vec4 InputX;
+    vec4 InputY;
+    vec4 InputOffset;
+
+    vec4 OutputX;
+    vec4 OutputY;
+    vec2 OutputOffset;
+
+    float Alpha;
+};
 
 in vec2 texCoord;
 
@@ -32,19 +47,6 @@ out vec4 fragColor;
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-
-uniform float Iterations;
-uniform float TimeStep;
-
-uniform vec4 InputX;
-uniform vec4 InputY;
-uniform vec4 InputOffset;
-
-uniform vec4 OutputX;
-uniform vec4 OutputY;
-uniform vec2 OutputOffset;
-
-uniform float luminance_alpha_smooth;
 
 vec4 derivative(vec4 state) {
     vec2 theta = state.xy;
@@ -97,5 +99,5 @@ void main(){
 
     vec4 col = texture(InSampler, fract(vec2(dot(OutputX, pendulum), dot(OutputY, pendulum)) + OutputOffset));
 
-    fragColor = vec4(mix(texture(InSampler, texCoord), col, luminance_alpha_smooth).rgb, 1.0);
+    fragColor = vec4(mix(texture(InSampler, texCoord), col, Alpha).rgb, 1.0);
 }

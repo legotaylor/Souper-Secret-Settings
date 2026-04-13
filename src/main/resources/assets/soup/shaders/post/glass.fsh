@@ -1,19 +1,24 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 
+layout(std140) uniform SamplerInfo {
+    vec2 OutSize;
+    vec2 InSize;
+};
+
+layout(std140) uniform Config {
+    float OffsetScale;
+    float CloudScale;
+    float CloudDistance;
+    float CloudAmount;
+    float Wrapping;
+    float Alpha;
+};
+
 in vec2 texCoord;
-in vec2 oneTexel;
 
 out vec4 fragColor;
-
-uniform float OffsetScale;
-uniform float CloudScale;
-uniform float CloudDistance;
-uniform float CloudAmount;
-
-uniform float Wrapping;
-uniform float luminance_alpha_smooth;
 
 vec4 wrapTexture(sampler2D tex, vec2 coord) {
     return texture(tex, mix(coord, fract(coord), Wrapping));
@@ -49,7 +54,7 @@ float noise( in vec2 p )
 }
 
 void main(){
-    vec2 aspect = vec2(1, oneTexel.x/oneTexel.y);
+    vec2 aspect = vec2(1, InSize.y/InSize.x);
     vec2 randomPos = (texCoord+vec2(100.123))*aspect;
     vec2 offset = vec2(noise(randomPos*400.123), noise(randomPos*399.987));
 
@@ -59,5 +64,5 @@ void main(){
 
     float vignetteAmount = max(length(texCoord - vec2(0.5))-CloudDistance, 0.0)*CloudScale;
 
-    fragColor = vec4(mix(texture(InSampler, texCoord).rgb, mix(color.rgb, color.rgb + distance*CloudAmount, vignetteAmount), luminance_alpha_smooth), 1.0);
+    fragColor = vec4(mix(texture(InSampler, texCoord).rgb, mix(color.rgb, color.rgb + distance*CloudAmount, vignetteAmount), Alpha), 1.0);
 }

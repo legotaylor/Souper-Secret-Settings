@@ -1,26 +1,27 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 uniform sampler2D InDepthSampler;
 
+layout(std140) uniform WallsConfig {
+    float Scale;
+    vec2 DepthMix;
+    vec4 TextureScale;
+
+    vec4 FloorUV;
+    vec4 WallUV;
+    vec4 CeilUV;
+
+    vec2 Clipping;
+    float Alpha;
+};
+
 in vec2 texCoord;
-in vec2 oneTexel;
 
 out vec4 fragColor;
 
-uniform float Scale;
-uniform vec2 DepthMix;
-uniform vec4 TextureScale;
-
-uniform vec4 FloorUV;
-uniform vec4 WallUV;
-uniform vec4 CeilUV;
-
-uniform vec2 luminance_clipping;
-uniform float luminance_alpha_smooth;
-
 float LinearizeDepth(float depth) {
-    return (luminance_clipping.x*luminance_clipping.y) / (depth * (luminance_clipping.x - luminance_clipping.y) + luminance_clipping.y);
+    return (Clipping.x*Clipping.y) / (depth * (Clipping.x - Clipping.y) + Clipping.y);
 }
 
 void main(){
@@ -44,5 +45,5 @@ void main(){
     samplePos = fract(samplePos*scale+vec2(0.5, 0));
     vec4 col = texture(InSampler, vec2(mix(uv.x, uv.z, samplePos.x), mix(uv.y, uv.w, samplePos.y)));
 
-    fragColor = vec4(mix(texture(InSampler, texCoord), col, luminance_alpha_smooth).rgb, 1.0);
+    fragColor = vec4(mix(texture(InSampler, texCoord), col, Alpha).rgb, 1.0);
 }

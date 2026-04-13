@@ -1,20 +1,26 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 
+layout(std140) uniform SamplerInfo {
+    vec2 OutSize;
+    vec2 InSize;
+};
+
+layout(std140) uniform Config {
+    float LumaRamp;
+    float LumaLevel;
+    float OutlineBlur;
+
+    vec4 MainHSV;
+    vec4 OutlineHSV;
+
+    vec3 Gray;
+
+    float Alpha;
+};
+
 in vec2 texCoord;
-in vec2 oneTexel;
-
-uniform float LumaRamp;
-uniform float LumaLevel;
-uniform float OutlineBlur;
-
-uniform vec4 MainHSV;
-uniform vec4 OutlineHSV;
-
-uniform vec3 Gray;
-
-uniform float luminance_alpha_smooth;
 
 out vec4 fragColor;
 
@@ -33,7 +39,8 @@ vec3 GetHSV(vec4 value, float hue) {
     return HSVtoRGB(vec3(fract(hue*value.w + value.x), value.y, value.z));
 }
 
-void main(){
+void main() {
+    vec2 oneTexel = 1.0 / InSize;
     vec4 center = texture(InSampler, texCoord);
     vec4 up     = texture(InSampler, texCoord + vec2(        0.0, -oneTexel.y*OutlineBlur));
     vec4 up2    = texture(InSampler, texCoord + vec2(        0.0, -oneTexel.y*OutlineBlur) * 2.0);
@@ -68,5 +75,5 @@ void main(){
     color = color * sumLuma;
     outlineColor = outlineColor * (1.0 - sumLuma);
 
-    fragColor = vec4(mix(center.rgb, color + outlineColor, luminance_alpha_smooth), 1.0);
+    fragColor = vec4(mix(center.rgb, color + outlineColor, Alpha), 1.0);
 }

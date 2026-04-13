@@ -1,24 +1,32 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 uniform sampler2D InDepthSampler;
 uniform sampler2D PrevOutSampler;
 
+layout(std140) uniform SamplerInfo {
+    vec2 OutSize;
+    vec2 InSize;
+    vec2 InDepthSize;
+    vec2 PrevOutSize;
+};
+
+layout(std140) uniform OutOfBoundsConfig {
+    float Threshold;
+    vec3 Color;
+    vec2 Pixels;
+    float Requirements;
+    vec2 Offset;
+    vec3 Amount;
+    vec2 Clipping;
+};
+
 in vec2 texCoord;
-in vec2 oneTexel;
 
 out vec4 fragColor;
 
-uniform float Threshold;
-uniform vec3 Color;
-uniform vec2 Pixels;
-uniform float Requirements;
-uniform vec2 Offset;
-uniform vec3 Amount;
-uniform vec2 luminance_clipping;
-
 float LinearizeDepth(float depth) {
-    return (luminance_clipping.x*luminance_clipping.y) / (depth * (luminance_clipping.x - luminance_clipping.y) + luminance_clipping.y);
+    return (Clipping.x*Clipping.y) / (depth * (Clipping.x - Clipping.y) + Clipping.y);
 }
 
 bool threshold01(float value, float threshold) {
@@ -32,6 +40,8 @@ bool threshold01(float value, float threshold) {
 bool threshold(float value, float threshold) {
     return threshold != 0 && (value/threshold > sign(threshold));
 }
+
+vec2 oneTexel = 1.0 / InSize;
 
 bool ignore(vec3 col) {
     if (Requirements == 0) {

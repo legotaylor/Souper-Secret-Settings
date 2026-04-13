@@ -1,21 +1,27 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 uniform sampler2D PrevOutSampler;
 
-in vec2 texCoord;
-in vec2 oneTexel;
+layout(std140) uniform SamplerInfo {
+    vec2 OutSize;
+    vec2 InSize;
+};
 
-uniform vec2 InSize;
+layout(std140) uniform VoronoiConfig {
+    float Last;
+    float Adjacent;
+    float Diagonal;
+    vec4 SampleDistance;
+};
+
+in vec2 texCoord;
 
 out vec4 fragColor;
 
-uniform float Last;
-uniform float Adjacent;
-uniform float Diagonal;
-uniform vec4 SampleDistance;
-
 void main() {
+    vec2 oneTexel = 1.0 / InSize;
+
     vec4 col = texture(InSampler, texCoord);
 
     vec2 aTexel = oneTexel*SampleDistance.xy;

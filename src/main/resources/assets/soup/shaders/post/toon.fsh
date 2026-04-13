@@ -1,21 +1,20 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 uniform sampler2D ASampler;
 uniform sampler2D BSampler;
 
-in vec2 texCoord;
-in vec2 oneTexel;
+layout(std140) uniform ToonConfig {
+    float OutlineStep;
+    float ColorSteps;
+    float ColorBoost;
+    float Darkening;
+    float Convolution;
+};
 
-uniform vec2 InSize;
+in vec2 texCoord;
 
 out vec4 fragColor;
-
-uniform float OutlineStep;
-uniform float ColorSteps;
-uniform float ColorBoost;
-uniform float Darkening;
-uniform float Convolution;
 
 float maxV(vec3 v) {
     return max(v.r, max(v.g, v.b));

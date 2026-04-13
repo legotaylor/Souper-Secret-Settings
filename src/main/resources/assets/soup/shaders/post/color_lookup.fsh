@@ -1,14 +1,15 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 uniform sampler2D LookupSampler;
 
-in vec2 texCoord;
-in vec2 oneTexel;
+layout(std140) uniform ColorLookupConfig {
+    float GridSize;
+    float Iterations;
+    float Alpha;
+};
 
-uniform float GridSize;
-uniform float Iterations;
-uniform float luminance_alpha_smooth;
+in vec2 texCoord;
 
 out vec4 fragColor;
 
@@ -31,5 +32,5 @@ void main() {
         col = mix(col, target, s*min(a-i,1));
     }
 
-    fragColor = vec4(mix(base, col, luminance_alpha_smooth), 1.0);
+    fragColor = vec4(mix(base, col, Alpha), 1.0);
 }

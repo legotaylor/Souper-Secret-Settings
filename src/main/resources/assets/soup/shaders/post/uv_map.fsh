@@ -1,17 +1,25 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 uniform sampler2D BaseSampler;
 
+layout(std140) uniform SamplerInfo {
+    vec2 OutSize;
+    vec2 InSize;
+};
+
+layout(std140) uniform UVMapConfig {
+    uniform vec4 UVDistances;
+    uniform float Alpha;
+};
+
 in vec2 texCoord;
-in vec2 oneTexel;
 
 out vec4 fragColor;
 
-uniform vec4 UVDistances;
-uniform float luminance_alpha_smooth;
-
 void main() {
+    vec2 oneTexel = 1.0 / InSize;
+
     vec3 pos = texture(InSampler, texCoord).rgb;
 
     vec3 offsetLeft =  pos - texture(InSampler, texCoord + vec2(-oneTexel.x * UVDistances.z, 0)).rgb;
@@ -30,5 +38,5 @@ void main() {
         uv = pos.xy;
     }
 
-    fragColor = vec4(mix(pos, texture(BaseSampler, uv).rgb, luminance_alpha_smooth), 1.0);
+    fragColor = vec4(mix(pos, texture(BaseSampler, uv).rgb, Alpha), 1.0);
 }

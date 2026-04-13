@@ -1,15 +1,21 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 
+layout(std140) uniform SamplerInfo {
+    vec2 OutSize;
+    vec2 InSize;
+};
+
+layout(std140) uniform HarshDitherConfig {
+    int Steps;
+    float Mix;
+    float Alpha;
+};
+
 in vec2 texCoord;
-in vec2 oneTexel;
 
 out vec4 fragColor;
-
-uniform int Steps;
-uniform float Mix;
-uniform float luminance_alpha_smooth;
 
 float getPositionThreshold(vec2 positionInPattern) {
     if (positionInPattern.x == 3) {
@@ -48,7 +54,7 @@ float getChannelOutput(float target, float positionThreshold) {
 void main(){
     vec4 target = texture(InSampler, texCoord);
 
-    vec2 positionInPattern = floor(fract((texCoord/oneTexel)/6)*6);
+    vec2 positionInPattern = floor(fract((texCoord*InSize)/6)*6);
 
     positionInPattern.y = 5-positionInPattern.y;
     float positionThreshold = getPositionThreshold(positionInPattern);
@@ -57,5 +63,5 @@ void main(){
 
     color = mix(color, (floor(target*Steps)/Steps), Mix);
 
-    fragColor = vec4(mix(target, color, luminance_alpha_smooth).rgb, 1);
+    fragColor = vec4(mix(target, color, Alpha).rgb, 1);
 }

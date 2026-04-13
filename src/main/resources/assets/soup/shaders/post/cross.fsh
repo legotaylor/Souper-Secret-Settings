@@ -1,24 +1,25 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 uniform sampler2D BaseSampler;
 
+layout(std140) uniform CrossConfig {
+    vec3 Swap;
+    vec4 R;
+    vec4 G;
+    vec4 B;
+    vec3 Abs;
+    vec3 MinThreshold;
+    vec3 MinA;
+    vec3 MinB;
+    vec3 BaseA;
+    vec3 BaseB;
+    vec3 Out;
+};
+
 in vec2 texCoord;
-in vec2 oneTexel;
 
 out vec4 fragColor;
-
-uniform vec3 Swap;
-uniform vec4 R;
-uniform vec4 G;
-uniform vec4 B;
-uniform vec3 Abs;
-uniform vec3 MinThreshold;
-uniform vec3 MinA;
-uniform vec3 MinB;
-uniform vec3 BaseA;
-uniform vec3 BaseB;
-uniform vec3 Out;
 
 void main() {
     vec3 colA = texture(InSampler, texCoord).rgb;

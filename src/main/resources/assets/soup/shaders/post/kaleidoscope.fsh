@@ -1,16 +1,17 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
+
+layout(std140) uniform KaleidoscopeConfig {
+    vec2 Mirrors;
+    vec2 Position;
+    float Wrapping;
+    float Alpha;
+};
 
 in vec2 texCoord;
 
 out vec4 fragColor;
-
-uniform vec2 Mirrors;
-uniform vec2 Position;
-
-uniform float Wrapping;
-uniform float luminance_alpha_smooth;
 
 vec4 wrapTexture(sampler2D tex, vec2 coord) {
     return texture(tex, mix(coord, fract(coord), Wrapping));
@@ -47,5 +48,5 @@ vec3 getLine(float angle, float offset) {
 void main(){
     vec2 coord = mirrorAlongLines(vec2(texCoord.x-0.5, texCoord.y-0.5), getLine(Mirrors.y*6.28318530718, Position.x), getLine((Mirrors.y+(1.0/Mirrors.x)+0.5)*6.28318530718, Position.y), abs(Mirrors.x-1));
     vec4 col = wrapTexture(InSampler, vec2(coord.x+0.5, coord.y+0.5));
-    fragColor = mix(texture(InSampler, texCoord), col, luminance_alpha_smooth);
+    fragColor = mix(texture(InSampler, texCoord), col, Alpha);
 }

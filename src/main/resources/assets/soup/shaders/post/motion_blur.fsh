@@ -1,22 +1,28 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 
+layout(std140) uniform SamplerInfo {
+    vec2 OutSize;
+    vec2 InSize;
+};
+
+layout(std140) uniform MotionBlurConfig {
+    uniform float Steps;
+    uniform float BaseMix;
+    uniform vec2 RotationScale;
+    uniform float Wrapping;
+    uniform vec4 Offset;
+    uniform float Fov;
+    uniform float Pitch;
+    uniform float PitchDelta;
+    uniform float YawDelta;
+    uniform float Alpha;
+};
+
 in vec2 texCoord;
-in vec2 oneTexel;
 
 out vec4 fragColor;
-
-uniform float Steps;
-uniform float BaseMix;
-uniform vec2 RotationScale;
-uniform float Wrapping;
-uniform vec4 Offset;
-uniform float luminance_fov;
-uniform float luminance_pitch;
-uniform float luminance_pitch_delta;
-uniform float luminance_yaw_delta;
-uniform float luminance_alpha_smooth;
 
 mat3 pitch(float rotation) {
     rotation /= 57.2957795131;
@@ -39,20 +45,20 @@ vec4 wrapTexture(sampler2D tex, vec2 coord) {
 void main(){
     float near = 0.1;
     float far = 1000.0;
-    float aspect = oneTexel.y/oneTexel.x;
-    float yTan = tan(luminance_fov/114.591559);
+    float aspect = InSize.x/InSize.y;
+    float yTan = tan(Fov/114.591559);
     float yCotan = 1.0/yTan;
     mat4 projection = mat4(yCotan/aspect, 0, 0, 0, 0, yCotan, 0, 0, 0, 0, (far+near)/(near-far), (2*far*near)/(near-far), 0, 0, -1, 0);
 
     vec3 pos = (vec3(yTan * (texCoord.x*2.0 - 1.0) * aspect, yTan * (texCoord.y*2.0 - 1.0), -Offset.w) + Offset.xyz);
-    pos *= pitch(-luminance_pitch);
+    pos *= pitch(-Pitch);
 
     vec3 base = texture(InSampler, texCoord).rgb;
     vec3 colAcc = base * BaseMix;
 
-    mat3 pitchCorrection = pitch(luminance_pitch);
-    mat3 pitchStep = pitch(luminance_pitch_delta/Steps * RotationScale.x);
-    float yawStep = luminance_yaw_delta/Steps * RotationScale.y;
+    mat3 pitchCorrection = pitch(Pitch);
+    mat3 pitchStep = pitch(PitchDelta/Steps * RotationScale.x);
+    float yawStep = YawDelta/Steps * RotationScale.y;
     float count = floor(abs(Steps));
     for (int i = 1; i < count; i++) {
         pos *= pitchStep;
@@ -64,5 +70,5 @@ void main(){
 
     colAcc /= count - (1-BaseMix);
 
-    fragColor = vec4(mix(base, colAcc, luminance_alpha_smooth), 1.0);
+    fragColor = vec4(mix(base, colAcc, Alpha), 1.0);
 }

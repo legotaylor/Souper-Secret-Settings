@@ -1,24 +1,24 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 uniform sampler2D BaseSampler;
 
+layout(std140) uniform BlendConfig {
+    vec3 Swap;
+    vec3 Add;
+    vec3 Sub;
+    vec3 Mul;
+    vec3 Div;
+    vec3 Pow;
+    vec3 Xor;
+    vec3 InA;
+    vec3 InB;
+    vec3 Out;
+};
+
 in vec2 texCoord;
-in vec2 oneTexel;
 
 out vec4 fragColor;
-
-uniform vec3 Swap;
-uniform vec3 Add;
-uniform vec3 Sub;
-uniform vec3 Mul;
-uniform vec3 Div;
-uniform vec3 Pow;
-uniform vec3 Xor;
-uniform vec3 InA;
-uniform vec3 InB;
-uniform vec3 Out;
-
 
 vec3 xor(vec3 a, vec3 b) {
     return vec3(ivec3(a*255.0) ^ ivec3(b*255.0))/255.0;

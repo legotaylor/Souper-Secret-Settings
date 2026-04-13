@@ -2,17 +2,23 @@
 
 uniform sampler2D InSampler;
 
+layout(std140) uniform SamplerInfo {
+    vec2 OutSize;
+    vec2 InSize;
+};
+
+layout(std140) uniform Config {
+    vec2 Offset;
+    float Centering;
+    float Alpha;
+};
+
 in vec2 texCoord;
-in vec2 oneTexel;
 
 out vec4 fragColor;
 
-uniform vec2 Offset;
-uniform float Centering;
-uniform float luminance_alpha_smooth;
-
 void main() {
-    float amount = ((int(texCoord.x/oneTexel.x)+int(texCoord.y/oneTexel.y))%2)+Centering;
+    float amount = ((int(texCoord.x*InSize.x)+int(texCoord.y*InSize.y))%2)+Centering;
     vec4 col = texture(InSampler, mod(texCoord + Offset*amount, vec2(1,1)));
-    fragColor = vec4(mix(texture(InSampler, texCoord), col, luminance_alpha_smooth).rgb, 1.0);
+    fragColor = vec4(mix(texture(InSampler, texCoord), col, Alpha).rgb, 1.0);
 }

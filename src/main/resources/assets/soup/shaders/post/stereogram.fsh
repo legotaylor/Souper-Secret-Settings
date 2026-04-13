@@ -1,19 +1,26 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 uniform sampler2D InDepthSampler;
 
+layout(std140) uniform SamplerInfo {
+    vec2 OutSize;
+    vec2 InSize;
+    vec2 InDepthSize;
+};
+
+layout(std140) uniform StereogramConfig {
+    float Stripes;
+    float Random;
+    vec2 Clipping;
+};
+
 in vec2 texCoord;
-in vec2 oneTexel;
 
 out vec4 fragColor;
 
-uniform float Stripes;
-uniform float luminance_random;
-uniform vec2 luminance_clipping;
-
 float LinearizeDepth(float depth) {
-    return (luminance_clipping.x*luminance_clipping.y) / (depth * (luminance_clipping.x - luminance_clipping.y) + luminance_clipping.y);
+    return (Clipping.x*Clipping.y) / (depth * (Clipping.x - Clipping.y) + Clipping.y);
 }
 
 //https://www.shadertoy.com/view/XdXGW8
@@ -73,15 +80,15 @@ vec2 originalPosition(vec2 position) {
 
 float sampleNoise(vec2 coords) {
     float x = fract(coords.x*Stripes)/Stripes;
-    float y = coords.y*(oneTexel.x/oneTexel.y);
+    float y = coords.y*(InSize.y/InSize.x);
 
-    vec2 random = vec2(fract(luminance_random*123456.789), fract(luminance_random*456789.123));
+    vec2 random = vec2(fract(Random*123456.789), fract(Random*456789.123));
 
     return noise((vec2(x,y)+random)*400);
 }
 
 void main(){
-    vec2 dotCalc = (texCoord - vec2(0.5, 0.95))*vec2(1,oneTexel.x/oneTexel.y);
+    vec2 dotCalc = (texCoord - vec2(0.5, 0.95))*vec2(1,InSize.y/InSize.x);
     float dotRadius = 0.005;
     if (min(distance(dotCalc, vec2(0.5/Stripes, 0)), distance(dotCalc, vec2(-(0.5/Stripes), 0))) < dotRadius) {
         fragColor = vec4(vec3(1.0), 1.0);

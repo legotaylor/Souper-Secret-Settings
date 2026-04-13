@@ -1,16 +1,22 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 
+layout(std140) uniform CollapseConfig {
+    uniform vec2 Distance;
+    uniform vec2 NoiseScale;
+    uniform float Time;
+    uniform float Alpha;
+};
+
+layout(std140) uniform SamplerInfo {
+    vec2 OutSize;
+    vec2 InSize;
+};
+
 in vec2 texCoord;
-in vec2 oneTexel;
 
 out vec4 fragColor;
-
-uniform float luminance_time;
-uniform vec2 Distance;
-uniform vec2 NoiseScale;
-uniform float luminance_alpha_smooth;
 
 //https://www.shadertoy.com/view/XdXGW8
 vec2 grad( ivec2 z )
@@ -42,14 +48,14 @@ float noise( in vec2 p )
 }
 
 void main(){
-    vec2 aspect = vec2(1, oneTexel.x/oneTexel.y);
+    vec2 aspect = vec2(1, InSize.y/InSize.x);
     vec2 randomPos = ((texCoord*NoiseScale)+vec2(43.123))*aspect;
-    float t = fract(noise(randomPos*300.123)+luminance_time);
+    float t = fract(noise(randomPos*300.123)+Time);
 
     vec3 center = texture(InSampler, texCoord).rgb;
-    vec3 down = texture(InSampler, texCoord - oneTexel*t*Distance).rgb;
+    vec3 down = texture(InSampler, texCoord - t*Distance/InSize).rgb;
 
-    vec3 col = mix(center, mix(down, center, t), luminance_alpha_smooth);
+    vec3 col = mix(center, mix(down, center, t), Alpha);
 
     fragColor = vec4(col, 1.0);
 }

@@ -1,17 +1,16 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 uniform sampler2D SubtractSampler;
 
-in vec2 texCoord;
-in vec2 oneTexel;
+layout(std140) uniform DifferenceConfig {
+    vec3 Color;
+    float Scale;
+};
 
-uniform vec2 InSize;
+in vec2 texCoord;
 
 out vec4 fragColor;
-
-uniform vec3 Color;
-uniform float Scale;
 
 void main() {
     vec3 col = Color + (texture(InSampler, texCoord).rgb - texture(SubtractSampler, texCoord).rgb) * Scale;

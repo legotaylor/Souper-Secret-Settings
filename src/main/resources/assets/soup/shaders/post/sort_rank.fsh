@@ -1,21 +1,22 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 uniform sampler2D InDepthSampler;
 
+layout(std140) uniform SortRankConfig {
+    vec3 RGBInfluence;
+    vec3 RGBLoop;
+    vec3 HSVInfluence;
+    vec3 HSVLoop;
+    vec3 Depth;
+
+    float Flip;
+    float SortThreshold;
+};
+
 in vec2 texCoord;
-in vec2 oneTexel;
 
 out vec4 fragColor;
-
-uniform vec3 RGBInfluence;
-uniform vec3 RGBLoop;
-uniform vec3 HSVInfluence;
-uniform vec3 HSVLoop;
-uniform vec3 Depth;
-
-uniform float Flip;
-uniform float SortThreshold;
 
 float ThresholdValue(float value) {
     float stepValue = step(abs(SortThreshold), value);

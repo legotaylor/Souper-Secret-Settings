@@ -1,39 +1,43 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 
-in vec2 texCoord;
-in vec2 oneTexel;
+layout(std140) uniform SamplerInfo {
+    vec2 OutSize;
+    vec2 InSize;
+};
 
-uniform vec2 InSize;
+layout(std140) uniform AsciiConfig {
+    vec3 Scale;
+    ivec2 Grid;
+    vec2 Levels;
+    vec4 Thresholds;
+    ivec3 BitShift;
+    ivec4 Char1A;
+    ivec4 Char1B;
+    ivec4 Char2A;
+    ivec4 Char2B;
+    ivec4 Char3A;
+    ivec4 Char3B;
+    ivec4 Char4A;
+    ivec4 Char4B;
+    ivec4 Char5A;
+    ivec4 Char5B;
+    float Alpha;
+};
+
+in vec2 texCoord;
 
 out vec4 fragColor;
-
-uniform vec3 Scale;
-uniform ivec2 Grid;
-uniform vec2 Levels;
-uniform vec4 Thresholds;
-uniform ivec3 BitShift;
-uniform ivec4 Char1A;
-uniform ivec4 Char1B;
-uniform ivec4 Char2A;
-uniform ivec4 Char2B;
-uniform ivec4 Char3A;
-uniform ivec4 Char3B;
-uniform ivec4 Char4A;
-uniform ivec4 Char4B;
-uniform ivec4 Char5A;
-uniform ivec4 Char5B;
-uniform float luminance_alpha_smooth;
 
 bool getChar(ivec4 charA, ivec4 charB, ivec2 index) {
     return (((((index.y/4)%2 > 0 ? charB : charA)[index.y%4] * BitShift.y) ^ BitShift.z) & (BitShift.x << index.x)) > 0;
 }
 
 void main() {
-    ivec2 pixelCoord = ivec2(texCoord/oneTexel/Scale.xy);
+    ivec2 pixelCoord = ivec2(texCoord*InSize/Scale.xy);
 
-    vec3 col = texture(InSampler, mix(pixelCoord, (pixelCoord/Grid)*Grid, Scale.z)*oneTexel*Scale.xy).rgb;
+    vec3 col = texture(InSampler, mix(pixelCoord, (pixelCoord/Grid)*Grid, Scale.z)/InSize*Scale.xy).rgb;
 
     float m = max(max(col.r, col.g), col.b);
     col /= m;
@@ -69,5 +73,5 @@ void main() {
     }
 
     col = round(col*Levels.x)/Levels.x * (getChar(charA, charB, coord) ? ceil(m) : min(floor(m),Levels.y-1))/Levels.y;
-    fragColor = vec4(mix(texture(InSampler, texCoord).rgb, col, luminance_alpha_smooth), 1.0);
+    fragColor = vec4(mix(texture(InSampler, texCoord).rgb, col, Alpha), 1.0);
 }

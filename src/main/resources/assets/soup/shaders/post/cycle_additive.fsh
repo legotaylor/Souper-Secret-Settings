@@ -1,17 +1,18 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 
+layout(std140) uniform CycleConfig {
+    int Phase;
+};
+
 in vec2 texCoord;
-in vec2 oneTexel;
 
 out vec4 fragColor;
 
-uniform int soup_shader_index;
-
 void main(){
     vec4 color = texture(InSampler, texCoord);
-    int channel = soup_shader_index%3;
+    int channel = Phase%3;
     if (channel == 0) {
         color.g = 0;
         color.b = 0;

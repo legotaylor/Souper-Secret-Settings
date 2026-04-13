@@ -1,15 +1,17 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
+
+layout(std140) uniform ProjectionConfig {
+    vec2 Corner00;
+    vec2 Corner01;
+    vec2 Corner10;
+    vec2 Corner11;
+};
 
 in vec2 texCoord;
 
 out vec4 fragColor;
-
-uniform vec2 Corner00;
-uniform vec2 Corner01;
-uniform vec2 Corner10;
-uniform vec2 Corner11;
 
 mat3 getMatrix(vec2 a, vec2 b, vec2 c, vec2 d) {
     vec3 A = vec3(a, 1);

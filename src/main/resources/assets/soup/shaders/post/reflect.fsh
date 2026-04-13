@@ -1,24 +1,31 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 uniform sampler2D InDepthSampler;
 
+layout(std140) uniform SamplerInfo {
+    vec2 OutSize;
+    vec2 InSize;
+    vec2 InDepthSize;
+};
+
+layout(std140) uniform ReflectConfig {
+    float Fov;
+    float Pitch;
+    float Yaw;
+    vec3 Offset;
+    vec3 Steps;
+    float Padding;
+    int Iterations;
+    vec4 UVDistances;
+    float MaxDistance;
+    vec2 OutOfBounds;
+    float Alpha;
+};
+
 in vec2 texCoord;
-in vec2 oneTexel;
 
 out vec4 fragColor;
-
-uniform float luminance_fov;
-uniform float luminance_pitch;
-uniform float luminance_yaw;
-uniform vec3 Offset;
-uniform vec3 Steps;
-uniform float Padding;
-uniform int Iterations;
-uniform vec4 UVDistances;
-uniform float MaxDistance;
-uniform vec2 OutOfBounds;
-uniform float luminance_alpha_smooth;
 
 float near = 0.1;
 float far = 1000.0;
@@ -27,8 +34,9 @@ float LinearizeDepth(float depth) {
     return (near * far) / (far + near - z * (far - near));
 }
 
+vec2 oneTexel = 1.0 / InSize;
 float aspect = oneTexel.y/oneTexel.x;
-float yTan = tan(luminance_fov/114.591559);
+float yTan = tan(Fov/114.591559);
 
 mat3 GetRotationMatrix(vec2 rotation) {
     rotation /= 57.2957795131;
@@ -39,7 +47,7 @@ mat3 GetRotationMatrix(vec2 rotation) {
     return transpose(mat3(cy, 0, sy, 0, 1, 0, -sy, 0, cy) * mat3(1, 0, 0, 0, cx, -sx, 0, sx, cx));
 }
 
-mat3 rotation = GetRotationMatrix(vec2(luminance_pitch, luminance_yaw));
+mat3 rotation = GetRotationMatrix(vec2(Pitch, Yaw));
 
 vec2 GetSlope(vec2 coord) {
     return vec2(yTan * (coord.x*2.0 - 1.0) * aspect, yTan * (coord.y*2.0 - 1.0));
@@ -122,5 +130,5 @@ void main(){
     if ((rotation*pos).z > 0) {
         color *= OutOfBounds.y;
     }
-    fragColor = vec4(mix(texture(InSampler, texCoord), color, luminance_alpha_smooth).rgb, 1.0);
+    fragColor = vec4(mix(texture(InSampler, texCoord), color, Alpha).rgb, 1.0);
 }

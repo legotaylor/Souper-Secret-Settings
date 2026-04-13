@@ -1,15 +1,17 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
+
+layout(std140) uniform HalfInvertConfig {
+    uniform float Iterations;
+    uniform vec3 Subtract;
+    uniform vec3 Multiply;
+    uniform float Alpha;
+};
 
 in vec2 texCoord;
 
 out vec4 fragColor;
-
-uniform float Iterations;
-uniform vec3 Subtract;
-uniform vec3 Multiply;
-uniform float luminance_alpha_smooth;
 
 const float roundingFactor = 0.5/255.0;
 
@@ -35,5 +37,5 @@ void main(){
         col = mix(col, target, s*min(a-i,1));
     }
 
-    fragColor = vec4(mix(base, col, luminance_alpha_smooth), 1.0);
+    fragColor = vec4(mix(base, col, Alpha), 1.0);
 }

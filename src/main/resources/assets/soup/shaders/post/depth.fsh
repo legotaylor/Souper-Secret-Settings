@@ -1,19 +1,21 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 uniform sampler2D InDepthSampler;
 uniform sampler2D BaseSampler;
 
+layout(std140) uniform DepthConfig {
+    uniform float Scale;
+    uniform float Offset;
+    uniform vec2 Clipping;
+};
+
 in vec2 texCoord;
 
 out vec4 fragColor;
 
-uniform float Scale;
-uniform float Offset;
-uniform vec2 luminance_clipping;
-
 float LinearizeDepth(float depth) {
-    return (luminance_clipping.x*luminance_clipping.y) / (depth * (luminance_clipping.x - luminance_clipping.y) + luminance_clipping.y);
+    return (Clipping.x*Clipping.y) / (depth * (Clipping.x - Clipping.y) + Clipping.y);
 }
 
 void main() {

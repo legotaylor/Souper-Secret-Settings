@@ -1,21 +1,25 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 
-in vec2 texCoord;
-in vec2 oneTexel;
+layout(std140) uniform SamplerInfo {
+    vec2 OutSize;
+    vec2 InSize;
+};
 
-uniform vec2 InSize;
+layout(std140) uniform PrintMaskConfig {
+    vec3 Color1;
+    vec3 Color2;
+    vec3 Color3;
+    vec3 Color4;
+    vec3 Base;
+    int Combinations;
+    float Dithering;
+};
+
+in vec2 texCoord;
 
 out vec4 fragColor;
-
-uniform vec3 Color1;
-uniform vec3 Color2;
-uniform vec3 Color3;
-uniform vec3 Color4;
-uniform vec3 Base;
-uniform int Combinations;
-uniform float Dithering;
 
 vec3 palette[16] = vec3[16](
     Base,
@@ -78,7 +82,7 @@ void main() {
     }
 
     if (Dithering > 0.5) {
-        ivec2 coord = ivec2((texCoord/oneTexel)/Dithering);
+        ivec2 coord = ivec2((texCoord*InSize)/Dithering);
         if ((coord.x + coord.y)%2 == 0 && minDistance > distance((palette[minI]+palette[secondI])/2.0, baseCol)) {
             minI = secondI;
         }

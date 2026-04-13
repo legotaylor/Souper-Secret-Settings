@@ -1,18 +1,25 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 
+layout(std140) uniform SamplerInfo {
+    vec2 OutSize;
+    vec2 InSize;
+};
+
+layout(std140) uniform HalftoneConfig {
+    vec3 Gray;
+    vec4 Cyan;
+    vec4 Magenta;
+    vec4 Yellow;
+    vec4 Black;
+    float NoiseScale;
+    float NoiseAmount;
+};
+
 in vec2 texCoord;
-in vec2 oneTexel;
 
 out vec4 fragColor;
-uniform vec3 Gray;
-uniform vec4 Cyan;
-uniform vec4 Magenta;
-uniform vec4 Yellow;
-uniform vec4 Black;
-uniform float NoiseScale;
-uniform float NoiseAmount;
 
 //https://www.shadertoy.com/view/XdXGW8
 vec2 grad( ivec2 z )
@@ -70,7 +77,7 @@ float black(vec3 col, vec2 coord, vec4 pattern) {
 void main(){
     vec4 col = texture(InSampler, texCoord);
 
-    vec2 coord = vec2(texCoord.x - 0.5, (texCoord.y - 0.5) * (oneTexel.x/oneTexel.y));
+    vec2 coord = vec2(texCoord.x - 0.5, (texCoord.y - 0.5) * (InSize.y/InSize.x));
 
     vec3 sub = vec3((noise(coord * NoiseScale)/NoiseAmount) + (1.0 - (1.0/NoiseAmount)));
 

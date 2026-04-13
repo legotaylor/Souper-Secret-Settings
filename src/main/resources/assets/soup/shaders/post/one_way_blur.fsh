@@ -1,17 +1,25 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 
+layout(std140) uniform SamplerInfo {
+    vec2 OutSize;
+    vec2 InSize;
+};
+
+layout(std140) uniform BlurConfig {
+    vec2 BlurDir;
+    float Radius;
+    float Curve;
+};
+
 in vec2 texCoord;
-in vec2 oneTexel;
 
 out vec4 fragColor;
 
-uniform vec2 BlurDir;
-uniform float Radius;
-uniform float Curve;
-
 void main(){
+    vec2 oneTexel = 1.0 / InSize;
+
     vec3 col = vec3(0);
     float total = 0;
     for (float i = 0; i <= Radius; i++) {

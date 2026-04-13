@@ -1,36 +1,43 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 uniform sampler2D InDepthSampler;
 
+layout(std140) uniform SamplerInfo {
+    vec2 OutSize;
+    vec2 InSize;
+    vec2 InDepthSize;
+};
+
+layout(std140) uniform Noise3DConfig {
+    vec4 Mode;
+    float Colored;
+    vec2 NoiseCurve;
+    float Loop;
+    vec3 Scale;
+    vec3 Offset;
+    vec3 Scroll;
+    float Fov;
+    float Pitch;
+    float Yaw;
+    vec3 CamFract;
+    vec3 Cam;
+    vec2 Clipping;
+    vec3 ScreenScale;
+    float RenderType;
+    float Alpha;
+};
+
 in vec2 texCoord;
-in vec2 oneTexel;
 
 out vec4 fragColor;
 
-uniform vec4 Mode;
-uniform float Colored;
-uniform vec2 NoiseCurve;
-uniform float Loop;
-uniform vec3 Scale;
-uniform vec3 Offset;
-uniform vec3 Scroll;
-uniform float luminance_fov;
-uniform float luminance_pitch;
-uniform float luminance_yaw;
-uniform vec3 luminance_cam_fract;
-uniform vec3 luminance_cam;
-uniform vec2 luminance_clipping;
-uniform vec3 ScreenScale;
-uniform float luminance_renderType;
-uniform float luminance_alpha_smooth;
-
 float LinearizeDepth(float depth) {
-    return (luminance_clipping.x*luminance_clipping.y) / (depth * (luminance_clipping.x - luminance_clipping.y) + luminance_clipping.y);
+    return (Clipping.x*Clipping.y) / (depth * (Clipping.x - Clipping.y) + Clipping.y);
 }
 
-float aspect = oneTexel.y/oneTexel.x;
-float yTan = tan(luminance_fov/114.591559);
+float aspect = InSize.x/InSize.y;
+float yTan = tan(Fov/114.591559);
 
 mat3 GetRotationMatrix(vec2 rotation) {
     rotation /= 57.2957795131;
@@ -41,7 +48,7 @@ mat3 GetRotationMatrix(vec2 rotation) {
     return transpose(mat3(cy, 0, sy, 0, 1, 0, -sy, 0, cy) * mat3(1, 0, 0, 0, cx, -sx, 0, sx, cx));
 }
 
-mat3 rotation = GetRotationMatrix(vec2(luminance_pitch, luminance_yaw));
+mat3 rotation = GetRotationMatrix(vec2(Pitch, Yaw));
 
 float GetDepth(vec2 coord) {
     return LinearizeDepth(texture(InDepthSampler, coord).r);
@@ -102,7 +109,7 @@ void main(){
     float dist = GetDepth(texCoord);
     vec3 pos = GetWorldOffset(texCoord, dist) + Offset - fract(Scroll)/Scale;
 
-    vec3 offset = luminance_cam_fract/Loop + fract(floor(luminance_cam)/Loop);
+    vec3 offset = CamFract/Loop + fract(floor(Cam)/Loop);
     offset.y = -offset.y;
     pos = (fract(pos/Loop - offset)*Loop)*Scale;
 
@@ -111,10 +118,10 @@ void main(){
 
     vec3 screen = vec3(texCoord.xy*ScreenScale.xy, ScreenScale.z)-fract(Scroll);
     screen.x *= aspect;
-    vec3 n = noise(mix(pos, screen, luminance_renderType));
+    vec3 n = noise(mix(pos, screen, RenderType));
 
     color = mix(color, step(n, pow(color, vec3(Mode.y))), Mode.x);
     color = mix(color, color*mix(n, 1-n, Mode.w), Mode.z);
 
-    fragColor = vec4(mix(base, color, luminance_alpha_smooth), 1.0);
+    fragColor = vec4(mix(base, color, Alpha), 1.0);
 }

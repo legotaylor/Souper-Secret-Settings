@@ -1,25 +1,27 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 
+layout(std140) uniform PaletteDitherConfig {
+    int Amount;
+    // this could be received as an array, but we filter then through a Pow() that shouldnt be repeated
+    vec3 Color1;
+    vec3 Color2;
+    vec3 Color3;
+    vec3 Color4;
+    vec3 Color5;
+    vec3 Color6;
+    vec3 Color7;
+    vec3 Color8;
+    float Fallback;
+    float Power;
+    float Seed;
+    float Alpha;
+};
+
 in vec2 texCoord;
-in vec2 oneTexel;
 
 out vec4 fragColor;
-
-uniform int Amount;
-uniform vec3 Color1;
-uniform vec3 Color2;
-uniform vec3 Color3;
-uniform vec3 Color4;
-uniform vec3 Color5;
-uniform vec3 Color6;
-uniform vec3 Color7;
-uniform vec3 Color8;
-uniform float Fallback;
-uniform float Power;
-uniform float Seed;
-uniform float luminance_alpha_smooth;
 
 float scalarTripleProduct(vec3 a, vec3 b, vec3 c) {
     return dot(a,cross(b,c));
@@ -192,5 +194,5 @@ void main() {
         result = D;
     }
 
-    fragColor = vec4(mix(base, pow(result, 1.0/p), luminance_alpha_smooth), 1.0);
+    fragColor = vec4(mix(base, pow(result, 1.0/p), Alpha), 1.0);
 }

@@ -1,16 +1,17 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 
-in vec2 texCoord;
-in vec2 oneTexel;
+layout(std140) uniform HuePerceptualConfig {
+    float Rotation;
+    vec3 Gray;
+    vec3 R;
+    vec3 G;
+    vec3 B;
+    float Alpha;
+};
 
-uniform float Rotation;
-uniform vec3 Gray;
-uniform vec3 R;
-uniform vec3 G;
-uniform vec3 B;
-uniform float luminance_alpha_smooth;
+in vec2 texCoord;
 
 out vec4 fragColor;
 
@@ -23,5 +24,5 @@ vec3 hue_shift(vec3 color, float dhue) {
 
 void main(){
     vec4 col = texture(InSampler, texCoord);
-    fragColor = vec4(mix(col.rgb, clamp(hue_shift(col.rgb, Rotation * -6.28318530718), 0, 1), luminance_alpha_smooth), 1.0);
+    fragColor = vec4(mix(col.rgb, clamp(hue_shift(col.rgb, Rotation * -6.28318530718), 0, 1), Alpha), 1.0);
 }

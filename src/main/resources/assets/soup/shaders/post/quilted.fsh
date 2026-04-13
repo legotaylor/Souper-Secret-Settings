@@ -1,22 +1,30 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 
+layout(std140) uniform SamplerInfo {
+    vec2 OutSize;
+    vec2 InSize;
+};
+
+layout(std140) uniform QuiltedConfig {
+    ivec2 Pixels;
+    vec2 Blur;
+    vec3 Highlight;
+    vec3 Exponent;
+    vec2 Center;
+    vec4 Base;
+    float Alpha;
+};
+
 in vec2 texCoord;
-in vec2 oneTexel;
 
 out vec4 fragColor;
 
-uniform ivec2 Pixels;
-uniform vec2 Blur;
-uniform vec3 Highlight;
-uniform vec3 Exponent;
-uniform vec2 Center;
-uniform vec4 Base;
-uniform float luminance_alpha_smooth;
-
 void main(){
     vec3 base = texture(InSampler, texCoord).rgb;
+
+    vec2 oneTexel = 1.0 / InSize;
 
     vec2 scale = oneTexel*Pixels;
     vec2 start = floor(texCoord/scale + vec2(0.5))*scale;
@@ -46,7 +54,7 @@ void main(){
     average = mix(average/mag, Base.rgb, Base.a);
     difference *= Highlight.x/max(mag-1, 1);
 
-    vec3 col = average + (difference+Highlight.z)*length((texCoord-start - Center*scale)/oneTexel);
+    vec3 col = average + (difference+Highlight.z)*length((texCoord-start - Center*scale)*InSize);
 
-    fragColor = vec4(mix(base, col, luminance_alpha_smooth), 1.0);
+    fragColor = vec4(mix(base, col, Alpha), 1.0);
 }

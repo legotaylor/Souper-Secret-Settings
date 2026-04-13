@@ -1,22 +1,28 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 uniform sampler2D DirectionSampler;
 
-in vec2 texCoord;
-in vec2 oneTexel;
+layout(std140) uniform SamplerInfo {
+    vec2 OutSize;
+    vec2 InSize;
+};
 
-uniform vec2 InSize;
+layout(std140) uniform MaxOffsetConfig {
+    uniform vec2 Direction;
+    uniform float Steps;
+    uniform vec2 Radius;
+    uniform vec2 PrevDirection;
+    uniform vec4 Mix;
+};
+
+in vec2 texCoord;
 
 out vec4 fragColor;
 
-uniform vec2 Direction;
-uniform float Steps;
-uniform vec2 Radius;
-uniform vec2 PrevDirection;
-uniform vec4 Mix;
-
 void main() {
+    vec2 oneTexel = 1.0 / InSize;
+
     vec3 maxCol = vec3(0.0);
 
     vec2 radius = 1.0/Radius;

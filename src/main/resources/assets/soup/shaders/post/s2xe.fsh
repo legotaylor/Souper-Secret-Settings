@@ -1,17 +1,23 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 
-in vec2 texCoord;
-in vec2 oneTexel;
+layout(std140) uniform SamplerInfo {
+    vec2 OutSize;
+    vec2 InSize;
+};
 
-uniform vec3 Pos;
-uniform vec3 Rotation;
-uniform vec2 Curvature;
-uniform float Wrapping;
-uniform float luminance_fov;
-uniform float luminance_pitch;
-uniform float luminance_alpha_smooth;
+layout(std140) uniform S2xEConfig {
+    vec3 Pos;
+    vec3 Rotation;
+    vec2 Curvature;
+    float Wrapping;
+    float Fov;
+    float Pitch;
+    float Alpha;
+};
+
+in vec2 texCoord;
 
 out vec4 fragColor;
 
@@ -43,10 +49,10 @@ mat2 rotation2D(float rotation) {
 void main(){
     vec4 base = texture(InSampler, texCoord);
 
-    float aspect = oneTexel.y/oneTexel.x;
-    float yTan = tan(luminance_fov/114.591559);
+    float aspect = InSize.x/InSize.y;
+    float yTan = tan(Fov/114.591559);
     vec3 view = normalize(vec3(yTan * (texCoord.x*2.0 - 1.0) * aspect, yTan * (texCoord.y*2.0 - 1.0), -1));
-    view.yz *= rotation2D(luminance_pitch);
+    view.yz *= rotation2D(Pitch);
 
     vec3 pos = Pos;
     mat2 xRotation = rotation2D(Rotation.x);
@@ -72,5 +78,5 @@ void main(){
 
     vec4 projected = wrapTexture(InSampler, uv + vec2(0.5));
 
-    fragColor = vec4(mix(base.rgb, projected.rgb, luminance_alpha_smooth), 1.0);
+    fragColor = vec4(mix(base.rgb, projected.rgb, Alpha), 1.0);
 }

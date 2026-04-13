@@ -1,15 +1,16 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 
+layout(std140) uniform ThresholdConfig {
+    float ThresholdBrightness;
+    float ThresholdSlope;
+    vec3 Luminance;
+};
+
 in vec2 texCoord;
-in vec2 oneTexel;
 
 out vec4 fragColor;
-
-uniform float ThresholdBrightness;
-uniform float ThresholdSlope;
-uniform vec3 Luminance;
 
 void main(){
     vec4 color = texture(InSampler, texCoord);

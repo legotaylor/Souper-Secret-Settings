@@ -15,7 +15,7 @@
             ],
             "output": "bloom_clip",
             "uniforms": {
-                "ColorBrightnessThresholdConfig": [
+                "ThresholdConfig": [
                     {
                         "name": "ThresholdBrightness",
                         "type": "float",

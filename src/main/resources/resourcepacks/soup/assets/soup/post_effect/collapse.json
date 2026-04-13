@@ -16,11 +16,6 @@
             "uniforms": {
                 "CollapseConfig": [
                     {
-                        "name": "luminance_time",
-                        "type": "float",
-                        "value": 1.0
-                    },
-                    {
                         "name": "Distance",
                         "type": "vec2",
                         "value": [
@@ -35,6 +30,11 @@
                             100,
                             0.1
                         ]
+                    },
+                    {
+                        "name": "luminance_time",
+                        "type": "float",
+                        "value": 1.0
                     },
                     {
                         "name": "luminance_alpha_smooth",

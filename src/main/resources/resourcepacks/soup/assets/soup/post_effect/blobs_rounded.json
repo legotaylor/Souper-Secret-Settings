@@ -47,7 +47,7 @@
             ],
             "output": "b",
             "uniforms": {
-                "MaxOffsetMergeConfig": [
+                "MaxOffsetConfig": [
                     {
                         "name": "Direction",
                         "type": "vec2",

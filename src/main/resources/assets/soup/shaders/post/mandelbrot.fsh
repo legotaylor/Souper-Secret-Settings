@@ -1,23 +1,29 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 
+layout(std140) uniform SamplerInfo {
+    vec2 OutSize;
+    vec2 InSize;
+};
+
+layout(std140) uniform MandelbrotConfig {
+    uniform vec3 Zoom;
+    uniform float Iterations;
+    uniform vec3 Coloring;
+    uniform vec3 ZR;
+    uniform vec3 ZI;
+    uniform vec3 XR;
+    uniform vec3 XI;
+    uniform vec3 CR;
+    uniform vec3 CI;
+    uniform float Radius;
+    uniform float Alpha;
+};
+
 in vec2 texCoord;
-in vec2 oneTexel;
 
 out vec4 fragColor;
-
-uniform vec3 Zoom;
-uniform float Iterations;
-uniform vec3 Coloring;
-uniform vec3 ZR;
-uniform vec3 ZI;
-uniform vec3 XR;
-uniform vec3 XI;
-uniform vec3 CR;
-uniform vec3 CI;
-uniform float Radius;
-uniform float luminance_alpha_smooth;
 
 //https://www.shadertoy.com/view/ml2fDh
 vec2 complexPow(vec2 z, vec2 n) {
@@ -44,7 +50,7 @@ void main() {
     float duration = 0;
     vec2 lastPos = vec2(0);
 
-    vec2 coord = ((texCoord-vec2(0.5))*vec2(1.0, oneTexel.x/oneTexel.y)/Zoom.r + Zoom.gb);
+    vec2 coord = ((texCoord-vec2(0.5))*vec2(1.0, InSize.y/InSize.x)/Zoom.r + Zoom.gb);
 
     vec2 z = parameter(coord, ZR, ZI);
     vec2 x = parameter(coord, XR, XI);
@@ -67,5 +73,5 @@ void main() {
         }
         col *= 1 - (1 - duration/ceil(Iterations)) * Coloring.r;
     }
-    fragColor = vec4(mix(texture(InSampler, texCoord).rgb, col, luminance_alpha_smooth), 1.0);
+    fragColor = vec4(mix(texture(InSampler, texCoord).rgb, col, Alpha), 1.0);
 }

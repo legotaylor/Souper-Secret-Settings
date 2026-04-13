@@ -1,19 +1,25 @@
-#version 150
+#version 330
 
 uniform sampler2D InSampler;
 
+layout(std140) uniform SamplerInfo {
+    vec2 OutSize;
+    vec2 InSize;
+};
+
+layout(std140) uniform CrystallizeConfig {
+    float Scale;
+    vec2 Offset;
+    vec3 Angle;
+    float Seed;
+    float UVMix;
+    int NthClosest;
+    float Alpha;
+};
+
 in vec2 texCoord;
-in vec2 oneTexel;
 
 out vec4 fragColor;
-
-uniform float Scale;
-uniform vec2 Offset;
-uniform vec3 Angle;
-uniform float Seed;
-uniform float UVMix;
-uniform int NthClosest;
-uniform float luminance_alpha_smooth;
 
 //https://www.shadertoy.com/view/3sGSWV
 
@@ -61,7 +67,7 @@ vec2 voronoiNoise(vec2 value){
 }
 
 void main(){
-    vec2 scale = (vec2(1.0)/oneTexel)/Scale;
+    vec2 scale = InSize/Scale;
 
     vec2 pos = texCoord*scale;
     vec2 cell = voronoiNoise(pos);
@@ -71,5 +77,5 @@ void main(){
     float angle = fract(slope.x + slope.y);
     color = mix(color, step(angle, color*color), Angle.z);
 
-    fragColor = vec4(mix(texture(InSampler, texCoord).rgb, color, luminance_alpha_smooth), 1);
+    fragColor = vec4(mix(texture(InSampler, texCoord).rgb, color, Alpha), 1);
 }
