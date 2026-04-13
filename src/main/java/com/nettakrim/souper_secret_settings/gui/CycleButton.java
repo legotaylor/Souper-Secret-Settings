@@ -27,6 +27,7 @@ public class CycleButton extends Button {
     @Override
     protected void renderContents(@NotNull GuiGraphics context, int mouseX, int mouseY, float deltaTicks) {
         renderDefaultSprite(context);
+        renderDefaultLabel(context.textRenderer());
     }
 
     public static int cycleInt(int value, int max) {
