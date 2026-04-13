@@ -61,12 +61,10 @@
                             "value": 0
                         },
                         {
-                            "name": "luminance_clipping",
+                            "name": "Clipping",
                             "type": "vec2",
-                            "value": [
-                                0.05,
-                                750
-                            ]
+                            "value": [ 0.05, 750 ],
+                            "override": "luminance:clipping"
                         }
                     ]
                 }

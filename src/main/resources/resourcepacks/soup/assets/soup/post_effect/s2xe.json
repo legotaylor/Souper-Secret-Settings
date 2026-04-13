@@ -46,19 +46,22 @@
                         "value": 1.0
                     },
                     {
-                        "name": "luminance_fov",
+                        "name": "Fov",
                         "type": "float",
-                        "value": 1.0
+                        "value": 1.0,
+                        "override": "luminance:fov"
                     },
                     {
-                        "name": "luminance_pitch",
+                        "name": "Pitch",
                         "type": "float",
-                        "value": 1.0
+                        "value": 1.0,
+                        "override": "luminance:pitch"
                     },
                     {
-                        "name": "luminance_alpha_smooth",
+                        "name": "Alpha",
                         "type": "float",
-                        "value": 1.0
+                        "value": 1.0,
+                        "override": "luminance:alpha/smooth"
                     }
                 ]
             },

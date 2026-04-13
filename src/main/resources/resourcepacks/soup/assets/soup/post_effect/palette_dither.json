@@ -108,9 +108,10 @@
                         "value": 123.456
                     },
                     {
-                        "name": "luminance_alpha_smooth",
+                        "name": "Alpha",
                         "type": "float",
-                        "value": 1.0
+                        "value": 1.0,
+                        "override": "luminance:alpha/smooth"
                     }
                 ]
             }

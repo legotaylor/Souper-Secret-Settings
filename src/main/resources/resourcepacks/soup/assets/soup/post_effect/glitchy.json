@@ -72,9 +72,10 @@
                         ]
                     },
                     {
-                        "name": "luminance_time",
+                        "name": "Time",
                         "type": "float",
-                        "value": 0.0
+                        "value": 0.0,
+                        "override": "luminance:time"
                     }
                 ]
             }
@@ -163,9 +164,10 @@
             "uniforms": {
                 "MergeConfig": [
                     {
-                        "name": "luminance_alpha_smooth",
+                        "name": "Alpha",
                         "type": "float",
-                        "value": 1.0
+                        "value": 1.0,
+                        "override": "luminance:alpha/smooth"
                     }
                 ]
             }

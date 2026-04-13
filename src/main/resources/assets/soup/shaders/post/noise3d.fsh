@@ -24,7 +24,7 @@ layout(std140) uniform Noise3DConfig {
     vec3 Cam;
     vec2 Clipping;
     vec3 ScreenScale;
-    float RenderType;
+    vec3 RenderLocation;
     float Alpha;
 };
 
@@ -118,7 +118,8 @@ void main(){
 
     vec3 screen = vec3(texCoord.xy*ScreenScale.xy, ScreenScale.z)-fract(Scroll);
     screen.x *= aspect;
-    vec3 n = noise(mix(pos, screen, RenderType));
+    // RenderLocation.y = isOverUi()
+    vec3 n = noise(mix(pos, screen, RenderLocation.y));
 
     color = mix(color, step(n, pow(color, vec3(Mode.y))), Mode.x);
     color = mix(color, color*mix(n, 1-n, Mode.w), Mode.z);

@@ -21,19 +21,22 @@
             "uniforms": {
                 "ReflectConfig": [
                     {
-                        "name": "luminance_fov",
+                        "name": "Fov",
                         "type": "float",
-                        "value": 90.0
+                        "value": 90.0,
+                        "override": "luminance:fov"
                     },
                     {
-                        "name": "luminance_pitch",
+                        "name": "Pitch",
                         "type": "float",
-                        "value": 0.0
+                        "value": 0.0,
+                        "override": "luminance:pitch"
                     },
                     {
-                        "name": "luminance_yaw",
+                        "name": "Yaw",
                         "type": "float",
-                        "value": 0.0
+                        "value": 0.0,
+                        "override": "luminance:yaw"
                     },
                     {
                         "name": "Offset",
@@ -87,9 +90,10 @@
                         ]
                     },
                     {
-                        "name": "luminance_alpha_smooth",
+                        "name": "Alpha",
                         "type": "float",
-                        "value": 1.0
+                        "value": 1.0,
+                        "override": "luminance:alpha/smooth"
                     }
                 ]
             }

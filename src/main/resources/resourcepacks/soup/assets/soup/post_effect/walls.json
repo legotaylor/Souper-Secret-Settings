@@ -74,17 +74,19 @@
                         ]
                     },
                     {
-                        "name": "luminance_clipping",
+                        "name": "Clipping",
                         "type": "vec2",
                         "value": [
                             0.05,
                             750
-                        ]
+                        ],
+                        "override": "luminance:clipping"
                     },
                     {
-                        "name": "luminance_alpha_smooth",
+                        "name": "Alpha",
                         "type": "float",
-                        "value": 1.0
+                        "value": 1.0,
+                        "override": "luminance:alpha/smooth"
                     }
                 ]
             }

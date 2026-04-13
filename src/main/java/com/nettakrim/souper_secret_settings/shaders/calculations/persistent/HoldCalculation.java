@@ -11,7 +11,7 @@ public class HoldCalculation extends Calculation {
 
     @Override
     protected String[] getInputs() {
-        return new String[]{"","luminance_time","0.9"};
+        return new String[]{"","luminance:time","0.9"};
     }
 
     @Override

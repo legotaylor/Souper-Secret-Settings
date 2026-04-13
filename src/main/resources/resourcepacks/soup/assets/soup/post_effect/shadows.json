@@ -21,19 +21,22 @@
             "uniforms": {
                 "ShadowsConfig": [
                     {
-                        "name": "luminance_fov",
+                        "name": "Fov",
                         "type": "float",
-                        "value": 90.0
+                        "value": 90.0,
+                        "override": "luminance:fov"
                     },
                     {
-                        "name": "luminance_pitch",
+                        "name": "Pitch",
                         "type": "float",
-                        "value": 0.0
+                        "value": 0.0,
+                        "override": "luminance:pitch"
                     },
                     {
-                        "name": "luminance_yaw",
+                        "name": "Yaw",
                         "type": "float",
-                        "value": 0.0
+                        "value": 0.0,
+                        "override": "luminance:yaw"
                     },
                     {
                         "name": "Offset",
@@ -82,9 +85,10 @@
                         ]
                     },
                     {
-                        "name": "luminance_viewDistance",
+                        "name": "ViewDistance",
                         "type": "float",
-                        "value": 0.0
+                        "value": 0.0,
+                        "override": "luminance:view_distance"
                     },
                     {
                         "name": "ShadowFade",
@@ -95,9 +99,10 @@
                         ]
                     },
                     {
-                        "name": "luminance_sunAngle",
+                        "name": "SunAngle",
                         "type": "float",
-                        "value": 0.0
+                        "value": 0.0,
+                        "override": "luminance:sun_angle"
                     },
                     {
                         "name": "SunFade",
@@ -105,17 +110,19 @@
                         "value": 50.0
                     },
                     {
-                        "name": "luminance_clipping",
+                        "name": "Clipping",
                         "type": "vec2",
                         "value": [
                             0.05,
                             750
-                        ]
+                        ],
+                        "override": "luminance:clipping"
                     },
                     {
-                        "name": "luminance_alpha_smooth",
+                        "name": "Alpha",
                         "type": "float",
-                        "value": 1.0
+                        "value": 1.0,
+                        "override": "luminance:alpha/smooth"
                     }
                 ]
             }

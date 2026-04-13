@@ -55,9 +55,10 @@
                             "value": [ 0.6, 0.8 ]
                         },
                         {
-                            "name": "luminance_viewDistance",
+                            "name": "ViewDistance",
                             "type": "float",
-                            "value": 12.0
+                            "value": 12.0,
+                            "override": "luminance:view_distance"
                         }
                     ]
                 },

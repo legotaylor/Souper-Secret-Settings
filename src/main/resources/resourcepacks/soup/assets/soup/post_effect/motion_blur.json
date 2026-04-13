@@ -49,29 +49,34 @@
                         ]
                     },
                     {
-                        "name": "luminance_fov",
+                        "name": "Fov",
                         "type": "float",
-                        "value": 0.0
+                        "value": 0.0,
+                        "override": "luminance:fov"
                     },
                     {
-                        "name": "luminance_pitch",
+                        "name": "Pitch",
                         "type": "float",
-                        "value": 0.0
+                        "value": 0.0,
+                        "override": "luminance:pitch"
                     },
                     {
-                        "name": "luminance_pitch_delta",
+                        "name": "PitchDelta",
                         "type": "float",
-                        "value": 0.0
+                        "value": 0.0,
+                        "override": "luminance:pitch/delta"
                     },
                     {
-                        "name": "luminance_yaw_delta",
+                        "name": "YawDelta",
                         "type": "float",
-                        "value": 0.0
+                        "value": 0.0,
+                        "override": "luminance:yaw/delta"
                     },
                     {
-                        "name": "luminance_alpha_smooth",
+                        "name": "Alpha",
                         "type": "float",
-                        "value": 0.0
+                        "value": 0.0,
+                        "override": "luminance:alpha/smooth"
                     }
                 ]
             }

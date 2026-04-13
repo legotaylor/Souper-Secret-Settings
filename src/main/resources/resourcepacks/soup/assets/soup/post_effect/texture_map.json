@@ -22,45 +22,51 @@
             "uniforms": {
                 "TextureMapConfig": [
                     {
-                        "name": "luminance_fov",
+                        "name": "Fov",
                         "type": "float",
-                        "value": 90.0
+                        "value": 90.0,
+                        "override": "luminance:fov"
                     },
                     {
-                        "name": "luminance_pitch",
+                        "name": "Pitch",
                         "type": "float",
-                        "value": 0.0
+                        "value": 0.0,
+                        "override": "luminance:pitch"
                     },
                     {
-                        "name": "luminance_yaw",
+                        "name": "Yaw",
                         "type": "float",
-                        "value": 0.0
+                        "value": 0.0,
+                        "override": "luminance:yaw"
                     },
                     {
-                        "name": "luminance_cam_fract",
+                        "name": "CamFract",
                         "type": "vec3",
                         "value": [
                             0.0,
                             0.0,
                             0.0
-                        ]
+                        ],
+                        "override": "luminance:cam_fract"
                     },
                     {
-                        "name": "luminance_cam",
+                        "name": "Cam",
                         "type": "vec3",
                         "value": [
                             0.0,
                             0.0,
                             0.0
-                        ]
+                        ],
+                        "override": "luminance:cam"
                     },
                     {
-                        "name": "luminance_clipping",
+                        "name": "Clipping",
                         "type": "vec2",
                         "value": [
                             0.05,
                             750
-                        ]
+                        ],
+                        "override": "luminance:clipping"
                     },
                     {
                         "name": "TextureScale",
@@ -128,9 +134,10 @@
             "uniforms": {
                 "MergeConfig": [
                     {
-                        "name": "luminance_alpha_smooth",
+                        "name": "Alpha",
                         "type": "float",
-                        "value": 1.0
+                        "value": 1.0,
+                        "override": "luminance:alpha/smooth"
                     }
                 ]
             }

@@ -10,7 +10,7 @@ layout(std140) uniform SamplerInfo {
 layout(std140) uniform RingsConfig {
     float Radius;
     float InnerPercent;
-    float luminance_alpha_smooth;
+    float Alpha;
 };
 
 in vec2 texCoord;
@@ -37,5 +37,5 @@ void main(){
         }
     }
 
-    fragColor = vec4(mix(base, maxVal, luminance_alpha_smooth).rgb, 1.0);
+    fragColor = vec4(mix(base, maxVal, Alpha).rgb, 1.0);
 }

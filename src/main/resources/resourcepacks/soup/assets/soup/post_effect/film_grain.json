@@ -16,9 +16,10 @@
             "uniforms": {
                 "FilmGrainConfig": [
                     {
-                        "name": "luminance_random",
+                        "name": "Random",
                         "type": "float",
-                        "value": 1.0
+                        "value": 1.0,
+                        "override": "luminance:random"
                     },
                     {
                         "name": "Rate",
@@ -46,9 +47,10 @@
                         "value": 0.1
                     },
                     {
-                        "name": "luminance_alpha_smooth",
+                        "name": "Alpha",
                         "type": "float",
-                        "value": 1.0
+                        "value": 1.0,
+                        "override": "luminance:alpha/smooth"
                     }
                 ]
             }

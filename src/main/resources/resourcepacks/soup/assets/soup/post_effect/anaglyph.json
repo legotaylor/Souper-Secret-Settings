@@ -50,9 +50,10 @@
                         ]
                     },
                     {
-                        "name": "luminance_fov",
+                        "name": "Fov",
                         "type": "float",
-                        "value": 90.0
+                        "value": 90.0,
+                        "override": "luminance:fov"
                     },
                     {
                         "name": "ZStep",
@@ -85,12 +86,10 @@
                         "value": 0.0
                     },
                     {
-                        "name": "luminance_clipping",
+                        "name": "Clipping",
                         "type": "vec2",
-                        "value": [
-                            0.05,
-                            750
-                        ]
+                        "value": [ 0.05, 750 ],
+                        "override": "luminance:clipping"
                     }
                 ]
             }
@@ -140,9 +139,10 @@
                         ]
                     },
                     {
-                        "name": "luminance_fov",
+                        "name": "Fov",
                         "type": "float",
-                        "value": 90.0
+                        "value": 90.0,
+                        "override": "luminance:fov"
                     },
                     {
                         "name": "ZStep",
@@ -175,12 +175,13 @@
                         "value": 0.0
                     },
                     {
-                        "name": "luminance_clipping",
+                        "name": "Clipping",
                         "type": "vec2",
                         "value": [
                             0.05,
                             750
-                        ]
+                        ],
+                        "override": "luminance:clipping"
                     }
                 ]
             }
@@ -239,9 +240,10 @@
             "uniforms": {
                 "MergeConfig": [
                     {
-                        "name": "luminance_alpha_smooth",
+                        "name": "Alpha",
                         "type": "float",
-                        "value": 1.0
+                        "value": 1.0,
+                        "override": "luminance:alpha/smooth"
                     }
                 ]
             }
