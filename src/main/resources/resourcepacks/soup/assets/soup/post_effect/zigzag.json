@@ -14,7 +14,7 @@
             ],
             "output": "0",
             "uniforms": {
-                "ZigzagConfig": [
+                "ZigZagConfig": [
                     {
                         "name": "Zig",
                         "type": "vec3",

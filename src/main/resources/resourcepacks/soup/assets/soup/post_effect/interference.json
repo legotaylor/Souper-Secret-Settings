@@ -38,7 +38,7 @@
             }
         },
         {
-            "vertex_shader": "minecraft:post/bumpy",
+            "vertex_shader": "minecraft:core/screenquad",
             "fragment_shader": "minecraft:post/bumpy",
             "inputs": [
                 {
@@ -59,7 +59,7 @@
         },
         {
             "vertex_shader": "minecraft:core/screenquad",
-            "fragment_shader": "minecraft:post/color_convolve",
+            "fragment_shader": "luminance:post/color_matrix",
             "inputs": [
                 {
                     "sampler_name": "In",
@@ -69,11 +69,6 @@
             "output": "1",
             "uniforms": {
                 "ColorConfig": [
-                    {
-                        "name": "Gray",
-                        "type": "vec3",
-                        "value": [ 0.3, 0.59, 0.11 ]
-                    },
                     {
                         "name": "RedMatrix",
                         "type": "vec3",
@@ -93,11 +88,13 @@
                         "name": "Offset",
                         "type": "vec3",
                         "value": [ 0.0, 0.0, 0.0 ]
-                    },
+                    }
+                ],
+                "SaturationConfig": [
                     {
-                        "name": "ColorScale",
+                        "name": "Gray",
                         "type": "vec3",
-                        "value": [ 1.0, 1.0, 1.0 ]
+                        "value": [ 0.3, 0.59, 0.11 ]
                     },
                     {
                         "name": "Saturation",

@@ -2,7 +2,7 @@
 
 uniform sampler2D InSampler;
 
-layout(std140) uniform Config {
+layout(std140) uniform HyperspaceConfig {
     vec2 Center;
     float Inside;
     float Outside;

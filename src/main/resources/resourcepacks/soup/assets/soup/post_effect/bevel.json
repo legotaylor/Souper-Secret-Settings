@@ -22,7 +22,7 @@
             ],
             "output": "0",
             "uniforms": {
-                "SpiderConfig": [
+                "RotScaleConfig": [
                     {
                         "name": "InScale",
                         "type": "vec2",
@@ -37,7 +37,9 @@
                         "name": "InRotation",
                         "type": "float",
                         "value": 0
-                    },
+                    }
+                ],
+                "SpiderConfig": [
                     {
                         "name": "Scissor",
                         "type": "vec4",

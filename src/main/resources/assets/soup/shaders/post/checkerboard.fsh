@@ -7,7 +7,7 @@ layout(std140) uniform SamplerInfo {
     vec2 InSize;
 };
 
-layout(std140) uniform Config {
+layout(std140) uniform CheckerboardConfig {
     vec2 Offset;
     float Centering;
     float Alpha;

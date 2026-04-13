@@ -18,7 +18,7 @@
             ],
             "output": "swap",
             "uniforms": {
-                "UvMapConfig": [
+                "UVMapConfig": [
                     {
                         "name": "UVDistances",
                         "type": "vec4",

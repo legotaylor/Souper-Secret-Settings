@@ -8,7 +8,7 @@ layout(std140) uniform SamplerInfo {
     vec2 InSize;
 };
 
-layout(std140) uniform Config {
+layout(std140) uniform ShadowsConfig {
     float Fov;
     float Pitch;
     float Yaw;

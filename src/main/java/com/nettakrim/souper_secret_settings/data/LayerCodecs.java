@@ -95,11 +95,12 @@ public record LayerCodecs(Optional<List<Shader>> shaders, Optional<List<Shader>>
 
         public void apply(ShaderLayer layer, Identifier registry) {
             // backwards compatibility
-            if (registry.getPath().equals("color_convolve") && registry.getNamespace().equals("minecraft")) {
-                registry = Identifier.fromNamespaceAndPath("luminance", "saturate");
+            Identifier shaderID = Identifier.parse(id);
+            if (shaderID.getPath().equals("color_convolve") && shaderID.getNamespace().equals("minecraft")) {
+                shaderID = Identifier.fromNamespaceAndPath("luminance", "saturate");
             }
 
-            List<ShaderData> shaderDatas = SouperSecretSettingsClient.soupRenderer.getShaderAdditions(layer, registry, Identifier.parse(id), 1, -1, false);
+            List<ShaderData> shaderDatas = SouperSecretSettingsClient.soupRenderer.getShaderAdditions(layer, registry, shaderID, 1, -1, false);
             if (shaderDatas == null || shaderDatas.isEmpty()) {
                 sayError("shader.missing", id);
                 return;

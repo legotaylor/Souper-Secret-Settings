@@ -2,7 +2,7 @@
 
 uniform sampler2D InSampler;
 
-layout(std140) uniform Config {
+layout(std140) uniform SplitToneConfig {
     vec3 ScaleA;
     vec3 OffsetA;
     vec3 ScaleB;

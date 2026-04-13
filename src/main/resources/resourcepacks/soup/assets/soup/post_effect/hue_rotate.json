@@ -14,7 +14,7 @@
             ],
             "output": "0",
             "uniforms": {
-                "HsvConfig": [
+                "HSVConfig": [
                     {
                         "name": "Hue",
                         "type": "vec2",

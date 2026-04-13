@@ -17,16 +17,6 @@
             "uniforms": {
                 "RotateConfig": [
                     {
-                        "name": "ScreenSize",
-                        "type": "vec2",
-                        "value": [ 1.0, 1.0 ]
-                    },
-                    {
-                        "name": "ColorModulate",
-                        "type": "vec4",
-                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
-                    },
-                    {
                         "name": "Angle",
                         "type": "float",
                         "value": 90.0
@@ -50,6 +40,13 @@
                         "name": "Squish",
                         "type": "float",
                         "value": 0.0
+                    }
+                ],
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [ 1.0, 1.0, 1.0, 1.0 ]
                     }
                 ]
             }

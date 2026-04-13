@@ -41,7 +41,7 @@
             ],
             "output": "2",
             "uniforms": {
-                "Blobs2Config": [
+                "BlobsConfig": [
                     {
                         "name": "Radius",
                         "type": "float",

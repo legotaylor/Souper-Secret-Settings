@@ -13,7 +13,7 @@
                 }
             ],
             "uniforms": {
-                "S2xeConfig": [
+                "S2xEConfig": [
                     {
                         "name": "Pos",
                         "type": "vec3",

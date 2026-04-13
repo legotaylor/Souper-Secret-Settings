@@ -14,7 +14,7 @@
             ],
             "output": "0",
             "uniforms": {
-                "HsvMapConfig": [
+                "HSVMapConfig": [
                     {
                         "name": "HueMatrix",
                         "type": "vec3",

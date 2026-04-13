@@ -3,7 +3,7 @@
 uniform sampler2D InSampler;
 uniform sampler2D PrevSampler;
 
-layout(std140) uniform Config {
+layout(std140) uniform RollingShutterConfig {
     uniform float Time;
     uniform float Threshold;
     uniform vec2 Direction;
