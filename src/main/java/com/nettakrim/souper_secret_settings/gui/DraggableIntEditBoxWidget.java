@@ -9,7 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
-public class DraggableIntWidget extends EditBox implements CursorWrap {
+public class DraggableIntEditBoxWidget extends EditBox implements CursorWrap {
     protected final int min;
     protected final int max;
     protected final String defaultValue;
@@ -17,7 +17,7 @@ public class DraggableIntWidget extends EditBox implements CursorWrap {
 
     float value;
 
-    public DraggableIntWidget(int x, int width, int height, Component message, int min, int max, int defaultValue, Consumer<Integer> onChange) {
+    public DraggableIntEditBoxWidget(int x, int width, int height, Component message, int min, int max, int defaultValue, Consumer<Integer> onChange) {
         super(ClientData.minecraft.font, x, 0, width, height, message);
         setResponder(this::onChange);
         this.min = min;

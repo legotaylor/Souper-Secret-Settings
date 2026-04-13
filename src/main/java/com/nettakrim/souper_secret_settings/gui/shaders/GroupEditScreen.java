@@ -8,7 +8,7 @@ import com.nettakrim.souper_secret_settings.SouperSecretSettingsClient;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.ListWidget;
 import com.nettakrim.souper_secret_settings.gui.SoupGui;
-import com.nettakrim.souper_secret_settings.gui.SuggestionTextFieldWidget;
+import com.nettakrim.souper_secret_settings.gui.SuggestionEditBoxWidget;
 import com.nettakrim.souper_secret_settings.shaders.Group;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.Nullable;
@@ -28,7 +28,7 @@ public class GroupEditScreen extends ListScreen<String> {
     protected String name;
     protected String startingName;
 
-    protected SuggestionTextFieldWidget nameWidget;
+    protected SuggestionEditBoxWidget nameWidget;
 
     public GroupEditScreen(ShaderAdditionScreen groupScreen, Group group, String name) {
         super(-1);
@@ -42,7 +42,7 @@ public class GroupEditScreen extends ListScreen<String> {
     protected int createHeader() {
         addRenderableWidget(Button.builder(Component.translatable("gui.back"), (widget) -> onClose()).bounds(SoupGui.listGap, SoupGui.listGap, SoupGui.headerWidthSmall, 20).build());
 
-        nameWidget = new SuggestionTextFieldWidget(SoupGui.listGap, SoupGui.headerWidthSmall, 20, Component.literal("name"), false);
+        nameWidget = new SuggestionEditBoxWidget(SoupGui.listGap, SoupGui.headerWidthSmall, 20, Component.literal("name"), false);
         nameWidget.setY(SoupGui.listGap*2 + 20);
         nameWidget.setValue(name.replace("user/", ""));
         nameWidget.setResponder((s) -> name = s);

@@ -25,7 +25,7 @@ public class ParameterScreen extends ListScreen<Calculation> {
 
     @Override
     public void render(@NotNull GuiGraphics context, int mouseX, int mouseY, float delta) {
-        ShaderTime.currentRenderLocation = SouperSecretSettingsClient.soupRenderer.getRenderType();
+        ShaderTime.currentRenderLocation = SouperSecretSettingsClient.soupRenderer.getRenderLocation();
         super.render(context, mouseX, mouseY, delta);
         ShaderTime.currentRenderLocation = RenderLocations.UI;
     }

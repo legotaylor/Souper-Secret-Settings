@@ -5,7 +5,7 @@ import com.nettakrim.souper_secret_settings.actions.LayerRenameAction;
 import com.nettakrim.souper_secret_settings.actions.ShaderLoadAction;
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
 import com.nettakrim.souper_secret_settings.gui.ListWidget;
-import com.nettakrim.souper_secret_settings.gui.SuggestionTextFieldWidget;
+import com.nettakrim.souper_secret_settings.gui.SuggestionEditBoxWidget;
 import com.nettakrim.souper_secret_settings.shaders.ShaderLayer;
 import com.nettakrim.souper_secret_settings.shaders.Toggleable;
 import net.minecraft.client.gui.GuiGraphics;
@@ -23,7 +23,7 @@ public class LayerWidget extends ListWidget {
     private Button saveButton;
     private Button loadButton;
 
-    private SuggestionTextFieldWidget nameWidget;
+    private SuggestionEditBoxWidget nameWidget;
 
     private static final int infoHeight = 15;
 
@@ -59,7 +59,7 @@ public class LayerWidget extends ListWidget {
 
         updateDataButtons();
 
-        nameWidget = new SuggestionTextFieldWidget(x, width, 20, Component.nullToEmpty("layer id"), false);
+        nameWidget = new SuggestionEditBoxWidget(x, width, 20, Component.nullToEmpty("layer id"), false);
         nameWidget.setListeners(() -> SouperSecretSettingsClient.soupData.getSavedLayers(true), this::setNameDisambiguate, false);
         nameWidget.submitOnLostFocus = true;
         nameWidget.setValue(layer.name);

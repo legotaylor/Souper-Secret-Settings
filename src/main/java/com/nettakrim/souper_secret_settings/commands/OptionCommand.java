@@ -96,17 +96,17 @@ public class OptionCommand {
                 .build();
         eatingNode.addChild(randomSoundNode);
 
-        LiteralCommandNode<FabricClientCommandSource> renderTypeNode = ClientCommandManager
-                .literal("render_type")
+        LiteralCommandNode<FabricClientCommandSource> renderLocationNode = ClientCommandManager
+                .literal("render_location")
                 .then(
-                        ClientCommandManager.literal("world").executes(context -> setRenderType(RenderLocations.WORLD))
+                        ClientCommandManager.literal("world").executes(context -> setRenderLocation(RenderLocations.WORLD))
                 )
                 .then(
-                        ClientCommandManager.literal("ui").executes(context -> setRenderType(RenderLocations.UI))
+                        ClientCommandManager.literal("ui").executes(context -> setRenderLocation(RenderLocations.UI))
                 )
-                .executes(context -> queryRenderType(1))
+                .executes(context -> queryRenderLocation(1))
                 .build();
-        commandNode.addChild(renderTypeNode);
+        commandNode.addChild(renderLocationNode);
 
         LiteralCommandNode<FabricClientCommandSource> toggleNode = ClientCommandManager
                 .literal("toggle")
@@ -233,13 +233,13 @@ public class OptionCommand {
         SouperSecretSettingsClient.say(key, priority, s);
     }
 
-    public static int setRenderType(RenderLocations.RenderLocation renderType) {
-        SouperSecretSettingsClient.soupRenderer.setRenderType(renderType);
-        return queryRenderType(0);
+    public static int setRenderLocation(RenderLocations.RenderLocation renderLocation) {
+        SouperSecretSettingsClient.soupRenderer.setRenderLocation(renderLocation);
+        return queryRenderLocation(0);
     }
 
-    public static int queryRenderType(int priority) {
-        SouperSecretSettingsClient.say("option.render_type."+SouperSecretSettingsClient.soupRenderer.getRenderType().toString().toLowerCase() + (priority > 0 ? ".query" : ".set"), priority);
+    public static int queryRenderLocation(int priority) {
+        SouperSecretSettingsClient.say("option.render_type."+SouperSecretSettingsClient.soupRenderer.getRenderLocation().toString().toLowerCase() + (priority > 0 ? ".query" : ".set"), priority);
         return 1;
     }
 

@@ -50,7 +50,7 @@ public class SoupGui {
         x += addHeaderButton(Button.builder(Component.empty(),  (widget) -> open(ScreenType.LAYERS, false)).bounds(x, listGap, (mainWidth*3+listGap*2)-(smallWidth*4+listGap*3)-listGap, 20).build());
         x += addHeaderButton(new HoverButtonWidget(x, listGap, smallWidth, 20, SouperSecretSettingsClient.translate("gui.undo"), null, (widget) -> undo()));
         x += addHeaderButton(new HoverButtonWidget(x, listGap, smallWidth, 20, SouperSecretSettingsClient.translate("gui.redo"), null, (widget) -> redo()));
-        x += addHeaderButton(Button.builder(SouperSecretSettingsClient.soupRenderer.getRenderTypeText(), SouperSecretSettingsClient.soupRenderer::cycleRenderType).bounds(x, listGap, smallWidth, 20).build());
+        x += addHeaderButton(Button.builder(SouperSecretSettingsClient.soupRenderer.getRenderLocationText(), SouperSecretSettingsClient.soupRenderer::cycleRenderLocation).bounds(x, listGap, smallWidth, 20).build());
              addHeaderButton(Button.builder(SouperSecretSettingsClient.translate("gui.config"), (widget) -> open(ScreenType.OPTION, false)).bounds(x, listGap, smallWidth, 20).build());
 
         x = listGap;

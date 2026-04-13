@@ -21,7 +21,7 @@ import net.minecraft.util.Mth;
 public abstract class ListScreen<V> extends ScrollScreen {
     protected ArrayList<ListWidget> listWidgets;
 
-    protected SuggestionTextFieldWidget suggestionTextFieldWidget;
+    protected SuggestionEditBoxWidget suggestionTextFieldWidget;
     protected Button suggestionScreenButton;
 
     protected int currentListSize;
@@ -48,7 +48,7 @@ public abstract class ListScreen<V> extends ScrollScreen {
             listWidgets.add(listWidget);
         }
 
-        suggestionTextFieldWidget = new SuggestionTextFieldWidget(SoupGui.listX, SoupGui.listWidth-20-SoupGui.listGap, 20, Component.literal("list addition"), false);
+        suggestionTextFieldWidget = new SuggestionEditBoxWidget(SoupGui.listX, SoupGui.listWidth-20-SoupGui.listGap, 20, Component.literal("list addition"), false);
         suggestionTextFieldWidget.setListeners(this::getAdditions, this::addAddition, matchIdentifiers());
         addRenderableWidget(suggestionTextFieldWidget);
 

@@ -37,7 +37,7 @@ public class SoupRenderer implements Runnables.WorldRender {
 
     private List<Identifier> validUniforms;
 
-    private RenderLocations.RenderLocation renderType;
+    private RenderLocations.RenderLocation renderLocation;
 
     public final Map<Identifier, Map<String, Group>> shaderGroups;
     public final Map<Identifier, Map<String, List<ShaderRegistryEntry>>> shaderGroupRegistries;
@@ -50,24 +50,24 @@ public class SoupRenderer implements Runnables.WorldRender {
         shaderLayers = new ArrayList<>();
         shaderGroups = new HashMap<>();
         shaderGroupRegistries = new HashMap<>();
-        renderType = RenderLocations.WORLD;
+        renderLocation = RenderLocations.WORLD;
 
         spectateHandler = new SoupSpectateHandler();
         Events.SpectatorHandlers.register(Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "spectate_handler"), spectateHandler);
-        Events.AfterVanillaPostEffectRender.register(Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "rendering"), (framebuffer, objectAllocator) -> {
+        Events.AfterVanillaPostEffectRender.register(Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "rendering"), (renderTarget, objectAllocator) -> {
             if (SouperSecretSettingsClient.soupData.config.disableState == 0) {
                 if (spectateHandler.shaderLayer != null) {
-                    Runnables.WorldRender.fromGameRender(spectateHandler.shaderLayer::render, framebuffer, objectAllocator);
+                    Runnables.WorldRender.fromGameRender(spectateHandler.shaderLayer::render, renderTarget, objectAllocator);
                     ShaderLayer.renderCleanup(null);
                 }
-                if (renderType == RenderLocations.WORLD) {
-                    Runnables.WorldRender.fromGameRender(this, framebuffer, objectAllocator);
+                if (renderLocation == RenderLocations.WORLD) {
+                    Runnables.WorldRender.fromGameRender(this, renderTarget, objectAllocator);
                 }
             }
         });
-        Events.AfterUiRender.register(Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "rendering"), (framebuffer, objectAllocator) -> {
-            if (renderType == RenderLocations.UI && SouperSecretSettingsClient.soupData.config.disableState == 0) {
-                Runnables.WorldRender.fromGameRender(this, framebuffer, objectAllocator);
+        Events.AfterUiRender.register(Identifier.fromNamespaceAndPath(SouperSecretSettingsClient.MODID, "rendering"), (renderTarget, objectAllocator) -> {
+            if (renderLocation == RenderLocations.UI && SouperSecretSettingsClient.soupData.config.disableState == 0) {
+                Runnables.WorldRender.fromGameRender(this, renderTarget, objectAllocator);
             }
         });
 
@@ -95,10 +95,10 @@ public class SoupRenderer implements Runnables.WorldRender {
     }
 
     @Override
-    public void run(FrameGraphBuilder builder, int textureWidth, int textureHeight, PostChain.TargetBundle framebufferSet) {
+    public void run(FrameGraphBuilder builder, int textureWidth, int textureHeight, PostChain.TargetBundle targetBundle) {
         if (shaderLayers != null) {
             for (ShaderLayer layer : shaderLayers) {
-                layer.render(builder, textureWidth, textureHeight, framebufferSet);
+                layer.render(builder, textureWidth, textureHeight, targetBundle);
             }
         }
 
@@ -131,7 +131,7 @@ public class SoupRenderer implements Runnables.WorldRender {
 
         List<ShaderData> shaders = new ArrayList<>();
 
-        Shader shader = new Shader(shaderRegistry, this::getRenderType);
+        Shader shader = new Shader(shaderRegistry, this::getRenderLocation);
         int i = 0;
         while (i < amount) {
             shaders.add(new ShaderData(shader));
@@ -164,7 +164,7 @@ public class SoupRenderer implements Runnables.WorldRender {
                 SouperSecretSettingsClient.say("shader.registry_empty", 1);
                 return null;
             }
-            shaders.add(new ShaderData(new Shader(shaderRegistry, this::getRenderType)));
+            shaders.add(new ShaderData(new Shader(shaderRegistry, this::getRenderLocation)));
             i++;
         }
 
@@ -250,21 +250,21 @@ public class SoupRenderer implements Runnables.WorldRender {
         return validUniforms;
     }
 
-    public void cycleRenderType(Button buttonWidget) {
-        setRenderType(renderType == RenderLocations.UI ? RenderLocations.WORLD : RenderLocations.UI);
-        buttonWidget.setMessage(getRenderTypeText());
+    public void cycleRenderLocation(Button buttonWidget) {
+        setRenderLocation(renderLocation == RenderLocations.UI ? RenderLocations.WORLD : RenderLocations.UI);
+        buttonWidget.setMessage(getRenderLocationText());
     }
 
-    public void setRenderType(RenderLocations.RenderLocation renderType) {
-        this.renderType = renderType;
+    public void setRenderLocation(RenderLocations.RenderLocation renderLocation) {
+        this.renderLocation = renderLocation;
     }
 
-    public RenderLocations.RenderLocation getRenderType() {
-        return renderType;
+    public RenderLocations.RenderLocation getRenderLocation() {
+        return renderLocation;
     }
 
-    public Component getRenderTypeText() {
-        return SouperSecretSettingsClient.translate(renderType == RenderLocations.UI ? "gui.ui" : "gui.world");
+    public Component getRenderLocationText() {
+        return SouperSecretSettingsClient.translate(renderLocation == RenderLocations.UI ? "gui.ui" : "gui.world");
     }
 
     private void runForGroups(ShaderRegistryEntry shaderRegistryEntry, List<Identifier> registries, BiConsumer<Identifier, String> consumer) {

@@ -9,7 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public class SuggestionTextFieldWidget extends DraggableTextFieldWidget {
+public class SuggestionEditBoxWidget extends DraggableEditBoxWidget {
     protected Supplier<List<String>> validAdditions;
     protected Consumer<String> onSubmit;
     protected boolean matchIdentifiers;
@@ -25,7 +25,7 @@ public class SuggestionTextFieldWidget extends DraggableTextFieldWidget {
 
     public int maxLengthMin = 32;
 
-    public SuggestionTextFieldWidget(int x, int width, int height, Component message, boolean resetOnEmpty) {
+    public SuggestionEditBoxWidget(int x, int width, int height, Component message, boolean resetOnEmpty) {
         super(x, width, height, message);
         super.setResponder(this::onChange);
         this.resetOnEmpty = resetOnEmpty;

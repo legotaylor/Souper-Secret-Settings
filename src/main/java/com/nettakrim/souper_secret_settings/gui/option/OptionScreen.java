@@ -55,8 +55,8 @@ public class OptionScreen extends ScrollScreen {
         widgets.clear();
 
         widgets.add(new StringWidget(SoupGui.listX, 0, widgetWidth, 8, SouperSecretSettingsClient.translate("option.gui.main"), ClientData.minecraft.font));
-        widgets.add(new CycleWidget(SoupGui.listX, widgetWidth,
-                (direction) -> SouperSecretSettingsClient.soupData.config.disableState = CycleWidget.cycleInt(SouperSecretSettingsClient.soupData.config.disableState + direction, 2),
+        widgets.add(new CycleButton(SoupGui.listX, widgetWidth,
+                (direction) -> SouperSecretSettingsClient.soupData.config.disableState = CycleButton.cycleInt(SouperSecretSettingsClient.soupData.config.disableState + direction, 2),
                 () -> SouperSecretSettingsClient.translate("option.gui.toggle."+SouperSecretSettingsClient.soupData.config.disableState))
         );
         AbstractSliderButton sliderWidget = new SoupAlphaSlider(SoupGui.listX, 0, widgetWidth, 20, Uniforms.getRawAlpha() / 100.0F, () -> Uniforms.updatingAlpha = true);
@@ -65,7 +65,7 @@ public class OptionScreen extends ScrollScreen {
         widgets.add(new StringWidget(SoupGui.listX, 0, widgetWidth, 8, SouperSecretSettingsClient.translate("option.gui.eating"), ClientData.minecraft.font));
         widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, SouperSecretSettingsClient.translate("option.gui.random"),
                 (x, width) -> {
-                    SuggestionTextFieldWidget widget = new SuggestionTextFieldWidget(x, width, 20, Component.empty(), false);
+                    SuggestionEditBoxWidget widget = new SuggestionEditBoxWidget(x, width, 20, Component.empty(), false);
                     widget.setMaxLengthMin(1024);
                     CompletableFuture.runAsync(() -> widget.setValue(itemStackToString(SouperSecretSettingsClient.soupData.config.randomItem)));
                     widget.setListeners(this::getItemSuggestions, null, true);
@@ -76,7 +76,7 @@ public class OptionScreen extends ScrollScreen {
         );
         widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, SouperSecretSettingsClient.translate("option.gui.shader"),
                 (x, width) -> {
-                    SuggestionTextFieldWidget widget = new SuggestionTextFieldWidget(x, width, 20, Component.empty(), false);
+                    SuggestionEditBoxWidget widget = new SuggestionEditBoxWidget(x, width, 20, Component.empty(), false);
                     widget.setValue(SouperSecretSettingsClient.soupData.config.randomShader);
                     widget.setListeners(() -> ShaderScreen.calculateAdditions(Shaders.getMainRegistryId()), null, true);
                     widget.setResponder((value) -> SouperSecretSettingsClient.soupData.config.randomShader = value);
@@ -86,21 +86,21 @@ public class OptionScreen extends ScrollScreen {
         );
         widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, SouperSecretSettingsClient.translate("option.gui.count"),
                 (x, width) -> {
-                    DraggableIntWidget widget = new DraggableIntWidget(x, width, 20, Component.empty(), 1, 256, 1, (value) -> SouperSecretSettingsClient.soupData.config.randomCount = value);
+                    DraggableIntEditBoxWidget widget = new DraggableIntEditBoxWidget(x, width, 20, Component.empty(), 1, 256, 1, (value) -> SouperSecretSettingsClient.soupData.config.randomCount = value);
                     widget.setValue(Integer.toString(SouperSecretSettingsClient.soupData.config.randomCount));
                     return widget;
                 })
         );
         widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, SouperSecretSettingsClient.translate("option.gui.duration"),
                 (x, width) -> {
-                    DraggableIntWidget widget = new DraggableIntWidget(x, width, 20, Component.empty(), 0, Integer.MAX_VALUE, 0, (value) -> SouperSecretSettingsClient.soupData.config.randomDuration = value);
+                    DraggableIntEditBoxWidget widget = new DraggableIntEditBoxWidget(x, width, 20, Component.empty(), 0, Integer.MAX_VALUE, 0, (value) -> SouperSecretSettingsClient.soupData.config.randomDuration = value);
                     widget.setValue(Integer.toString(SouperSecretSettingsClient.soupData.config.randomDuration));
                     return widget;
                 })
         );
         widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, SouperSecretSettingsClient.translate("option.gui.clear"),
                 (x, width) -> {
-                    SuggestionTextFieldWidget widget = new SuggestionTextFieldWidget(x, width, 20, Component.empty(), false);
+                    SuggestionEditBoxWidget widget = new SuggestionEditBoxWidget(x, width, 20, Component.empty(), false);
                     widget.setMaxLengthMin(1024);
                     CompletableFuture.runAsync(() -> widget.setValue(itemStackToString(SouperSecretSettingsClient.soupData.config.clearItem)));
                     widget.setListeners(this::getItemSuggestions, null, true);
@@ -109,7 +109,7 @@ public class OptionScreen extends ScrollScreen {
                     return widget;
                 })
         );
-        widgets.add(new CycleWidget(SoupGui.listX, widgetWidth,
+        widgets.add(new CycleButton(SoupGui.listX, widgetWidth,
                 (direction) -> SouperSecretSettingsClient.soupData.config.randomSound = !SouperSecretSettingsClient.soupData.config.randomSound,
                 () -> SouperSecretSettingsClient.translate("option.gui.sound."+(SouperSecretSettingsClient.soupData.config.randomSound ? "on" : "off")))
         );
@@ -117,17 +117,17 @@ public class OptionScreen extends ScrollScreen {
         widgets.add(new StringWidget(SoupGui.listX, 0, widgetWidth, 8, SouperSecretSettingsClient.translate("option.gui.misc"), ClientData.minecraft.font));
         widgets.add(Button.builder(SouperSecretSettingsClient.translate("option.gui.luminance"), (buttonWidget) -> ClientData.minecraft.setScreen(new ConfigScreen(this))).bounds(SoupGui.listX, 0, widgetWidth, 20).build());
         widgets.add(Button.builder(SouperSecretSettingsClient.translate("option.gui.keybinds"), (buttonWidget) -> ClientData.minecraft.setScreen(new KeyBindsScreen(this, ClientData.minecraft.options))).bounds(SoupGui.listX, 0, widgetWidth, 20).build());
-        widgets.add(new CycleWidget(SoupGui.listX, widgetWidth,
-                (direction) -> SouperSecretSettingsClient.soupData.config.messageFilter = CycleWidget.cycleInt(SouperSecretSettingsClient.soupData.config.messageFilter - direction, 2),
+        widgets.add(new CycleButton(SoupGui.listX, widgetWidth,
+                (direction) -> SouperSecretSettingsClient.soupData.config.messageFilter = CycleButton.cycleInt(SouperSecretSettingsClient.soupData.config.messageFilter - direction, 2),
                 () -> SouperSecretSettingsClient.translate("option.gui.filter."+SouperSecretSettingsClient.soupData.config.messageFilter))
         );
-        widgets.add(new CycleWidget(SoupGui.listX, widgetWidth,
+        widgets.add(new CycleButton(SoupGui.listX, widgetWidth,
                 (direction) -> SouperSecretSettingsClient.soupData.config.warning = !SouperSecretSettingsClient.soupData.config.warning,
                 () -> SouperSecretSettingsClient.translate("option.gui.warning."+(SouperSecretSettingsClient.soupData.config.warning ? "on" : "off")))
         );
         widgets.add(new LabelledWidget(SoupGui.listX, widgetWidth, SouperSecretSettingsClient.translate("option.gui.undo_limit"),
                 (x, width) -> {
-                    DraggableIntWidget widget = new DraggableIntWidget(x, width, 20, Component.empty(), 16, Integer.MAX_VALUE, Actions.defaultLength, (value) -> SouperSecretSettingsClient.soupData.config.undoLimit = value);
+                    DraggableIntEditBoxWidget widget = new DraggableIntEditBoxWidget(x, width, 20, Component.empty(), 16, Integer.MAX_VALUE, Actions.defaultLength, (value) -> SouperSecretSettingsClient.soupData.config.undoLimit = value);
                     widget.setValue(Integer.toString(SouperSecretSettingsClient.soupData.config.undoLimit));
                     return widget;
                 })

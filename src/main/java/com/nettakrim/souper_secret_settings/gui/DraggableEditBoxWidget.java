@@ -6,11 +6,11 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
-public class DraggableTextFieldWidget extends EditBox implements ListChild, CursorWrap {
+public class DraggableEditBoxWidget extends EditBox implements ListChild, CursorWrap {
     public boolean disableDrag = false;
     public Float dragValue = null;
 
-    public DraggableTextFieldWidget(int x, int width, int height, Component message) {
+    public DraggableEditBoxWidget(int x, int width, int height, Component message) {
         super(ClientData.minecraft.font, x, 0, width, height, message);
     }
 

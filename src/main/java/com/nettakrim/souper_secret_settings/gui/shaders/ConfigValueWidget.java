@@ -1,7 +1,7 @@
 package com.nettakrim.souper_secret_settings.gui.shaders;
 
 import com.nettakrim.souper_secret_settings.gui.ListScreen;
-import com.nettakrim.souper_secret_settings.gui.SuggestionTextFieldWidget;
+import com.nettakrim.souper_secret_settings.gui.SuggestionEditBoxWidget;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +18,7 @@ public class ConfigValueWidget extends AbstractWidget {
 
     protected boolean visible;
 
-    protected final List<SuggestionTextFieldWidget> children;
+    protected final List<SuggestionEditBoxWidget> children;
 
     protected Consumer<ConfigValueWidget> onChangeCallback;
 
@@ -36,7 +36,7 @@ public class ConfigValueWidget extends AbstractWidget {
             setWidth(childStart);
             int childWidth = (width - childStart) / objects.size();
             for (int i = 0; i < objects.size(); i++) {
-                SuggestionTextFieldWidget textFieldWidget = new SuggestionTextFieldWidget(x + childStart + (childWidth * i), childWidth, height, Component.literal(String.valueOf(i)), true);
+                SuggestionEditBoxWidget textFieldWidget = new SuggestionEditBoxWidget(x + childStart + (childWidth * i), childWidth, height, Component.literal(String.valueOf(i)), true);
                 int finalI = i;
                 Object object = objects.get(i);
                 textFieldWidget.setValue(String.valueOf(object));
@@ -55,7 +55,7 @@ public class ConfigValueWidget extends AbstractWidget {
     public void renderWidget(@NotNull GuiGraphics context, int mouseX, int mouseY, float delta) {
         if (visible) {
             renderScrollingStringOverContents(context.textRenderer(), getMessage(), 2);
-            for (SuggestionTextFieldWidget textFieldWidget : children) {
+            for (SuggestionEditBoxWidget textFieldWidget : children) {
                 textFieldWidget.renderWidget(context, mouseX, mouseY, delta);
             }
         }
@@ -68,21 +68,21 @@ public class ConfigValueWidget extends AbstractWidget {
 
     public void setVisible(boolean visible) {
         this.visible = visible;
-        for (SuggestionTextFieldWidget textFieldWidget : children) {
+        for (SuggestionEditBoxWidget textFieldWidget : children) {
             textFieldWidget.setVisible(visible);
         }
     }
 
     public void addToScreen(ListScreen<?> listScreen) {
         listScreen.addSelectable(this);
-        for (SuggestionTextFieldWidget textFieldWidget : children) {
+        for (SuggestionEditBoxWidget textFieldWidget : children) {
             listScreen.addSelectable(textFieldWidget);
         }
     }
 
     public void removeFromScreen(ListScreen<?> listScreen) {
         listScreen.removeSelectable(this);
-        for (SuggestionTextFieldWidget textFieldWidget : children) {
+        for (SuggestionEditBoxWidget textFieldWidget : children) {
             listScreen.removeSelectable(textFieldWidget);
         }
     }
@@ -90,7 +90,7 @@ public class ConfigValueWidget extends AbstractWidget {
     @Override
     public void setY(int y) {
         super.setY(y);
-        for (SuggestionTextFieldWidget textFieldWidget : children) {
+        for (SuggestionEditBoxWidget textFieldWidget : children) {
             textFieldWidget.setY(y);
         }
     }

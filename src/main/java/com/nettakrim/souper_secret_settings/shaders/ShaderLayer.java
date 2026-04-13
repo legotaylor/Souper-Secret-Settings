@@ -61,7 +61,8 @@ public class ShaderLayer implements Toggleable {
         calculations.clear();
     }
 
-    public void render(FrameGraphBuilder builder, int textureWidth, int textureHeight, PostChain.TargetBundle framebufferSet) {
+    public void render(FrameGraphBuilder builder, int textureWidth, int textureHeight, PostChain.TargetBundle targetBundle
+    ) {
         if (!active) {
             return;
         }
@@ -80,29 +81,29 @@ public class ShaderLayer implements Toggleable {
             OverrideManager.startShaderQueue(shaderQueue);
         });
 
-        renderList(modifiers, shaderQueue, builder, textureWidth, textureHeight, framebufferSet, beforeLayerRender);
+        renderList(modifiers, shaderQueue, builder, textureWidth, textureHeight, targetBundle, beforeLayerRender);
 
         for (ShaderData shaderData : shaders) {
             if (shaderData.active) {
-                renderList(modifiers, shaderQueue, builder, textureWidth, textureHeight, framebufferSet, beforeShaderRender);
-                renderShader(shaderData, shaderQueue, builder, textureWidth, textureHeight, framebufferSet, null);
-                renderList(modifiers.reversed(), shaderQueue, builder, textureWidth, textureHeight, framebufferSet, afterShaderRender);
+                renderList(modifiers, shaderQueue, builder, textureWidth, textureHeight, targetBundle, beforeShaderRender);
+                renderShader(shaderData, shaderQueue, builder, textureWidth, textureHeight, targetBundle, null);
+                renderList(modifiers.reversed(), shaderQueue, builder, textureWidth, textureHeight, targetBundle, afterShaderRender);
                 shaderQueue.add(null);
             }
         }
 
-        renderList(modifiers.reversed(), shaderQueue, builder, textureWidth, textureHeight, framebufferSet, afterLayerRender);
+        renderList(modifiers.reversed(), shaderQueue, builder, textureWidth, textureHeight, targetBundle, afterLayerRender);
     }
 
-    public void renderList(List<ShaderData> shaders, Queue<Couple<ShaderData, Identifier>> shaderQueue, FrameGraphBuilder builder, int textureWidth, int textureHeight, PostChain.TargetBundle framebufferSet, @Nullable Identifier customPasses) {
+    public void renderList(List<ShaderData> shaders, Queue<Couple<ShaderData, Identifier>> shaderQueue, FrameGraphBuilder builder, int textureWidth, int textureHeight, PostChain.TargetBundle targetBundle, @Nullable Identifier customChain) {
         for (ShaderData shaderData : shaders) {
-            renderShader(shaderData, shaderQueue, builder, textureWidth, textureHeight, framebufferSet, customPasses);
+            renderShader(shaderData, shaderQueue, builder, textureWidth, textureHeight, targetBundle, customChain);
         }
     }
 
-    public void renderShader(ShaderData shaderData, Queue<Couple<ShaderData, Identifier>> shaderQueue, FrameGraphBuilder builder, int textureWidth, int textureHeight, PostChain.TargetBundle framebufferSet, @Nullable Identifier customPasses) {
-        if (shaderData.render(builder, textureWidth, textureHeight, framebufferSet, customPasses)) {
-            shaderQueue.add(new Couple<>(shaderData, customPasses));
+    public void renderShader(ShaderData shaderData, Queue<Couple<ShaderData, Identifier>> shaderQueue, FrameGraphBuilder builder, int textureWidth, int textureHeight, PostChain.TargetBundle targetBundle, @Nullable Identifier customChain) {
+        if (shaderData.render(builder, textureWidth, textureHeight, targetBundle, customChain)) {
+            shaderQueue.add(new Couple<>(shaderData, customChain));
         }
     }
 

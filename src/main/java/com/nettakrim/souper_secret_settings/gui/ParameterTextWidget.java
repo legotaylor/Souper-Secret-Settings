@@ -8,7 +8,7 @@ import java.util.List;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 
-public class ParameterTextWidget extends SuggestionTextFieldWidget {
+public class ParameterTextWidget extends SuggestionEditBoxWidget {
     protected final String defaultValue;
     protected final ShaderLayer layer;
 

@@ -8,11 +8,11 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.input.InputWithModifiers;
 import org.jetbrains.annotations.NotNull;
 
-public class CycleWidget extends Button {
+public class CycleButton extends Button {
     protected final Consumer<Integer> advance;
     protected final Supplier<net.minecraft.network.chat.Component> getText;
 
-    public CycleWidget(int x, int width, Consumer<Integer> advance, Supplier<net.minecraft.network.chat.Component> getText) {
+    public CycleButton(int x, int width, Consumer<Integer> advance, Supplier<net.minecraft.network.chat.Component> getText) {
         super(x, 0, width, 20, getText.get(), (button) -> {}, Button.DEFAULT_NARRATION);
         this.advance = advance;
         this.getText = getText;
