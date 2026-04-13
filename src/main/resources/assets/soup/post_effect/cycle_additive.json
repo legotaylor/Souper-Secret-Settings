@@ -44,9 +44,10 @@
                 "uniforms": {
                     "CycleAdditiveConfig": [
                         {
-                            "name": "soup_shader_index",
+                            "name": "ShaderIndex",
                             "type": "int",
-                            "value": 0
+                            "value": 0,
+                            "override": "soup:shader_index"
                         }
                     ]
                 }
@@ -90,9 +91,10 @@
                 "uniforms": {
                     "CycleAdditiveCombineConfig": [
                         {
-                            "name": "soup_shader_index",
+                            "name": "ShaderIndex",
                             "type": "int",
-                            "value": 0
+                            "value": 0,
+                            "override": "soup:shader_index"
                         }
                     ]
                 }

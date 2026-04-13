@@ -69,9 +69,10 @@
                 "uniforms": {
                     "CycleExclusiveConfig": [
                         {
-                            "name": "soup_shader_index",
+                            "name": "ShaderIndex",
                             "type": "int",
-                            "value": 0
+                            "value": 0,
+                            "override": "soup:shader_index"
                         }
                     ]
                 }
@@ -135,9 +136,10 @@
                 "uniforms": {
                     "CycleExclusiveCombineConfig": [
                         {
-                            "name": "soup_shader_index",
+                            "name": "ShaderIndex",
                             "type": "int",
-                            "value": 0
+                            "value": 0,
+                            "override": "soup:shader_index"
                         }
                     ]
                 }
