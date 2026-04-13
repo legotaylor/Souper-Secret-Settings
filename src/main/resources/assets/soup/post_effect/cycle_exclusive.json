@@ -8,7 +8,7 @@
         },
         "temp": {}
     },
-    "custom_passes": {
+    "custom_chains": {
         "souper_secret_settings:before_layer_render": [
             {
                 "vertex_shader": "minecraft:core/screenquad",
