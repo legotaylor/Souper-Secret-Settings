@@ -1,5 +1,4 @@
 {
-    "enabled": false,
     "fallback_when_over_ui": false,
     "fallback_when_under_ui": false,
     "photosensitive": false,
